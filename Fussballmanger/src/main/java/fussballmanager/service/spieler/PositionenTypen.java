@@ -13,9 +13,9 @@ public enum PositionenTypen {
 	RM("Rechtes Mittelfeld"),
 	ZM("Zentrales Mittelfeld"),
 	OM("Offensives Mittelfeld"),
-	LS("Linkes Mittelfeld"),
+	LS("Linkes Stürmer"),
 	MS("Mittelstürmer"),
-	RS("Rechtes Mittelfeld");
+	RS("Rechtes Stürmer");
     
     private final String position;
     

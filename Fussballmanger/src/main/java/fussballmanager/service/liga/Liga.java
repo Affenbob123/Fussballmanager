@@ -1,17 +1,12 @@
 package fussballmanager.service.liga;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 
 import fussballmanager.service.land.Land;
-import fussballmanager.service.team.Team;
 
 @Entity
 public class Liga {
@@ -22,12 +17,11 @@ public class Liga {
 	
 	private LigenNamenTypen ligaName;
 	
+	private final int groeße = 18;
+	
 	@ManyToOne
 	private Land land;
 	
-	@OneToMany
-	private Set<Team> teams = new HashSet<>();
-
 	public Liga(LigenNamenTypen ligaName, Land land) {
 		this.ligaName = ligaName;
 		this.land = land;
@@ -61,15 +55,7 @@ public class Liga {
 		this.land = land;
 	}
 
-	public Set<Team> getTeams() {
-		return teams;
-	}
-
-	public void setTeams(Set<Team> teams) {
-		this.teams = teams;
-	}
-	
-	public void addTeam(Team team) {
-		getTeams().add(team);
+	public int getGroeße() {
+		return groeße;
 	}
 }

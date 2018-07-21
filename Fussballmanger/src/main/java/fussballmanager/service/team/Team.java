@@ -4,6 +4,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+
+import fussballmanager.service.liga.Liga;
+import fussballmanager.service.user.User;
 
 
 @Entity
@@ -17,10 +21,26 @@ public class Team implements Comparable<Team>{
 		
 	private double geld;
 	
+	@ManyToOne
+	private User user;
 	
-	public Team(String name, double geld) {
+	@ManyToOne
+	private Liga liga;
+		
+	private int punkte;
+	
+	private int maximaleSpielerAnzahl;
+	
+	private int aktuelleSpielerAnzahl;
+	
+	public Team(String name, User user, Liga liga) {
 		this.name = name;
-		this.geld = geld;
+		this.geld = 500000.0;
+		this.user = user;
+		this.liga = liga;
+		this.punkte = 0;
+		this.maximaleSpielerAnzahl = 43;
+		this.maximaleSpielerAnzahl = 0;
 	}
 	
 	public Team() {
@@ -49,6 +69,46 @@ public class Team implements Comparable<Team>{
 
 	public void setGeld(double geld) {
 		this.geld = geld;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public Liga getLiga() {
+		return liga;
+	}
+
+	public void setLiga(Liga liga) {
+		this.liga = liga;
+	}
+
+	public int getPunkte() {
+		return punkte;
+	}
+
+	public void setPunkte(int punkte) {
+		this.punkte = punkte;
+	}
+
+	public int getMaximaleSpielerAnzahl() {
+		return maximaleSpielerAnzahl;
+	}
+
+	public void setMaximaleSpielerAnzahl(int maximaleSpielerAnzahl) {
+		this.maximaleSpielerAnzahl = maximaleSpielerAnzahl;
+	}
+
+	public int getAktuelleSpielerAnzahl() {
+		return aktuelleSpielerAnzahl;
+	}
+
+	public void setAktuelleSpielerAnzahl(int aktuelleSpielerAnzahl) {
+		this.aktuelleSpielerAnzahl = aktuelleSpielerAnzahl;
 	}
 
 	@Override

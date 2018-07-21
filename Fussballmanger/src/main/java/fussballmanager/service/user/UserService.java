@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,12 +17,19 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import fussballmanager.service.team.TeamService;
+
 @Service
 @Transactional
 public class UserService {
 	
+	private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
+	
 	@Autowired
 	UserRepository userRepository;
+	
+	@Autowired
+	TeamService teamService;
 	
 	private static final Collection<GrantedAuthority> ADMIN_ROLES = AuthorityUtils.createAuthorityList("ROLE_ADMIN");
 	private static final Collection<GrantedAuthority> USER_ROLES = AuthorityUtils.createAuthorityList("ROLE_USER");
@@ -62,8 +71,11 @@ public class UserService {
 	}
 	
 	public void legeUserAn(User user) {
+		teamService.standardTeamsErstellen(user);
+		
 		user.setPassword("{noop}" + user.getPassword());
 		userRepository.save(user);
+		LOG.info("User: {} wurde angelegt.", user.getLogin());
 	}
 	
 	public void aktualisiereUser(User user) {

@@ -44,5 +44,10 @@ public class FussballmanagerTestData {
 	}
 
 	private void erzeugeTestTipps() {
+		
+	}
+	
+	private void erzeugeTestSpieler() {
+		
 	}
 }

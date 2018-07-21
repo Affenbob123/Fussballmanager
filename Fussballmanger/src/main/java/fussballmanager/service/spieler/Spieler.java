@@ -25,6 +25,8 @@ public class Spieler {
 	
 	private double staerke;
 	
+	private int erfahrung;
+	
 	@OneToMany
 	private List<SpielerZuwachs> spielerZuwachs;
 	
@@ -37,13 +39,15 @@ public class Spieler {
 	
 	private int trainingslagerTage;
 
-	public Spieler(PositionenTypen position, int staerke, int motivation,
-			Team team, int trainingslagerTage) {
+	public Spieler(PositionenTypen position, int alter, double staerke, int talentwert, Team team) {
 		this.position = position;
+		this.alter = alter;
 		this.staerke = staerke;
-		this.motivation = motivation;
+		this.talentwert = talentwert;
+		this.erfahrung = 0;
+		this.motivation = 0;
 		this.team = team;
-		this.trainingslagerTage = trainingslagerTage;
+		this.trainingslagerTage = 10;
 	}
 
 	public Spieler() {
@@ -58,7 +62,7 @@ public class Spieler {
 		this.id = id;
 	}
 
-	public PositionenTypen getPosition() {
+	public PositionenTypen getPositionenTypen() {
 		return position;
 	}
 
@@ -80,6 +84,14 @@ public class Spieler {
 
 	public void setStaerke(double staerke) {
 		this.staerke = staerke;
+	}
+
+	public int getErfahrung() {
+		return erfahrung;
+	}
+
+	public void setErfahrung(int erfahrung) {
+		this.erfahrung = erfahrung;
 	}
 
 	public List<SpielerZuwachs> getSpielerZuwachs() {

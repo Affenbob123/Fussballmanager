@@ -13,8 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fussballmanager.service.land.Land;
 import fussballmanager.service.land.LandRepository;
-import fussballmanager.service.liga.Liga;
-import fussballmanager.service.liga.LigenNamenTypen;
 import fussballmanager.service.liga.LigaService;
 
 @Service
@@ -34,10 +32,8 @@ public class LandService {
 		if(landRepository.count() == 0) {
 			for(LaenderNamenTypen laenderNamenTypen : LaenderNamenTypen.values()) {
 				legeLandAn(new Land(laenderNamenTypen));
-				ligaService.legeLigaAn(new Liga(LigenNamenTypen.ERSTELIGA, findeLand(laenderNamenTypen)));
-				LOG.info("Land: {} und die Liga: {} ist erstellt worden", laenderNamenTypen.getName(), LigenNamenTypen.ERSTELIGA.getName());
+				ligaService.legeHauptteamLigenAn(findeLand(laenderNamenTypen));
 			}
-
 		}
 	}
 

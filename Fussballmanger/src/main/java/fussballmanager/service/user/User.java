@@ -9,7 +9,6 @@ import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
 import fussballmanager.service.land.Land;
-import fussballmanager.service.team.Team;
 
 @Entity
 public class User implements Comparable<User> {
@@ -28,9 +27,6 @@ public class User implements Comparable<User> {
 	
 	@OneToMany
 	private Set<Land> laender = new HashSet<>();
-	
-	@OneToMany
-	private Set<Team> teams = new HashSet<>();
 	
 	private boolean isAdmin;
 	
@@ -105,18 +101,6 @@ public class User implements Comparable<User> {
 	
 	public void addLaender(Land land) {
 		getLaender().add(land);
-	}
-
-	public Set<Team> getTeams() {
-		return teams;
-	}
-
-	public void setTeams(Set<Team> teams) {
-		this.teams = teams;
-	}
-	
-	public void addTeams(Team team) {
-		getTeams().add(team);
 	}
 
 	@Override
