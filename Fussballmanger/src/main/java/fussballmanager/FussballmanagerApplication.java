@@ -8,9 +8,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @EnableCaching
 @EnableScheduling
-public class FussballmangerApplication {
+public class FussballmanagerApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(FussballmangerApplication.class, args);
+		SpringApplication.run(FussballmanagerApplication.class, args);
 	}
 }

@@ -3,6 +3,8 @@ package fussballmanager.service.spiel;
 import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
@@ -12,13 +14,14 @@ import fussballmanager.service.team.Team;
 public class Spiel {
 	
 	@Id
+	@GeneratedValue(strategy=GenerationType.SEQUENCE)
 	private long id;
 	
 	@ManyToOne
-	private Team Heimmannschaft;
+	private Team heimmannschaft;
 	
 	@ManyToOne
-	private Team Gastmannschaft;
+	private Team gastmannschaft;
 	
 	private int toreHeimMannschaft;
 	
@@ -28,15 +31,18 @@ public class Spiel {
 	
 	private String spielort;
 
-	public Spiel(long id, Team heimmannschaft, Team gastmannschaft, int toreHeimMannschaft, int toreGastMannschaft,
+	public Spiel(Team heimmannschaft, Team gastmannschaft, int toreHeimMannschaft, int toreGastMannschaft,
 			LocalDateTime spielbeginn, String spielort) {
-		this.id = id;
-		Heimmannschaft = heimmannschaft;
-		Gastmannschaft = gastmannschaft;
+		this.heimmannschaft = heimmannschaft;
+		this.gastmannschaft = gastmannschaft;
 		this.toreHeimMannschaft = toreHeimMannschaft;
 		this.toreGastMannschaft = toreGastMannschaft;
 		this.spielbeginn = spielbeginn;
 		this.spielort = spielort;
+	}
+	
+	public Spiel() {
+		
 	}
 
 	public long getId() {
@@ -48,19 +54,19 @@ public class Spiel {
 	}
 
 	public Team getHeimmannschaft() {
-		return Heimmannschaft;
+		return heimmannschaft;
 	}
 
 	public void setHeimmannschaft(Team heimmannschaft) {
-		Heimmannschaft = heimmannschaft;
+		this.heimmannschaft = heimmannschaft;
 	}
 
 	public Team getGastmannschaft() {
-		return Gastmannschaft;
+		return gastmannschaft;
 	}
 
 	public void setGastmannschaft(Team gastmannschaft) {
-		Gastmannschaft = gastmannschaft;
+		this.gastmannschaft = gastmannschaft;
 	}
 
 	public int getToreHeimMannschaft() {

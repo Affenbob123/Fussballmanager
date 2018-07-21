@@ -3,16 +3,14 @@ package fussballmanager.service.land;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+
 @Entity
 public class Land {
 	
 	@Id
-	private long id;
+	private LaenderNamenTypen landName;
 	
-	private String landName;
-	
-	public Land(long id, String landName) {
-		this.id = id;
+	public Land(LaenderNamenTypen landName) {
 		this.landName = landName;
 	}
 
@@ -20,19 +18,11 @@ public class Land {
 		
 	}
 
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public String getLandName() {
+	public LaenderNamenTypen getLandName() {
 		return landName;
 	}
 
-	public void setLandName(String landName) {
+	public void setLandName(LaenderNamenTypen landName) {
 		this.landName = landName;
 	}
 }

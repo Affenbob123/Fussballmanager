@@ -1,6 +1,6 @@
 package fussballmanager.service.spieler;
 
-public enum Position {
+public enum PositionenTypen {
 
 	TW("Torwart"),
 	LV("Linker Verteidiger"),
@@ -19,7 +19,7 @@ public enum Position {
     
     private final String position;
     
-    Position(String position){
+    PositionenTypen(String position){
     	this.position = position;
     }
     

@@ -1,6 +1,8 @@
 package fussballmanager.service.team;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 
@@ -8,6 +10,7 @@ import javax.persistence.Id;
 public class Team implements Comparable<Team>{
 	
 	@Id
+	@GeneratedValue(strategy=GenerationType.SEQUENCE)
 	private long id;
 	
 	private String name;
@@ -15,9 +18,7 @@ public class Team implements Comparable<Team>{
 	private double geld;
 	
 	
-	public Team(long id, String name, double geld) {
-		super();
-		this.id = id;
+	public Team(String name, double geld) {
 		this.name = name;
 		this.geld = geld;
 	}
