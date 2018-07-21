@@ -29,7 +29,7 @@ public class Team implements Comparable<Team>{
 		
 	private int punkte;
 	
-	private int maximaleSpielerAnzahl;
+	private final int maximaleSpielerAnzahl = 0;
 	
 	private int aktuelleSpielerAnzahl;
 	
@@ -39,8 +39,6 @@ public class Team implements Comparable<Team>{
 		this.user = user;
 		this.liga = liga;
 		this.punkte = 0;
-		this.maximaleSpielerAnzahl = 43;
-		this.maximaleSpielerAnzahl = 0;
 	}
 	
 	public Team() {
@@ -97,10 +95,6 @@ public class Team implements Comparable<Team>{
 
 	public int getMaximaleSpielerAnzahl() {
 		return maximaleSpielerAnzahl;
-	}
-
-	public void setMaximaleSpielerAnzahl(int maximaleSpielerAnzahl) {
-		this.maximaleSpielerAnzahl = maximaleSpielerAnzahl;
 	}
 
 	public int getAktuelleSpielerAnzahl() {

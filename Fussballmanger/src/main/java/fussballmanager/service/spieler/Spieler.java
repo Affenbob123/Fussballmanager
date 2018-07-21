@@ -38,6 +38,8 @@ public class Spieler {
 	private Team team;
 	
 	private int trainingslagerTage;
+	
+	private int tore;
 
 	public Spieler(PositionenTypen position, int alter, double staerke, int talentwert, Team team) {
 		this.position = position;
@@ -48,6 +50,7 @@ public class Spieler {
 		this.motivation = 0;
 		this.team = team;
 		this.trainingslagerTage = 10;
+		this.tore = 0;
 	}
 
 	public Spieler() {
@@ -132,5 +135,13 @@ public class Spieler {
 
 	public void setTrainingslagerTage(int trainingslagerTage) {
 		this.trainingslagerTage = trainingslagerTage;
+	}
+
+	public int getTore() {
+		return tore;
+	}
+
+	public void setTore(int tore) {
+		this.tore = tore;
 	}
 }

@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import fussballmanager.service.land.LandService;
+import fussballmanager.service.user.User;
+import fussballmanager.service.user.UserService;
 
 
 @Component
@@ -47,7 +49,6 @@ public class FussballmanagerTestData {
 		
 	}
 	
-	private void erzeugeTestSpieler() {
-		
+	private void erzeugeTestUser() {
 	}
 }

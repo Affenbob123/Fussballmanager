@@ -71,11 +71,11 @@ public class UserService {
 	}
 	
 	public void legeUserAn(User user) {
-		teamService.standardTeamsErstellen(user);
-		
 		user.setPassword("{noop}" + user.getPassword());
 		userRepository.save(user);
 		LOG.info("User: {} wurde angelegt.", user.getLogin());
+		
+		teamService.standardHauptteamfuerUserErstellen(user);
 	}
 	
 	public void aktualisiereUser(User user) {

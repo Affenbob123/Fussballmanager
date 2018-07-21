@@ -41,6 +41,16 @@ public class TeamService {
 		return null;
 	}
 	
+	public Team findeErstesDummyTeam() {
+		for(Team team : findeAlleTeams()) {
+			if(team.getUser().equals(null)) {
+				return team;
+			}
+		}
+		//TODO Land ist voll
+		return null;
+	}
+	
 	public List<Team> findeAlleTeams() {
 		return teamRepository.findAll();
 	}
@@ -67,18 +77,13 @@ public class TeamService {
 			LOG.info("DummyHauptTeam: {} wurde in der Liga: {} angelegt.", standardName, liga.getLigaName());
 		}
 	}
-	
-	public void standardTeamsErstellen(User user) {
-		String standardName = "Unbennantes Team";
+
+	public void standardHauptteamfuerUserErstellen(User user) {
+		Team team = findeErstesDummyTeam();
+		team.setPunkte(0);
+		team.setUser(user);
+		aktualisiereTeam(team);
 		
-		//Hauptteam
-		legeTeamAn(new Team(standardName, user, ligaService.findeNaechsteFreieHauptteamLiga()));
-		LOG.info("Team: {} für den User: {} wurde angelegt.", standardName, user.getLogin());
-		
-		//Amateurteams
-//		for(int i = 0; i < anzahlStandardTeams - 1; i++) {
-//			legeTeamAn(new Team(standardName, user, ligaService.findeNaechsteFreieAmateuerteamLiga(), false));
-//			LOG.info("Team: {} für den User: {} wurde angelegt.", standardName, user.getLogin());
-//		}
+		LOG.info("Team: {} wurde dem User: {} zugewiesen.", team.getId(), team.getUser().getLogin());
 	}
 }
