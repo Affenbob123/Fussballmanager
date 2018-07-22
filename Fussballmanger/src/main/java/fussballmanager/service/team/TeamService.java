@@ -74,6 +74,17 @@ public class TeamService {
 		return alleTeamsEinesUsers;
 	}
 	
+	public List<Team> findeAlleTeamsEinerLiga(Liga liga) {
+		List<Team> alleTeamsEinerLiga =  new ArrayList<>();
+		
+		for(Team team : findeAlleTeams()) {
+			if(team.getLiga().equals(liga)) {
+				alleTeamsEinerLiga.add(team);
+			}
+		}
+		return alleTeamsEinerLiga;
+	}
+	
 	public void legeTeamAn(Team team) {
 		teamRepository.save(team);
 		

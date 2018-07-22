@@ -42,10 +42,13 @@ public class TeamController {
 	@GetMapping("/")
 	public String getTeamListe(Model model, Authentication auth) {
 		User aktuellerUser = userService.findeUser(auth.getName());
+		
+		model.addAttribute("aktuellesTeam", aktuellerUser.getAktuellesTeam());
+		
 		List<Team> alleTeamsEinesUsers = teamService.findeAlleTeamsEinesUsers(aktuellerUser);
 		
 		model.addAttribute("alleTeamsDesAktuellenUsers", alleTeamsEinesUsers);
-		model.addAttribute("aktuellesTeam", aktuellerUser.getAktuellesTeam());
+		
 		
 		return "teamliste";
 	}
