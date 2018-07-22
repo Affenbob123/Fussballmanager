@@ -13,13 +13,15 @@ import fussballmanager.service.spieler.spielerzuwachs.SpielerZuwachs;
 import fussballmanager.service.team.Team;
 
 @Entity
-public class Spieler {
+public class Spieler implements Comparable<Spieler>{
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE)
 	private long id;
 	
 	private PositionenTypen position;
+	
+	private String name;
 	
 	private int alter;
 	
@@ -43,6 +45,7 @@ public class Spieler {
 
 	public Spieler(PositionenTypen position, int alter, double staerke, int talentwert, Team team) {
 		this.position = position;
+		this.name = "Unbennanter Spieler";
 		this.alter = alter;
 		this.staerke = staerke;
 		this.talentwert = talentwert;
@@ -65,12 +68,20 @@ public class Spieler {
 		this.id = id;
 	}
 
-	public PositionenTypen getPositionenTypen() {
+	public PositionenTypen getPosition() {
 		return position;
 	}
 
 	public void setPosition(PositionenTypen position) {
 		this.position = position;
+	}
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public int getAlter() {
@@ -143,5 +154,11 @@ public class Spieler {
 
 	public void setTore(int tore) {
 		this.tore = tore;
+	}
+
+	@Override
+	public int compareTo(Spieler compareTo) {
+		int comparePosition=((Spieler)compareTo).getPosition().getRangfolge();
+		return this.position.getRangfolge() - comparePosition;
 	}
 }

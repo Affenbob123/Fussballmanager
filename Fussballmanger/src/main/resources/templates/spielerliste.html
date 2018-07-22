@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head th:replace="fragments/header :: head" />
+<body>
+	<div th:replace="fragments/header :: header"></div>
+	<div class="container">
+		<h2 th:text="Teamname"></h2>
+	</div>
+	<div class="container" id="containerBody">
+		<div class="alert alert-success" th:if="${successMessage}">
+  			<strong><p th:utext="${successMessage}"></p></strong>
+		</div>
+		<div class="alert alert-danger" th:if="${errorMessage}">
+  			<strong><p th:utext="${errorMessage}"></p></strong>
+		</div>
+		<div class="col-md-12">
+			<table class="table table-hover">
+				<thead>
+					<tr class="table-active">
+						<th scope="col">Id</th>
+						<th scope="col">Position</th>
+						<th scope="col">Name</th>
+						<th scope="col">Stärke</th>
+						<th scope="col">Erfahrung</th>
+						<th scope="col">Talentwert</th>
+						<th scope="col">Motivation</th>
+					</tr>
+				</thead>
+
+				<tr class="" th:each="spieler : ${alleSpielerDesAktuellenTeams}">
+					<td th:text="${spieler.id}" />
+					<td th:text="${spieler.position}" />
+					<td> 
+						<a class="" th:text="${spieler.name}" th:href="@{/spieler/}+${spieler.id}"></a>
+					</td>
+					<td th:text="${spieler.staerke}" />
+					<td th:text="${spieler.erfahrung}" />
+					<td th:text="${spieler.talentwert}" />
+					<td th:text="${spieler.motivation}" />
+				</tr>
+			</table>
+		</div>
+	</div>
+	<th:block th:replace="fragments/header :: scripts" />
+</body>
+</html>

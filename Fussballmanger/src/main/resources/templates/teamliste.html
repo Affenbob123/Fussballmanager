@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head th:replace="fragments/header :: head" />
+<body>
+	<div th:replace="fragments/header :: header"></div>
+	<div class="container">
+		<h2>Teamliste</h2>
+	</div>
+	<div class="container" id="containerBody">
+		<div class="alert alert-success" th:if="${successMessage}">
+  			<strong><p th:utext="${successMessage}"></p></strong>
+		</div>
+		<div class="alert alert-danger" th:if="${errorMessage}">
+  			<strong><p th:utext="${errorMessage}"></p></strong>
+		</div>
+		<div class="col-md-12">
+			<table class="table table-hover">
+				<thead>
+					<tr class="table-active">
+						<th scope="col">Id</th>
+						<th scope="col">Name</th>
+						<th scope="col">Liga</th>
+						<th scope="col">Geld</th>
+						<th scope="col">Punkte</th>
+					</tr>
+				</thead>
+
+				<tr class="" th:each="team : ${alleTeamsDesAktuellenUsers}">
+					<td th:text="${team.id}" />
+					<td> 
+						<a class="" th:text="${team.name}" th:href="@{/team/}+${team.id}"></a>
+					<td/>
+					<td th:text="${team.liga}" />
+					<td th:text="${team.geld}" />
+					<td th:text="${team.punkte}" />
+				</tr>
+			</table>
+		</div>
+	</div>
+	<th:block th:replace="fragments/header :: scripts" />
+</body>
+</html>

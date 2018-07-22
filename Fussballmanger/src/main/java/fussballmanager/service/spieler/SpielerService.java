@@ -1,7 +1,11 @@
 package fussballmanager.service.spieler;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,10 +35,24 @@ public class SpielerService {
 		return spielerRepository.findAll();
 	}
 	
+	public List<Spieler> findeAlleSpielerEinesTeams(Team aktuellesTeam) {
+		List<Spieler> alleSpielerEinesTeams =  new ArrayList<>();
+		
+		for(Spieler spieler : findeAlleSpieler()) {
+			if(spieler.getTeam() != null) {
+				if(spieler.getTeam().equals(aktuellesTeam)) {
+					alleSpielerEinesTeams.add(spieler);
+				}
+			}
+		}
+		Collections.sort(alleSpielerEinesTeams);
+		return alleSpielerEinesTeams;
+	}
+	
 	public void legeSpielerAn(Spieler spieler) {
 		spielerRepository.save(spieler);
 		LOG.info("Spieler mit Talentwert: {} und der Position: {} im Team: {} wurde angelegt.", spieler.getTalentwert(), 
-			spieler.getPositionenTypen().getPosition(), spieler.getTeam().getName());
+			spieler.getPosition().getPositionsName(), spieler.getTeam().getName());
 	}
 	
 	public void aktualisiereSpieler(Spieler spieler) {

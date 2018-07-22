@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +22,7 @@ import fussballmanager.service.team.TeamService;
 
 @Service
 @Transactional
-public class UserService {
+public class UserService implements UserDetailsService {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
 	
@@ -47,10 +48,11 @@ public class UserService {
 		}
 	}
 
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Optional<User> findeMitspieler = userRepository.findById(username);
-		if (findeMitspieler.isPresent()) {
-			User user = findeMitspieler.get();
+	@Override
+	public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
+		Optional<User> findeUser = userRepository.findById(login);
+		if (findeUser.isPresent()) {
+			User user = findeUser.get();
 			return new org.springframework.security.core.userdetails.User(user.getLogin(), user.getPassword(),
 					user.isAdmin() ? ADMIN_ROLES : USER_ROLES);
 		} else {
@@ -72,10 +74,11 @@ public class UserService {
 	
 	public void legeUserAn(User user) {
 		user.setPassword("{noop}" + user.getPassword());
+		
 		userRepository.save(user);
 		LOG.info("User: {} wurde angelegt.", user.getLogin());
 		
-		teamService.standardHauptteamfuerUserErstellen(user);
+		teamService.standardHauptteamfuerUserErstellen(findeUser(user.getLogin()));
 	}
 	
 	public void aktualisiereUser(User user) {

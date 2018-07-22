@@ -15,10 +15,10 @@ public class FussballmanagerConfiguration extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
-        .antMatchers("/login.**", "/logout**", "/create").permitAll()
+        .antMatchers("/login**", "/logout**", "/accounterstellen").permitAll()
         .antMatchers("/admin", "/h2_console/**").hasRole("ADMIN")
 		.anyRequest().fullyAuthenticated()
-		.and().formLogin().loginPage("/login.html").loginProcessingUrl("/login").and()
+		.and().formLogin().loginPage("/login").loginProcessingUrl("/login").and()
 		.logout().permitAll();
 		http.csrf().disable();
 		http.headers().frameOptions().disable();

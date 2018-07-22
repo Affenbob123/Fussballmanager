@@ -1,6 +1,9 @@
 package fussballmanager.service.team;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +46,7 @@ public class TeamService {
 	
 	public Team findeErstesDummyTeam() {
 		for(Team team : findeAlleTeams()) {
-			if(team.getUser().equals(null)) {
+			if(team.getUser() == null) {
 				return team;
 			}
 		}
@@ -53,6 +56,19 @@ public class TeamService {
 	
 	public List<Team> findeAlleTeams() {
 		return teamRepository.findAll();
+	}
+	
+	public List<Team> findeAlleTeamsEinesUsers(User aktuellerUser) {
+		List<Team> alleTeamsEinesUsers =  new ArrayList<>();
+		
+		for(Team team : findeAlleTeams()) {
+			if(team.getUser() != null) {
+				if(team.getUser().equals(aktuellerUser)) {
+					alleTeamsEinesUsers.add(team);
+				}
+			}
+		}
+		return alleTeamsEinesUsers;
 	}
 	
 	public void legeTeamAn(Team team) {
