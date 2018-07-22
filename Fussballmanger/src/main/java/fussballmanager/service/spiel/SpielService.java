@@ -73,8 +73,8 @@ public class SpielService {
 			    	spielHinspiel.setSpielort(alleTeamsEinerLiga.get(i).getSpielort());
 			    	spielHinspiel.setSpieltag(spieltagHinspiel);
 			    	
-			    	LOG.info("Spieltag: {}, Heimmannschaft: {}, Gastmannschaft: {}, Liga: {}", spieltagHinspiel, spielHinspiel.getHeimmannschaft().getName(), 
-			    			spielHinspiel.getGastmannschaft().getName(), liga.getLigaNameTyp().getName());
+//			    	LOG.info("Spieltag: {}, Heimmannschaft: {}, Gastmannschaft: {}, Liga: {}", spieltagHinspiel, spielHinspiel.getHeimmannschaft().getName(), 
+//			    			spielHinspiel.getGastmannschaft().getName(), liga.getLigaNameTyp().getName());
 			    	legeSpielAn(spielHinspiel);
 			    	
 			    	//Rückspiel
@@ -83,8 +83,8 @@ public class SpielService {
 			    	spielRueckspiel.setSpielort(alleTeamsEinerLiga.get(j).getSpielort());
 			    	spielRueckspiel.setSpieltag(spieltagRueckspiel);
 			    	
-			    	LOG.info("Spieltag: {}, Heimmannschaft: {}, Gastmannschaft: {}, Liga: {}", spieltagRueckspiel, spielRueckspiel.getHeimmannschaft().getName(), 
-			    			spielRueckspiel.getGastmannschaft().getName(), liga.getLigaNameTyp().getName());
+//			    	LOG.info("Spieltag: {}, Heimmannschaft: {}, Gastmannschaft: {}, Liga: {}", spieltagRueckspiel, spielRueckspiel.getHeimmannschaft().getName(), 
+//			    			spielRueckspiel.getGastmannschaft().getName(), liga.getLigaNameTyp().getName());
 			    	
 			    	legeSpielAn(spielRueckspiel);
 			    	spieltagHinspiel++;
@@ -104,8 +104,8 @@ public class SpielService {
 			    	spielHinspiel.setSpielort(alleTeamsEinerLiga.get(i).getSpielort());
 			    	spielHinspiel.setSpieltag(spieltagHinspiel);
 			    	
-			    	LOG.info("Spieltag: {}, Heimmannschaft: {}, Gastmannschaft: {}, Liga: {}", spieltagHinspiel, spielHinspiel.getHeimmannschaft().getName(), 
-			    			spielHinspiel.getGastmannschaft().getName(), liga.getLigaNameTyp().getName());
+//			    	LOG.info("Spieltag: {}, Heimmannschaft: {}, Gastmannschaft: {}, Liga: {}", spieltagHinspiel, spielHinspiel.getHeimmannschaft().getName(), 
+//			    			spielHinspiel.getGastmannschaft().getName(), liga.getLigaNameTyp().getName());
 			    	legeSpielAn(spielHinspiel);
 			    	
 			    	//Rückspiel
@@ -114,8 +114,8 @@ public class SpielService {
 			    	spielRueckspiel.setSpielort(alleTeamsEinerLiga.get(j).getSpielort());
 			    	spielRueckspiel.setSpieltag(spieltagRueckspiel);
 			    	
-			    	LOG.info("Spieltag: {}, Heimmannschaft: {}, Gastmannschaft: {}, Liga: {}", spieltagRueckspiel, spielRueckspiel.getHeimmannschaft().getName(), 
-			    			spielRueckspiel.getGastmannschaft().getName(), liga.getLigaNameTyp().getName());
+//			    	LOG.info("Spieltag: {}, Heimmannschaft: {}, Gastmannschaft: {}, Liga: {}", spieltagRueckspiel, spielRueckspiel.getHeimmannschaft().getName(), 
+//			    			spielRueckspiel.getGastmannschaft().getName(), liga.getLigaNameTyp().getName());
 			    	
 			    	legeSpielAn(spielRueckspiel);
 			    	spieltagHinspiel--;

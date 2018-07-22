@@ -11,8 +11,10 @@ public class Saison {
 	
 	private final int Spieltage = 35;
 	
+	private int aktuellerSpieltag;
+	
 	public Saison() {
-		
+		this.aktuellerSpieltag = 1;
 	}
 
 	public long getId() {
@@ -25,5 +27,13 @@ public class Saison {
 
 	public int getSpieltage() {
 		return Spieltage;
+	}
+
+	public int getAktuellerSpieltag() {
+		return aktuellerSpieltag;
+	}
+
+	public void setAktuellerSpieltag(int aktuellerSpieltag) {
+		this.aktuellerSpieltag = aktuellerSpieltag;
 	}
 }
