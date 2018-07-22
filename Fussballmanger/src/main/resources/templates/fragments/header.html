@@ -52,13 +52,13 @@
 							<a class="nav-link" href="/">Teams</a>
 						</li>
 						<li class="nav-item" th:unless="${administration}">
-							<a class="nav-link" href="/tipps">Meine Tipps</a>
+							<a class="nav-link" th:href="@{/liga/}+${aktuellesTeam.liga.getId()}">Tabelle</a>
 						</li>
 						<li class="nav-item" th:if="${administration}">
-							<a class="nav-link" href="/ergebnisse">Ergebnisse</a>
+							<a class="nav-link" href="/ergebnisse"></a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="/tabelle/1">Tabellen</a>
+							<a class="nav-link" href="/tabelle/1">sdf</a>
 						</li>
 						<li class="nav-item">
 							<a class="nav-link" href="/statistik">Statistik</a>

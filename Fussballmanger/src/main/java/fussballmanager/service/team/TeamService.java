@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import fussballmanager.service.land.Land;
 import fussballmanager.service.liga.Liga;
 import fussballmanager.service.liga.LigaService;
 import fussballmanager.service.spieler.SpielerService;
@@ -44,10 +45,12 @@ public class TeamService {
 		return null;
 	}
 	
-	public Team findeErstesDummyTeam() {
+	public Team findeErstesDummyTeam(Land land) {
 		for(Team team : findeAlleTeams()) {
-			if(team.getUser() == null) {
-				return team;
+			if(team.getLand().equals(land)) {
+				if(team.getUser() == null) {
+					return team;
+				}
 			}
 		}
 		//TODO Land ist voll
@@ -89,17 +92,19 @@ public class TeamService {
 		String standardName = "Dummy Team";
 		
 		for(int i = 0; i < liga.getGroeße(); i++) {
-			legeTeamAn(new Team(standardName, null, liga));
+			legeTeamAn(new Team(liga.getLand(), standardName, null, liga));
 			LOG.info("DummyHauptTeam: {} wurde in der Liga: {} angelegt.", standardName, liga.getLigaNameTyp());
 		}
 	}
 
 	public void standardHauptteamfuerUserErstellen(User user) {
-		Team team = findeErstesDummyTeam();
+		Team team = findeErstesDummyTeam(user.getLand());
 		team.setPunkte(0);
 		team.setUser(user);
 		aktualisiereTeam(team);
+		user.setAktuellesTeam(findeAlleTeamsEinesUsers(user).get(0));
 		
 		LOG.info("Team: {} wurde dem User: {} zugewiesen.", team.getId(), team.getUser().getLogin());
+		LOG.info("AktuellesTeam: {}", team.getId(), team.getUser().getLogin());
 	}
 }

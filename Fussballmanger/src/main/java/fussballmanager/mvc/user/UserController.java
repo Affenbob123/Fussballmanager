@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import fussballmanager.service.land.LaenderNamenTypen;
 import fussballmanager.service.user.User;
 import fussballmanager.service.user.UserService;
 
@@ -20,6 +21,7 @@ public class UserController {
 	@GetMapping("/accounterstellen")
 	public String getErstelleUser(Model model, Authentication auth) {
 		model.addAttribute("neuerUser", new User());
+		model.addAttribute("laenderNamenTypen", LaenderNamenTypen.values());
 		
 		return "usercreate";
 	}

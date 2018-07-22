@@ -13,6 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import fussballmanager.service.land.LandService;
+import fussballmanager.service.liga.LigaService;
+import fussballmanager.service.spieler.SpielerService;
+import fussballmanager.service.team.TeamService;
 import fussballmanager.service.user.User;
 import fussballmanager.service.user.UserService;
 
@@ -20,6 +23,21 @@ import fussballmanager.service.user.UserService;
 @Component
 @Profile("test")
 public class FussballmanagerTestData {
+	
+	@Autowired
+	LandService landService;
+	
+	@Autowired
+	LigaService ligaService;
+	
+	@Autowired
+	TeamService teamService;
+	
+	@Autowired
+	SpielerService spielerService;
+	
+	@Autowired
+	UserService userService;
 		
 	LocalDateTime spielbeginn = LocalDateTime.of(LocalDate.of(2018, 4 , 16), LocalTime.of(18, 30));
 	LocalDateTime spielbeginn1 = LocalDateTime.of(LocalDate.of(2018, 4 , 18), LocalTime.of(18, 30));
@@ -27,14 +45,8 @@ public class FussballmanagerTestData {
 	LocalDateTime spielbeginn3 = LocalDateTime.of(LocalDate.of(2018, 5 , 01), LocalTime.of(13, 07));
 	LocalDateTime spielbeginn4 = LocalDateTime.of(LocalDate.of(2019, 4 , 28), LocalTime.of(14, 47));
 	
-	String dummyEins = "dummy1";
-	String dummyZwei = "dummy2";
-	String dummyDrei = "dummy3";
-	String dummyVier = "dummy4";
-	String dummyFuenf = "dummy5";
-	String dummySechs = "dummy6";
-	String dummySieben = "dummy7";
-	String dummyAcht = "dummy8";
+	String LoginA = "a";
+
 	
 	String defaultProfilBild ="default.png";
 	
@@ -42,13 +54,11 @@ public class FussballmanagerTestData {
 
 	@PostConstruct
 	public void erzeugeTestDaten() {
-
-	}
-
-	private void erzeugeTestTipps() {
-		
+		//erzeugeTestUser();
 	}
 	
 	private void erzeugeTestUser() {
+		User userA = new User(LoginA, LoginA, false, LoginA, LoginA);
+		userService.legeUserAn(userA);
 	}
 }

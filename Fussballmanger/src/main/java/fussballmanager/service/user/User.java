@@ -1,14 +1,12 @@
 package fussballmanager.service.user;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
 import fussballmanager.service.land.Land;
+import fussballmanager.service.team.Team;
 
 @Entity
 public class User implements Comparable<User> {
@@ -25,8 +23,11 @@ public class User implements Comparable<User> {
 	
 	private String email;
 	
-	@OneToMany
-	private Set<Land> laender = new HashSet<>();
+	@OneToOne
+	private Land land;
+	
+	@OneToOne
+	private Team aktuellesTeam;
 	
 	private boolean isAdmin;
 	
@@ -91,16 +92,20 @@ public class User implements Comparable<User> {
 		this.email = email;
 	}
 
-	public Set<Land> getLaender() {
-		return laender;
+	public Land getLand() {
+		return land;
 	}
 
-	public void setLaender(Set<Land> laender) {
-		this.laender = laender;
+	public void setLand(Land land) {
+		this.land = land;
 	}
-	
-	public void addLaender(Land land) {
-		getLaender().add(land);
+
+	public Team getAktuellesTeam() {
+		return aktuellesTeam;
+	}
+
+	public void setAktuellesTeam(Team aktuellesTeam) {
+		this.aktuellesTeam = aktuellesTeam;
 	}
 
 	@Override

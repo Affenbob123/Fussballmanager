@@ -45,6 +45,7 @@ public class TeamController {
 		List<Team> alleTeamsEinesUsers = teamService.findeAlleTeamsEinesUsers(aktuellerUser);
 		
 		model.addAttribute("alleTeamsDesAktuellenUsers", alleTeamsEinesUsers);
+		model.addAttribute("aktuellesTeam", aktuellerUser.getAktuellesTeam());
 		
 		return "teamliste";
 	}

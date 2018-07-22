@@ -6,6 +6,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import fussballmanager.service.land.Land;
 import fussballmanager.service.liga.Liga;
 import fussballmanager.service.user.User;
 
@@ -16,6 +17,9 @@ public class Team implements Comparable<Team>{
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE)
 	private long id;
+	
+	@ManyToOne
+	private Land land;
 	
 	private String name;
 		
@@ -33,7 +37,8 @@ public class Team implements Comparable<Team>{
 	
 	private int aktuelleSpielerAnzahl;
 	
-	public Team(String name, User user, Liga liga) {
+	public Team(Land land, String name, User user, Liga liga) {
+		this.land = land;
 		this.name = name;
 		this.geld = 500000.0;
 		this.user = user;
@@ -51,6 +56,14 @@ public class Team implements Comparable<Team>{
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	public Land getLand() {
+		return land;
+	}
+
+	public void setLand(Land land) {
+		this.land = land;
 	}
 
 	public String getName() {

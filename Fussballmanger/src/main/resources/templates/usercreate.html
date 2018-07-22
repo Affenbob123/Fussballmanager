@@ -28,7 +28,17 @@
 					    <label>Passwort:</label>
 	    				<input type="text" th:field="*{password}" class="form-control"/>
 				</div>
-				 <button type="submit" value="submit" class="btn btn-primary">Submit</button>
+				<div class="form-group">
+					    <label>Land:</label>
+					    <select class="" th:field="*{land}">
+							<option 
+								  th:each="landNameTyp : ${laenderNamenTypen}" 
+								  th:text="${landNameTyp.getName()}"
+								  th:value="${landNameTyp}">
+							</option>
+						</select>
+				</div>
+				<button type="submit" value="submit" class="btn btn-primary">Submit</button>
 			</form>
         </div>
     </div>
