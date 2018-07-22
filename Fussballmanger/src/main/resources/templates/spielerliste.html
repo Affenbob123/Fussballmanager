@@ -17,7 +17,7 @@
 			<table class="table table-hover">
 				<thead>
 					<tr class="table-active">
-						<th scope="col">Id</th>
+						<th scope="col">Nationalität</th>
 						<th scope="col">Position</th>
 						<th scope="col">Name</th>
 						<th scope="col">Stärke</th>
@@ -28,7 +28,7 @@
 				</thead>
 
 				<tr class="" th:each="spieler : ${alleSpielerDesAktuellenTeams}">
-					<td th:text="${spieler.id}" />
+					<td th:text="${spieler.nationalitaet.getLandNameTyp().getName()}" />
 					<td th:text="${spieler.position}" />
 					<td> 
 						<a class="" th:text="${spieler.name}" th:href="@{/spieler/}+${spieler.id}"></a>

@@ -15,7 +15,7 @@ public class Liga {
 	@GeneratedValue(strategy=GenerationType.SEQUENCE)
 	private long id;
 	
-	private LigenNamenTypen ligaName;
+	private LigenNamenTypen ligaNameTyp;
 	
 	private final int groeße = 18;
 	
@@ -23,7 +23,7 @@ public class Liga {
 	private Land land;
 	
 	public Liga(LigenNamenTypen ligaName, Land land) {
-		this.ligaName = ligaName;
+		this.ligaNameTyp = ligaName;
 		this.land = land;
 	}
 	
@@ -39,12 +39,12 @@ public class Liga {
 		this.id = id;
 	}
 
-	public LigenNamenTypen getLigaName() {
-		return ligaName;
+	public LigenNamenTypen getLigaNameTyp() {
+		return ligaNameTyp;
 	}
 
-	public void setLigaName(LigenNamenTypen ligaName) {
-		this.ligaName = ligaName;
+	public void setLigaNameTyp(LigenNamenTypen ligaName) {
+		this.ligaNameTyp = ligaName;
 	}
 
 	public Land getLand() {

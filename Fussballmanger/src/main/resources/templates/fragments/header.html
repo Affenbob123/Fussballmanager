@@ -16,11 +16,6 @@
 	<div th:fragment="header" id="header">
 		<div class="container container-header">
 			<div class="row">
-				<div class="col col-lg-6" >
-					<a href="/">
-						<img alt="Wm-Tipp" src="/Banner.jpeg" />
-					</a>
-				</div>
 				<div class="col col-lg-6" id="countDownTimer" th:if="${naechstesSpiel}">
 					<form class="form-inline" method="GET" th:action="@{/tipps/}+${naechstesSpiel.getId()}">
 						<span class="countdownMannschaften">

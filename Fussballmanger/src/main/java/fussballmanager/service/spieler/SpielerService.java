@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import fussballmanager.service.land.Land;
 import fussballmanager.service.team.Team;
 
 @Service
@@ -66,11 +67,11 @@ public class SpielerService {
 	public void erstelleStandardSpieler(Team team) {
 		int alter = 17;
 		double staerke = 200.0;
-		
+		Land nationalitaet = team.getLiga().getLand();
 		
 		for(PositionenTypen positionenTyp : PositionenTypen.values()) {
 			int talentwert = erzeugeZufaelligenTalentwert();
-			legeSpielerAn(new Spieler(positionenTyp, alter, staerke, talentwert, team));
+			legeSpielerAn(new Spieler(nationalitaet, positionenTyp, alter, staerke, talentwert, team));
 		}
 	}
 	

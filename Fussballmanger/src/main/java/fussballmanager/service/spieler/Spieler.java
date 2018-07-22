@@ -8,7 +8,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
+import fussballmanager.service.land.Land;
 import fussballmanager.service.spieler.spielerzuwachs.SpielerZuwachs;
 import fussballmanager.service.team.Team;
 
@@ -18,6 +20,9 @@ public class Spieler implements Comparable<Spieler>{
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE)
 	private long id;
+	
+	@OneToOne
+	private Land nationalitaet;
 	
 	private PositionenTypen position;
 	
@@ -42,8 +47,11 @@ public class Spieler implements Comparable<Spieler>{
 	private int trainingslagerTage;
 	
 	private int tore;
+	
+	private int verletzungsTage;
 
-	public Spieler(PositionenTypen position, int alter, double staerke, int talentwert, Team team) {
+	public Spieler(Land nationalitaet, PositionenTypen position, int alter, double staerke, int talentwert, Team team) {
+		this.nationalitaet = nationalitaet;
 		this.position = position;
 		this.name = "Unbennanter Spieler";
 		this.alter = alter;
@@ -54,6 +62,7 @@ public class Spieler implements Comparable<Spieler>{
 		this.team = team;
 		this.trainingslagerTage = 10;
 		this.tore = 0;
+		this.verletzungsTage = 0;
 	}
 
 	public Spieler() {
@@ -66,6 +75,14 @@ public class Spieler implements Comparable<Spieler>{
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	public Land getNationalitaet() {
+		return nationalitaet;
+	}
+
+	public void setNationalitaet(Land nationalitaet) {
+		this.nationalitaet = nationalitaet;
 	}
 
 	public PositionenTypen getPosition() {
@@ -154,6 +171,14 @@ public class Spieler implements Comparable<Spieler>{
 
 	public void setTore(int tore) {
 		this.tore = tore;
+	}
+
+	public int getVerletzungsTage() {
+		return verletzungsTage;
+	}
+
+	public void setVerletzungsTage(int verletzungsTage) {
+		this.verletzungsTage = verletzungsTage;
 	}
 
 	@Override

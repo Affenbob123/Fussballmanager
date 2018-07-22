@@ -29,8 +29,8 @@
 					<td th:text="${team.id}" />
 					<td> 
 						<a class="" th:text="${team.name}" th:href="@{/team/}+${team.id}"></a>
-					<td/>
-					<td th:text="${team.liga}" />
+					</td>
+					<td th:text="${team.liga.ligaNameTyp.getName()}" />
 					<td th:text="${team.geld}" />
 					<td th:text="${team.punkte}" />
 				</tr>

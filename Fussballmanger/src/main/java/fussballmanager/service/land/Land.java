@@ -8,21 +8,21 @@ import javax.persistence.Id;
 public class Land {
 	
 	@Id
-	private LaenderNamenTypen landName;
+	private LaenderNamenTypen landNameTyp;
 	
 	public Land(LaenderNamenTypen landName) {
-		this.landName = landName;
+		this.landNameTyp = landName;
 	}
 
 	public Land() {
 		
 	}
 
-	public LaenderNamenTypen getLandName() {
-		return landName;
+	public LaenderNamenTypen getLandNameTyp() {
+		return landNameTyp;
 	}
 
-	public void setLandName(LaenderNamenTypen landName) {
-		this.landName = landName;
+	public void setLandNameTyp(LaenderNamenTypen landName) {
+		this.landNameTyp = landName;
 	}
 }

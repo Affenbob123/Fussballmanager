@@ -90,7 +90,7 @@ public class TeamService {
 		
 		for(int i = 0; i < liga.getGroeße(); i++) {
 			legeTeamAn(new Team(standardName, null, liga));
-			LOG.info("DummyHauptTeam: {} wurde in der Liga: {} angelegt.", standardName, liga.getLigaName());
+			LOG.info("DummyHauptTeam: {} wurde in der Liga: {} angelegt.", standardName, liga.getLigaNameTyp());
 		}
 	}
 
