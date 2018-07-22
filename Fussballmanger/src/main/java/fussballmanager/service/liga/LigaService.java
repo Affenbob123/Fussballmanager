@@ -48,6 +48,16 @@ public class LigaService {
 		return null;
 	}
 	
+	public Liga findeLiga(String land, String ligaName) {
+		for(Liga liga : findeAlleLigen()) {
+			if(liga.getLigaNameTyp().getName().equals(ligaName) &&
+					liga.getLand().getLandNameTyp().getName().equals(land)) {
+				return liga;
+			}
+		}
+		return null;
+	}
+	
 	public void legeLigaAn(Liga liga) {
 		ligaRepository.save(liga);
 		

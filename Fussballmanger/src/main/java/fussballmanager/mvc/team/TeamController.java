@@ -55,7 +55,12 @@ public class TeamController {
 	
 	@GetMapping("/team/{id}")
 	public String getTeamListe(Model model, Authentication auth, @PathVariable("id") Long id) {
+		User aktuellerUser = userService.findeUser(auth.getName());
+		
+		model.addAttribute("aktuellesTeam", aktuellerUser.getAktuellesTeam());
+		
 		Team aktuellesTeam = teamService.findeTeam(id);
+		
 		List<Spieler> alleSpielerEinesTeams = spielerService.findeAlleSpielerEinesTeams(aktuellesTeam);
 		
 		model.addAttribute("alleSpielerDesAktuellenTeams", alleSpielerEinesTeams);

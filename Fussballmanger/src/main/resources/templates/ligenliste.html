@@ -4,7 +4,7 @@
 <body>
 	<div th:replace="fragments/header :: header"></div>
 	<div class="container">
-		<h2>Tabelle</h2>
+		<h2>Teamliste</h2>
 	</div>
 	<div class="container" id="containerBody">
 		<div class="alert alert-success" th:if="${successMessage}">
@@ -17,16 +17,16 @@
 			<table class="table table-hover">
 				<thead>
 					<tr class="table-active">
-						<th scope="col">Platzierung</th>
+						<th scope="col">Id</th>
 						<th scope="col">Name</th>
+						<th scope="col">Land</th>
 					</tr>
 				</thead>
 
-				<tr class="" th:each="eintrag : ${alleTeamsDerAktuellenLiga}">
-					<td th:text="${eintrag.platzierung}" />
-					<td> 
-						<a class="" th:text="${eintrag.teamName}" th:href="@{/team/}+${eintrag.id}"></a>
-					</td>
+				<tr class="" th:each="liga : ${alleLigen}">
+					<td th:text="${liga.id}" />
+					<td th:text="${liga.ligaNameTyp.getName()}" />
+					<td th:text="${liga.land}" />
 				</tr>
 			</table>
 		</div>

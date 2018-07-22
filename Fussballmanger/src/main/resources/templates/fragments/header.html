@@ -52,7 +52,8 @@
 							<a class="nav-link" href="/">Teams</a>
 						</li>
 						<li class="nav-item" th:unless="${administration}">
-							<a class="nav-link" th:href="@{/liga/}+${aktuellesTeam.liga.getId()}">Tabelle</a>
+							<a class="nav-link" 
+							th:href="@{/liga/}+${aktuellesTeam.land.getLandNameTyp().getName()}+'/'+${aktuellesTeam.liga.ligaNameTyp.getName()}">Tabelle</a>
 						</li>
 						<li class="nav-item" th:if="${administration}">
 							<a class="nav-link" href="/ergebnisse"></a>
