@@ -110,7 +110,6 @@ public class TeamService {
 
 	public void standardHauptteamfuerUserErstellen(User user) {
 		Team team = findeErstesDummyTeam(user.getLand());
-		team.setPunkte(0);
 		team.setUser(user);
 		aktualisiereTeam(team);
 		user.setAktuellesTeam(findeAlleTeamsEinesUsers(user).get(0));

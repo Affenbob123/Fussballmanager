@@ -14,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 import fussballmanager.service.land.Land;
 import fussballmanager.service.land.LandRepository;
 import fussballmanager.service.liga.LigaService;
+import fussballmanager.service.saison.Saison;
+import fussballmanager.service.saison.SaisonService;
 
 @Service
 @Transactional
@@ -27,14 +29,19 @@ public class LandService {
 	@Autowired
 	LigaService ligaService;
 	
+	@Autowired
+	SaisonService saisonService;
+	
 	@PostConstruct
 	public synchronized void erstelleLaender() {
+		Saison saison = new Saison();
 		if(landRepository.count() == 0) {
 			for(LaenderNamenTypen laenderNamenTypen : LaenderNamenTypen.values()) {
 				legeLandAn(new Land(laenderNamenTypen));
 				ligaService.legeHauptteamLigenAn(findeLand(laenderNamenTypen));
 			}
 		}
+		saisonService.legeSaisonAn(saison);
 	}
 
 	public Land findeLand(LaenderNamenTypen laenderNamenTypen) {

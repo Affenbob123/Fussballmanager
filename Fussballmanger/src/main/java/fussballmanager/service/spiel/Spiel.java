@@ -1,14 +1,18 @@
 package fussballmanager.service.spiel;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
+import fussballmanager.service.saison.Saison;
 import fussballmanager.service.team.Team;
+import fussballmanager.service.tor.Tor;
 
 @Entity
 public class Spiel {
@@ -23,22 +27,26 @@ public class Spiel {
 	@ManyToOne
 	private Team gastmannschaft;
 	
-	private int toreHeimMannschaft;
+	@OneToMany
+	private List<Tor> toreHeimMannschaft;
 	
-	private int toreGastMannschaft;
+	@OneToMany
+	private List<Tor> toreGastMannschaft;
 	
 	private LocalDateTime spielbeginn;
 	
 	private String spielort;
+	
+	@ManyToOne
+	private Saison saison;
 
-	public Spiel(Team heimmannschaft, Team gastmannschaft, int toreHeimMannschaft, int toreGastMannschaft,
-			LocalDateTime spielbeginn, String spielort) {
+	public Spiel(Team heimmannschaft, Team gastmannschaft, LocalDateTime spielbeginn, 
+			String spielort, Saison saison) {
 		this.heimmannschaft = heimmannschaft;
 		this.gastmannschaft = gastmannschaft;
-		this.toreHeimMannschaft = toreHeimMannschaft;
-		this.toreGastMannschaft = toreGastMannschaft;
 		this.spielbeginn = spielbeginn;
 		this.spielort = spielort;
+		this.saison = saison;
 	}
 	
 	public Spiel() {
@@ -69,20 +77,28 @@ public class Spiel {
 		this.gastmannschaft = gastmannschaft;
 	}
 
-	public int getToreHeimMannschaft() {
+	public List<Tor> getToreHeimMannschaft() {
 		return toreHeimMannschaft;
 	}
 
-	public void setToreHeimMannschaft(int toreHeimMannschaft) {
+	public void setToreHeimMannschaft(List<Tor> toreHeimMannschaft) {
 		this.toreHeimMannschaft = toreHeimMannschaft;
 	}
+	
+	public void addToreHeimMannschaft(Tor tor) {
+		toreHeimMannschaft.add(tor);
+	}
 
-	public int getToreGastMannschaft() {
+	public List<Tor> getToreGastMannschaft() {
 		return toreGastMannschaft;
 	}
 
-	public void setToreGastMannschaft(int toreGastMannschaft) {
+	public void setToreGastMannschaft(List<Tor> toreGastMannschaft) {
 		this.toreGastMannschaft = toreGastMannschaft;
+	}
+	
+	public void addToreGastMannschaft(Tor tor) {
+		toreGastMannschaft.add(tor);
 	}
 
 	public LocalDateTime getSpielbeginn() {
@@ -99,5 +115,13 @@ public class Spiel {
 
 	public void setSpielort(String spielort) {
 		this.spielort = spielort;
+	}
+
+	public Saison getSaison() {
+		return saison;
+	}
+
+	public void setSaison(Saison saison) {
+		this.saison = saison;
 	}
 }

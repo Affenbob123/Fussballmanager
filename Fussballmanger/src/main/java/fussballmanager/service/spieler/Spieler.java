@@ -46,8 +46,6 @@ public class Spieler implements Comparable<Spieler>{
 	
 	private int trainingslagerTage;
 	
-	private int tore;
-	
 	private int verletzungsTage;
 
 	public Spieler(Land nationalitaet, PositionenTypen position, int alter, double staerke, int talentwert, Team team) {
@@ -61,7 +59,6 @@ public class Spieler implements Comparable<Spieler>{
 		this.motivation = 0;
 		this.team = team;
 		this.trainingslagerTage = 10;
-		this.tore = 0;
 		this.verletzungsTage = 0;
 	}
 
@@ -163,14 +160,6 @@ public class Spieler implements Comparable<Spieler>{
 
 	public void setTrainingslagerTage(int trainingslagerTage) {
 		this.trainingslagerTage = trainingslagerTage;
-	}
-
-	public int getTore() {
-		return tore;
-	}
-
-	public void setTore(int tore) {
-		this.tore = tore;
 	}
 
 	public int getVerletzungsTage() {

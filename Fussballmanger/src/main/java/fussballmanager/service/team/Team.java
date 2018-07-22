@@ -30,10 +30,10 @@ public class Team implements Comparable<Team>{
 	
 	@ManyToOne
 	private Liga liga;
-		
-	private int punkte;
 	
-	private final int maximaleSpielerAnzahl = 0;
+	private String spielort;
+			
+	private final int maximaleSpielerAnzahl = 43;
 	
 	private int aktuelleSpielerAnzahl;
 	
@@ -43,7 +43,7 @@ public class Team implements Comparable<Team>{
 		this.geld = 500000.0;
 		this.user = user;
 		this.liga = liga;
-		this.punkte = 0;
+		this.spielort = "Unbennantes Stadion";
 	}
 	
 	public Team() {
@@ -98,12 +98,12 @@ public class Team implements Comparable<Team>{
 		this.liga = liga;
 	}
 
-	public int getPunkte() {
-		return punkte;
+	public String getSpielort() {
+		return spielort;
 	}
 
-	public void setPunkte(int punkte) {
-		this.punkte = punkte;
+	public void setSpielort(String spielort) {
+		this.spielort = spielort;
 	}
 
 	public int getMaximaleSpielerAnzahl() {
