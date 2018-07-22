@@ -31,10 +31,9 @@ public class FussballmanagerTestData {
 	
 	@Autowired
 	LigaService ligaService;
-	
+
 	@Autowired
 	TeamService teamService;
-	
 	@Autowired
 	SpielerService spielerService;
 	

@@ -2,11 +2,11 @@ package fussballmanager.service.land;
 
 public enum LaenderNamenTypen {
 	
-	DEUTSCHLAND("Deutschland"),
-	ENGLAND("England"),
-	SPANIEN("Spanien"),
-	ITALIEN("Italien"),
-	FRANKREICH("Frankreich"),;
+	DEUTSCHLAND("Deutschland");
+//	ENGLAND("England"),
+//	SPANIEN("Spanien"),
+//	ITALIEN("Italien"),
+//	FRANKREICH("Frankreich");
     
     private final String name;
     

@@ -1,9 +1,7 @@
 package fussballmanager.service.team;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,7 +72,7 @@ public class TeamService {
 		return alleTeamsEinesUsers;
 	}
 	
-	public List<Team> findeAlleTeamsEinerLiga(Liga liga) {
+	public List<Team> findeAlleTeamsEinerLiga(Liga liga) {		
 		List<Team> alleTeamsEinerLiga =  new ArrayList<>();
 		
 		for(Team team : findeAlleTeams()) {
@@ -100,9 +98,11 @@ public class TeamService {
 	}
 	
 	public void dummyHauptteamsErstellen(Liga liga) {
-		String standardName = "Dummy Team";
-		
 		for(int i = 0; i < liga.getGroeße(); i++) {
+			StringBuilder sb = new StringBuilder("Dummy Team");
+			sb.append (i);
+			String standardName = sb.toString();
+			
 			legeTeamAn(new Team(liga.getLand(), standardName, null, liga));
 			LOG.info("DummyHauptTeam: {} wurde in der Liga: {} angelegt.", standardName, liga.getLigaNameTyp());
 		}
