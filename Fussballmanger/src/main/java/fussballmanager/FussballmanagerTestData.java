@@ -7,8 +7,6 @@ import java.util.Random;
 
 import javax.annotation.PostConstruct;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -19,7 +17,6 @@ import fussballmanager.service.saison.spieltag.SpieltagService;
 import fussballmanager.service.spiel.SpielService;
 import fussballmanager.service.spieler.SpielerService;
 import fussballmanager.service.team.TeamService;
-import fussballmanager.service.torversuch.TorVersuchService;
 import fussballmanager.service.user.User;
 import fussballmanager.service.user.UserService;
 
@@ -50,9 +47,6 @@ public class FussballmanagerTestData {
 	
 	@Autowired
 	SpielService spielService;
-	
-	@Autowired
-	TorVersuchService torService;
 		
 	LocalDateTime spielbeginn = LocalDateTime.of(LocalDate.of(2018, 4 , 16), LocalTime.of(18, 30));
 	LocalDateTime spielbeginn1 = LocalDateTime.of(LocalDate.of(2018, 4 , 18), LocalTime.of(18, 30));

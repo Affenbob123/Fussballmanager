@@ -20,7 +20,6 @@ import fussballmanager.service.saison.spieltag.SpieltagService;
 import fussballmanager.service.spiel.SpielService;
 import fussballmanager.service.spieler.SpielerService;
 import fussballmanager.service.team.TeamService;
-import fussballmanager.service.torversuch.TorVersuchService;
 import fussballmanager.service.user.UserService;
 
 @Service
@@ -50,9 +49,6 @@ public class FussballmanagerErstellung {
 	
 	@Autowired
 	SpielService spielService;
-	
-	@Autowired
-	TorVersuchService torService;
 	
 	public FussballmanagerErstellung() {
 
