@@ -67,8 +67,16 @@ public class SaisonService {
 	}
 	
 	public void legeSaisonAn(Saison saison) {
-		LOG.info("Saison: {} angelegt", saison.getSaisonNummer());
+		if(findeAlleSaisons().size() > 1) {
+			Saison alteSaison = findeAktuelleSaison();
+			alteSaison.setAktuelleSaison(false);
+			aktualisiereSaison(alteSaison);
+			LOG.info("Saison: {} angelegt und ist: {}", findeSaison(alteSaison.getId()).getSaisonNummer(), findeSaison(alteSaison.getId()).isAktuelleSaison());
+		}
+			
+		saison.setAktuelleSaison(true);
 		saisonRepository.save(saison);
+		LOG.info("Saison: {} angelegt und ist: {}", saison.getSaisonNummer(), saison.isAktuelleSaison());
 		
 		spieltagService.erstelleAlleSpieltageFuerEineSaison(findeLetzteSasion());
 		erstelleSpieleFuerEineSaison(saison);

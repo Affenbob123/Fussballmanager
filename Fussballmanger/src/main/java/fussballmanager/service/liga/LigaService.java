@@ -92,7 +92,7 @@ public class LigaService {
 	public void legeHauptteamLigenAn(Land land) {
 		for(LigenNamenTypen ligaNamenTypen : LigenNamenTypen.values()) {
 			legeLigaAn(new Liga(ligaNamenTypen, landService.findeLand(land.getLandNameTyp())));
-			LOG.info("Land: {} und die Hauptteamliga: {} ist erstellt worden", land.getLandNameTyp(), ligaNamenTypen.getName());
+			LOG.info("Die Hauptteamliga: {} ist erstellt worden", ligaNamenTypen.getName());
 		}
 	}
 }

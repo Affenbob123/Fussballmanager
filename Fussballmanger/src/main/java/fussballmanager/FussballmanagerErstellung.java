@@ -58,17 +58,16 @@ public class FussballmanagerErstellung {
 
 	}
 	
-	@Scheduled(fixedDelay=100)
+	//@Scheduled(fixedDelay=100)
+	@PostConstruct
 	public void checkTimeForCreation() {
 		LocalDateTime aktuellesDatum = LocalDateTime.now(ZoneId.of("Europe/Berlin"));
-		LocalDateTime erstellDatum = LocalDateTime.of(2018, 7, 23, 9, 34);
+		LocalDateTime erstellDatum = LocalDateTime.of(2018, 7, 23, 10, 03);
 		
-//		if(aktuellesDatum.isAfter(erstellDatum) || aktuellesDatum.isEqual(erstellDatum)) {
-//			erstelleSpiel();
-//		}
-		
-		erstelleSpiel();
-	}
+		if(aktuellesDatum.isAfter(erstellDatum) || aktuellesDatum.isEqual(erstellDatum)) {
+			erstelleSpiel();
+		}
+}
 	
 	public void erstelleSpiel() {
 		if(landService.findeAlleLaender().size() == 0) {

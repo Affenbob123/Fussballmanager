@@ -42,6 +42,7 @@ public class LandService {
 	
 	public void legeLandAn(Land land) {
 		landRepository.save(land);
+		LOG.info("Land: {} ist erstellt worden", land.getLandNameTyp().getName());
 	}
 	
 	public void aktualisiereLand(Land land) {
