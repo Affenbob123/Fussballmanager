@@ -31,17 +31,6 @@ public class LandService {
 	
 	@Autowired
 	SaisonService saisonService;
-	
-	@PostConstruct
-	public synchronized void erstelleLaender() {
-		if(landRepository.count() == 0) {
-			for(LaenderNamenTypen laenderNamenTypen : LaenderNamenTypen.values()) {
-				legeLandAn(new Land(laenderNamenTypen));
-				ligaService.legeHauptteamLigenAn(findeLand(laenderNamenTypen));
-			}
-		}
-		saisonService.ersteSaisonErstellen();
-	}
 
 	public Land findeLand(LaenderNamenTypen laenderNamenTypen) {
 		return landRepository.getOne(laenderNamenTypen);

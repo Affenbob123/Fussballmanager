@@ -35,15 +35,21 @@ public class SaisonService {
 	
 	public synchronized void ersteSaisonErstellen() {
 		if(findeAlleSaisons().size() < 1) {
-			Saison saison = new Saison(findeAlleSaisons().size() + 1);
+			Saison saison = new Saison(1);
+			saison.setAktuelleSaison(true);
 			legeSaisonAn(saison);
-			spieltagService.erstelleAlleSpieltageFuerEineSaison(findeAlleSaisons().get(0));
-			erstelleSpieleFuerEineSaison(saison);
+			spieltagService.findeSpieltagDurchSpieltagUndSaison(0, saison).setAktuellerSpieltag(true);
 		}
+		LOG.info("aktuelle Saison: {} aktueller Spieltag: {}", findeAktuelleSaison().getSaisonNummer(), 
+				spieltagService.findeAktuellenSpieltag().getSpieltagNummer());
 	}
 
 	public Saison findeSaison(Long id) {
 		return saisonRepository.getOne(id);
+	}
+	
+	public Saison findeLetzteSasion() {
+		return findeAlleSaisons().get(findeAlleSaisons().size() -1);
 	}
 	
 	public List<Saison> findeAlleSaisons() {
@@ -51,12 +57,21 @@ public class SaisonService {
 	}
 	
 	public Saison findeAktuelleSaison() {
-		return findeAlleSaisons().get(findeAlleSaisons().size()-1);
+		for(Saison saison : findeAlleSaisons()) {
+			if(saison.isAktuelleSaison()) {
+				return saison;
+			}
+		}
+		LOG.error("FEHLER BEIM FINDEN DER AKTUELLEN SAISON!!!");
+		return findeAlleSaisons().get(findeAlleSaisons().size() - 1 );
 	}
 	
 	public void legeSaisonAn(Saison saison) {
-		LOG.info("Saison: {} angelegt", saison.getSaisonAnzahl());
+		LOG.info("Saison: {} angelegt", saison.getSaisonNummer());
 		saisonRepository.save(saison);
+		
+		spieltagService.erstelleAlleSpieltageFuerEineSaison(findeLetzteSasion());
+		erstelleSpieleFuerEineSaison(saison);
 	}
 
 	public void aktualisiereSaison(Saison saison) {
@@ -70,7 +85,7 @@ public class SaisonService {
 	private void erstelleSpieleFuerEineSaison(Saison saison) {
 		for(Liga liga : ligaService.findeAlleLigen()) {
 			spielService.erstelleSpieleFuerEineLiga(liga);
-			LOG.info("Spiele für die Saison: {} und Liga: {} wurde angelegt.", saison.getSaisonAnzahl(), liga.getLigaNameTyp().getName());
+			LOG.info("Spiele für die Saison: {} und Liga: {} wurde angelegt.", saison.getSaisonNummer(), liga.getLigaNameTyp().getName());
 		}
 	}
 }

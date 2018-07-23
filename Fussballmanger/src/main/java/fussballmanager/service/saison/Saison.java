@@ -12,12 +12,14 @@ public class Saison {
 	@GeneratedValue(strategy=GenerationType.SEQUENCE)
 	private long id;
 	
-	private int saisonAnzahl;
+	private int saisonNummer;
 	
 	private final int  Spieltage = 35;
+	
+	private boolean aktuelleSaison = false;
 		
-	public Saison(int saisonAnzahl) {
-		this.saisonAnzahl = saisonAnzahl;
+	public Saison(int saisonNummer) {
+		this.saisonNummer = saisonNummer;
 	}
 	
 	public Saison() {
@@ -32,15 +34,23 @@ public class Saison {
 		this.id = id;
 	}
 
-	public int getSaisonAnzahl() {
-		return saisonAnzahl;
+	public int getSaisonNummer() {
+		return saisonNummer;
 	}
 
-	public void setSaisonAnzahl(int saisonAnzahl) {
-		this.saisonAnzahl = saisonAnzahl;
+	public void setSaisonNummer(int saisonAnzahl) {
+		this.saisonNummer = saisonAnzahl;
 	}
 
 	public int getSpieltage() {
 		return Spieltage;
+	}
+
+	public boolean isAktuelleSaison() {
+		return aktuelleSaison;
+	}
+
+	public void setAktuelleSaison(boolean aktuelleSaison) {
+		this.aktuelleSaison = aktuelleSaison;
 	}
 }

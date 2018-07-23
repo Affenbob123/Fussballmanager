@@ -26,7 +26,7 @@ public class SpieltagService {
 	public Spieltag findeSpieltagDurchSpieltagUndSaison(int spieltag, Saison saison) {
 		for(Spieltag s : findeAlleSpieltage()) {
 			if(s.getSaison().equals(saison)) {
-				if(s.getDerSpieltag() == (spieltag)) {
+				if(s.getSpieltagNummer() == (spieltag)) {
 					return s;
 				}
 			}
@@ -36,6 +36,16 @@ public class SpieltagService {
 	
 	public List<Spieltag> findeAlleSpieltage() {
 		return spieltagRepository.findAll();
+	}
+	
+	public Spieltag findeAktuellenSpieltag() {
+		for(Spieltag spieltage : findeAlleSpieltage()) {
+			if(spieltage.isAktuellerSpieltag()) {
+				return spieltage;
+			}
+		}
+		LOG.error("FEHLER BEIM FINDEN DER AKTUELLEN SPIELTAGES!!!");
+		return findeAlleSpieltage().get(findeAlleSpieltage().size() - 1 );
 	}
 	
 	public void legeSpieltagAn(Spieltag spieltag) {
@@ -51,9 +61,13 @@ public class SpieltagService {
 	}
 
 	public void erstelleAlleSpieltageFuerEineSaison(Saison saison) {
-		for(int i = 0; i < saison.getSpieltage(); i++) {
+		for(int i = 0; i <= saison.getSpieltage(); i++) {
 			legeSpieltagAn(new Spieltag(i, saison));
-			LOG.info("Spieltag: {}, Saison: {}", i, saison.getSaisonAnzahl());
+			LOG.info("Spieltag: {}, Saison: {}", i, saison.getSaisonNummer());
 		}
+	}
+	
+	public void checkAktuellerSpieltag() {
+		
 	}
 }

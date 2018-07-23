@@ -15,13 +15,15 @@ public class Spieltag {
 	@GeneratedValue(strategy=GenerationType.SEQUENCE)
 	private long id;
 
-	private int derSpieltag;
+	private int spieltagNummer;
 	
 	@ManyToOne
 	private Saison saison;
 	
-	public Spieltag(int derSpieltag, Saison saison) {
-		this.derSpieltag = derSpieltag;
+	private boolean AktuellerSpieltag = false;
+	
+	public Spieltag(int spieltagNummer, Saison saison) {
+		this.spieltagNummer = spieltagNummer;
 		this.saison = saison;
 	}
 	
@@ -37,12 +39,12 @@ public class Spieltag {
 		this.id = id;
 	}
 
-	public int getDerSpieltag() {
-		return derSpieltag;
+	public int getSpieltagNummer() {
+		return spieltagNummer;
 	}
 
-	public void setDerSpieltag(int derSpieltag) {
-		this.derSpieltag = derSpieltag;
+	public void setSpieltagNummer(int spieltagNummer) {
+		this.spieltagNummer = spieltagNummer;
 	}
 
 	public Saison getSaison() {
@@ -51,5 +53,13 @@ public class Spieltag {
 
 	public void setSaison(Saison saison) {
 		this.saison = saison;
+	}
+
+	public boolean isAktuellerSpieltag() {
+		return AktuellerSpieltag;
+	}
+
+	public void setAktuellerSpieltag(boolean istAktuellerSpieltag) {
+		this.AktuellerSpieltag = istAktuellerSpieltag;
 	}
 }
