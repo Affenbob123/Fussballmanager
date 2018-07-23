@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fussballmanager.service.saison.Saison;
 import fussballmanager.service.saison.SaisonService;
+import fussballmanager.service.spiel.Spiel;
+import fussballmanager.service.spiel.SpielService;
 
 @Service
 @Transactional
@@ -23,6 +25,9 @@ public class SpieltagService {
 
 	@Autowired
 	SaisonService saisonService;
+	
+	@Autowired
+	SpielService spielService;
 	
 	public Spieltag findeSpieltag(Long id) {
 		return spieltagRepository.getOne(id);
@@ -97,9 +102,8 @@ public class SpieltagService {
 		LOG.info("Alter Spieltag: {}, Status: {}", alterSpieltag.getSpieltagNummer(), alterSpieltag.isAktuellerSpieltag());
 	}
 	
-	@Scheduled(fixedDelay=1000)
+	//@Scheduled(fixedDelay=1000)
 	public void checkAktuellerSpieltag() {
-		
 		if(findeAktuellenSpieltag().getSpieltagNummer() >= saisonService.findeAktuelleSaison().getSpieltage()) {
 			// aktuellen Spieltag der alten Saison auf false setzten
 			Spieltag aktuellerSpieltagDerAltenSaison = findeAktuellenSpieltag();
@@ -109,6 +113,12 @@ public class SpieltagService {
 			saisonService.legeSaisonAn(new Saison(saisonService.findeLetzteSasion().getSaisonNummer() + 1));
 		} else {
 			wechsleAktuellenSpieltag();
+		}
+	}
+	
+	public void simuliereSpieltag() {
+		for(Spiel spiel : spielService.findeAlleSpieleEinesSpieltages(findeAktuellenSpieltag())) {
+			spielService.spielSimulieren(spiel);
 		}
 	}
 }

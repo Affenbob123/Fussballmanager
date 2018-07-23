@@ -1,18 +1,15 @@
 package fussballmanager.service.spiel;
 
 import java.time.LocalTime;
-import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 
 import fussballmanager.service.saison.spieltag.Spieltag;
 import fussballmanager.service.team.Team;
-import fussballmanager.service.torversuch.Torversuch;
 
 @Entity
 public class Spiel {
@@ -26,12 +23,6 @@ public class Spiel {
 	
 	@ManyToOne
 	private Team gastmannschaft;
-	
-	@OneToMany
-	private List<Torversuch> toreHeimMannschaft;
-	
-	@OneToMany
-	private List<Torversuch> toreGastMannschaft;
 	
 	@ManyToOne
 	private Spieltag spieltag;
@@ -75,30 +66,6 @@ public class Spiel {
 
 	public void setGastmannschaft(Team gastmannschaft) {
 		this.gastmannschaft = gastmannschaft;
-	}
-
-	public List<Torversuch> getToreHeimMannschaft() {
-		return toreHeimMannschaft;
-	}
-
-	public void setToreHeimMannschaft(List<Torversuch> toreHeimMannschaft) {
-		this.toreHeimMannschaft = toreHeimMannschaft;
-	}
-	
-	public void addToreHeimMannschaft(Torversuch tor) {
-		toreHeimMannschaft.add(tor);
-	}
-
-	public List<Torversuch> getToreGastMannschaft() {
-		return toreGastMannschaft;
-	}
-
-	public void setToreGastMannschaft(List<Torversuch> toreGastMannschaft) {
-		this.toreGastMannschaft = toreGastMannschaft;
-	}
-	
-	public void addToreGastMannschaft(Torversuch tor) {
-		toreGastMannschaft.add(tor);
 	}
 
 	public LocalTime getSpielbeginn() {

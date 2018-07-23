@@ -15,7 +15,7 @@ import fussballmanager.service.spieler.spielerzuwachs.SpielerZuwachs;
 import fussballmanager.service.team.Team;
 
 @Entity
-public class Spieler implements Comparable<Spieler>{
+public class Spieler implements Comparable<Spieler> {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE)

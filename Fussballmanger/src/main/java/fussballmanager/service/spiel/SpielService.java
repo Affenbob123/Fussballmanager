@@ -10,12 +10,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import fussballmanager.service.liga.Liga;
-import fussballmanager.service.saison.Saison;
 import fussballmanager.service.saison.SaisonService;
 import fussballmanager.service.saison.spieltag.Spieltag;
 import fussballmanager.service.saison.spieltag.SpieltagService;
+import fussballmanager.service.spielereignisse.SpielEreignisService;
 import fussballmanager.service.team.Team;
 import fussballmanager.service.team.TeamService;
+import fussballmanager.spielsimulation.SpielMinute;
 
 @Service
 @Transactional
@@ -34,6 +35,12 @@ public class SpielService {
 	
 	@Autowired
 	SpieltagService spieltagService;
+	
+	@Autowired
+	SpielEreignisService spielEreignisService;
+	
+	@Autowired
+	SpielMinute spielMinute;
 
 	public Spiel findeSpiel(Long id) {
 		return spielRepository.getOne(id);
@@ -54,6 +61,17 @@ public class SpielService {
 		return alleSpieleEinerLiga;
 	}
 	
+	public List<Spiel> findeAlleSpieleEinesSpieltages(Spieltag spieltag) {
+		List<Spiel> alleSpieleEinesSpieltages = new ArrayList<>();
+		
+		for(Spiel spiel : findeAlleSpiele()) {
+			if(spiel.getSpieltag().equals(spieltag)) {
+				alleSpieleEinesSpieltages.add(spiel);
+			}
+		}
+		return alleSpieleEinesSpieltages;
+	}
+	
 	public void legeSpielAn(Spiel spiel) {
 		spielRepository.save(spiel);
 	}
@@ -64,6 +82,12 @@ public class SpielService {
 	
 	public void loescheSpiel(Spiel spiel) {
 		spielRepository.delete(spiel);
+	}
+	
+	public void spielSimulieren(Spiel spiel) {
+		for(int i = 0; i < 30; i++) {
+			spielMinute.simuliereSpielminute(spiel, i);
+		}
 	}
 
 	public void erstelleSpieleFuerEineLiga(Liga liga) {
