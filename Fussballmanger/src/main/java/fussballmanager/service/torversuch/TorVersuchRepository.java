@@ -1,9 +1,9 @@
-package fussballmanager.service.tor;
+package fussballmanager.service.torversuch;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TorRepository extends JpaRepository<Tor, Long> {
+public interface TorVersuchRepository extends JpaRepository<Torversuch, Long> {
 
 }

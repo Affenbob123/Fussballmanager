@@ -12,7 +12,7 @@ import javax.persistence.OneToMany;
 
 import fussballmanager.service.saison.Saison;
 import fussballmanager.service.team.Team;
-import fussballmanager.service.tor.Tor;
+import fussballmanager.service.torversuch.Torversuch;
 
 @Entity
 public class Spiel {
@@ -28,10 +28,10 @@ public class Spiel {
 	private Team gastmannschaft;
 	
 	@OneToMany
-	private List<Tor> toreHeimMannschaft;
+	private List<Torversuch> toreHeimMannschaft;
 	
 	@OneToMany
-	private List<Tor> toreGastMannschaft;
+	private List<Torversuch> toreGastMannschaft;
 	
 	private int spieltag;
 	
@@ -79,27 +79,27 @@ public class Spiel {
 		this.gastmannschaft = gastmannschaft;
 	}
 
-	public List<Tor> getToreHeimMannschaft() {
+	public List<Torversuch> getToreHeimMannschaft() {
 		return toreHeimMannschaft;
 	}
 
-	public void setToreHeimMannschaft(List<Tor> toreHeimMannschaft) {
+	public void setToreHeimMannschaft(List<Torversuch> toreHeimMannschaft) {
 		this.toreHeimMannschaft = toreHeimMannschaft;
 	}
 	
-	public void addToreHeimMannschaft(Tor tor) {
+	public void addToreHeimMannschaft(Torversuch tor) {
 		toreHeimMannschaft.add(tor);
 	}
 
-	public List<Tor> getToreGastMannschaft() {
+	public List<Torversuch> getToreGastMannschaft() {
 		return toreGastMannschaft;
 	}
 
-	public void setToreGastMannschaft(List<Tor> toreGastMannschaft) {
+	public void setToreGastMannschaft(List<Torversuch> toreGastMannschaft) {
 		this.toreGastMannschaft = toreGastMannschaft;
 	}
 	
-	public void addToreGastMannschaft(Tor tor) {
+	public void addToreGastMannschaft(Torversuch tor) {
 		toreGastMannschaft.add(tor);
 	}
 

@@ -1,4 +1,4 @@
-package fussballmanager.service.tor;
+package fussballmanager.service.torversuch;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,24 +11,27 @@ import fussballmanager.service.spiel.Spiel;
 import fussballmanager.service.spieler.Spieler;
 
 @Entity
-public class Tor {
+public class Torversuch {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE)
 	private long id;
 
 	@OneToOne
-	private Spieler torschuetze;
+	private Spieler spieler;
 	
 	private int spielminute;
 	
 	@ManyToOne
 	private Spiel spiel;
 	
-	public Tor(Spieler torschuetze, int spielminute, Spiel spiel) {
-		this.torschuetze = torschuetze;
+	private TorVersuchTypen torVersuchTyp;
+	
+	public Torversuch(Spieler spieler, int spielminute, Spiel spiel, TorVersuchTypen torVersuchTyp) {
+		this.spieler = spieler;
 		this.spielminute = spielminute;
 		this.spiel = spiel;
+		this.torVersuchTyp = torVersuchTyp;
 	}
 
 	public long getId() {
@@ -37,14 +40,6 @@ public class Tor {
 
 	public void setId(long id) {
 		this.id = id;
-	}
-
-	public Spieler getTorschuetze() {
-		return torschuetze;
-	}
-
-	public void setTorschuetze(Spieler torschuetze) {
-		this.torschuetze = torschuetze;
 	}
 
 	public int getSpielminute() {
@@ -61,5 +56,21 @@ public class Tor {
 
 	public void setSpiel(Spiel spiel) {
 		this.spiel = spiel;
+	}
+
+	public Spieler getSpieler() {
+		return spieler;
+	}
+
+	public void setSpieler(Spieler spieler) {
+		this.spieler = spieler;
+	}
+
+	public TorVersuchTypen getTorVersuchTyp() {
+		return torVersuchTyp;
+	}
+
+	public void setTorVersuchTyp(TorVersuchTypen torVersuchTyp) {
+		this.torVersuchTyp = torVersuchTyp;
 	}
 }

@@ -17,7 +17,7 @@ import fussballmanager.service.liga.LigaService;
 import fussballmanager.service.spiel.SpielService;
 import fussballmanager.service.spieler.SpielerService;
 import fussballmanager.service.team.TeamService;
-import fussballmanager.service.tor.TorService;
+import fussballmanager.service.torversuch.TorVersuchService;
 import fussballmanager.service.user.User;
 import fussballmanager.service.user.UserService;
 
@@ -44,7 +44,7 @@ public class FussballmanagerTestData {
 	SpielService spielService;
 	
 	@Autowired
-	TorService torService;
+	TorVersuchService torService;
 		
 	LocalDateTime spielbeginn = LocalDateTime.of(LocalDate.of(2018, 4 , 16), LocalTime.of(18, 30));
 	LocalDateTime spielbeginn1 = LocalDateTime.of(LocalDate.of(2018, 4 , 18), LocalTime.of(18, 30));
