@@ -104,7 +104,7 @@ public class TeamService {
 			String standardName = sb.toString();
 			
 			legeTeamAn(new Team(liga.getLand(), standardName, null, liga));
-			LOG.info("DummyHauptTeam: {} wurde in der Liga: {} angelegt.", standardName, liga.getLigaNameTyp());
+			//LOG.info("DummyHauptTeam: {} wurde in der Liga: {} angelegt.", standardName, liga.getLigaNameTyp());
 		}
 	}
 

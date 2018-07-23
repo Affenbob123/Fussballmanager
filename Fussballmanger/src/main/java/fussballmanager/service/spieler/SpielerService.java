@@ -52,8 +52,8 @@ public class SpielerService {
 	
 	public void legeSpielerAn(Spieler spieler) {
 		spielerRepository.save(spieler);
-		LOG.info("Spieler mit Talentwert: {} und der Position: {} im Team: {} wurde angelegt.", spieler.getTalentwert(), 
-			spieler.getPosition().getPositionsName(), spieler.getTeam().getName());
+//		LOG.info("Spieler mit Talentwert: {} und der Position: {} im Team: {} wurde angelegt.", spieler.getTalentwert(), 
+//			spieler.getPosition().getPositionsName(), spieler.getTeam().getName());
 	}
 	
 	public void aktualisiereSpieler(Spieler spieler) {

@@ -2,6 +2,8 @@ package fussballmanager.service.saison;
 
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fussballmanager.service.liga.Liga;
 import fussballmanager.service.liga.LigaService;
+import fussballmanager.service.saison.spieltag.SpieltagService;
 import fussballmanager.service.spiel.SpielService;
-import fussballmanager.service.user.UserService;
 
 @Service
 @Transactional
@@ -27,6 +29,18 @@ public class SaisonService {
 	
 	@Autowired
 	LigaService ligaService;
+	
+	@Autowired
+	SpieltagService spieltagService;
+	
+	public synchronized void ersteSaisonErstellen() {
+		if(findeAlleSaisons().size() < 1) {
+			Saison saison = new Saison(findeAlleSaisons().size() + 1);
+			legeSaisonAn(saison);
+			spieltagService.erstelleAlleSpieltageFuerEineSaison(findeAlleSaisons().get(0));
+			erstelleSpieleFuerEineSaison(saison);
+		}
+	}
 
 	public Saison findeSaison(Long id) {
 		return saisonRepository.getOne(id);
@@ -36,11 +50,13 @@ public class SaisonService {
 		return saisonRepository.findAll();
 	}
 	
+	public Saison findeAktuelleSaison() {
+		return findeAlleSaisons().get(findeAlleSaisons().size()-1);
+	}
+	
 	public void legeSaisonAn(Saison saison) {
-		saison.setId(findeAlleSaisons().size() + 1);
+		LOG.info("Saison: {} angelegt", saison.getSaisonAnzahl());
 		saisonRepository.save(saison);
-		
-		erstelleSpieleFuerEineSaison(findeSaison(saison.getId()));
 	}
 
 	public void aktualisiereSaison(Saison saison) {
@@ -54,7 +70,7 @@ public class SaisonService {
 	private void erstelleSpieleFuerEineSaison(Saison saison) {
 		for(Liga liga : ligaService.findeAlleLigen()) {
 			spielService.erstelleSpieleFuerEineLiga(liga);
-			LOG.info("Spiele für die Saison: {} und Liga: {} wurde angelegt.", saison.getId(), liga.getLigaNameTyp().getName());
+			LOG.info("Spiele für die Saison: {} und Liga: {} wurde angelegt.", saison.getSaisonAnzahl(), liga.getLigaNameTyp().getName());
 		}
 	}
 }

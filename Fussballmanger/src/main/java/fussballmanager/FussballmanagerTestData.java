@@ -14,6 +14,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import fussballmanager.service.land.LandService;
 import fussballmanager.service.liga.LigaService;
+import fussballmanager.service.saison.SaisonService;
+import fussballmanager.service.saison.spieltag.SpieltagService;
 import fussballmanager.service.spiel.SpielService;
 import fussballmanager.service.spieler.SpielerService;
 import fussballmanager.service.team.TeamService;
@@ -28,6 +30,12 @@ public class FussballmanagerTestData {
 	
 	@Autowired
 	LandService landService;
+	
+	@Autowired
+	SaisonService saisonService;
+	
+	@Autowired
+	SpieltagService spieltagService;
 	
 	@Autowired
 	LigaService ligaService;

@@ -11,6 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fussballmanager.service.liga.Liga;
 import fussballmanager.service.saison.Saison;
+import fussballmanager.service.saison.SaisonService;
+import fussballmanager.service.saison.spieltag.Spieltag;
+import fussballmanager.service.saison.spieltag.SpieltagService;
 import fussballmanager.service.team.Team;
 import fussballmanager.service.team.TeamService;
 
@@ -25,6 +28,12 @@ public class SpielService {
 	
 	@Autowired
 	TeamService teamService;
+	
+	@Autowired
+	SaisonService saisonService;
+	
+	@Autowired
+	SpieltagService spieltagService;
 
 	public Spiel findeSpiel(Long id) {
 		return spielRepository.getOne(id);
@@ -61,8 +70,10 @@ public class SpielService {
     	List<Team> alleTeamsEinerLiga = teamService.findeAlleTeamsEinerLiga(liga);
 		for (int i=0; i < alleTeamsEinerLiga.size() - 1; i++) {
 			if(i%2 == 0) {
-				int spieltagHinspiel = 1;
-				int spieltagRueckspiel = 18;
+				int spieltagHinspielZahl = 1;
+				int spieltagRueckspielZahl = 18;
+				Spieltag spieltagHinspiel = spieltagService.findeSpieltagDurchSpieltagUndSaison(spieltagHinspielZahl, saisonService.findeAktuelleSaison());
+				Spieltag spieltagRueckspiel = spieltagService.findeSpieltagDurchSpieltagUndSaison(spieltagRueckspielZahl, saisonService.findeAktuelleSaison());
 				
 			    for (int j=i+1; j < alleTeamsEinerLiga.size(); j++) {
 			    	Spiel spielHinspiel = new Spiel();
@@ -87,13 +98,15 @@ public class SpielService {
 //			    			spielRueckspiel.getGastmannschaft().getName(), liga.getLigaNameTyp().getName());
 			    	
 			    	legeSpielAn(spielRueckspiel);
-			    	spieltagHinspiel++;
-			    	spieltagRueckspiel++;
+			    	spieltagHinspielZahl++;
+			    	spieltagRueckspielZahl++;
 			    	
 			    }
 			} else {
-				int spieltagHinspiel = 17;
-				int spieltagRueckspiel = 34;
+				int spieltagHinspielZahl = 17;
+				int spieltagRueckspielZahl = 34;
+				Spieltag spieltagHinspiel = spieltagService.findeSpieltagDurchSpieltagUndSaison(spieltagHinspielZahl, saisonService.findeAktuelleSaison());
+				Spieltag spieltagRueckspiel = spieltagService.findeSpieltagDurchSpieltagUndSaison(spieltagRueckspielZahl, saisonService.findeAktuelleSaison());
 				
 			    for (int j=i+1; j < teamService.findeAlleTeamsEinerLiga(liga).size(); j++) {
 			    	Spiel spielHinspiel = new Spiel();
@@ -118,8 +131,8 @@ public class SpielService {
 //			    			spielRueckspiel.getGastmannschaft().getName(), liga.getLigaNameTyp().getName());
 			    	
 			    	legeSpielAn(spielRueckspiel);
-			    	spieltagHinspiel--;
-			    	spieltagRueckspiel--;
+			    	spieltagHinspielZahl--;
+			    	spieltagRueckspielZahl--;
 			    	
 			    }
 			}

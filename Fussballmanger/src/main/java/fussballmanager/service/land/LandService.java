@@ -34,14 +34,13 @@ public class LandService {
 	
 	@PostConstruct
 	public synchronized void erstelleLaender() {
-		Saison saison = new Saison();
 		if(landRepository.count() == 0) {
 			for(LaenderNamenTypen laenderNamenTypen : LaenderNamenTypen.values()) {
 				legeLandAn(new Land(laenderNamenTypen));
 				ligaService.legeHauptteamLigenAn(findeLand(laenderNamenTypen));
 			}
 		}
-		saisonService.legeSaisonAn(saison);
+		saisonService.ersteSaisonErstellen();
 	}
 
 	public Land findeLand(LaenderNamenTypen laenderNamenTypen) {

@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import fussballmanager.service.saison.Saison;
+import fussballmanager.service.saison.spieltag.Spieltag;
 import fussballmanager.service.team.Team;
 import fussballmanager.service.torversuch.Torversuch;
 
@@ -33,22 +33,20 @@ public class Spiel {
 	@OneToMany
 	private List<Torversuch> toreGastMannschaft;
 	
-	private int spieltag;
+	@ManyToOne
+	private Spieltag spieltag;
 	
 	private LocalTime spielbeginn;
 	
 	private String spielort;
-	
-	@ManyToOne
-	private Saison saison;
 
-	public Spiel(Team heimmannschaft, Team gastmannschaft, LocalTime spielbeginn, 
-			String spielort, Saison saison) {
+	public Spiel(Team heimmannschaft, Team gastmannschaft, LocalTime spielbeginn, Spieltag spieltag,
+			String spielort) {
 		this.heimmannschaft = heimmannschaft;
 		this.gastmannschaft = gastmannschaft;
 		this.spielbeginn = spielbeginn;
+		this.spieltag = spieltag;
 		this.spielort = spielort;
-		this.saison = saison;
 	}
 	
 	public Spiel() {
@@ -111,11 +109,11 @@ public class Spiel {
 		this.spielbeginn = spielbeginn;
 	}
 
-	public int getSpieltag() {
+	public Spieltag getSpieltag() {
 		return spieltag;
 	}
 
-	public void setSpieltag(int spieltag) {
+	public void setSpieltag(Spieltag spieltag) {
 		this.spieltag = spieltag;
 	}
 
@@ -125,13 +123,5 @@ public class Spiel {
 
 	public void setSpielort(String spielort) {
 		this.spielort = spielort;
-	}
-
-	public Saison getSaison() {
-		return saison;
-	}
-
-	public void setSaison(Saison saison) {
-		this.saison = saison;
 	}
 }
