@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import fussballmanager.service.liga.LigaService;
 import fussballmanager.service.spiel.SpielService;
-import fussballmanager.service.spielereignisse.SpielEreignisService;
 import fussballmanager.service.team.Team;
 import fussballmanager.service.team.TeamService;
 import fussballmanager.service.user.User;
@@ -32,9 +31,6 @@ public class LigaController {
 	
 	@Autowired
 	SpielService spielService;
-	
-	@Autowired
-	SpielEreignisService spielEreignisService;
 
 	@GetMapping("/liga/{land}/{ligaName}")
 	public String getLiga(Model model, Authentication auth, @PathVariable("land") String land, @PathVariable("ligaName") String ligaName) {
@@ -44,7 +40,6 @@ public class LigaController {
 		
 		model.addAttribute("alleTeamsDerAktuellenLiga", erstelleLigaTabelle(land, ligaName));
 		model.addAttribute("alleSpieleEinerLiga", spielService.findeAlleSpieleEinerLiga(ligaService.findeLiga(land, ligaName)));
-		model.addAttribute("alleSpielEreignisseDerLiga", spielEreignisService.findeAlleSpielEreignisseEinerLiga(ligaService.findeLiga(land, ligaName)));
 		
 		return "tabelle";
 	}

@@ -5,6 +5,7 @@ import java.time.ZoneId;
 import java.util.Timer;
 
 import javax.annotation.PostConstruct;
+import javax.persistence.Entity;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +20,18 @@ import fussballmanager.service.saison.SaisonService;
 import fussballmanager.service.saison.spieltag.SpieltagService;
 import fussballmanager.service.spiel.SpielService;
 import fussballmanager.service.spieler.SpielerService;
+import fussballmanager.service.spielereignisse.SpielEreignis;
+import fussballmanager.service.spielereignisse.SpielEreignisService;
 import fussballmanager.service.team.TeamService;
 import fussballmanager.service.user.UserService;
 
 @Service
 @Transactional
 public class FussballmanagerErstellung {
-
+	
+	@Autowired
+	SpielEreignisService spielEreignisService;
+	
 	@Autowired
 	LandService landService;
 	

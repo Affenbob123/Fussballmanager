@@ -4,10 +4,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
-import fussballmanager.service.spiel.Spiel;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+
 import fussballmanager.service.spieler.Spieler;
 
 @Entity
@@ -17,25 +18,29 @@ public class SpielEreignis {
 	@GeneratedValue(strategy=GenerationType.SEQUENCE)
 	private long id;
 	
-	int Spielminute;
+	private int Spielminute;
 	
 	@OneToOne
 	private Spieler spieler;
 	
-	@ManyToOne
-	private Spiel spiel;
-	
 	SpielEreignisTypen spielereignisTyp;
 	
-	public SpielEreignis(int spielminute, Spieler spieler, Spiel spiel, SpielEreignisTypen spielereignisTyp) {
+	public SpielEreignis(int spielminute, Spieler spieler, SpielEreignisTypen spielereignisTyp) {
 		Spielminute = spielminute;
 		this.spieler = spieler;
-		this.spiel = spiel;
 		this.spielereignisTyp = spielereignisTyp;
 	}
 
 	public SpielEreignis() {
 
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	public int getSpielminute() {
@@ -50,24 +55,8 @@ public class SpielEreignis {
 		return spieler;
 	}
 
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
 	public void setSpieler(Spieler spieler) {
 		this.spieler = spieler;
-	}
-
-	public Spiel getSpiel() {
-		return spiel;
-	}
-
-	public void setSpiel(Spiel spiel) {
-		this.spiel = spiel;
 	}
 
 	public SpielEreignisTypen getSpielereignisTyp() {

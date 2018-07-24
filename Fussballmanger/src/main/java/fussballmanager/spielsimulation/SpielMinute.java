@@ -24,6 +24,9 @@ public class SpielMinute {
 	@Autowired
 	SpielEreignisService spielEreignisService;
 	
+	@Autowired
+	SpielService spielService;
+	
 	public SpielMinute() {
 		
 	}
@@ -31,9 +34,7 @@ public class SpielMinute {
 	public SpielEreignis simuliereSpielminute(Spiel spiel, int spielminute) {
 		int zufallsZahl = ThreadLocalRandom.current().nextInt(0, 100);
 		SpielEreignis spielEreignis = new SpielEreignis();
-		
-		spielEreignis.setSpiel(spiel);
-		
+				
 		if(zufallsZahl > 10) {
 			spielEreignis.setSpielereignisTyp(SpielEreignisTypen.NIX);
 			LOG.info("Spielereignis: {}", SpielEreignisTypen.NIX);
@@ -41,8 +42,11 @@ public class SpielMinute {
 			spielEreignis.setSpielereignisTyp(SpielEreignisTypen.TORVERSUCHGETROFFEN);
 			spielEreignis.setSpieler(null);
 			spielEreignis.setSpielminute(spielminute);
-			spielEreignisService.legeSpielEreignisAn(spielEreignis);
-			LOG.info("Spielereignis: {}", spielEreignis.getSpielereignisTyp());
+			
+			spiel.addSpielEreignis(spielEreignis);
+			spielService.aktualisiereSpiel(spiel);
+			LOG.info("Spielereignis: {}, Spieler: {}, Spielminute: {}", 
+					spielEreignis.getSpielereignisTyp(), spielEreignis.getSpieler(), spielEreignis.getSpielminute());
 		}
 		return spielEreignis;
 	}

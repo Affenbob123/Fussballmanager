@@ -13,7 +13,6 @@ import fussballmanager.service.liga.Liga;
 import fussballmanager.service.saison.SaisonService;
 import fussballmanager.service.saison.spieltag.Spieltag;
 import fussballmanager.service.saison.spieltag.SpieltagService;
-import fussballmanager.service.spielereignisse.SpielEreignisService;
 import fussballmanager.service.team.Team;
 import fussballmanager.service.team.TeamService;
 import fussballmanager.spielsimulation.SpielMinute;
@@ -35,9 +34,6 @@ public class SpielService {
 	
 	@Autowired
 	SpieltagService spieltagService;
-	
-	@Autowired
-	SpielEreignisService spielEreignisService;
 	
 	@Autowired
 	SpielMinute spielMinute;

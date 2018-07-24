@@ -1,14 +1,20 @@
 package fussballmanager.service.spiel;
 
 import java.time.LocalTime;
+import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import fussballmanager.service.saison.spieltag.Spieltag;
+import fussballmanager.service.spielereignisse.SpielEreignis;
 import fussballmanager.service.team.Team;
 
 @Entity
@@ -30,6 +36,9 @@ public class Spiel {
 	private LocalTime spielbeginn;
 	
 	private String spielort;
+	
+	@OneToMany(cascade = {CascadeType.ALL})
+	private List<SpielEreignis> spielEreignisse;
 
 	public Spiel(Team heimmannschaft, Team gastmannschaft, LocalTime spielbeginn, Spieltag spieltag,
 			String spielort) {
@@ -90,5 +99,17 @@ public class Spiel {
 
 	public void setSpielort(String spielort) {
 		this.spielort = spielort;
+	}
+
+	public List<SpielEreignis> getSpielEreignisse() {
+		return spielEreignisse;
+	}
+
+	public void setSpielEreignisse(List<SpielEreignis> spielEreignisse) {
+		this.spielEreignisse = spielEreignisse;
+	}
+	
+	public void addSpielEreignis(SpielEreignis spielEreignis) {
+		this.spielEreignisse.add(spielEreignis);
 	}
 }

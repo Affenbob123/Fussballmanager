@@ -5,7 +5,6 @@
 	<div th:replace="fragments/header :: header"></div>
 	<div class="container">
 		<h2>Tabelle</h2>
-		<h2 th:text="${alleSpielEreignisseDerLiga.size()}"></h2>
 	</div>
 	<div class="container" id="containerBody">
 		<div class="alert alert-success" th:if="${successMessage}">
@@ -22,6 +21,7 @@
 						<th scope="col">Spieltag</th>
 						<th scope="col">Heimmannschaft</th>
 						<th scope="col">GastMannschaft</th>
+						<th scope="col">Spielereignisse</th>
 					</tr>
 				</thead>
 
@@ -30,6 +30,7 @@
 					<td th:text="${spiel.spieltag}" />
 					<td th:text="${spiel.heimmannschaft.getName()}" />
 					<td th:text="${spiel.gastmannschaft.getName()}" />
+					<td th:text="${spiel.spielEreignisse.size()}" />
 				</tr>
 				
 			</table>
