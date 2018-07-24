@@ -2,6 +2,7 @@ package fussballmanager.service.spieler;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,6 +13,7 @@ import javax.persistence.OneToOne;
 
 import fussballmanager.service.land.Land;
 import fussballmanager.service.spieler.spielerzuwachs.SpielerZuwachs;
+import fussballmanager.service.spieler.staerke.Staerke;
 import fussballmanager.service.team.Team;
 
 @Entity
@@ -30,7 +32,8 @@ public class Spieler implements Comparable<Spieler> {
 	
 	private int alter;
 	
-	private double staerke;
+	@OneToOne(cascade = {CascadeType.ALL})
+	private Staerke staerke;
 	
 	private int erfahrung;
 	
@@ -48,7 +51,7 @@ public class Spieler implements Comparable<Spieler> {
 	
 	private int verletzungsTage;
 
-	public Spieler(Land nationalitaet, PositionenTypen position, int alter, double staerke, int talentwert, Team team) {
+	public Spieler(Land nationalitaet, PositionenTypen position, int alter, Staerke staerke, int talentwert, Team team) {
 		this.nationalitaet = nationalitaet;
 		this.position = position;
 		this.name = "Unbennanter Spieler";
@@ -106,11 +109,11 @@ public class Spieler implements Comparable<Spieler> {
 		this.alter = alter;
 	}
 
-	public double getStaerke() {
+	public Staerke getStaerke() {
 		return staerke;
 	}
 
-	public void setStaerke(double staerke) {
+	public void setStaerke(Staerke staerke) {
 		this.staerke = staerke;
 	}
 

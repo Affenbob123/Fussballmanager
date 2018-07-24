@@ -86,7 +86,7 @@ public class TeamService {
 	public void legeTeamAn(Team team) {
 		teamRepository.save(team);
 		
-		spielerService.erstelleStandardSpieler(team);
+		spielerService.erstelleStandardSpielerFuerEinTeam(team);
 	}
 	
 	public void aktualisiereTeam(Team team) {

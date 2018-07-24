@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import fussballmanager.service.land.Land;
+import fussballmanager.service.spieler.staerke.Staerke;
 import fussballmanager.service.team.Team;
 
 @Service
@@ -64,14 +65,16 @@ public class SpielerService {
 		spielerRepository.delete(spieler);
 	}
 	
-	public void erstelleStandardSpieler(Team team) {
+	public void erstelleStandardSpielerFuerEinTeam(Team team) {
 		int alter = 17;
-		double staerke = 200.0;
+		Staerke staerke = new Staerke(200.0, 200.0, 200.0, 200.0, 200.0, 200.0);
 		Land nationalitaet = team.getLiga().getLand();
 		
 		for(PositionenTypen positionenTyp : PositionenTypen.values()) {
 			int talentwert = erzeugeZufaelligenTalentwert();
-			legeSpielerAn(new Spieler(nationalitaet, positionenTyp, alter, staerke, talentwert, team));
+			Spieler spieler = new Spieler(nationalitaet, positionenTyp, alter, staerke, talentwert, team);
+			legeSpielerAn(spieler);
+			LOG.info("Spielerstaerke: {}", spieler.getStaerke().getDurchschnittsStaerke());
 		}
 	}
 	
