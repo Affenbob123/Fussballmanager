@@ -25,6 +25,8 @@ public class Spiel {
 	@GeneratedValue(strategy=GenerationType.SEQUENCE)
 	private long id;
 	
+	private SpieleTypen spielTyp;
+	
 	@ManyToOne
 	private Team heimmannschaft;
 	
@@ -37,18 +39,17 @@ public class Spiel {
 	@ManyToOne
 	private Saison saison;
 	
-	private LocalTime spielbeginn;
-	
 	private String spielort;
 	
 	@OneToMany(cascade = {CascadeType.ALL})
 	private List<SpielEreignis> spielEreignisse;
 
-	public Spiel(Team heimmannschaft, Team gastmannschaft, LocalTime spielbeginn, Spieltag spieltag, Saison saison,
+	public Spiel(SpieleTypen spielTyp, Team heimmannschaft, Team gastmannschaft, LocalTime spielbeginn, 
+			Spieltag spieltag, Saison saison,
 			String spielort) {
 		this.heimmannschaft = heimmannschaft;
 		this.gastmannschaft = gastmannschaft;
-		this.spielbeginn = spielbeginn;
+		this.spielTyp = spielTyp;
 		this.spieltag = spieltag;
 		this.saison = saison;
 		this.spielort = spielort;
@@ -66,6 +67,14 @@ public class Spiel {
 		this.id = id;
 	}
 
+	public SpieleTypen getSpielTyp() {
+		return spielTyp;
+	}
+
+	public void setSpielTyp(SpieleTypen spielTyp) {
+		this.spielTyp = spielTyp;
+	}
+
 	public Team getHeimmannschaft() {
 		return heimmannschaft;
 	}
@@ -80,14 +89,6 @@ public class Spiel {
 
 	public void setGastmannschaft(Team gastmannschaft) {
 		this.gastmannschaft = gastmannschaft;
-	}
-
-	public LocalTime getSpielbeginn() {
-		return spielbeginn;
-	}
-
-	public void setSpielbeginn(LocalTime spielbeginn) {
-		this.spielbeginn = spielbeginn;
 	}
 
 	public Spieltag getSpieltag() {

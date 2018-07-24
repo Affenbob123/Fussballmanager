@@ -113,7 +113,9 @@ public class SpielService {
 					Spieltag spieltagRueckspiel = spieltagService.findeSpieltagDurchSpieltagUndSaison(spieltagRueckspielZahl, aktuelleSaison);
 			    	Spiel spielHinspiel = new Spiel();
 			    	Spiel spielRueckspiel = new Spiel();
+			    	
 			    	//Hinspiel
+			    	spielHinspiel.setSpielTyp(SpieleTypen.LIGASPIEL);
 			    	spielHinspiel.setHeimmannschaft(alleTeamsEinerLiga.get(i));
 			    	spielHinspiel.setGastmannschaft(alleTeamsEinerLiga.get(j));
 			    	spielHinspiel.setSpielort(alleTeamsEinerLiga.get(i).getSpielort());
@@ -125,6 +127,7 @@ public class SpielService {
 			    	legeSpielAn(spielHinspiel);
 			    	
 			    	//Rückspiel
+			    	spielRueckspiel.setSpielTyp(SpieleTypen.LIGASPIEL);
 			    	spielRueckspiel.setHeimmannschaft(alleTeamsEinerLiga.get(j));
 			    	spielRueckspiel.setGastmannschaft(alleTeamsEinerLiga.get(i));
 			    	spielRueckspiel.setSpielort(alleTeamsEinerLiga.get(j).getSpielort());
@@ -148,7 +151,9 @@ public class SpielService {
 					Spieltag spieltagRueckspiel = spieltagService.findeSpieltagDurchSpieltagUndSaison(spieltagRueckspielZahl, aktuelleSaison);
 			    	Spiel spielHinspiel = new Spiel();
 			    	Spiel spielRueckspiel = new Spiel();
+			    	
 			    	//Hinspiel
+			    	spielHinspiel.setSpielTyp(SpieleTypen.LIGASPIEL);
 			    	spielHinspiel.setHeimmannschaft(alleTeamsEinerLiga.get(i));
 			    	spielHinspiel.setGastmannschaft(alleTeamsEinerLiga.get(j));
 			    	spielHinspiel.setSpielort(alleTeamsEinerLiga.get(i).getSpielort());
@@ -160,6 +165,7 @@ public class SpielService {
 			    	legeSpielAn(spielHinspiel);
 			    	
 			    	//Rückspiel
+			    	spielRueckspiel.setSpielTyp(SpieleTypen.LIGASPIEL);
 			    	spielRueckspiel.setHeimmannschaft(alleTeamsEinerLiga.get(j));
 			    	spielRueckspiel.setGastmannschaft(alleTeamsEinerLiga.get(i));
 			    	spielRueckspiel.setSpielort(alleTeamsEinerLiga.get(j).getSpielort());
