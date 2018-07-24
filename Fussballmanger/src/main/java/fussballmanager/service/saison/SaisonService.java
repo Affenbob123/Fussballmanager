@@ -52,6 +52,15 @@ public class SaisonService {
 		return findeAlleSaisons().get(findeAlleSaisons().size() -1);
 	}
 	
+	public Saison findeSaisonDurchSaisonNummer(int saisonNummer) {
+		for(Saison saison : findeAlleSaisons()) {
+			if(saison.getSaisonNummer() == saisonNummer) {
+				return saison;
+			}
+		}
+		return null;
+	}
+	
 	public List<Saison> findeAlleSaisons() {
 		return saisonRepository.findAll();
 	}

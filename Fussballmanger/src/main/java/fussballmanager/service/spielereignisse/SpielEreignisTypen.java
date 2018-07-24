@@ -7,6 +7,7 @@ public enum SpielEreignisTypen {
 	GELBEKARTE(""),
 	GELBROTEKARTE(""),
 	ROTEKARTE(""),
+	VERLETZUNG(""),
 	NIX("");
 	
 	final String beschreibung;

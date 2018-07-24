@@ -1,5 +1,6 @@
 package fussballmanager.service.saison.spieltag;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -60,6 +61,17 @@ public class SpieltagService {
 	
 	public Spieltag findeNaechstenSpieltag() {
 		return findeSpieltagDurchSpieltagUndSaison(findeAktuellenSpieltag().getSpieltagNummer() + 1, saisonService.findeAktuelleSaison());
+	}
+	
+	public List<Spieltag> findeAlleSpieltageEinerSaison(Saison saison) {
+		List<Spieltag> alleSpieltageEinerSaison = new ArrayList<>();
+		for(Spieltag spieltag : findeAlleSpieltage()) {
+			if(spieltag.getSaison().equals(saison)) {
+				alleSpieltageEinerSaison.add(spieltag);
+			}
+		}
+		
+		return alleSpieltageEinerSaison;
 	}
 	
 	public void legeSpieltagAn(Spieltag spieltag) {

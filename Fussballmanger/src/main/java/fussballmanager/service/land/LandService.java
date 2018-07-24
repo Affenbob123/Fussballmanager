@@ -36,6 +36,15 @@ public class LandService {
 		return landRepository.getOne(laenderNamenTypen);
 	}
 	
+	public Land findeLandDurchLandName(String landName) {
+		for(Land land : findeAlleLaender()) {
+			if(land.getLandNameTyp().getName().equals(landName)) {
+				return land;
+			}
+		}
+		return null;
+	}
+	
 	public List<Land> findeAlleLaender() {
 		return landRepository.findAll();
 	}

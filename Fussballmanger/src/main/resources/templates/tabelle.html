@@ -14,37 +14,85 @@
   			<strong><p th:utext="${errorMessage}"></p></strong>
 		</div>
 		<div class="col-md-12">
+			<p>Land:</p>
+			<form action="#" th:action="@{/liga/}+${landName}+'/'+${ligaName}+'/land'" th:object="${land}"
+					method="post">
+				<select class="custom-select" th:field="*{landNameTyp}" onchange="this.form.submit();">
+					<option 
+						  th:each="land : ${alleLaender}" 
+						  th:text="${land.landNameTyp.name}"
+						  th:value="${land.landNameTyp}">
+					</option>
+				</select>
+			</form>
+			<p>Liga:</p>
+			<form action="#" th:action="@{/liga/}+${landName}+'/'+${ligaName}+'/liga'" th:object="${liga}"
+					method="post">
+				<select class="custom-select" th:field="*{ligaNameTyp}" onchange="this.form.submit();">
+					<option 
+						  th:each="liga : ${alleLigenEinesLandes}" 
+						  th:text="${liga.ligaNameTyp.name}"
+						  th:value="${liga.ligaNameTyp}">
+					</option>
+				</select>
+			</form>
 			<table class="table table-hover">
 				<thead>
 					<tr class="table-active">
-						<th scope="col">Id</th>
 						<th scope="col">Spieltag</th>
+						<th scope="col">Saison</th>
 						<th scope="col">Heimmannschaft</th>
 						<th scope="col">GastMannschaft</th>
 						<th scope="col">Spielereignisse</th>
 					</tr>
 				</thead>
 
-				<tr class="" th:each="spiel : ${alleSpieleEinerLiga}">
-					<td th:text="${spiel.id}" />
-					<td th:text="${spiel.spieltag}" />
+				<tr class="" th:each="spiel : ${findeAlleSpieleEinerLigaEinerSaisonEinesSpieltages}">
+					<td th:text="${spiel.spieltag.spieltagNummer}" />
+					<td th:text="${spiel.saison.saisonNummer}" />
 					<td th:text="${spiel.heimmannschaft.getName()}" />
 					<td th:text="${spiel.gastmannschaft.getName()}" />
 					<td th:text="${spiel.spielEreignisse.size()}" />
 				</tr>
 				
 			</table>
+			<p>Saison:</p>
+			<form action="#" th:action="@{/liga/}+${landName}+'/'+${ligaName}+'/saison'" th:object="${saison}"
+					method="post">
+				<select class="custom-select" th:field="*{saisonNummer}" onchange="this.form.submit();">
+					<option 
+						  th:each="saison : ${alleSaisons}" 
+						  th:text="${saison.saisonNummer}"
+						  th:value="${saison.saisonNummer}">
+					</option>
+				</select>
+			</form>
+			<p>Spieltag:</p>
+			<form action="#" th:action="@{/liga/}+${landName}+'/'+${ligaName}+'/spieltag'" th:object="${spieltag}"
+					method="post">
+				<select class="custom-select" th:field="*{spieltagNummer}" onchange="this.form.submit();">
+					<option 
+						  th:each="spieltag : ${alleSpieltage}" 
+						  th:text="${spieltag.spieltagNummer}"
+						  th:value="${spieltag.spieltagNummer}">
+					</option>
+				</select>
+			</form>
 		</div>
 		<div class="col-md-12">
 			<table class="table table-hover">
 				<thead>
 					<tr class="table-active">
+						<th scope="col">Land</th>
+						<th scope="col">Liga</th>
 						<th scope="col">Platzierung</th>
 						<th scope="col">Name</th>
 					</tr>
 				</thead>
 
 				<tr class="" th:each="eintrag : ${alleTeamsDerAktuellenLiga}">
+					<td th:text="${eintrag.land.landNameTyp.getName()}" />
+					<td th:text="${eintrag.liga.ligaNameTyp.getName()}" />
 					<td th:text="${eintrag.platzierung}" />
 					<td> 
 						<a class="" th:text="${eintrag.teamName}" th:href="@{/team/}+${eintrag.id}"></a>

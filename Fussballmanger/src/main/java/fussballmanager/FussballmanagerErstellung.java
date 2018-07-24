@@ -78,8 +78,8 @@ public class FussballmanagerErstellung {
 				ligaService.legeHauptteamLigenAn(landService.findeLand(laenderNamenTypen));
 			}
 			saisonService.ersteSaisonErstellen();
-			spieltagService.checkAktuellerSpieltag();
-			spieltagService.simuliereSpieltag();
+//			spieltagService.checkAktuellerSpieltag();
+//			spieltagService.simuliereSpieltag();
 		}
 	}
 }

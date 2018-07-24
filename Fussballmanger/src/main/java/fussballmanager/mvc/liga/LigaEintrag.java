@@ -1,8 +1,15 @@
 package fussballmanager.mvc.liga;
 
+import fussballmanager.service.land.Land;
+import fussballmanager.service.liga.Liga;
+
 public class LigaEintrag implements Comparable<LigaEintrag> {
 	
 	private long id;
+	
+	private Land land;
+	
+	private Liga liga;
 	
 	private int platzierung;
 	
@@ -33,6 +40,22 @@ public class LigaEintrag implements Comparable<LigaEintrag> {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	public Land getLand() {
+		return land;
+	}
+
+	public void setLand(Land land) {
+		this.land = land;
+	}
+
+	public Liga getLiga() {
+		return liga;
+	}
+
+	public void setLiga(Liga liga) {
+		this.liga = liga;
 	}
 
 	public int getPunkte() {

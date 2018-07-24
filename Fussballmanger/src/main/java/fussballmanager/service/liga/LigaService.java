@@ -1,5 +1,6 @@
 package fussballmanager.service.liga;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import fussballmanager.service.land.LandService;
 import fussballmanager.service.liga.Liga;
 import fussballmanager.service.liga.LigaRepository;
 import fussballmanager.service.saison.SaisonService;
+import fussballmanager.service.saison.spieltag.SpieltagService;
 import fussballmanager.service.team.Team;
 import fussballmanager.service.team.TeamService;
 
@@ -30,6 +32,12 @@ public class LigaService {
 	
 	@Autowired
 	LandService landService;
+	
+	@Autowired
+	SaisonService saisonService;
+	
+	@Autowired
+	SpieltagService spieltagService;
 
 	public Liga findeLiga(Long id) {
 		return ligaRepository.getOne(id);
@@ -37,6 +45,17 @@ public class LigaService {
 	
 	public List<Liga> findeAlleLigen() {
 		return ligaRepository.findAll();
+	}
+	
+	public List<Liga> findeAlleLigenEinesLandes(String landName) {
+		List<Liga> alleLigenEinesLandes = new ArrayList<>();
+		
+		for(Liga liga : findeAlleLigen()) {
+			if(liga.getLand().getLandNameTyp().getName().equals(landName)) {
+				alleLigenEinesLandes.add(liga);
+			}
+		}
+		return alleLigenEinesLandes;
 	}
 	
 	public Liga findeNaechsteFreieHauptteamLiga() {

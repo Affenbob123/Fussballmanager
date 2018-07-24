@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import fussballmanager.service.saison.Saison;
 import fussballmanager.service.saison.spieltag.Spieltag;
 import fussballmanager.service.spielereignisse.SpielEreignis;
 import fussballmanager.service.team.Team;
@@ -33,6 +34,9 @@ public class Spiel {
 	@ManyToOne
 	private Spieltag spieltag;
 	
+	@ManyToOne
+	private Saison saison;
+	
 	private LocalTime spielbeginn;
 	
 	private String spielort;
@@ -40,12 +44,13 @@ public class Spiel {
 	@OneToMany(cascade = {CascadeType.ALL})
 	private List<SpielEreignis> spielEreignisse;
 
-	public Spiel(Team heimmannschaft, Team gastmannschaft, LocalTime spielbeginn, Spieltag spieltag,
+	public Spiel(Team heimmannschaft, Team gastmannschaft, LocalTime spielbeginn, Spieltag spieltag, Saison saison,
 			String spielort) {
 		this.heimmannschaft = heimmannschaft;
 		this.gastmannschaft = gastmannschaft;
 		this.spielbeginn = spielbeginn;
 		this.spieltag = spieltag;
+		this.saison = saison;
 		this.spielort = spielort;
 	}
 	
@@ -91,6 +96,14 @@ public class Spiel {
 
 	public void setSpieltag(Spieltag spieltag) {
 		this.spieltag = spieltag;
+	}
+
+	public Saison getSaison() {
+		return saison;
+	}
+
+	public void setSaison(Saison saison) {
+		this.saison = saison;
 	}
 
 	public String getSpielort() {
