@@ -49,7 +49,7 @@ public class TorVersuchWahrscheinlicheit {
 		return 0;
 	}
 	
-	public int wahrscheinlichkeitTorwartGegenTorwart(List<Spieler> spielerAngreifer, List<Spieler> spielerVerteidiger, double staerkeFaktor) {
+	public double wahrscheinlichkeitTorwartGegenTorwart(List<Spieler> spielerAngreifer, List<Spieler> spielerVerteidiger, double staerkeFaktor) {
 		Spieler torwartDesAngreifers = null;
 		Spieler torwartDesVerteidigers = null;
 		double durchschnittsStaerkeTorwartAngreifer = 0.0;
@@ -78,11 +78,11 @@ public class TorVersuchWahrscheinlicheit {
 		durchschnittsStaerkeTorwartAngreifer = torwartDesAngreifers.getStaerke().getDurchschnittsStaerke();
 		durchschnittsStaerkeTorwartVerteidiger = torwartDesVerteidigers.getStaerke().getDurchschnittsStaerke();
 		
-		return (int) (durchschnittsStaerkeTorwartAngreifer / 
-				(durchschnittsStaerkeTorwartAngreifer + durchschnittsStaerkeTorwartVerteidiger));
+		return durchschnittsStaerkeTorwartAngreifer / 
+				(durchschnittsStaerkeTorwartAngreifer + durchschnittsStaerkeTorwartVerteidiger);
 	}
 	
-	public int wahrscheinlichkeitAbwehrGegenAngriff(List<Spieler> spielerAngreifer, List<Spieler> spielerVerteidiger, double staerkeFaktor) {
+	public double wahrscheinlichkeitAbwehrGegenAngriff(List<Spieler> spielerAngreifer, List<Spieler> spielerVerteidiger, double staerkeFaktor) {
 		int gewichtungPassenAngreifer = 40;
 		int gewichtungDribbelnAngreifer = 25;
 		int gewichtungGeschwindigkeitAngreifer = 15;
@@ -129,10 +129,10 @@ public class TorVersuchWahrscheinlicheit {
 		
 		staerkenDesAngreifers = staerkenDesAngreifers * staerkeFaktor;
 		
-		return (int) ((staerkenDesAngreifers * 100) / (staerkenDesAngreifers + staerkenDesVerteidigers));
+		return (staerkenDesAngreifers) / (staerkenDesAngreifers + staerkenDesVerteidigers);
 	}
 	
-	public int wahrscheinlichkeitMittelfeldGegenMittelfeld(List<Spieler> spielerAngreifer, List<Spieler> spielerVerteidiger, double staerkeFaktor) {
+	public double wahrscheinlichkeitMittelfeldGegenMittelfeld(List<Spieler> spielerAngreifer, List<Spieler> spielerVerteidiger, double staerkeFaktor) {
 		int gewichtungPassenAngreifer = 30;
 		int gewichtungDribbelnAngreifer = 25;
 		int gewichtungPhysisAngreifer = 15;
@@ -181,10 +181,10 @@ public class TorVersuchWahrscheinlicheit {
 		
 		staerkenDesAngreifers = staerkenDesAngreifers * staerkeFaktor;
 		
-		return (int) ((staerkenDesAngreifers * 100) / (staerkenDesAngreifers + staerkenDesVerteidigers));
+		return (staerkenDesAngreifers) / (staerkenDesAngreifers + staerkenDesVerteidigers);
 	}
 	
-	public int wahrscheinlichkeitAngriffGegenAbwehr(List<Spieler> spielerAngreifer, List<Spieler> spielerVerteidiger, double staerkeFaktor) {
+	public double wahrscheinlichkeitAngriffGegenAbwehr(List<Spieler> spielerAngreifer, List<Spieler> spielerVerteidiger, double staerkeFaktor) {
 		int gewichtungPassenAngreifer = 10;
 		int gewichtungDribbelnAngreifer = 15;
 		int gewichtungPhysisAngreifer = 15;
@@ -232,6 +232,6 @@ public class TorVersuchWahrscheinlicheit {
 		
 		staerkenDesAngreifers = staerkenDesAngreifers * staerkeFaktor;
 		
-		return (int) ((staerkenDesAngreifers * 100) / (staerkenDesAngreifers + staerkenDesVerteidigers));
+		return (staerkenDesAngreifers) / (staerkenDesAngreifers + staerkenDesVerteidigers);
 	}
 }
