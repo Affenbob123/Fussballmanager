@@ -15,7 +15,7 @@ import javax.persistence.OneToMany;
 
 import fussballmanager.service.saison.Saison;
 import fussballmanager.service.saison.spieltag.Spieltag;
-import fussballmanager.service.spielereignisse.SpielEreignis;
+import fussballmanager.service.spiel.spielereignisse.SpielEreignis;
 import fussballmanager.service.team.Team;
 
 @Entity

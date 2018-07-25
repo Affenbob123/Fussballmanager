@@ -14,6 +14,28 @@
   			<strong><p th:utext="${errorMessage}"></p></strong>
 		</div>
 		<div class="col-md-12">
+		<p>Einsatz:</p>
+			<form action="#" th:action="@{/team/}+${aktuellesTeam.id}+'/einsatz'" th:object="${aktuellesTeam}"
+					method="post">
+				<select class="custom-select" th:field="*{einsatzTyp}" onchange="this.form.submit();">
+					<option 
+						  th:each="einsatzTypen : ${alleEinsatzTypen}" 
+						  th:text="${einsatzTypen.bezeichnung}"
+						  th:value="${einsatzTypen}">
+					</option>
+				</select>
+			</form>
+			<p>Ausrichtung:</p>
+			<form action="#" th:action="@{/team/}+${aktuellesTeam.id}+'/ausrichtung'" th:object="${aktuellesTeam}"
+					method="post">
+				<select class="custom-select" th:field="*{ausrichtungsTyp}" onchange="this.form.submit();">
+					<option 
+						  th:each="ausrichtungsTyp : ${alleAusrichtungsTypen}" 
+						  th:text="${ausrichtungsTyp.bezeichnung}"
+						  th:value="${ausrichtungsTyp}">
+					</option>
+				</select>
+			</form>
 			<table class="table table-hover">
 				<thead>
 					<tr class="table-active">
@@ -21,6 +43,7 @@
 						<th scope="col">Position</th>
 						<th scope="col">Name</th>
 						<th scope="col">Stärke</th>
+						<th scope="col">Reinstärke</th>
 						<th scope="col">Erfahrung</th>
 						<th scope="col">Talentwert</th>
 						<th scope="col">Motivation</th>
@@ -33,6 +56,7 @@
 					<td> 
 						<a class="" th:text="${spieler.name}" th:href="@{/spieler/}+${spieler.id}"></a>
 					</td>
+					<td th:text="${spieler.reinStaerke.durchschnittsStaerke}" />
 					<td th:text="${spieler.staerke.durchschnittsStaerke}" />
 					<td th:text="${spieler.erfahrung}" />
 					<td th:text="${spieler.talentwert}" />

@@ -2,10 +2,8 @@ package fussballmanager.service.spieler;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,7 +71,7 @@ public class SpielerService {
 		for(PositionenTypen positionenTyp : PositionenTypen.values()) {
 			int talentwert = erzeugeZufaelligenTalentwert();
 			Staerke staerke = new Staerke(200.0, 200.0, 200.0, 200.0, 200.0, 200.0);
-			Spieler spieler = new Spieler(nationalitaet, positionenTyp, alter, staerke, talentwert, team);
+			Spieler spieler = new Spieler(nationalitaet, positionenTyp, alter, staerke, staerke, talentwert, team);
 			legeSpielerAn(spieler);
 			LOG.info("Spielerstaerke: {}", spieler.getStaerke().getDurchschnittsStaerke());
 		}

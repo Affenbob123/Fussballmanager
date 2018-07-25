@@ -1,4 +1,4 @@
-package fussballmanager.service.spielereignisse;
+package fussballmanager.service.spiel.spielereignisse;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

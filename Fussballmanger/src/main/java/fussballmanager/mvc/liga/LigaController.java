@@ -24,7 +24,7 @@ import fussballmanager.service.saison.SaisonService;
 import fussballmanager.service.saison.spieltag.Spieltag;
 import fussballmanager.service.saison.spieltag.SpieltagService;
 import fussballmanager.service.spiel.SpielService;
-import fussballmanager.service.spielereignisse.SpielEreignisService;
+import fussballmanager.service.spiel.spielereignisse.SpielEreignisService;
 import fussballmanager.service.team.Team;
 import fussballmanager.service.team.TeamService;
 import fussballmanager.service.user.User;

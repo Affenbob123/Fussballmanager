@@ -14,11 +14,11 @@ import org.springframework.stereotype.Service;
 
 import fussballmanager.service.spiel.Spiel;
 import fussballmanager.service.spiel.SpielService;
+import fussballmanager.service.spiel.spielereignisse.SpielEreignis;
+import fussballmanager.service.spiel.spielereignisse.SpielEreignisService;
+import fussballmanager.service.spiel.spielereignisse.SpielEreignisTypen;
 import fussballmanager.service.spieler.Spieler;
 import fussballmanager.service.spieler.SpielerService;
-import fussballmanager.service.spielereignisse.SpielEreignis;
-import fussballmanager.service.spielereignisse.SpielEreignisService;
-import fussballmanager.service.spielereignisse.SpielEreignisTypen;
 
 @Service
 @Transactional

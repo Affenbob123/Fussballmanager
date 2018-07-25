@@ -4,11 +4,9 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -34,7 +32,10 @@ public class Spieler implements Comparable<Spieler> {
 	
 	private int alter;
 	
-	@OneToOne(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+	@OneToOne(cascade = {CascadeType.ALL})
+	private Staerke reinStaerke;
+	
+	@OneToOne(cascade = {CascadeType.ALL})
 	private Staerke staerke;
 	
 	private int erfahrung;
@@ -53,11 +54,12 @@ public class Spieler implements Comparable<Spieler> {
 	
 	private int verletzungsTage;
 
-	public Spieler(Land nationalitaet, PositionenTypen position, int alter, Staerke staerke, int talentwert, Team team) {
+	public Spieler(Land nationalitaet, PositionenTypen position, int alter, Staerke reinStaerke, Staerke staerke, int talentwert, Team team) {
 		this.nationalitaet = nationalitaet;
 		this.position = position;
 		this.name = "Unbennanter Spieler";
 		this.alter = alter;
+		this.reinStaerke = reinStaerke;
 		this.staerke = staerke;
 		this.talentwert = talentwert;
 		this.erfahrung = 0;
@@ -109,6 +111,14 @@ public class Spieler implements Comparable<Spieler> {
 
 	public void setAlter(int alter) {
 		this.alter = alter;
+	}
+
+	public Staerke getReinStaerke() {
+		return reinStaerke;
+	}
+
+	public void setReinStaerke(Staerke reinStaerke) {
+		this.reinStaerke = reinStaerke;
 	}
 
 	public Staerke getStaerke() {
