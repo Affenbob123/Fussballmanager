@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import fussballmanager.service.land.Land;
 import fussballmanager.service.liga.Liga;
 import fussballmanager.service.liga.LigaService;
+import fussballmanager.service.spieler.Spieler;
 import fussballmanager.service.spieler.SpielerService;
 import fussballmanager.service.user.User;
 
@@ -116,5 +117,20 @@ public class TeamService {
 		
 		LOG.info("Team: {} wurde dem User: {} zugewiesen.", team.getId(), team.getUser().getLogin());
 		LOG.info("AktuellesTeam: {}", team.getId(), team.getUser().getLogin());
+	}
+	
+	public void aendereEinsatzEinesTeams(Team team) {
+		aktualisiereTeam(team);
+		List<Spieler> alleSpielerDesTeams = spielerService.findeAlleSpielerEinesTeams(team);
+		
+		for(Spieler spieler : alleSpielerDesTeams) {
+			spieler.getStaerke().setDribbeln(spieler.getReinStaerke().getDribbeln() * team.getEinsatzTyp().getStaerkenFaktor());
+			spieler.getStaerke().setGeschwindigkeit(spieler.getReinStaerke().getGeschwindigkeit() * team.getEinsatzTyp().getStaerkenFaktor());
+			spieler.getStaerke().setPassen(spieler.getReinStaerke().getPassen() * team.getEinsatzTyp().getStaerkenFaktor());
+			spieler.getStaerke().setPhysis(spieler.getReinStaerke().getPhysis() * team.getEinsatzTyp().getStaerkenFaktor());
+			spieler.getStaerke().setSchießen(spieler.getReinStaerke().getSchießen() * team.getEinsatzTyp().getStaerkenFaktor());
+			spieler.getStaerke().setVerteidigen(spieler.getReinStaerke().getVerteidigen() * team.getEinsatzTyp().getStaerkenFaktor());
+			spieler.getStaerke().setDurchschnittsStaerke(spieler.getReinStaerke().getDurchschnittsStaerke() * team.getEinsatzTyp().getStaerkenFaktor());
+		}
 	}
 }

@@ -2,8 +2,6 @@ package fussballmanager.mvc.team;
 
 import java.util.List;
 
-import javax.xml.ws.Service.Mode;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -77,7 +75,7 @@ public class TeamController {
 	public String aendereEinsatz(Model model, Authentication auth, @PathVariable("id") Long id, @ModelAttribute("aktuellesTeam") Team aktuellesTeam) {
 		Team team = teamService.findeTeam(id);
 		team.setEinsatzTyp(aktuellesTeam.getEinsatzTyp());
-		teamService.aktualisiereTeam(team);
+		teamService.aendereEinsatzEinesTeams(team);
 		
 		return "redirect:/team/{id}";
 	}
