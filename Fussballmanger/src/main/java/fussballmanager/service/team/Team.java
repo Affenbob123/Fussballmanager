@@ -12,7 +12,7 @@ import fussballmanager.service.user.User;
 
 
 @Entity
-public class Team implements Comparable<Team>{
+public class Team implements Comparable<Team> {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE)

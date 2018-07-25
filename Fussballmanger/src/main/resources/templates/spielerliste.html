@@ -33,7 +33,7 @@
 					<td> 
 						<a class="" th:text="${spieler.name}" th:href="@{/spieler/}+${spieler.id}"></a>
 					</td>
-					<td th:text="${spieler.staerke}" />
+					<td th:text="${spieler.staerke.durchschnittsStaerke}" />
 					<td th:text="${spieler.erfahrung}" />
 					<td th:text="${spieler.talentwert}" />
 					<td th:text="${spieler.motivation}" />

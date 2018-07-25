@@ -2,14 +2,13 @@ package fussballmanager;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Timer;
 
 import javax.annotation.PostConstruct;
-import javax.persistence.Entity;
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import fussballmanager.service.land.LaenderNamenTypen;
@@ -20,17 +19,16 @@ import fussballmanager.service.saison.SaisonService;
 import fussballmanager.service.saison.spieltag.SpieltagService;
 import fussballmanager.service.spiel.SpielService;
 import fussballmanager.service.spieler.SpielerService;
-import fussballmanager.service.spielereignisse.SpielEreignis;
 import fussballmanager.service.spielereignisse.SpielEreignisService;
 import fussballmanager.service.team.TeamService;
 import fussballmanager.service.user.UserService;
+import fussballmanager.spielsimulation.SpielSimulation;
 
 @Service
 @Transactional
 public class FussballmanagerErstellung {
 	
-	@Autowired
-	SpielEreignisService spielEreignisService;
+	private static final Logger LOG = LoggerFactory.getLogger(FussballmanagerErstellung.class);
 	
 	@Autowired
 	LandService landService;
@@ -54,7 +52,13 @@ public class FussballmanagerErstellung {
 	UserService userService;
 	
 	@Autowired
+	SpielEreignisService spielEreignisService;
+	
+	@Autowired
 	SpielService spielService;
+	
+	@Autowired
+	SpielSimulation spielSimulation;
 	
 	public FussballmanagerErstellung() {
 
@@ -78,8 +82,9 @@ public class FussballmanagerErstellung {
 				ligaService.legeHauptteamLigenAn(landService.findeLand(laenderNamenTypen));
 			}
 			saisonService.ersteSaisonErstellen();
-//			spieltagService.checkAktuellerSpieltag();
-//			spieltagService.simuliereSpieltag();
+			spieltagService.checkAktuellerSpieltag();
+			spieltagService.simuliereSpieltag();
+			LOG.info("DurchschnittlicheTorVersuche: {}", spielEreignisService.findeSpielEreignisse().size());
 		}
 	}
 }

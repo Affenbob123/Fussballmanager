@@ -67,11 +67,12 @@ public class SpielerService {
 	
 	public void erstelleStandardSpielerFuerEinTeam(Team team) {
 		int alter = 17;
-		Staerke staerke = new Staerke(200.0, 200.0, 200.0, 200.0, 200.0, 200.0);
+		
 		Land nationalitaet = team.getLiga().getLand();
 		
 		for(PositionenTypen positionenTyp : PositionenTypen.values()) {
 			int talentwert = erzeugeZufaelligenTalentwert();
+			Staerke staerke = new Staerke(200.0, 200.0, 200.0, 200.0, 200.0, 200.0);
 			Spieler spieler = new Spieler(nationalitaet, positionenTyp, alter, staerke, talentwert, team);
 			legeSpielerAn(spieler);
 			LOG.info("Spielerstaerke: {}", spieler.getStaerke().getDurchschnittsStaerke());

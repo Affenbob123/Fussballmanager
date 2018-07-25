@@ -43,7 +43,8 @@
 						<th scope="col">Saison</th>
 						<th scope="col">Heimmannschaft</th>
 						<th scope="col">GastMannschaft</th>
-						<th scope="col">Spielereignisse</th>
+						<th scope="col">Tore Heimmannschaft</th>
+						<th scope="col">Tore Gastmannschaft</th>
 					</tr>
 				</thead>
 
@@ -52,7 +53,8 @@
 					<td th:text="${spiel.saison.saisonNummer}" />
 					<td th:text="${spiel.heimmannschaft.getName()}" />
 					<td th:text="${spiel.gastmannschaft.getName()}" />
-					<td th:text="${spiel.spielEreignisse.size()}" />
+					<td th:text="${spielEreignisService.berechneAnzahlTorVersucheHeimmannschaft(spiel)}" />
+					<td th:text="${spielEreignisService.berechneAnzahlTorVersucheGastmannschaft(spiel)}" />
 				</tr>
 				
 			</table>

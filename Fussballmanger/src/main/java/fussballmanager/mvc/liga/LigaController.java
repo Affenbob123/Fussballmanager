@@ -24,6 +24,7 @@ import fussballmanager.service.saison.SaisonService;
 import fussballmanager.service.saison.spieltag.Spieltag;
 import fussballmanager.service.saison.spieltag.SpieltagService;
 import fussballmanager.service.spiel.SpielService;
+import fussballmanager.service.spielereignisse.SpielEreignisService;
 import fussballmanager.service.team.Team;
 import fussballmanager.service.team.TeamService;
 import fussballmanager.service.user.User;
@@ -54,6 +55,9 @@ public class LigaController {
 	
 	@Autowired
 	SpieltagService spieltagService;
+	
+	@Autowired
+	SpielEreignisService spielEreignisService;
 
 	@GetMapping("/liga/{landName}/{ligaName}")
 	public String getLiga(Model model, Authentication auth, @PathVariable("landName") String landName, 
@@ -63,6 +67,7 @@ public class LigaController {
 		User aktuellerUser = userService.findeUser(auth.getName());
 		
 		model.addAttribute("aktuellesTeam", aktuellerUser.getAktuellesTeam());
+		model.addAttribute("spielEreignisService", spielEreignisService);
 		
 		Land ausgewaehltesLand = landService.findeLandDurchLandName(landName);;
 		Liga ausgewaehlteLiga = ligaService.findeLiga(landName, ligaName);

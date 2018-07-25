@@ -6,10 +6,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-
 import fussballmanager.service.spieler.Spieler;
+import fussballmanager.service.team.Team;
 
 @Entity
 public class SpielEreignis {
@@ -23,11 +21,15 @@ public class SpielEreignis {
 	@OneToOne
 	private Spieler spieler;
 	
+	@OneToOne
+	private Team team;
+	
 	SpielEreignisTypen spielereignisTyp;
 	
-	public SpielEreignis(int spielminute, Spieler spieler, SpielEreignisTypen spielereignisTyp) {
+	public SpielEreignis(int spielminute, Spieler spieler, Team team , SpielEreignisTypen spielereignisTyp) {
 		Spielminute = spielminute;
 		this.spieler = spieler;
+		this.team = team;
 		this.spielereignisTyp = spielereignisTyp;
 	}
 
@@ -57,6 +59,14 @@ public class SpielEreignis {
 
 	public void setSpieler(Spieler spieler) {
 		this.spieler = spieler;
+	}
+
+	public Team getTeam() {
+		return team;
+	}
+
+	public void setTeam(Team team) {
+		this.team = team;
 	}
 
 	public SpielEreignisTypen getSpielereignisTyp() {

@@ -16,7 +16,7 @@ import fussballmanager.service.saison.spieltag.Spieltag;
 import fussballmanager.service.saison.spieltag.SpieltagService;
 import fussballmanager.service.team.Team;
 import fussballmanager.service.team.TeamService;
-import fussballmanager.spielsimulation.SpielMinute;
+import fussballmanager.spielsimulation.SpielSimulation;
 
 @Service
 @Transactional
@@ -37,7 +37,7 @@ public class SpielService {
 	SpieltagService spieltagService;
 	
 	@Autowired
-	SpielMinute spielMinute;
+	SpielSimulation spielSimulation;
 
 	public Spiel findeSpiel(Long id) {
 		return spielRepository.getOne(id);
@@ -95,9 +95,7 @@ public class SpielService {
 	}
 	
 	public void spielSimulieren(Spiel spiel) {
-		for(int i = 0; i < 30; i++) {
-			spielMinute.simuliereSpielminute(spiel, i);
-		}
+		spielSimulation.simuliereSpiel(spiel);
 	}
 
 	public void erstelleSpieleFuerEineLiga(Liga liga) {
