@@ -14,6 +14,17 @@
   			<strong><p th:utext="${errorMessage}"></p></strong>
 		</div>
 		<div class="col-md-12">
+		<p>Formation:</p>
+			<form action="#" th:action="@{/team/}+${aktuellesTeam.id}+'/formation'" th:object="${aktuellesTeam}"
+					method="post">
+				<select class="custom-select" th:field="*{formationsTyp}" onchange="this.form.submit();">
+					<option 
+						  th:each="formationsTyp : ${alleFormationsTypen}" 
+						  th:text="${formationsTyp.bezeichnung}"
+						  th:value="${formationsTyp}">
+					</option>
+				</select>
+			</form>
 		<p>Einsatz:</p>
 			<form action="#" th:action="@{/team/}+${aktuellesTeam.id}+'/einsatz'" th:object="${aktuellesTeam}"
 					method="post">
@@ -41,6 +52,7 @@
 					<tr class="table-active">
 						<th scope="col">Nationalität</th>
 						<th scope="col">Position</th>
+						<th scope="col">Aufstellungsposition</th>
 						<th scope="col">Name</th>
 						<th scope="col">Stärke</th>
 						<th scope="col">Reinstärke</th>
@@ -53,6 +65,7 @@
 				<tr class="" th:each="spieler : ${alleSpielerDesAktuellenTeams}">
 					<td th:text="${spieler.nationalitaet.getLandNameTyp().getName()}" />
 					<td th:text="${spieler.position}" />
+					<td th:text="${spieler.aufstellungsPositinsTyp}" />
 					<td> 
 						<a class="" th:text="${spieler.name}" th:href="@{/spieler/}+${spieler.id}"></a>
 					</td>

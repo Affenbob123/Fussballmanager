@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import fussballmanager.service.land.Land;
 import fussballmanager.service.spieler.staerke.Staerke;
 import fussballmanager.service.team.Team;
+import fussballmanager.service.team.startelf.FormationsTypen;
 
 @Service
 @Transactional
@@ -72,7 +73,16 @@ public class SpielerService {
 			int talentwert = erzeugeZufaelligenTalentwert();
 			Staerke staerke = new Staerke(200.0, 200.0, 200.0, 200.0, 200.0, 200.0);
 			Staerke reinStaerke = new Staerke(200.0, 200.0, 200.0, 200.0, 200.0, 200.0);
-			Spieler spieler = new Spieler(nationalitaet, positionenTyp, alter, reinStaerke, staerke, talentwert, team);
+			AufstellungsPositionsTypen aufstellungsPositionsTyp = AufstellungsPositionsTypen.ERSATZ;
+			FormationsTypen formationsTypTeam = team.getFormationsTyp();
+			
+			for(AufstellungsPositionsTypen a : formationsTypTeam.getAufstellungsPositionsTypen()) {
+				if(positionenTyp.getPositionsName().equals(a.getPositionsName())) {
+					aufstellungsPositionsTyp = a;
+				}
+			}
+
+			Spieler spieler = new Spieler(nationalitaet, positionenTyp, aufstellungsPositionsTyp, alter, reinStaerke, staerke, talentwert, team);
 			legeSpielerAn(spieler);
 			LOG.info("Spielerstaerke: {}", spieler.getStaerke().getDurchschnittsStaerke());
 		}

@@ -28,6 +28,8 @@ public class Spieler implements Comparable<Spieler> {
 	
 	private PositionenTypen position;
 	
+	private AufstellungsPositionsTypen aufstellungsPositinsTyp;
+	
 	private String name;
 	
 	private int alter;
@@ -54,9 +56,11 @@ public class Spieler implements Comparable<Spieler> {
 	
 	private int verletzungsTage;
 
-	public Spieler(Land nationalitaet, PositionenTypen position, int alter, Staerke reinStaerke, Staerke staerke, int talentwert, Team team) {
+	public Spieler(Land nationalitaet, PositionenTypen position, AufstellungsPositionsTypen aufstellungsPositionsTyp,
+			int alter, Staerke reinStaerke, Staerke staerke, int talentwert, Team team) {
 		this.nationalitaet = nationalitaet;
 		this.position = position;
+		this.aufstellungsPositinsTyp = aufstellungsPositionsTyp;
 		this.name = "Unbennanter Spieler";
 		this.alter = alter;
 		this.reinStaerke = reinStaerke;
@@ -185,9 +189,17 @@ public class Spieler implements Comparable<Spieler> {
 		this.verletzungsTage = verletzungsTage;
 	}
 
+	public AufstellungsPositionsTypen getAufstellungsPositinsTyp() {
+		return aufstellungsPositinsTyp;
+	}
+
+	public void setAufstellungsPositinsTyp(AufstellungsPositionsTypen aufstellungsPositinsTyp) {
+		this.aufstellungsPositinsTyp = aufstellungsPositinsTyp;
+	}
+
 	@Override
 	public int compareTo(Spieler compareTo) {
-		int comparePosition=((Spieler)compareTo).getPosition().getRangfolge();
-		return this.position.getRangfolge() - comparePosition;
+		int comparePosition=((Spieler)compareTo).getAufstellungsPositinsTyp().getRangfolge();
+		return this.aufstellungsPositinsTyp.getRangfolge() - comparePosition;
 	}
 }

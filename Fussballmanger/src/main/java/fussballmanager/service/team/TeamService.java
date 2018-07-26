@@ -14,8 +14,10 @@ import fussballmanager.service.liga.Liga;
 import fussballmanager.service.liga.LigaService;
 import fussballmanager.service.spiel.Spiel;
 import fussballmanager.service.spiel.SpielService;
+import fussballmanager.service.spieler.AufstellungsPositionsTypen;
 import fussballmanager.service.spieler.Spieler;
 import fussballmanager.service.spieler.SpielerService;
+import fussballmanager.service.team.startelf.FormationsTypen;
 import fussballmanager.service.user.User;
 
 @Service
@@ -138,6 +140,22 @@ public class TeamService {
 			spieler.getStaerke().setDurchschnittsStaerke(spieler.getReinStaerke().getDurchschnittsStaerke() * team.getEinsatzTyp().getStaerkenFaktor());
 			
 			spielerService.aktualisiereSpieler(spieler);
+		}
+	}
+
+	//TODO Wenn kein SPieler mit der Position vorhanden ist dann spielen zu wenige
+	public void aenderFormationEinesTeams(Team team) {
+		aktualisiereTeam(team);
+		FormationsTypen formationsTypDesTeams = team.getFormationsTyp();
+		List<Spieler> spielerDesTeams = spielerService.findeAlleSpielerEinesTeams(team);
+		
+		for(Spieler spieler : spielerDesTeams) {
+			spieler.setAufstellungsPositinsTyp(AufstellungsPositionsTypen.ERSATZ);
+			for(AufstellungsPositionsTypen a : formationsTypDesTeams.getAufstellungsPositionsTypen()) {
+				if(spieler.getPosition().getPositionsName().equals(a.getPositionsName())) {
+					spieler.setAufstellungsPositinsTyp(a);
+				}
+			}
 		}
 	}
 }

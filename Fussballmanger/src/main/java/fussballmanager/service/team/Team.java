@@ -1,16 +1,14 @@
 package fussballmanager.service.team;
 
-import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 
 import fussballmanager.service.land.Land;
 import fussballmanager.service.liga.Liga;
-import fussballmanager.service.team.startelf.Startelf;
+import fussballmanager.service.team.startelf.FormationsTypen;
 import fussballmanager.service.user.User;
 
 
@@ -38,8 +36,7 @@ public class Team implements Comparable<Team> {
 			
 	private final int maximaleSpielerAnzahl = 43;
 	
-	@OneToOne
-	private Startelf startelf;
+	private FormationsTypen formationsTyp;
 	
 	private EinsatzTypen einsatzTyp;
 	
@@ -52,6 +49,7 @@ public class Team implements Comparable<Team> {
 		this.user = user;
 		this.liga = liga;
 		this.spielort = "Unbennantes Stadion";
+		this.formationsTyp = FormationsTypen.VIERVIERZWEI;
 		this.einsatzTyp = EinsatzTypen.NORMAL;
 		this.ausrichtungsTyp = AusrichtungsTypen.NORMAL;
 	}
@@ -120,14 +118,6 @@ public class Team implements Comparable<Team> {
 		return maximaleSpielerAnzahl;
 	}
 
-	public Startelf getStartelf() {
-		return startelf;
-	}
-
-	public void setStartelf(Startelf startelf) {
-		this.startelf = startelf;
-	}
-
 	public EinsatzTypen getEinsatzTyp() {
 		return einsatzTyp;
 	}
@@ -142,6 +132,14 @@ public class Team implements Comparable<Team> {
 
 	public void setAusrichtungsTyp(AusrichtungsTypen ausrichtungsTyp) {
 		this.ausrichtungsTyp = ausrichtungsTyp;
+	}
+
+	public FormationsTypen getFormationsTyp() {
+		return formationsTyp;
+	}
+
+	public void setFormationsTyp(FormationsTypen formationsTyp) {
+		this.formationsTyp = formationsTyp;
 	}
 
 	@Override

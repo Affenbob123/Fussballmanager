@@ -19,6 +19,7 @@ import fussballmanager.service.team.AusrichtungsTypen;
 import fussballmanager.service.team.EinsatzTypen;
 import fussballmanager.service.team.Team;
 import fussballmanager.service.team.TeamService;
+import fussballmanager.service.team.startelf.FormationsTypen;
 import fussballmanager.service.user.User;
 import fussballmanager.service.user.UserService;
 
@@ -65,10 +66,20 @@ public class TeamController {
 		List<Spieler> alleSpielerEinesTeams = spielerService.findeAlleSpielerEinesTeams(aktuellesTeam);
 		
 		model.addAttribute("alleSpielerDesAktuellenTeams", alleSpielerEinesTeams);
+		model.addAttribute("alleFormationsTypen", FormationsTypen.values());
 		model.addAttribute("alleEinsatzTypen", EinsatzTypen.values());
 		model.addAttribute("alleAusrichtungsTypen", AusrichtungsTypen.values());
 		
 		return "spielerliste";
+	}
+	
+	@PostMapping("/team/{id}/formation")
+	public String aendereFormation(Model model, Authentication auth, @PathVariable("id") Long id, @ModelAttribute("aktuellesTeam") Team aktuellesTeam) {
+		Team team = teamService.findeTeam(id);
+		team.setFormationsTyp(aktuellesTeam.getFormationsTyp());
+		teamService.aenderFormationEinesTeams(team);
+		
+		return "redirect:/team/{id}";
 	}
 	
 	@PostMapping("/team/{id}/einsatz")
