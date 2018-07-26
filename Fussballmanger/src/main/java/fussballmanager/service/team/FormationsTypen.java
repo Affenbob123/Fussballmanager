@@ -1,4 +1,4 @@
-package fussballmanager.service.team.startelf;
+package fussballmanager.service.team;
 
 import fussballmanager.service.spieler.AufstellungsPositionsTypen;
 

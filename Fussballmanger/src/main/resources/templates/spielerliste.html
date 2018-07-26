@@ -65,7 +65,7 @@
 				<tr class="" th:each="spieler : ${alleSpielerDesAktuellenTeams}">
 					<td th:text="${spieler.nationalitaet.getLandNameTyp().getName()}" />
 					<td th:text="${spieler.position}" />
-					<td th:text="${spieler.aufstellungsPositinsTyp}" />
+					<td th:text="${spieler.aufstellungsPositionsTyp}" />
 					<td> 
 						<a class="" th:text="${spieler.name}" th:href="@{/spieler/}+${spieler.id}"></a>
 					</td>

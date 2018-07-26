@@ -17,9 +17,9 @@ import fussballmanager.service.spieler.Spieler;
 import fussballmanager.service.spieler.SpielerService;
 import fussballmanager.service.team.AusrichtungsTypen;
 import fussballmanager.service.team.EinsatzTypen;
+import fussballmanager.service.team.FormationsTypen;
 import fussballmanager.service.team.Team;
 import fussballmanager.service.team.TeamService;
-import fussballmanager.service.team.startelf.FormationsTypen;
 import fussballmanager.service.user.User;
 import fussballmanager.service.user.UserService;
 

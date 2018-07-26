@@ -1,6 +1,8 @@
 package fussballmanager.service.team;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -15,9 +17,10 @@ import fussballmanager.service.liga.LigaService;
 import fussballmanager.service.spiel.Spiel;
 import fussballmanager.service.spiel.SpielService;
 import fussballmanager.service.spieler.AufstellungsPositionsTypen;
+import fussballmanager.service.spieler.PositionenTypen;
+import fussballmanager.service.spieler.RollenTypen;
 import fussballmanager.service.spieler.Spieler;
 import fussballmanager.service.spieler.SpielerService;
-import fussballmanager.service.team.startelf.FormationsTypen;
 import fussballmanager.service.user.User;
 
 @Service
@@ -131,15 +134,8 @@ public class TeamService {
 		List<Spieler> alleSpielerDesTeams = spielerService.findeAlleSpielerEinesTeams(team);
 		
 		for(Spieler spieler : alleSpielerDesTeams) {
-			spieler.getStaerke().setDribbeln(spieler.getReinStaerke().getDribbeln() * team.getEinsatzTyp().getStaerkenFaktor());
-			spieler.getStaerke().setGeschwindigkeit(spieler.getReinStaerke().getGeschwindigkeit() * team.getEinsatzTyp().getStaerkenFaktor());
-			spieler.getStaerke().setPassen(spieler.getReinStaerke().getPassen() * team.getEinsatzTyp().getStaerkenFaktor());
-			spieler.getStaerke().setPhysis(spieler.getReinStaerke().getPhysis() * team.getEinsatzTyp().getStaerkenFaktor());
-			spieler.getStaerke().setSchießen(spieler.getReinStaerke().getSchießen() * team.getEinsatzTyp().getStaerkenFaktor());
-			spieler.getStaerke().setVerteidigen(spieler.getReinStaerke().getVerteidigen() * team.getEinsatzTyp().getStaerkenFaktor());
-			spieler.getStaerke().setDurchschnittsStaerke(spieler.getReinStaerke().getDurchschnittsStaerke() * team.getEinsatzTyp().getStaerkenFaktor());
-			
-			spielerService.aktualisiereSpieler(spieler);
+			double spielerStaerkeAenderung = team.getEinsatzTyp().getStaerkenFaktor();
+			spielerService.kompletteStaerkeAendern(spieler, spielerStaerkeAenderung);
 		}
 	}
 
@@ -147,13 +143,206 @@ public class TeamService {
 	public void aenderFormationEinesTeams(Team team) {
 		aktualisiereTeam(team);
 		FormationsTypen formationsTypDesTeams = team.getFormationsTyp();
-		List<Spieler> spielerDesTeams = spielerService.findeAlleSpielerEinesTeams(team);
-		
+		AufstellungsPositionsTypen aufstellung[] = formationsTypDesTeams.getAufstellungsPositionsTypen();
+		Collection<AufstellungsPositionsTypen> fehlendePositionen = new ArrayList<AufstellungsPositionsTypen>(Arrays.asList(aufstellung));
+	
+		staerksteFormationEinesTeams(team);
+	}
+	
+	//TODO fml
+	public void staerksteFormationEinesTeams(Team team) {
+		FormationsTypen formationsTypDesTeams = team.getFormationsTyp();
+		AufstellungsPositionsTypen aufstellung[] = formationsTypDesTeams.getAufstellungsPositionsTypen();
+		List<Spieler> spielerDesTeams = spielerService.spielerEinesTeamsSortiertNachStaerke(team);
+		Collection<AufstellungsPositionsTypen> fehlendePositionen = new ArrayList<AufstellungsPositionsTypen>(Arrays.asList(aufstellung));
+				
 		for(Spieler spieler : spielerDesTeams) {
-			spieler.setAufstellungsPositinsTyp(AufstellungsPositionsTypen.ERSATZ);
-			for(AufstellungsPositionsTypen a : formationsTypDesTeams.getAufstellungsPositionsTypen()) {
-				if(spieler.getPosition().getPositionsName().equals(a.getPositionsName())) {
-					spieler.setAufstellungsPositinsTyp(a);
+			spieler.setAufstellungsPositionsTyp(AufstellungsPositionsTypen.ERSATZ);
+			for(AufstellungsPositionsTypen a : aufstellung) {
+				if(spieler.getPosition().getPositionsName().equals(a.getPositionsName()) && fehlendePositionen.contains(a)) {
+					spieler.setAufstellungsPositionsTyp(a);
+					fehlendePositionen.remove(a);
+					LOG.info("{}", fehlendePositionen);
+					spielerService.aktualisiereSpieler(spieler);
+					break;
+				}
+			}
+		}
+		
+		if(fehlendePositionen.size() > 0) {
+			for(AufstellungsPositionsTypen a : aufstellung) {
+				for(Spieler spieler: spielerDesTeams) {
+					if((spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.ERSATZ) || 
+							spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.TRANSFERMARKT)) && fehlendePositionen.contains(a)) {
+						if(a.getRollenTyp().equals(RollenTypen.ANGREIFER)) {
+							if(spieler.getPosition().getRollenTyp().equals(a.getRollenTyp())) {
+								spieler.setAufstellungsPositionsTyp(a);
+								fehlendePositionen.remove(a);
+								spielerDesTeams.remove(spieler);
+								LOG.info("{}", fehlendePositionen);
+								spielerService.aktualisiereSpieler(spieler);
+								break;
+							}
+						}
+						
+						if(a.getRollenTyp().equals(RollenTypen.MITTELFELD)) {
+							if(spieler.getPosition().getRollenTyp().equals(a.getRollenTyp())) {
+								spieler.setAufstellungsPositionsTyp(a);
+								fehlendePositionen.remove(a);
+								spielerDesTeams.remove(spieler);
+								LOG.info("{}", fehlendePositionen);
+								spielerService.aktualisiereSpieler(spieler);
+								break;
+							}
+						}
+						
+						if(a.getRollenTyp().equals(RollenTypen.VERTEIDIGER)) {
+							if(spieler.getPosition().getRollenTyp().equals(a.getRollenTyp())) {
+								spieler.setAufstellungsPositionsTyp(a);
+								fehlendePositionen.remove(a);
+								spielerDesTeams.remove(spieler);
+								LOG.info("{}", fehlendePositionen);
+								spielerService.aktualisiereSpieler(spieler);
+								break;
+							}
+						}
+					}
+				}
+			}
+			
+			for(AufstellungsPositionsTypen a : aufstellung) {
+				for(Spieler spieler: spielerDesTeams) {
+					if((spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.ERSATZ) || 
+							spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.TRANSFERMARKT)) && fehlendePositionen.contains(a)) {
+						if(a.getRollenTyp().equals(RollenTypen.ANGREIFER)) {
+							if(spieler.getPosition().getRollenTyp().equals(RollenTypen.MITTELFELD)) {
+								spieler.setAufstellungsPositionsTyp(a);
+								fehlendePositionen.remove(a);
+								spielerDesTeams.remove(spieler);
+								LOG.info("{}", fehlendePositionen);
+								spielerService.aktualisiereSpieler(spieler);
+								break;
+							}
+						}
+						
+						if(a.getRollenTyp().equals(RollenTypen.MITTELFELD)) {
+							if(spieler.getPosition().getRollenTyp().equals(RollenTypen.VERTEIDIGER)) {
+								spieler.setAufstellungsPositionsTyp(a);
+								fehlendePositionen.remove(a);
+								spielerDesTeams.remove(spieler);
+								LOG.info("{}", fehlendePositionen);
+								spielerService.aktualisiereSpieler(spieler);
+								break;
+							}
+						}
+						
+						if(a.getRollenTyp().equals(RollenTypen.VERTEIDIGER)) {
+							if(spieler.getPosition().getRollenTyp().equals(RollenTypen.ANGREIFER)) {
+								spieler.setAufstellungsPositionsTyp(a);
+								fehlendePositionen.remove(a);
+								spielerDesTeams.remove(spieler);
+								LOG.info("{}", fehlendePositionen);
+								spielerService.aktualisiereSpieler(spieler);
+								break;
+							}
+						}
+					}
+				}
+			}
+			
+			for(AufstellungsPositionsTypen a : aufstellung) {
+				for(Spieler spieler: spielerDesTeams) {
+					if((spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.ERSATZ) || 
+							spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.TRANSFERMARKT)) && fehlendePositionen.contains(a)) {
+						if(a.getRollenTyp().equals(RollenTypen.ANGREIFER)) {
+							if(spieler.getPosition().getRollenTyp().equals(RollenTypen.VERTEIDIGER)) {
+								spieler.setAufstellungsPositionsTyp(a);
+								fehlendePositionen.remove(a);
+								spielerDesTeams.remove(spieler);
+								LOG.info("{}", fehlendePositionen);
+								spielerService.aktualisiereSpieler(spieler);
+								break;
+							}
+						}
+						
+						if(a.getRollenTyp().equals(RollenTypen.MITTELFELD)) {
+							if(spieler.getPosition().getRollenTyp().equals(RollenTypen.ANGREIFER)) {
+								spieler.setAufstellungsPositionsTyp(a);
+								fehlendePositionen.remove(a);
+								spielerDesTeams.remove(spieler);
+								LOG.info("{}", fehlendePositionen);
+								spielerService.aktualisiereSpieler(spieler);
+								break;
+							}
+						}
+						
+						if(a.getRollenTyp().equals(RollenTypen.VERTEIDIGER)) {
+							if(spieler.getPosition().getRollenTyp().equals(RollenTypen.MITTELFELD)) {
+								spieler.setAufstellungsPositionsTyp(a);
+								fehlendePositionen.remove(a);
+								spielerDesTeams.remove(spieler);
+								LOG.info("{}", fehlendePositionen);
+								spielerService.aktualisiereSpieler(spieler);
+								break;
+							}
+						}
+					}
+				}
+			}
+			
+			for(AufstellungsPositionsTypen a : aufstellung) {
+				for(Spieler spieler: spielerDesTeams) {
+					if((spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.ERSATZ) || 
+							spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.TRANSFERMARKT)) && fehlendePositionen.contains(a)) {
+						if(a.getRollenTyp().equals(RollenTypen.ANGREIFER)) {
+							if(spieler.getPosition().getRollenTyp().equals(RollenTypen.TORWART)) {
+								spieler.setAufstellungsPositionsTyp(a);
+								fehlendePositionen.remove(a);
+								spielerDesTeams.remove(spieler);
+								LOG.info("{}", fehlendePositionen);
+								spielerService.aktualisiereSpieler(spieler);
+								break;
+							}
+						}
+						
+						if(a.getRollenTyp().equals(RollenTypen.MITTELFELD)) {
+							if(spieler.getPosition().getRollenTyp().equals(RollenTypen.TORWART)) {
+								spieler.setAufstellungsPositionsTyp(a);
+								fehlendePositionen.remove(a);
+								spielerDesTeams.remove(spieler);
+								LOG.info("{}", fehlendePositionen);
+								spielerService.aktualisiereSpieler(spieler);
+								break;
+							}
+						}
+						
+						if(a.getRollenTyp().equals(RollenTypen.VERTEIDIGER)) {
+							if(spieler.getPosition().getRollenTyp().equals(RollenTypen.TORWART)) {
+								spieler.setAufstellungsPositionsTyp(a);
+								fehlendePositionen.remove(a);
+								spielerDesTeams.remove(spieler);
+								LOG.info("{}", fehlendePositionen);
+								spielerService.aktualisiereSpieler(spieler);
+								break;
+							}
+						}
+					}
+				}
+			}
+			
+			for(AufstellungsPositionsTypen a : aufstellung) {
+				for(Spieler spieler: spielerDesTeams) {
+					if((spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.ERSATZ) || 
+							spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.TRANSFERMARKT)) && fehlendePositionen.contains(a)) {
+						if(a.getRollenTyp().equals(RollenTypen.TORWART)) {
+							spieler.setAufstellungsPositionsTyp(a);
+							fehlendePositionen.remove(a);
+							spielerDesTeams.remove(spieler);
+							LOG.info("{}", fehlendePositionen);
+							spielerService.aktualisiereSpieler(spieler);
+							break;
+						}
+					}
 				}
 			}
 		}

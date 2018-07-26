@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import fussballmanager.service.spieler.Spieler;
+import fussballmanager.service.team.FormationsTypen;
 
 @Entity
 public class Startelf {

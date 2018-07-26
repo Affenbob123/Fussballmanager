@@ -8,7 +8,6 @@ import javax.persistence.ManyToOne;
 
 import fussballmanager.service.land.Land;
 import fussballmanager.service.liga.Liga;
-import fussballmanager.service.team.startelf.FormationsTypen;
 import fussballmanager.service.user.User;
 
 

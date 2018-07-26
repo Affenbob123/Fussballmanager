@@ -2,6 +2,7 @@ package fussballmanager.service.spieler;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
@@ -13,8 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fussballmanager.service.land.Land;
 import fussballmanager.service.spieler.staerke.Staerke;
+import fussballmanager.service.team.FormationsTypen;
 import fussballmanager.service.team.Team;
-import fussballmanager.service.team.startelf.FormationsTypen;
 
 @Service
 @Transactional
@@ -82,7 +83,7 @@ public class SpielerService {
 				}
 			}
 
-			Spieler spieler = new Spieler(nationalitaet, positionenTyp, aufstellungsPositionsTyp, alter, reinStaerke, staerke, talentwert, team);
+			Spieler spieler = new Spieler(nationalitaet, PositionenTypen.DM , aufstellungsPositionsTyp, alter, reinStaerke, staerke, talentwert, team);
 			legeSpielerAn(spieler);
 			LOG.info("Spielerstaerke: {}", spieler.getStaerke().getDurchschnittsStaerke());
 		}
@@ -95,5 +96,130 @@ public class SpielerService {
 
 		Random r = new Random();
 		return r.nextInt((maxTalentwert - minTalentwert) + 1) + minTalentwert;
+	}
+	
+	public void kompletteStaerkeAendern(Spieler spieler, double staerkeAenderungsFaktor) {
+		spieler.getStaerke().setDribbeln(spieler.getReinStaerke().getDribbeln() * staerkeAenderungsFaktor);
+		spieler.getStaerke().setGeschwindigkeit(spieler.getReinStaerke().getGeschwindigkeit() * staerkeAenderungsFaktor);
+		spieler.getStaerke().setPassen(spieler.getReinStaerke().getPassen() * staerkeAenderungsFaktor);
+		spieler.getStaerke().setPhysis(spieler.getReinStaerke().getPhysis() * staerkeAenderungsFaktor);
+		spieler.getStaerke().setSchießen(spieler.getReinStaerke().getSchießen() * staerkeAenderungsFaktor);
+		spieler.getStaerke().setVerteidigen(spieler.getReinStaerke().getVerteidigen() * staerkeAenderungsFaktor);
+		spieler.getStaerke().setDurchschnittsStaerke(spieler.getReinStaerke().getDurchschnittsStaerke() * staerkeAenderungsFaktor);
+		
+		aktualisiereSpieler(spieler);
+	}
+	
+	public List<Spieler> spielerEinesTeamsSortiertNachStaerke(Team team) {
+		List<Spieler> alleSpielerDesTeams = findeAlleSpielerEinesTeams(team);
+		
+		Collections.sort(alleSpielerDesTeams, new Comparator<Spieler>() {
+			@Override
+			public int compare(Spieler s1, Spieler s2) {
+				return Double.compare(s1.getStaerke().getDurchschnittsStaerke(), s2.getStaerke().getDurchschnittsStaerke());
+			}
+		});
+		return alleSpielerDesTeams;
+	}
+	
+	public double staerkeFaktorWennAufstellungsPositionNichtPositionIst(Spieler spieler) {
+		double staerkeFaktor = 1.0;
+		
+		PositionenTypen position = spieler.getPosition();
+		AufstellungsPositionsTypen aufstellungsPositon = spieler.getAufstellungsPositionsTyp();
+		
+		boolean spielerIstTorwart = false;
+		boolean spielerIstVerteidiger = false;
+		boolean spielerIstMittelfeld = false;
+		boolean spielerIstAngreifer = false;
+		
+		boolean spielerIstAufgestelltAlsTorwart = false;
+		boolean spielerIstAufgestelltAlsVerteidiger = false;
+		boolean spielerIstAufgestelltAlsMittelfeld = false;
+		boolean spielerIstAufgestelltAlsAngreifer = false;
+		
+		//Position des Spielers ermitteln
+		if(position.equals(PositionenTypen.TW)) {
+			spielerIstTorwart = true;
+		}
+		
+		if(position.equals(PositionenTypen.LV) || position.equals(PositionenTypen.LIV) || position.equals(PositionenTypen.LIB) ||
+				position.equals(PositionenTypen.RIV) || position.equals(PositionenTypen.RV)) {
+			spielerIstVerteidiger = true;
+		}
+		
+		if(position.equals(PositionenTypen.LM) || position.equals(PositionenTypen.DM) || position.equals(PositionenTypen.RM) ||
+				position.equals(PositionenTypen.ZM) || position.equals(PositionenTypen.OM)) {
+			spielerIstMittelfeld = true;
+		}
+		
+		if(position.equals(PositionenTypen.LS) || position.equals(PositionenTypen.MS) || position.equals(PositionenTypen.RS)) {
+			spielerIstAngreifer = true;
+		}
+		
+		//Aufstellungsposition des Spielers ermitteln
+		if(aufstellungsPositon.equals(AufstellungsPositionsTypen.TW)) {
+			spielerIstAufgestelltAlsTorwart = true;
+		}
+		
+		if(aufstellungsPositon.equals(AufstellungsPositionsTypen.LV) || aufstellungsPositon.equals(AufstellungsPositionsTypen.LIV) || 
+				aufstellungsPositon.equals(AufstellungsPositionsTypen.LIB) ||
+				aufstellungsPositon.equals(AufstellungsPositionsTypen.RIV) || aufstellungsPositon.equals(AufstellungsPositionsTypen.RV)) {
+			spielerIstAufgestelltAlsVerteidiger = true;
+		}
+		
+		if(aufstellungsPositon.equals(AufstellungsPositionsTypen.LM) || aufstellungsPositon.equals(AufstellungsPositionsTypen.DM) || 
+				aufstellungsPositon.equals(AufstellungsPositionsTypen.RM) ||
+				aufstellungsPositon.equals(AufstellungsPositionsTypen.ZM) || aufstellungsPositon.equals(AufstellungsPositionsTypen.OM)) {
+			spielerIstAufgestelltAlsMittelfeld = true;
+		}
+		
+		if(aufstellungsPositon.equals(AufstellungsPositionsTypen.LS) || aufstellungsPositon.equals(AufstellungsPositionsTypen.MS) || 
+				aufstellungsPositon.equals(AufstellungsPositionsTypen.RS)) {
+			spielerIstAufgestelltAlsAngreifer = true;
+		}
+		
+		//Starekefaktor ermittlung
+		if(spielerIstTorwart && !spielerIstAufgestelltAlsTorwart) {
+			staerkeFaktor = 0.5;
+			return staerkeFaktor;
+		}
+		
+		if(!spielerIstTorwart && spielerIstAufgestelltAlsTorwart) {
+			staerkeFaktor = 0.5;
+			return staerkeFaktor;
+		}
+		
+		if(spielerIstVerteidiger && spielerIstAufgestelltAlsMittelfeld) {
+			staerkeFaktor = 0.85;
+			return staerkeFaktor;
+		}
+		
+		if(!spielerIstVerteidiger && spielerIstAufgestelltAlsAngreifer) {
+			staerkeFaktor = 0.7;
+			return staerkeFaktor;
+		}
+		
+		if(spielerIstMittelfeld && spielerIstAufgestelltAlsVerteidiger) {
+			staerkeFaktor = 0.85;
+			return staerkeFaktor;
+		}
+		
+		if(!spielerIstMittelfeld && spielerIstAufgestelltAlsAngreifer) {
+			staerkeFaktor = 0.85;
+			return staerkeFaktor;
+		}
+		
+		if(spielerIstAngreifer && spielerIstAufgestelltAlsVerteidiger) {
+			staerkeFaktor = 0.7;
+			return staerkeFaktor;
+		}
+		
+		if(!spielerIstAngreifer && spielerIstAufgestelltAlsMittelfeld) {
+			staerkeFaktor = 0.85;
+			return staerkeFaktor;
+		}
+		
+		return staerkeFaktor;
 	}
 }

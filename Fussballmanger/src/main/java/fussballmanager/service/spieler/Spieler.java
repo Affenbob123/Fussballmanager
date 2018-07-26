@@ -28,7 +28,7 @@ public class Spieler implements Comparable<Spieler> {
 	
 	private PositionenTypen position;
 	
-	private AufstellungsPositionsTypen aufstellungsPositinsTyp;
+	private AufstellungsPositionsTypen aufstellungsPositionsTyp;
 	
 	private String name;
 	
@@ -60,7 +60,7 @@ public class Spieler implements Comparable<Spieler> {
 			int alter, Staerke reinStaerke, Staerke staerke, int talentwert, Team team) {
 		this.nationalitaet = nationalitaet;
 		this.position = position;
-		this.aufstellungsPositinsTyp = aufstellungsPositionsTyp;
+		this.aufstellungsPositionsTyp = aufstellungsPositionsTyp;
 		this.name = "Unbennanter Spieler";
 		this.alter = alter;
 		this.reinStaerke = reinStaerke;
@@ -129,9 +129,7 @@ public class Spieler implements Comparable<Spieler> {
 		return staerke;
 	}
 
-	public void setStaerke(Staerke staerke) {
-		this.staerke = staerke;
-	}
+
 
 	public int getErfahrung() {
 		return erfahrung;
@@ -189,17 +187,22 @@ public class Spieler implements Comparable<Spieler> {
 		this.verletzungsTage = verletzungsTage;
 	}
 
-	public AufstellungsPositionsTypen getAufstellungsPositinsTyp() {
-		return aufstellungsPositinsTyp;
+	public AufstellungsPositionsTypen getAufstellungsPositionsTyp() {
+		return aufstellungsPositionsTyp;
 	}
 
-	public void setAufstellungsPositinsTyp(AufstellungsPositionsTypen aufstellungsPositinsTyp) {
-		this.aufstellungsPositinsTyp = aufstellungsPositinsTyp;
+	public void setAufstellungsPositionsTyp(AufstellungsPositionsTypen aufstellungsPositionsTyp) {
+		this.aufstellungsPositionsTyp = aufstellungsPositionsTyp;
 	}
 
 	@Override
 	public int compareTo(Spieler compareTo) {
-		int comparePosition=((Spieler)compareTo).getAufstellungsPositinsTyp().getRangfolge();
-		return this.aufstellungsPositinsTyp.getRangfolge() - comparePosition;
+		int compareAufstellungsPosition=((Spieler)compareTo).getAufstellungsPositionsTyp().getRangfolge();
+		int comparePosition=((Spieler)compareTo).getPosition().getRangfolge();
+		
+		if(this.aufstellungsPositionsTyp.getRangfolge() - compareAufstellungsPosition == 0) {
+			return this.position.getRangfolge() - comparePosition;
+		}
+		return this.aufstellungsPositionsTyp.getRangfolge() - compareAufstellungsPosition;
 	}
 }
