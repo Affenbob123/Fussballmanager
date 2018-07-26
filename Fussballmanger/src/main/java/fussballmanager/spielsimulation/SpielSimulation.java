@@ -1,6 +1,5 @@
 package fussballmanager.spielsimulation;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -10,8 +9,10 @@ import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import fussballmanager.service.saison.spieltag.SpieltagService;
 import fussballmanager.service.spiel.Spiel;
 import fussballmanager.service.spiel.SpielService;
 import fussballmanager.service.spiel.spielereignisse.SpielEreignis;
@@ -20,6 +21,7 @@ import fussballmanager.service.spiel.spielereignisse.SpielEreignisTypen;
 import fussballmanager.service.spieler.Spieler;
 import fussballmanager.service.spieler.SpielerService;
 import fussballmanager.service.team.AusrichtungsTypen;
+import fussballmanager.service.team.TeamService;
 
 @Service
 @Transactional
@@ -37,36 +39,42 @@ public class SpielSimulation {
 	SpielerService spielerService;
 	
 	@Autowired
+	TeamService teamService;
+	
+	@Autowired
 	TorVersuchWahrscheinlicheit torVersuchWahrscheinlichkeit;
+	
+	@Autowired
+	SpieltagService spieltagService;
 	
 	Random random = new Random();
 	
-	private List<Spieler> spielerHeimmannschaft;
-	private List<Spieler> spielerGastmannschaft;
 	private boolean heimmannschaftAngreifer;
 	
 	public SpielSimulation() {
 		
 	}
 	
-	public synchronized List<SpielEreignis> simuliereSpiel(Spiel spiel) {
-		spielerHeimmannschaft = spielerService.findeAlleSpielerEinesTeams(spiel.getHeimmannschaft());
-		spielerGastmannschaft = spielerService.findeAlleSpielerEinesTeams(spiel.getGastmannschaft());
-	
-		int zufallsZahlHeimVorteil = random.nextInt(100 - 30 + 1) + 30;
-		List<SpielEreignis> spielEreignisse = new ArrayList<>();
-		double heimVorteil = berechneHeimVorteil(zufallsZahlHeimVorteil);
-		double staerkeFaktor = staerkeFaktorHeimmannschaft(spielerHeimmannschaft, spielerGastmannschaft, heimVorteil);
-
-		for(int i = 0; i < 90; i++) {
-			spielEreignisse.add(simuliereSpielminute(spiel, staerkeFaktor, i));
-		}		
-		return spielEreignisse;
+	@Scheduled(cron = "00 35 22 * * ?")
+	public void simuliereSpiele() {
+		simuliereSpielMinuteAllesSpiele();
 	}
 	
-	public SpielEreignis simuliereSpielminute(Spiel spiel, double staerkeFaktor, int spielminute) {
-		SpielEreignis spielEreignis = new SpielEreignis();
-		int zufallsZahl = random.nextInt(100*100*100*100 - 1 + 1) + 1;
+	
+	public void simuliereSpielMinuteAllesSpiele() {
+		int spielminute = 1;
+		for(Spiel spiel : spielService.findeAlleSpieleEinesSpieltages(spieltagService.findeAktuellenSpieltag())) {
+			simuliereSpielminuteEinesSpieles(spiel,spielminute);
+		}
+	}
+	
+	public void simuliereSpielminuteEinesSpieles(Spiel spiel, int spielminute) {
+		List<Spieler> spielerHeimmannschaft = spielerService.findeAlleSpielerEinesTeams(spiel.getHeimmannschaft());
+		List<Spieler> spielerGastmannschaft = spielerService.findeAlleSpielerEinesTeams(spiel.getGastmannschaft());
+		
+		spiel = spielService.findeSpiel(spiel.getId());
+		
+		int zufallsZahl = random.nextInt(100 - 1 + 1) + 1;
 		double wahrscheinlichkeitTorVersuch;
 		
 		AusrichtungsTypen ausrichtungsTypAngreifer;
@@ -76,29 +84,30 @@ public class SpielSimulation {
 		double erfolgsWahrscheinlichkeitAbwehr;
 		double erfolgsWahrscheinlichkeitMittelfeld;
 		double erfolgsWahrscheinlichkeitAngriff;
-
-		bestimmeAngreifer(staerkeFaktor);
+		
+		double staerkeFaktorHeimmannschaft = staerkeFaktorHeimmannschaft(spiel);
+		double staerkeFaktorGastmannschaft = 1 / staerkeFaktorHeimmannschaft(spiel);
+		
+		bestimmeAngreifer(spiel.getHeimVorteil(), spielerHeimmannschaft, spielerGastmannschaft);
 		
 		if(heimmannschaftAngreifer) {
 			ausrichtungsTypAngreifer = spiel.getHeimmannschaft().getAusrichtungsTyp();
 			ausrichtungsTypVerteidiger = spiel.getGastmannschaft().getAusrichtungsTyp();
 			
-			erfolgsWahrscheinlichkeitTorwart = torVersuchWahrscheinlichkeit.wahrscheinlichkeitTorwartGegenTorwart(spielerHeimmannschaft, spielerGastmannschaft, staerkeFaktor);
-			erfolgsWahrscheinlichkeitAbwehr = torVersuchWahrscheinlichkeit.wahrscheinlichkeitAbwehrGegenAngriff(spielerHeimmannschaft, spielerGastmannschaft, staerkeFaktor);
-			erfolgsWahrscheinlichkeitMittelfeld = torVersuchWahrscheinlichkeit.wahrscheinlichkeitMittelfeldGegenMittelfeld(spielerHeimmannschaft, spielerGastmannschaft, staerkeFaktor);
-			erfolgsWahrscheinlichkeitAngriff = torVersuchWahrscheinlichkeit.wahrscheinlichkeitAngriffGegenAbwehr(spielerHeimmannschaft, spielerGastmannschaft, staerkeFaktor);
+			erfolgsWahrscheinlichkeitTorwart = torVersuchWahrscheinlichkeit.wahrscheinlichkeitTorwartGegenTorwart(spielerHeimmannschaft, spielerGastmannschaft, staerkeFaktorHeimmannschaft);
+			erfolgsWahrscheinlichkeitAbwehr = torVersuchWahrscheinlichkeit.wahrscheinlichkeitAbwehrGegenAngriff(spielerHeimmannschaft, spielerGastmannschaft, staerkeFaktorHeimmannschaft);
+			erfolgsWahrscheinlichkeitMittelfeld = torVersuchWahrscheinlichkeit.wahrscheinlichkeitMittelfeldGegenMittelfeld(spielerHeimmannschaft, spielerGastmannschaft, staerkeFaktorHeimmannschaft);
+			erfolgsWahrscheinlichkeitAngriff = torVersuchWahrscheinlichkeit.wahrscheinlichkeitAngriffGegenAbwehr(spielerHeimmannschaft, spielerGastmannschaft, staerkeFaktorHeimmannschaft);
 			
 			wahrscheinlichkeitTorVersuch = erfolgsWahrscheinlichkeitAbwehr * erfolgsWahrscheinlichkeitMittelfeld * erfolgsWahrscheinlichkeitAngriff * erfolgsWahrscheinlichkeitTorwart;
-			LOG.info("Wahrscheinlichkeit vor Ausrichtung:", wahrscheinlichkeitTorVersuch);
 			wahrscheinlichkeitTorVersuch = wahrscheinlichkeitTorVersuch * ausrichtungsTypAngreifer.getWahrscheinlichkeitTorZuErzielen() * 
 					ausrichtungsTypVerteidiger.getWahrscheinlichkeitTorZuKassieren();
-			LOG.info("Wahrscheinlichkeit nach Ausrichtung:", wahrscheinlichkeitTorVersuch);
 			
 			wahrscheinlichkeitTorVersuch = wahrscheinlichkeitTorVersuch * 100;
 			
-			if(zufallsZahl > wahrscheinlichkeitTorVersuch) {
-				spielEreignis.setSpielereignisTyp(SpielEreignisTypen.NIX);
-			} else {
+			if(zufallsZahl < wahrscheinlichkeitTorVersuch) {
+				LOG.info("TV");
+				SpielEreignis spielEreignis = new SpielEreignis();
 				spielEreignis.setSpielereignisTyp(SpielEreignisTypen.TORVERSUCH);
 				spielEreignis.setSpieler(null);
 				spielEreignis.setTeam(spiel.getHeimmannschaft());
@@ -106,29 +115,25 @@ public class SpielSimulation {
 				
 				spiel.addSpielEreignis(spielEreignis);
 				spielService.aktualisiereSpiel(spiel);
-			}
-//			LOG.info("{} Abwehr: {}, Mittelfeld: {}, Angriff: {}, Torversuch: {}", "Gastmannschaft", erfolgsWahrscheinlichkeitAbwehr, 
-//					erfolgsWahrscheinlichkeitMittelfeld, erfolgsWahrscheinlichkeitAngriff, wahrscheinlichkeitTorVersuch);		
+			}	
 		} else {
 			ausrichtungsTypAngreifer = spiel.getGastmannschaft().getAusrichtungsTyp();
 			ausrichtungsTypVerteidiger = spiel.getHeimmannschaft().getAusrichtungsTyp();
 			
-			erfolgsWahrscheinlichkeitTorwart = torVersuchWahrscheinlichkeit.wahrscheinlichkeitTorwartGegenTorwart(spielerGastmannschaft, spielerHeimmannschaft, staerkeFaktor);
-			erfolgsWahrscheinlichkeitAbwehr = torVersuchWahrscheinlichkeit.wahrscheinlichkeitAbwehrGegenAngriff(spielerGastmannschaft, spielerHeimmannschaft, staerkeFaktor);
-			erfolgsWahrscheinlichkeitMittelfeld = torVersuchWahrscheinlichkeit.wahrscheinlichkeitMittelfeldGegenMittelfeld(spielerGastmannschaft, spielerHeimmannschaft, staerkeFaktor);
-			erfolgsWahrscheinlichkeitAngriff = torVersuchWahrscheinlichkeit.wahrscheinlichkeitAngriffGegenAbwehr(spielerGastmannschaft, spielerHeimmannschaft, staerkeFaktor);
+			erfolgsWahrscheinlichkeitTorwart = torVersuchWahrscheinlichkeit.wahrscheinlichkeitTorwartGegenTorwart(spielerGastmannschaft, spielerHeimmannschaft, staerkeFaktorGastmannschaft);
+			erfolgsWahrscheinlichkeitAbwehr = torVersuchWahrscheinlichkeit.wahrscheinlichkeitAbwehrGegenAngriff(spielerGastmannschaft, spielerHeimmannschaft, staerkeFaktorGastmannschaft);
+			erfolgsWahrscheinlichkeitMittelfeld = torVersuchWahrscheinlichkeit.wahrscheinlichkeitMittelfeldGegenMittelfeld(spielerGastmannschaft, spielerHeimmannschaft, staerkeFaktorGastmannschaft);
+			erfolgsWahrscheinlichkeitAngriff = torVersuchWahrscheinlichkeit.wahrscheinlichkeitAngriffGegenAbwehr(spielerGastmannschaft, spielerHeimmannschaft, staerkeFaktorGastmannschaft);
 			
 			wahrscheinlichkeitTorVersuch = erfolgsWahrscheinlichkeitAbwehr * erfolgsWahrscheinlichkeitMittelfeld * erfolgsWahrscheinlichkeitAngriff * erfolgsWahrscheinlichkeitTorwart;
-			LOG.info("Wahrscheinlichkeit vor Ausrichtung: {}", wahrscheinlichkeitTorVersuch);
 			wahrscheinlichkeitTorVersuch = wahrscheinlichkeitTorVersuch * ausrichtungsTypAngreifer.getWahrscheinlichkeitTorZuErzielen() * 
 					ausrichtungsTypVerteidiger.getWahrscheinlichkeitTorZuKassieren();
-			LOG.info("Wahrscheinlichkeit nach Ausrichtung: {}", wahrscheinlichkeitTorVersuch);
 			
 			wahrscheinlichkeitTorVersuch = wahrscheinlichkeitTorVersuch * 100;
 			
-			if(zufallsZahl > wahrscheinlichkeitTorVersuch) {
-				spielEreignis.setSpielereignisTyp(SpielEreignisTypen.NIX);
-			} else {
+			if(zufallsZahl < wahrscheinlichkeitTorVersuch) {
+				LOG.info("TV");
+				SpielEreignis spielEreignis = new SpielEreignis();
 				spielEreignis.setSpielereignisTyp(SpielEreignisTypen.TORVERSUCH);
 				spielEreignis.setSpieler(null);
 				spielEreignis.setTeam(spiel.getGastmannschaft());
@@ -136,18 +141,16 @@ public class SpielSimulation {
 				
 				spiel.addSpielEreignis(spielEreignis);
 				spielService.aktualisiereSpiel(spiel);
-			}
-			
-//			LOG.info("{} Abwehr: {}, Mittelfeld: {}, Angriff: {}, Torversuch: {}", "Gastmannschaft", erfolgsWahrscheinlichkeitAbwehr, 
-//				erfolgsWahrscheinlichkeitMittelfeld, erfolgsWahrscheinlichkeitAngriff, wahrscheinlichkeitTorVersuch);
+			} 
 		}
-		return spielEreignis;
-	}
-	
-	public double berechneHeimVorteil(int zufallsZahlHeimVorteil) {
-		double doubleZufallsZahl = (double)zufallsZahlHeimVorteil;
-		//LOG.info("Zufallszahlheimvorteil : {}", doubleZufallsZahl);
-		return (doubleZufallsZahl + 100.00) / 100.00;
+		
+		LOG.info("Heimmannscahftangreifer: {}, zufallszahl: {}, tvwahrscheinlichkeit: {}", heimmannschaftAngreifer, zufallsZahl, wahrscheinlichkeitTorVersuch);
+		//LOG.info("Spiel: {} : {}, Ausrichtung: {} : {}, Einsatz: {} : {}", spiel.getHeimmannschaft().getName(), spiel.getGastmannschaft().getName(), 
+		//		spiel.getHeimmannschaft().getAusrichtungsTyp(), spiel.getGastmannschaft().getAusrichtungsTyp(), spiel.getHeimmannschaft().getEinsatzTyp(),
+		//		spiel.getGastmannschaft().getEinsatzTyp());
+		//LOG.info("Heimmannschaft Angreifer: {}, Torwart: {}, Abwehr: {}, Mittelfeld: {}, Angriff: {}, Torversuch: {}", heimmannschaftAngreifer, 
+		//		erfolgsWahrscheinlichkeitTorwart, erfolgsWahrscheinlichkeitAbwehr, erfolgsWahrscheinlichkeitMittelfeld, erfolgsWahrscheinlichkeitAngriff,
+		//		wahrscheinlichkeitTorVersuch);
 	}
 
 	public boolean isHeimmannschaftAngreifer() {
@@ -158,9 +161,9 @@ public class SpielSimulation {
 		this.heimmannschaftAngreifer = heimmannschaftAngreifer;
 	}
 	
-	public void bestimmeAngreifer(double heimVorteil) {
+	public void bestimmeAngreifer(double heimVorteil, List<Spieler> spielerHeimmannschaft, List<Spieler> spielerGastmannschaft) {
 		int zufallsZahl = ThreadLocalRandom.current().nextInt(1, 100);
-		
+		//LOG.info("Torversuchwahrscheinlichkeit: {}", torVersuchWahrscheinlichkeit.wahrscheinlichkeitDasHeimmannschaftImAngriffIst(spielerHeimmannschaft, spielerGastmannschaft, heimVorteil));
 		if(torVersuchWahrscheinlichkeit.wahrscheinlichkeitDasHeimmannschaftImAngriffIst(spielerHeimmannschaft, spielerGastmannschaft, heimVorteil) > zufallsZahl) {
 			setHeimmannschaftAngreifer(true);
 		} else {
@@ -171,7 +174,9 @@ public class SpielSimulation {
 	/*
 	 * Nimmt summe der Stärken der teams und vergleicht diese. Anschließend wird mit der fuenften wurzel der stärkefaktor der heimmanschaft berechnet
 	 */
-	public double staerkeFaktorHeimmannschaft(List<Spieler> spielerHeimmannschaft, List<Spieler> spielerGastmannschaft, double heimVorteil) {
+	public double staerkeFaktorHeimmannschaft(Spiel spiel) {
+		List<Spieler> spielerHeimmannschaft = spielerService.findeAlleSpielerEinesTeams(spiel.getHeimmannschaft());
+		List<Spieler> spielerGastmannschaft = spielerService.findeAlleSpielerEinesTeams(spiel.getGastmannschaft());
 		double staerkeFaktor = 1.0;
 		double gesamtStaerkeHeimmannschaft = 0.0;
 		double gesamtStaerkeGastmannschaft = 0.0;
@@ -185,6 +190,8 @@ public class SpielSimulation {
 			gesamtStaerkeGastmannschaft = gesamtStaerkeGastmannschaft + spieler.getStaerke().getDurchschnittsStaerke();
 		}
 		
+		gesamtStaerkeHeimmannschaft = gesamtStaerkeHeimmannschaft * spiel.getHeimVorteil();
+		
 		if(gesamtStaerkeHeimmannschaft <= 0.0) {
 			gesamtStaerkeHeimmannschaft = 0.01;
 		}
@@ -193,23 +200,12 @@ public class SpielSimulation {
 			gesamtStaerkeGastmannschaft = 0.01;
 		}
 		
-		if((gesamtStaerkeHeimmannschaft / gesamtStaerkeGastmannschaft) >= 1.0) {
-			tatsaechlicherFaktor = gesamtStaerkeHeimmannschaft / gesamtStaerkeGastmannschaft;
-			
-			if(tatsaechlicherFaktor > 100) {
-				tatsaechlicherFaktor = 100;
-			}
-			staerkeFaktor = Math.pow(tatsaechlicherFaktor, 1.0/5);
-		} else {
-			tatsaechlicherFaktor = gesamtStaerkeGastmannschaft / gesamtStaerkeHeimmannschaft;
-			
-			if(tatsaechlicherFaktor > 100) {
-				tatsaechlicherFaktor = 100;
-			}
-			staerkeFaktor = Math.pow(tatsaechlicherFaktor, 1.0/5);
-			staerkeFaktor = staerkeFaktor * -1;
+		tatsaechlicherFaktor = gesamtStaerkeHeimmannschaft / gesamtStaerkeGastmannschaft;
+		
+		if(tatsaechlicherFaktor > 100) {
+			tatsaechlicherFaktor = 100;
 		}
-		LOG.info("Heimmannschaft: {}, Gastmannschaft: {}, Stärkefaktor: {}", gesamtStaerkeHeimmannschaft, gesamtStaerkeGastmannschaft, staerkeFaktor);
+		staerkeFaktor = Math.pow(tatsaechlicherFaktor, 1.0/5);
 		
 		return staerkeFaktor;
 	}

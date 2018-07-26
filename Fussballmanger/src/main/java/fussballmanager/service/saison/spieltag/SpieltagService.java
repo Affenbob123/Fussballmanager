@@ -127,10 +127,4 @@ public class SpieltagService {
 			wechsleAktuellenSpieltag();
 		}
 	}
-	
-	public void simuliereSpieltag() {
-		for(Spiel spiel : spielService.findeAlleSpieleEinesSpieltages(findeAktuellenSpieltag())) {
-			spielService.spielSimulieren(spiel);
-		}
-	}
 }

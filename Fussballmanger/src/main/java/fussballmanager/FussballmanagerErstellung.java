@@ -64,7 +64,6 @@ public class FussballmanagerErstellung {
 
 	}
 	
-	//@Scheduled(fixedDelay=100)
 	@PostConstruct
 	public void checkTimeForCreation() {
 		LocalDateTime aktuellesDatum = LocalDateTime.now(ZoneId.of("Europe/Berlin"));
@@ -83,8 +82,7 @@ public class FussballmanagerErstellung {
 			}
 			saisonService.ersteSaisonErstellen();
 			spieltagService.checkAktuellerSpieltag();
-			spieltagService.simuliereSpieltag();
-			LOG.info("DurchschnittlicheTorVersuche: {}", spielEreignisService.findeSpielEreignisse().size());
+			spielSimulation.simuliereSpiele();
 		}
 	}
 }

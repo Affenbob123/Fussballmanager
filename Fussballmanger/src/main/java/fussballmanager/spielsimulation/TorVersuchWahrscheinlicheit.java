@@ -14,7 +14,7 @@ import fussballmanager.service.spieler.Spieler;
 @Transactional
 public class TorVersuchWahrscheinlicheit {
 
-	public int wahrscheinlichkeitDasHeimmannschaftImAngriffIst(List<Spieler> spielerHeimmannschaft, List<Spieler> spielerGastmannschaft, double staerkeFaktor) {
+	public int wahrscheinlichkeitDasHeimmannschaftImAngriffIst(List<Spieler> spielerHeimmannschaft, List<Spieler> spielerGastmannschaft, double heimVorteil) {
 		int wahrscheinlichkeit;
 
 		double staerkeHeimmannschaft = 0.0;
@@ -28,25 +28,10 @@ public class TorVersuchWahrscheinlicheit {
 			staerkeGastmannschaft = staerkeGastmannschaft + spieler.getStaerke().getDurchschnittsStaerke();
 		}
 		
-		staerkeHeimmannschaft = staerkeHeimmannschaft * staerkeFaktor;
+		staerkeHeimmannschaft = staerkeHeimmannschaft * heimVorteil;
 		wahrscheinlichkeit = (int) ((staerkeHeimmannschaft) * 100 / (staerkeHeimmannschaft + staerkeGastmannschaft));
 		
 		return wahrscheinlichkeit;
-	}
-	
-	public double wahrscheinlichkeitDasDerAngriffZumTorschussFuehrt(List<Spieler> spielerAngreifer, List<Spieler> spielerVerteidiger, double staerkeFaktor) {
-		double wahrscheinlichkeit;
-		return 0;
-	}
-	
-	public double wahrscheinlichkeitDasDerAngreiferEinenTorschussHat(List<Spieler> spielerAngreifer, List<Spieler> spielerVerteidiger, double staerkeFaktor) {
-		double wahrscheinlichkeit;
-		return 0;
-	}
-	
-	public double wahrscheinlichkeitDasDerAngreiferEinenTorversuchHat(List<Spieler> spielerAngreifer, List<Spieler> spielerVerteidiger, double staerkeFaktor) {
-		int wahrscheinlichkeit;
-		return 0;
 	}
 	
 	public double wahrscheinlichkeitTorwartGegenTorwart(List<Spieler> spielerAngreifer, List<Spieler> spielerVerteidiger, double staerkeFaktor) {
@@ -78,7 +63,8 @@ public class TorVersuchWahrscheinlicheit {
 		durchschnittsStaerkeTorwartAngreifer = torwartDesAngreifers.getStaerke().getDurchschnittsStaerke();
 		durchschnittsStaerkeTorwartVerteidiger = torwartDesVerteidigers.getStaerke().getDurchschnittsStaerke();
 		
-		return durchschnittsStaerkeTorwartAngreifer / 
+		durchschnittsStaerkeTorwartAngreifer = durchschnittsStaerkeTorwartAngreifer * staerkeFaktor;
+		return (durchschnittsStaerkeTorwartAngreifer) / 
 				(durchschnittsStaerkeTorwartAngreifer + durchschnittsStaerkeTorwartVerteidiger);
 	}
 	

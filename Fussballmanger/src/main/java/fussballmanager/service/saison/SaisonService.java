@@ -2,8 +2,6 @@ package fussballmanager.service.saison;
 
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,6 +98,7 @@ public class SaisonService {
 	}
 	
 	private void erstelleSpieleFuerEineSaison(Saison saison) {
+		spielService.erstelleSpieleFuerEineLiga(ligaService.findeLiga(1L));
 		for(Liga liga : ligaService.findeAlleLigen()) {
 			spielService.erstelleSpieleFuerEineLiga(liga);
 			LOG.info("Spiele für die Saison: {} und Liga: {} wurde angelegt.", saison.getSaisonNummer(), liga.getLigaNameTyp().getName());

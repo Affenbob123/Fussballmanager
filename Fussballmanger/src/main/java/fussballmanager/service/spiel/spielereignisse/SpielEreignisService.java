@@ -46,7 +46,6 @@ public class SpielEreignisService {
 					toreVersucheAnzahl++;
 				}
 			}
-
 		}
 		return toreVersucheAnzahl;
 	}

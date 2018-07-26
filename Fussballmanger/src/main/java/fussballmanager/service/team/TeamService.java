@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import fussballmanager.service.land.Land;
 import fussballmanager.service.liga.Liga;
 import fussballmanager.service.liga.LigaService;
+import fussballmanager.service.spiel.Spiel;
+import fussballmanager.service.spiel.SpielService;
 import fussballmanager.service.spieler.Spieler;
 import fussballmanager.service.spieler.SpielerService;
 import fussballmanager.service.user.User;
@@ -30,6 +32,9 @@ public class TeamService {
 	
 	@Autowired
 	SpielerService spielerService;
+	
+	@Autowired
+	SpielService spielService;
 	
 	public Team findeTeam(Long id) {
 		return teamRepository.getOne(id);
@@ -131,6 +136,8 @@ public class TeamService {
 			spieler.getStaerke().setSchießen(spieler.getReinStaerke().getSchießen() * team.getEinsatzTyp().getStaerkenFaktor());
 			spieler.getStaerke().setVerteidigen(spieler.getReinStaerke().getVerteidigen() * team.getEinsatzTyp().getStaerkenFaktor());
 			spieler.getStaerke().setDurchschnittsStaerke(spieler.getReinStaerke().getDurchschnittsStaerke() * team.getEinsatzTyp().getStaerkenFaktor());
+			
+			spielerService.aktualisiereSpieler(spieler);
 		}
 	}
 }

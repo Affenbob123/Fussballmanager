@@ -47,6 +47,16 @@ public class SpielService {
 		return spielRepository.findAll();
 	}
 	
+	public List<Spiel> findeAlleSpieleEinesTeams(Team team) {
+		List<Spiel> alleSpieleEinesTeams = new ArrayList<>();
+		for(Spiel spiel : findeAlleSpiele()) {
+			if(spiel.getGastmannschaft().equals(team) || spiel.getHeimmannschaft().equals(team)) {
+				alleSpieleEinesTeams.add(spiel);
+			}
+		}
+		return alleSpieleEinesTeams;
+	}
+	
 	public List<Spiel> findeAlleSpieleEinerLiga(Liga liga) {
 		List<Spiel> alleSpieleEinerLiga = new ArrayList<>();
 		
@@ -92,10 +102,6 @@ public class SpielService {
 	
 	public void loescheSpiel(Spiel spiel) {
 		spielRepository.delete(spiel);
-	}
-	
-	public void spielSimulieren(Spiel spiel) {
-		spielSimulation.simuliereSpiel(spiel);
 	}
 
 	public void erstelleSpieleFuerEineLiga(Liga liga) {
