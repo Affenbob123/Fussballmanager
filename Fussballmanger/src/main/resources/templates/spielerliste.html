@@ -47,37 +47,63 @@
 					</option>
 				</select>
 			</form>
-			<table class="table table-hover">
+			<table class="table table-hover table-condensed" style="border-collapse:collapse;">
 				<thead>
 					<tr class="table-active">
-						<th scope="col">Nationalität</th>
+						<th scope="col">Nationalit&auml;t</th>
 						<th scope="col">Position</th>
 						<th scope="col">Aufstellungsposition</th>
 						<th scope="col">Name</th>
-						<th scope="col">Stärke</th>
-						<th scope="col">Reinstärke</th>
+						<th scope="col">St&auml;rke</th>
+						<th scope="col">Reinst&auml;rke</th>
 						<th scope="col">Erfahrung</th>
 						<th scope="col">Talentwert</th>
 						<th scope="col">Motivation</th>
 					</tr>
 				</thead>
-
-				<tr class="" th:each="spieler : ${alleSpielerDesAktuellenTeams}">
-					<td th:text="${spieler.nationalitaet.getLandNameTyp().getName()}" />
-					<td th:text="${spieler.position}" />
-					<td th:text="${spieler.aufstellungsPositionsTyp}" />
-					<td> 
-						<a class="" th:text="${spieler.name}" th:href="@{/spieler/}+${spieler.id}"></a>
-					</td>
-					<td th:text="${spieler.staerke.durchschnittsStaerke}" />
-					<td th:text="${spieler.reinStaerke.durchschnittsStaerke}" />
-					<td th:text="${spieler.erfahrung}" />
-					<td th:text="${spieler.talentwert}" />
-					<td th:text="${spieler.motivation}" />
-				</tr>
+				<tbody th:each="spieler : ${alleSpielerDesAktuellenTeams}">
+					<tr data-toggle="collapse" th:attr="data-target='#'+${spieler.id}" class="accordion-toggle" >
+						<td th:text="${spieler.nationalitaet.getLandNameTyp().getName()}" />
+						<td th:text="${spieler.position}" />
+						<td th:text="${spieler.aufstellungsPositionsTyp}" />
+						<td> 
+							<a class="" th:text="${spieler.name}" th:href="@{/spieler/}+${spieler.id}"></a>
+						</td>
+						<td th:text="${spieler.staerke.durchschnittsStaerke}" />
+						<td th:text="${spieler.reinStaerke.durchschnittsStaerke}" />
+						<td th:text="${spieler.erfahrung}" />
+						<td th:text="${spieler.talentwert}" />
+						<td th:text="${spieler.motivation}" />
+					</tr>
+					<tr class="collapse" th:id="${spieler.id}">
+		           		<td class="hiddenRow">
+		           			<div class="accordian-body">
+		           				<p>Geschwindigkeit:</p>
+		           				<p>Schuss:</p>
+		           				<p>Passen:</p>
+		           				<p>Dribbeln:</p>
+		           				<p>Verteidigung:</p>
+		           				<p>Physis:</p>
+		           			</div>
+		           		</td>
+		           		<td class="hiddenRow">
+		           			<div class="accordian-body">
+		           				<p th:text="${spieler.reinStaerke.geschwindigkeit}"></p>
+		           				<p th:text="${spieler.reinStaerke.schiessen}"></p>
+		           				<p th:text="${spieler.reinStaerke.passen}"></p>
+		           				<p th:text="${spieler.reinStaerke.dribbeln}"></p>
+		           				<p th:text="${spieler.reinStaerke.verteidigen}"></p>
+		           				<p th:text="${spieler.reinStaerke.physis}"></p>
+		           			</div>
+		           		</td>
+		       		</tr>
+		       	</tbody>
 			</table>
 		</div>
 	</div>
-	<th:block th:replace="fragments/header :: scripts" />
+	<th:block th:replace="fragments/header :: scripts">
+		<script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css"></script>
+		<script src="https://raw.githubusercontent.com/SteveSanderson/knockout.mapping/master/build/output/knockout.mapping-latest.debug.js"></script>
+	</th:block>
 </body>
 </html>

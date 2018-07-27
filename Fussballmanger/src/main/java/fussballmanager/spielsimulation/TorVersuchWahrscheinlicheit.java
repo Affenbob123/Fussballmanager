@@ -155,7 +155,7 @@ public class TorVersuchWahrscheinlicheit {
 		for(Spieler spieler : mittelfeldDesAngreifers) {
 			staerkenDesAngreifers = staerkenDesAngreifers + (((spieler.getStaerke().getPassen() * gewichtungPassenAngreifer) + 
 					(spieler.getStaerke().getDribbeln() * gewichtungDribbelnAngreifer) + (spieler.getStaerke().getPhysis() * gewichtungPhysisAngreifer) + 
-					(spieler.getStaerke().getGeschwindigkeit() * gewichtungGeschwindigkeitAngreifer) + (spieler.getStaerke().getSchießen() * gewichtungSchießenAngreifer)) / 100);
+					(spieler.getStaerke().getGeschwindigkeit() * gewichtungGeschwindigkeitAngreifer) + (spieler.getStaerke().getSchiessen() * gewichtungSchießenAngreifer)) / 100);
 		}
 		
 		//berechnet den durchschnittswert von physis, verteidigung, geschwindigkeit des Mittelfeldes des Verteidigers
@@ -206,7 +206,7 @@ public class TorVersuchWahrscheinlicheit {
 		for(Spieler spieler : angriffDesAngreifers) {
 			staerkenDesAngreifers = staerkenDesAngreifers + (((spieler.getStaerke().getPassen() * gewichtungPassenAngreifer) + 
 					(spieler.getStaerke().getDribbeln() * gewichtungDribbelnAngreifer) + (spieler.getStaerke().getPhysis() * gewichtungPhysisAngreifer) + 
-					(spieler.getStaerke().getGeschwindigkeit() * gewichtungGeschwindigkeitAngreifer) + (spieler.getStaerke().getSchießen() * gewichtungSchießenAngreifer)) / 100);
+					(spieler.getStaerke().getGeschwindigkeit() * gewichtungGeschwindigkeitAngreifer) + (spieler.getStaerke().getSchiessen() * gewichtungSchießenAngreifer)) / 100);
 		}
 		
 		//berechnet den durchschnittswert von physis, verteidigung, geschwindigkeit des Mittelfeldes des Verteidigers

@@ -14,7 +14,7 @@ public class Staerke {
 	
 	private double geschwindigkeit;
 	
-	private double schießen;
+	private double schiessen;
 	
 	private double passen;
 	
@@ -26,15 +26,15 @@ public class Staerke {
 	
 	private double durchschnittsStaerke;
 	
-	public Staerke(double geschwindigkeit, double schießen, double passen, double dribbeln, double verteidigen,
+	public Staerke(double geschwindigkeit, double schiessen, double passen, double dribbeln, double verteidigen,
 			double physis) {
 		this.geschwindigkeit = geschwindigkeit;
-		this.schießen = schießen;
+		this.schiessen = schiessen;
 		this.passen = passen;
 		this.dribbeln = dribbeln;
 		this.verteidigen = verteidigen;
 		this.physis = physis;
-		this.durchschnittsStaerke = (this.geschwindigkeit + this.schießen + this.passen 
+		this.durchschnittsStaerke = (this.geschwindigkeit + this.schiessen + this.passen 
 				+ this.dribbeln + this.verteidigen + this.physis) / 6.0;
 	}
 
@@ -50,12 +50,12 @@ public class Staerke {
 		this.geschwindigkeit = geschwindigkeit;
 	}
 
-	public double getSchießen() {
-		return schießen;
+	public double getSchiessen() {
+		return schiessen;
 	}
 
-	public void setSchießen(double schießen) {
-		this.schießen = schießen;
+	public void setSchiessen(double schießen) {
+		this.schiessen = schießen;
 	}
 
 	public double getPassen() {
