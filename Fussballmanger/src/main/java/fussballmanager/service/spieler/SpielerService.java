@@ -51,6 +51,23 @@ public class SpielerService {
 		return alleSpielerEinesTeams;
 	}
 	
+	public List<Spieler> findeAlleSpielerEinesTeamsInAufstellung(Team aktuellesTeam) {
+		List<Spieler> alleSpielerEinesTeams =  new ArrayList<>();
+		
+		for(Spieler spieler : findeAlleSpieler()) {
+			if(spieler.getTeam() != null) {
+				if(spieler.getTeam().equals(aktuellesTeam)) {
+					if(!(spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.TRANSFERMARKT)
+							|| spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.ERSATZ))) {
+						alleSpielerEinesTeams.add(spieler);
+					}
+				}
+			}
+		}
+		Collections.sort(alleSpielerEinesTeams);
+		return alleSpielerEinesTeams;
+	}
+	
 	public void legeSpielerAn(Spieler spieler) {
 		spielerRepository.save(spieler);
 //		LOG.info("Spieler mit Talentwert: {} und der Position: {} im Team: {} wurde angelegt.", spieler.getTalentwert(), 

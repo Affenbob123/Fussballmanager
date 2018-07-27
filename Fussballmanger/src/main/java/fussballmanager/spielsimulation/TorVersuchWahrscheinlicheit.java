@@ -7,7 +7,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
-import fussballmanager.service.spieler.PositionenTypen;
+import fussballmanager.service.spieler.AufstellungsPositionsTypen;
 import fussballmanager.service.spieler.Spieler;
 
 @Service
@@ -41,13 +41,13 @@ public class TorVersuchWahrscheinlicheit {
 		double durchschnittsStaerkeTorwartVerteidiger = 0.0;
 		
 		for(Spieler spieler : spielerAngreifer) {
-			if(spieler.getPosition().equals(PositionenTypen.TW)) {
+			if(spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.TW)) {
 				torwartDesAngreifers = spieler;
 			}
 		}
 		
 		for(Spieler spieler : spielerVerteidiger) {
-			if(spieler.getPosition().equals(PositionenTypen.TW)) {
+			if(spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.TW)) {
 				torwartDesVerteidigers = spieler;
 			}
 		}
@@ -85,16 +85,19 @@ public class TorVersuchWahrscheinlicheit {
 		double staerkenDesVerteidigers = 0.0;
 		
 		for(Spieler spieler : spielerAngreifer) {
-			if(spieler.getPosition().equals(PositionenTypen.LV) || spieler.getPosition().equals(PositionenTypen.LIV) 
-					|| spieler.getPosition().equals(PositionenTypen.LIB) || spieler.getPosition().equals(PositionenTypen.RIV) || 
-					spieler.getPosition().equals(PositionenTypen.RV)) {
+			if(spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.LV) || 
+					spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.LIV) || 
+					spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.LIB) || 
+					spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.RIV) || 
+					spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.RV)) {
 				abwehrDesAngreifers.add(spieler);
 			}
 		}
 		
 		for(Spieler spieler : spielerVerteidiger) {
-			if(spieler.getPosition().equals(PositionenTypen.LS) || spieler.getPosition().equals(PositionenTypen.MS) || 
-					spieler.getPosition().equals(PositionenTypen.RS)) {
+			if(spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.LS) || 
+					spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.MS) || 
+					spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.RS)) {
 				sturmDesVerteidigers.add(spieler);
 			}
 		}
@@ -136,17 +139,21 @@ public class TorVersuchWahrscheinlicheit {
 		double staerkenDesVerteidigers = 0.0;
 		
 		for(Spieler spieler : spielerAngreifer) {
-			if(spieler.getPosition().equals(PositionenTypen.LM) || spieler.getPosition().equals(PositionenTypen.DM) 
-					|| spieler.getPosition().equals(PositionenTypen.RM) || spieler.getPosition().equals(PositionenTypen.ZM) || 
-					spieler.getPosition().equals(PositionenTypen.OM)) {
+			if(spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.LM) || 
+					spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.DM) || 
+					spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.RM) || 
+					spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.ZM) || 
+					spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.OM)) {
 				mittelfeldDesAngreifers.add(spieler);
 			}
 		}
 		
 		for(Spieler spieler : spielerVerteidiger) {
-			if(spieler.getPosition().equals(PositionenTypen.LM) || spieler.getPosition().equals(PositionenTypen.DM) 
-					|| spieler.getPosition().equals(PositionenTypen.RM) || spieler.getPosition().equals(PositionenTypen.ZM) || 
-					spieler.getPosition().equals(PositionenTypen.OM)) {
+			if(spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.LM) || 
+					spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.DM) || 
+					spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.RM) || 
+					spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.ZM) || 
+					spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.OM)) {
 				mittelfeldDesVerteidigers.add(spieler);
 			}
 		}
@@ -188,16 +195,19 @@ public class TorVersuchWahrscheinlicheit {
 		double staerkenDesVerteidigers = 0.0;
 		
 		for(Spieler spieler : spielerAngreifer) {
-			if(spieler.getPosition().equals(PositionenTypen.LS) || spieler.getPosition().equals(PositionenTypen.MS) 
-					|| spieler.getPosition().equals(PositionenTypen.RS)) {
+			if(spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.LS) || 
+					spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.MS) || 
+					spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.RS)) {
 				angriffDesAngreifers.add(spieler);
 			}
 		}
 		
 		for(Spieler spieler : spielerVerteidiger) {
-			if(spieler.getPosition().equals(PositionenTypen.LV) || spieler.getPosition().equals(PositionenTypen.LIV) 
-					|| spieler.getPosition().equals(PositionenTypen.LIB) || spieler.getPosition().equals(PositionenTypen.RIV) || 
-					spieler.getPosition().equals(PositionenTypen.RV)) {
+			if(spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.LV) || 
+					spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.LIV) || 
+					spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.LIB) || 
+					spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.RIV) || 
+					spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.RV)) {
 				verteidigungDesVerteidigers.add(spieler);
 			}
 		}

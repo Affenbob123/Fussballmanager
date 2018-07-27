@@ -2,8 +2,6 @@ package fussballmanager.service.land;
 
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import fussballmanager.service.land.Land;
 import fussballmanager.service.land.LandRepository;
 import fussballmanager.service.liga.LigaService;
-import fussballmanager.service.saison.Saison;
 import fussballmanager.service.saison.SaisonService;
 
 @Service

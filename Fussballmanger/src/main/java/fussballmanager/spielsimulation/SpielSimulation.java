@@ -175,8 +175,8 @@ public class SpielSimulation {
 	 * Nimmt summe der Stärken der teams und vergleicht diese. Anschließend wird mit der fuenften wurzel der stärkefaktor der heimmanschaft berechnet
 	 */
 	public double staerkeFaktorHeimmannschaft(Spiel spiel) {
-		List<Spieler> spielerHeimmannschaft = spielerService.findeAlleSpielerEinesTeams(spiel.getHeimmannschaft());
-		List<Spieler> spielerGastmannschaft = spielerService.findeAlleSpielerEinesTeams(spiel.getGastmannschaft());
+		List<Spieler> spielerHeimmannschaft = spielerService.findeAlleSpielerEinesTeamsInAufstellung(spiel.getHeimmannschaft());
+		List<Spieler> spielerGastmannschaft = spielerService.findeAlleSpielerEinesTeamsInAufstellung(spiel.getGastmannschaft());
 		double staerkeFaktor = 1.0;
 		double gesamtStaerkeHeimmannschaft = 0.0;
 		double gesamtStaerkeGastmannschaft = 0.0;
@@ -200,6 +200,7 @@ public class SpielSimulation {
 			gesamtStaerkeGastmannschaft = 0.01;
 		}
 		
+		LOG.info("Heim: {}, Gast:{}",gesamtStaerkeHeimmannschaft, gesamtStaerkeGastmannschaft);
 		tatsaechlicherFaktor = gesamtStaerkeHeimmannschaft / gesamtStaerkeGastmannschaft;
 		
 		if(tatsaechlicherFaktor > 100) {
