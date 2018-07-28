@@ -92,6 +92,18 @@ public class SpielService {
 		return alleSpieleEinesSpieltages;
 	}
 	
+	public List<Spiel> findeAlleSpieleEinesSpieltagesNachSpielTyp(Spieltag spieltag, SpieleTypen spielTyp) {
+		List<Spiel> alleSpieleEinesSpieltages = new ArrayList<>();
+		
+		for(Spiel spiel : findeAlleSpiele()) {
+			if(spiel.getSpieltag().equals(spieltag)) {
+				if(spiel.getSpielTyp().equals(spielTyp))
+				alleSpieleEinesSpieltages.add(spiel);
+			}
+		}
+		return alleSpieleEinesSpieltages;
+	}
+	
 	public void legeSpielAn(Spiel spiel) {
 		spielRepository.save(spiel);
 	}

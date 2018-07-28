@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import fussballmanager.helper.SpielstatusHelper;
 import fussballmanager.service.land.Land;
 import fussballmanager.service.land.LandService;
 import fussballmanager.service.liga.Liga;
@@ -66,6 +67,7 @@ public class LigaController {
 			@ModelAttribute("spieltag") Spieltag spieltag) {
 		User aktuellerUser = userService.findeUser(auth.getName());
 		
+		model.addAttribute("spielstatusHelper", new SpielstatusHelper());
 		model.addAttribute("aktuellesTeam", aktuellerUser.getAktuellesTeam());
 		model.addAttribute("spielEreignisService", spielEreignisService);
 		
@@ -73,18 +75,6 @@ public class LigaController {
 		Liga ausgewaehlteLiga = ligaService.findeLiga(landName, ligaName);
 		Saison ausgewaehlteSaison;
 		Spieltag ausgewaehlterSpieltag;
-		
-//		if(land.getLandNameTyp().equals(null)) {
-//			ausgewaehltesLand = 
-//		} else {
-//			ausgewaehltesLand = 
-//		}
-//		
-//		if(spieltag.getSpieltagNummer() == 0) {
-//			ausgewaehlterSpieltag = spieltagService.findeAktuellenSpieltag();
-//		} else {
-//			ausgewaehlterSpieltag = spieltagService.findeSpieltagDurchSpieltagUndSaison(spieltag.getSpieltagNummer(), ausgewaehlteSaison);
-//		}
 		
 		if(saison.getSaisonNummer() == 0) {
 			ausgewaehlteSaison = saisonService.findeAktuelleSaison();
@@ -153,17 +143,6 @@ public class LigaController {
 		redirectAttributes.addFlashAttribute("spieltag", spieltag);
 		
 		return "redirect:/liga/{landName}/{ligaName}";
-	}
-	
-	@GetMapping("/ligen")
-	public String getAlleLigen(Model model, Authentication auth) {
-		User aktuellerUser = userService.findeUser(auth.getName());
-		
-		model.addAttribute("aktuellesTeam", aktuellerUser.getAktuellesTeam());
-		
-		model.addAttribute("alleLigen", ligaService.findeAlleLigen());
-		
-		return "ligenliste";
 	}
 	
 	public List<LigaEintrag> erstelleLigaTabelle(String land, String ligaName) {

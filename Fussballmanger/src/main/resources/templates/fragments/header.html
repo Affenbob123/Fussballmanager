@@ -62,6 +62,9 @@
 				<p th:text="${aktuellesTeam.liga.ligaNameTyp.name}"></p>
 				<p th:text="${aktuellesTeam.geld}"></p>
 			</div>
+			<div class="container">
+				<p th:text="${spielstatusHelper.getAktuellenSpielstatus()}"></p>
+			</div>
 		</div>
 	</div>
 	<th:block th:fragment="scripts">

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import fussballmanager.helper.SpielstatusHelper;
 import fussballmanager.mvc.sekretariat.TeamListeWrapper;
 import fussballmanager.service.spieler.Spieler;
 import fussballmanager.service.spieler.SpielerService;
@@ -32,6 +33,7 @@ public class SpielerController {
 	public String getSpieler(Model model, Authentication auth, @PathVariable("id") Long id) {
 		User aktuellerUser = userService.findeUser(auth.getName());
 		
+		model.addAttribute("spielstatusHelper", new SpielstatusHelper());
 		model.addAttribute("aktuellesTeam", aktuellerUser.getAktuellesTeam());
 		
 		model.addAttribute("spieler", spielerService.findeSpieler(id));
@@ -44,7 +46,7 @@ public class SpielerController {
 		User aktuellerUser = userService.findeUser(auth.getName());
 		SpielerListeWrapper spielerListeWrapper= new SpielerListeWrapper();
 		
-		
+		model.addAttribute("spielstatusHelper", new SpielstatusHelper());
 		model.addAttribute("aktuellesTeam", aktuellerUser.getAktuellesTeam());
 		
 		List<Spieler> spielerDesAktuellenTeams = spielerService.findeAlleSpielerEinesTeams(aktuellerUser.getAktuellesTeam());

@@ -4,10 +4,10 @@ import java.time.LocalTime;
 
 public enum SpieleTypen {
 	
-	TURNIERSPIEL("Ligaspiel", LocalTime.of(14, 00)),
-	FREUNDSCHAFTSSPIEL("Ligaspiel", LocalTime.of(16, 00)),
+	TURNIERSPIEL("Ligaspiel", LocalTime.of(12, 00)),
+	FREUNDSCHAFTSSPIEL("Ligaspiel", LocalTime.of(15, 00)),
 	LIGASPIEL("Ligaspiel", LocalTime.of(18, 00)),
-	POKALSPIEL("Ligaspiel", LocalTime.of(20, 00));
+	POKALSPIEL("Ligaspiel", LocalTime.of(21, 00));
 	
 	
 	private final String name;

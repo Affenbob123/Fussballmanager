@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import fussballmanager.helper.SpielstatusHelper;
 import fussballmanager.service.land.LandService;
 import fussballmanager.service.liga.LigaService;
 import fussballmanager.service.spieler.AufstellungsPositionsTypen;
@@ -46,6 +47,7 @@ public class SekretariatController {
 	public String getTeamListe(Model model, Authentication auth) {
 		User aktuellerUser = userService.findeUser(auth.getName());
 		
+		model.addAttribute("spielstatusHelper", new SpielstatusHelper());
 		model.addAttribute("aktuellesTeam", aktuellerUser.getAktuellesTeam());
 		
 		List<Team> alleTeamsEinesUsers = teamService.findeAlleTeamsEinesUsers(aktuellerUser);
@@ -87,7 +89,7 @@ public class SekretariatController {
 		User aktuellerUser = userService.findeUser(auth.getName());
 		TeamListeWrapper teamListWrapper = new TeamListeWrapper();
 		
-		
+		model.addAttribute("spielstatusHelper", new SpielstatusHelper());
 		model.addAttribute("aktuellesTeam", aktuellerUser.getAktuellesTeam());
 		
 		List<Team> alleTeamsEinesUsers = teamService.findeAlleTeamsEinesUsers(aktuellerUser);

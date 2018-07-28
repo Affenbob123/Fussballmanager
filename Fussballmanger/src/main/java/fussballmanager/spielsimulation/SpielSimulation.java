@@ -1,5 +1,7 @@
 package fussballmanager.spielsimulation;
 
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 import fussballmanager.service.saison.spieltag.SpieltagService;
 import fussballmanager.service.spiel.Spiel;
 import fussballmanager.service.spiel.SpielService;
+import fussballmanager.service.spiel.SpieleTypen;
 import fussballmanager.service.spiel.spielereignisse.SpielEreignis;
 import fussballmanager.service.spiel.spielereignisse.SpielEreignisService;
 import fussballmanager.service.spiel.spielereignisse.SpielEreignisTypen;
@@ -22,6 +25,9 @@ import fussballmanager.service.spieler.Spieler;
 import fussballmanager.service.spieler.SpielerService;
 import fussballmanager.service.team.AusrichtungsTypen;
 import fussballmanager.service.team.TeamService;
+
+import static java.time.temporal.ChronoUnit.MINUTES;
+import static java.lang.Math.toIntExact;
 
 @Service
 @Transactional
@@ -51,21 +57,81 @@ public class SpielSimulation {
 	
 	private boolean heimmannschaftAngreifer;
 	
+	int counter = 0;
+	int spielminute;
+	
 	public SpielSimulation() {
 		
 	}
 	
-	@Scheduled(cron = "00 35 22 * * ?")
-	public void simuliereSpiele() {
-		simuliereSpielMinuteAllesSpiele();
+//	@Scheduled(cron = "0 15-59 12 * * ?", zone="Europe/Berlin")
+//	public void simuliereTurnierspielErsteHalbzeit() {
+//		simuliereSpielMinuteAllerSpieleErsteHalbzeit(SpieleTypen.TURNIERSPIEL);
+//	}
+//	
+//	@Scheduled(cron = "0 15-59 13 * * ?", zone="Europe/Berlin")
+//	public void simuliereTurnierspielZweiteHalbzeit() {
+//		simuliereSpielMinuteAllerSpieleZweiteHalbzeit(SpieleTypen.TURNIERSPIEL);
+//	}
+//	
+//	@Scheduled(cron = "0 15-59 15 * * ?", zone="Europe/Berlin")
+//	public void simuliereFreundschaftsspielErsteHalbzeit() {
+//		simuliereSpielMinuteAllerSpieleErsteHalbzeit(SpieleTypen.FREUNDSCHAFTSSPIEL);
+//	}
+//	
+//	@Scheduled(cron = "0 15-59 16 * * ?", zone="Europe/Berlin")
+//	public void simuliereFreundschaftsspielZweiteHalbzeit() {
+//		simuliereSpielMinuteAllerSpieleZweiteHalbzeit(SpieleTypen.FREUNDSCHAFTSSPIEL);
+//	}
+	
+	@Scheduled(cron = "0 15-59 18 * * ?", zone="Europe/Berlin")
+	public void simuliereLigaspielErsteHalbzeit() {
+		simuliereSpielMinuteAllerSpieleErsteHalbzeit(SpieleTypen.LIGASPIEL);
+	}
+	
+	@Scheduled(cron = "0 15-59 19 * * ?", zone="Europe/Berlin")
+	public void simuliereLigaspielZweiteHalbzeit() {
+		simuliereSpielMinuteAllerSpieleZweiteHalbzeit(SpieleTypen.LIGASPIEL);
+	}
+	
+//	@Scheduled(cron = "0 15-59 21 * * ?", zone="Europe/Berlin")
+//	public void simulierePokalspielErsteHalbzeit() {
+//		simuliereSpielMinuteAllerSpieleErsteHalbzeit(SpieleTypen.POKALSPIEL);
+//	}
+//	
+//	@Scheduled(cron = "0 15-59 22 * * ?", zone="Europe/Berlin")
+//	public void simulierePokalspielZweiteHalbzeit() {
+//		simuliereSpielMinuteAllerSpieleZweiteHalbzeit(SpieleTypen.POKALSPIEL);
+//	}
+	
+	public void simuliereSpielMinuteAllerSpieleErsteHalbzeit(SpieleTypen spielTyp) {	
+		List<Spiel> alleSpieleEinesSpieltages = spielService.
+				findeAlleSpieleEinesSpieltagesNachSpielTyp(spieltagService.findeAktuellenSpieltag(), spielTyp);
+		LocalTime localTimeStart = spielTyp.getSpielBeginn().plusMinutes(15);
+		LocalTime localTime  = LocalTime.now(ZoneId.of("Europe/Berlin"));
+		
+		int spielminute = toIntExact(localTimeStart.until(localTime, MINUTES));
+		counter++;
+		
+		for(Spiel spiel : alleSpieleEinesSpieltages) {
+			simuliereSpielminuteEinesSpieles(spiel,spielminute);
+		}
+		LOG.info("Spielminute: {}, counter: {}", spielminute, counter);
 	}
 	
 	
-	public void simuliereSpielMinuteAllesSpiele() {
-		int spielminute = 1;
-		for(Spiel spiel : spielService.findeAlleSpieleEinesSpieltages(spieltagService.findeAktuellenSpieltag())) {
+	public void simuliereSpielMinuteAllerSpieleZweiteHalbzeit(SpieleTypen spielTyp) {
+		counter++;
+		LocalTime localTimeStart = spielTyp.getSpielBeginn().plusHours(1);
+		LocalTime localTime  = LocalTime.now(ZoneId.of("Europe/Berlin"));
+		
+		int spielminute = toIntExact(localTimeStart.until(localTime, MINUTES));
+		List<Spiel> alleSpieleEinesSpieltages = spielService.findeAlleSpieleEinesSpieltages(spieltagService.findeAktuellenSpieltag());
+		
+		for(Spiel spiel : alleSpieleEinesSpieltages) {
 			simuliereSpielminuteEinesSpieles(spiel,spielminute);
 		}
+		LOG.info("Spielminute: {}, counter: {}", spielminute, counter);
 	}
 	
 	public void simuliereSpielminuteEinesSpieles(Spiel spiel, int spielminute) {
@@ -144,7 +210,7 @@ public class SpielSimulation {
 			} 
 		}
 		
-		LOG.info("Heimmannscahftangreifer: {}, zufallszahl: {}, tvwahrscheinlichkeit: {}", heimmannschaftAngreifer, zufallsZahl, wahrscheinlichkeitTorVersuch);
+		//LOG.info("Heimmannscahftangreifer: {}, zufallszahl: {}, tvwahrscheinlichkeit: {}", heimmannschaftAngreifer, zufallsZahl, wahrscheinlichkeitTorVersuch);
 		//LOG.info("Spiel: {} : {}, Ausrichtung: {} : {}, Einsatz: {} : {}", spiel.getHeimmannschaft().getName(), spiel.getGastmannschaft().getName(), 
 		//		spiel.getHeimmannschaft().getAusrichtungsTyp(), spiel.getGastmannschaft().getAusrichtungsTyp(), spiel.getHeimmannschaft().getEinsatzTyp(),
 		//		spiel.getGastmannschaft().getEinsatzTyp());
@@ -200,7 +266,7 @@ public class SpielSimulation {
 			gesamtStaerkeGastmannschaft = 0.01;
 		}
 		
-		LOG.info("Heim: {}, Gast:{}",gesamtStaerkeHeimmannschaft, gesamtStaerkeGastmannschaft);
+		//LOG.info("Heim: {}, Gast:{}",gesamtStaerkeHeimmannschaft, gesamtStaerkeGastmannschaft);
 		tatsaechlicherFaktor = gesamtStaerkeHeimmannschaft / gesamtStaerkeGastmannschaft;
 		
 		if(tatsaechlicherFaktor > 100) {
