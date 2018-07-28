@@ -33,6 +33,11 @@ public class LigaEintrag implements Comparable<LigaEintrag> {
 	
 	private int punkte;
 	
+	private int gelbeKarten;
+	
+	private int gelbRoteKarten;
+	
+	private int roteKarten;
 	
 	public long getId() {
 		return id;
@@ -146,8 +151,56 @@ public class LigaEintrag implements Comparable<LigaEintrag> {
 		this.teamWappen = teamWappen;
 	}
 
+	public int getGelbeKarten() {
+		return gelbeKarten;
+	}
+
+	public void setGelbeKarten(int gelbeKarten) {
+		this.gelbeKarten = gelbeKarten;
+	}
+
+	public int getGelbRoteKarten() {
+		return gelbRoteKarten;
+	}
+
+	public void setGelbRoteKarten(int gelbRoteKarten) {
+		this.gelbRoteKarten = gelbRoteKarten;
+	}
+
+	public int getRoteKarten() {
+		return roteKarten;
+	}
+
+	public void setRoteKarten(int roteKarten) {
+		this.roteKarten = roteKarten;
+	}
+
 	@Override
 	public int compareTo(LigaEintrag compareTo) {
-		return this.platzierung - compareTo.getPlatzierung();
+		if(this.punkte - compareTo.getPunkte() == 0) {
+			if(this.torDifferenz - compareTo.getTorDifferenz() == 0) {
+				if(this.tore - compareTo.getTore() == 0) {
+					if(this.roteKarten - compareTo.getRoteKarten() == 0) {
+						if(this.gelbRoteKarten - compareTo.getGelbRoteKarten() == 0) {
+							if(this.gelbeKarten - compareTo.getGelbeKarten() == 0) {
+								return 1;
+							} else {
+								return compareTo.getGelbeKarten() - this.gelbeKarten;
+							}
+						} else {
+							return compareTo.getGelbRoteKarten() - this.gelbRoteKarten;
+						}
+					} else {
+						return compareTo.getRoteKarten() - this.roteKarten;
+					}
+				} else {
+					return compareTo.getTore() - this.tore;
+				}
+			} else {
+				return compareTo.getTorDifferenz() - this.torDifferenz;
+			}
+		} else {
+			return compareTo.getPunkte() - this.punkte;
+		}
 	}
 }

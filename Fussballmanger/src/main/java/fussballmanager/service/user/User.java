@@ -111,7 +111,7 @@ public class User implements Comparable<User> {
 	@Override
 	public int compareTo(User compareTo) {
 		String compareString = ((User)compareTo).getUsername();
-		return this.username.compareToIgnoreCase(compareString);
+		return this.username.compareTo(compareString);
 	}
 }
 

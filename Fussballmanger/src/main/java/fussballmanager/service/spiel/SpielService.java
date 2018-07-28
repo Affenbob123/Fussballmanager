@@ -14,6 +14,8 @@ import fussballmanager.service.saison.Saison;
 import fussballmanager.service.saison.SaisonService;
 import fussballmanager.service.saison.spieltag.Spieltag;
 import fussballmanager.service.saison.spieltag.SpieltagService;
+import fussballmanager.service.spiel.spielereignisse.SpielEreignis;
+import fussballmanager.service.spiel.spielereignisse.SpielEreignisTypen;
 import fussballmanager.service.team.Team;
 import fussballmanager.service.team.TeamService;
 import fussballmanager.spielsimulation.SpielSimulation;
@@ -99,6 +101,24 @@ public class SpielService {
 			if(spiel.getSpieltag().equals(spieltag)) {
 				if(spiel.getSpielTyp().equals(spielTyp))
 				alleSpieleEinesSpieltages.add(spiel);
+			}
+		}
+		return alleSpieleEinesSpieltages;
+	}
+	
+	public List<Spiel> findeAlleSpieleEinesTeamsNachSpielTypUndSaison(Team team, SpieleTypen spielTyp, Saison saison) {
+		List<Spiel> alleSpieleEinesSpieltages = new ArrayList<>();
+		
+		for(Spiel spiel : findeAlleSpiele()) {
+			if(spiel.getSaison().equals(saison)) {
+				if(spiel.isVorbei()) {
+					if(spiel.getGastmannschaft().equals(team) || spiel.getHeimmannschaft().equals(team)) {
+						if(spiel.getSpielTyp().equals(spielTyp)) {
+							alleSpieleEinesSpieltages.add(spiel);
+						}
+						
+					}
+				}
 			}
 		}
 		return alleSpieleEinesSpieltages;
@@ -198,5 +218,26 @@ public class SpielService {
 			    }
 			}
 		}
+	}
+	
+	public void anzahlToreNachDemSpielSetzen(Spiel spiel) {
+		int toreHeimmannschaft = 0;
+		int toreGastmannschaft = 0;
+		
+		for(SpielEreignis spielEreignis : spiel.getSpielEreignisse()) {
+			if(spielEreignis.getTeam().equals(spiel.getHeimmannschaft())) {
+				if(spielEreignis.getSpielereignisTyp().equals(SpielEreignisTypen.TORVERSUCH)) {
+					toreHeimmannschaft++;
+				}
+			} else {
+				if(spielEreignis.getSpielereignisTyp().equals(SpielEreignisTypen.TORVERSUCH)) {
+					toreGastmannschaft++;
+				}
+			}
+		}
+		spiel.setToreHeimmannschaft(toreHeimmannschaft);
+		spiel.setToreGastmannschaft(toreGastmannschaft);
+		spiel.setVorbei(true);
+		aktualisiereSpiel(spiel);
 	}
 }

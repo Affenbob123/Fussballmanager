@@ -41,6 +41,8 @@ public class Team implements Comparable<Team> {
 	
 	private AusrichtungsTypen ausrichtungsTyp;
 	
+	private int anzahlAuswechselungen = 3;
+	
 	public Team(Land land, String name, User user, Liga liga) {
 		this.land = land;
 		this.name = name;
@@ -140,11 +142,18 @@ public class Team implements Comparable<Team> {
 	public void setFormationsTyp(FormationsTypen formationsTyp) {
 		this.formationsTyp = formationsTyp;
 	}
+	
+	public int getAnzahlAuswechselungen() {
+		return anzahlAuswechselungen;
+	}
+
+	public void setAnzahlAuswechselungen(int anzahlAuswechselungen) {
+		this.anzahlAuswechselungen = anzahlAuswechselungen;
+	}
 
 	@Override
 	public int compareTo(Team arg0) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
 }

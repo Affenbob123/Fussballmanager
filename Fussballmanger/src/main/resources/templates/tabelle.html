@@ -85,20 +85,50 @@
 			<table class="table table-hover">
 				<thead>
 					<tr class="table-active">
-						<th scope="col">Land</th>
-						<th scope="col">Liga</th>
-						<th scope="col">Platzierung</th>
+						<th scope="col">#</th>
 						<th scope="col">Name</th>
+						<th scope="col">Spiele</th>
+						<th scope="col">Siege</th>
+						<th scope="col">Unentschieden</th>
+						<th scope="col">Niederlagen</th>
+						<th scope="col">Tore</th>
+						<th scope="col">Gegentore</th>
+						<th scope="col">+/-</th>
+						<th scope="col">Punkte</th>
 					</tr>
 				</thead>
-
-				<tr class="" th:each="eintrag : ${alleTeamsDerAktuellenLiga}">
-					<td th:text="${eintrag.land.landNameTyp.getName()}" />
-					<td th:text="${eintrag.liga.ligaNameTyp.getName()}" />
+				<tr th:if="${ligaName} != '1'" class="" th:each="eintrag, stat : ${alleTeamsDerAktuellenLiga}" 
+					th:classappend="${(stat.index == 0 or stat.index == 1 ? 'table-success' : '') + 
+					(stat.index == 14 or stat.index == 15 or stat.index == 16 or stat.index == 17 ? 'table-danger' : '')}" >
 					<td th:text="${eintrag.platzierung}" />
 					<td> 
 						<a class="" th:text="${eintrag.teamName}" th:href="@{/team/}+${eintrag.id}"></a>
 					</td>
+					<td th:text="${eintrag.spiele}" />
+					<td th:text="${eintrag.siege}" />
+					<td th:text="${eintrag.unentschieden}" />
+					<td th:text="${eintrag.niederlagen}" />
+					<td th:text="${eintrag.tore}" />
+					<td th:text="${eintrag.gegentore}" />
+					<td th:text="${eintrag.torDifferenz}" />
+					<td th:text="${eintrag.punkte}" />
+				</tr>
+				<tr th:if="${ligaName} == '1'" class="" th:each="eintrag, stat : ${alleTeamsDerAktuellenLiga}" 
+					th:classappend="${(stat.index == 0 or stat.index == 1 ? 'table-success' : '') + 
+					(stat.index == 2 or stat.index == 3 ? 'table-primary' : '') +
+					(stat.index == 14 or stat.index == 15 or stat.index == 16 or stat.index == 17 ? 'table-danger' : '')}" >
+					<td th:text="${eintrag.platzierung}" />
+					<td> 
+						<a class="" th:text="${eintrag.teamName}" th:href="@{/team/}+${eintrag.id}"></a>
+					</td>
+					<td th:text="${eintrag.spiele}" />
+					<td th:text="${eintrag.siege}" />
+					<td th:text="${eintrag.unentschieden}" />
+					<td th:text="${eintrag.niederlagen}" />
+					<td th:text="${eintrag.tore}" />
+					<td th:text="${eintrag.gegentore}" />
+					<td th:text="${eintrag.torDifferenz}" />
+					<td th:text="${eintrag.punkte}" />
 				</tr>
 			</table>
 		</div>

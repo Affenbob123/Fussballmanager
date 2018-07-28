@@ -31,8 +31,12 @@ public class Spiel {
 	@OneToOne
 	private Team heimmannschaft;
 	
+	private int toreHeimmannschaft;
+	
 	@OneToOne
 	private Team gastmannschaft;
+	
+	private int toreGastmannschaft;
 	
 	@ManyToOne
 	private Spieltag spieltag;
@@ -46,6 +50,8 @@ public class Spiel {
 	private List<SpielEreignis> spielEreignisse;
 	
 	private double heimVorteil = 1.3;
+	
+	private boolean vorbei = false;
 
 	public Spiel(SpieleTypen spielTyp, Team heimmannschaft, Team gastmannschaft, LocalTime spielbeginn, 
 			Spieltag spieltag, Saison saison,String spielort) {
@@ -135,5 +141,29 @@ public class Spiel {
 
 	public void setHeimVorteil(double heimVorteil) {
 		this.heimVorteil = heimVorteil;
+	}
+
+	public int getToreHeimmannschaft() {
+		return toreHeimmannschaft;
+	}
+
+	public void setToreHeimmannschaft(int toreHeimmannschaft) {
+		this.toreHeimmannschaft = toreHeimmannschaft;
+	}
+
+	public int getToreGastmannschaft() {
+		return toreGastmannschaft;
+	}
+
+	public void setToreGastmannschaft(int toreGastmannschaft) {
+		this.toreGastmannschaft = toreGastmannschaft;
+	}
+
+	public boolean isVorbei() {
+		return vorbei;
+	}
+
+	public void setVorbei(boolean vorbei) {
+		this.vorbei = vorbei;
 	}
 }

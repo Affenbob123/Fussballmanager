@@ -16,18 +16,20 @@
   			<strong><p th:utext="${errorMessage}"></p></strong>
 		</div>
 		<div class="col-md-12">
-		<p>Formation:</p>
-			<form action="#" th:action="@{/team/}+${aktuellesTeam.id}+'/formation'" th:object="${aktuellesTeam}"
-					method="post">
-				<select class="custom-select" th:field="*{formationsTyp}" onchange="this.form.submit();">
-					<option 
-						  th:each="formationsTyp : ${alleFormationsTypen}" 
-						  th:text="${formationsTyp.bezeichnung}"
-						  th:value="${formationsTyp}">
-					</option>
-				</select>
-			</form>
-		<p>Einsatz:</p>
+			<div th:if="${spielstatusHelper.getAktuellenSpielstatus() == ''}">
+				<p>Formation:</p>
+				<form action="#" th:action="@{/team/}+${aktuellesTeam.id}+'/formation'" th:object="${aktuellesTeam}"
+						method="post">
+					<select class="custom-select" th:field="*{formationsTyp}" onchange="this.form.submit();">
+						<option 
+							  th:each="formationsTyp : ${alleFormationsTypen}" 
+							  th:text="${formationsTyp.bezeichnung}"
+							  th:value="${formationsTyp}">
+						</option>
+					</select>
+				</form>				
+			</div>
+			<p>Einsatz:</p>
 			<form action="#" th:action="@{/team/}+${aktuellesTeam.id}+'/einsatz'" th:object="${aktuellesTeam}"
 					method="post">
 				<select class="custom-select" th:field="*{einsatzTyp}" onchange="this.form.submit();">
@@ -49,25 +51,30 @@
 					</option>
 				</select>
 			</form>
-			<p>Auswechslung:</p>
-			<form action="#" th:action="@{/team/}+${aktuellesTeam.id}+'/einwechseln'" th:object="${einzuwechselnderSpieler}"
-					method="post">
-			<select class="custom-select" th:field="*{id}">
-				<option
-					  th:each="spieler : ${alleSpielerAufErsatzbank}" 
-					  th:text="${spieler.position.positionsName}+' | '+${spieler.name}"
-					  th:value="${spieler.id}">
-				</option>
-			</select>
-				<select class="custom-select" th:field="*{aufstellungsPositionsTyp}">
-					<option 
-						  th:each="aufstellungsPositionsTyp : ${alleAufstellungsPositionsTypen}" 
-						  th:text="${aufstellungsPositionsTyp.positionsName}"
-						  th:value="${aufstellungsPositionsTyp}">
-					</option>
-				</select>
-				<button type="submit" value="submit" class="btn btn-sm btn-primary">Submit</button>
-			</form>
+			<div th:if="${anzahlDerEinwechslungen} &gt; 0">
+				<div th:if="${spielstatusHelper.getAktuellenSpielstatus() != ''}">
+					<p>Auswechslung:</p>
+					<p th:text="${anzahlDerEinwechslungen}"></p>
+					<form action="#" th:action="@{/team/}+${aktuellesTeam.id}+'/einwechseln'" th:object="${einzuwechselnderSpieler}"
+							method="post">
+						<select class="custom-select" th:field="*{id}">
+							<option
+								  th:each="spieler : ${alleSpielerAufErsatzbank}" 
+								  th:text="${spieler.position.positionsName}+' | '+${spieler.name}"
+								  th:value="${spieler.id}">
+							</option>
+						</select>
+						<select class="custom-select" th:field="*{aufstellungsPositionsTyp}">
+							<option 
+								  th:each="aufstellungsPositionsTyp : ${alleAufstellungsPositionsTypen}" 
+								  th:text="${aufstellungsPositionsTyp.positionsName}"
+								  th:value="${aufstellungsPositionsTyp}">
+							</option>
+						</select>
+							<button type="submit" value="submit" class="btn btn-sm btn-primary">Submit</button>
+					</form>
+				</div>
+			</div>
 			<table class="table table-hover table-condensed" style="border-collapse:collapse;">
 				<thead>
 					<tr class="table-active">

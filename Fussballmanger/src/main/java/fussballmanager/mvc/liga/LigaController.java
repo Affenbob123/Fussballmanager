@@ -1,6 +1,7 @@
 package fussballmanager.mvc.liga;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -102,7 +103,7 @@ public class LigaController {
 		
 		model.addAttribute("findeAlleSpieleEinerLigaEinerSaisonEinesSpieltages", 
 				spielService.findeAlleSpieleEinerLigaEinerSaisonEinesSpieltages(ligaService.findeLiga(landName, ligaName), ausgewaehlteSaison, ausgewaehlterSpieltag));
-		model.addAttribute("alleTeamsDerAktuellenLiga", erstelleLigaTabelle(landName, ligaName));
+		model.addAttribute("alleTeamsDerAktuellenLiga", erstelleLigaTabelle(landName, ligaName, ausgewaehlteSaison));
 		
 		return "tabelle";
 	}
@@ -145,23 +146,40 @@ public class LigaController {
 		return "redirect:/liga/{landName}/{ligaName}";
 	}
 	
-	public List<LigaEintrag> erstelleLigaTabelle(String land, String ligaName) {
+	public List<LigaEintrag> erstelleLigaTabelle(String land, String ligaName, Saison saison) {
 		List<LigaEintrag> ligaEintraege = new ArrayList<>();
-		for (Team team : teamService.findeAlleTeamsEinerLiga(ligaService.findeLiga(land, ligaName))) {
-			ligaEintraege.add(erstelleEineZeileDerLigaTabelle(team));
+		List<Team> alleTeamsEinerLiga = teamService.findeAlleTeamsEinerLiga(ligaService.findeLiga(land, ligaName));
+		for (Team team : alleTeamsEinerLiga) {
+			ligaEintraege.add(erstelleEineZeileDerLigaTabelle(team, saison));
+		}
+		Collections.sort(ligaEintraege);
+		int counter = 1;
+		
+		for(LigaEintrag ligaEintrag : ligaEintraege) {
+			ligaEintrag.setPlatzierung(counter++);
 		}
 		return ligaEintraege;
 	}
 	
-	public LigaEintrag erstelleEineZeileDerLigaTabelle(Team team) {
+	public LigaEintrag erstelleEineZeileDerLigaTabelle(Team team, Saison saison) {
 		LigaEintrag ligaEintrag = new LigaEintrag();
 		
 		ligaEintrag.setId(team.getId());
 		ligaEintrag.setLand(team.getLand());
 		ligaEintrag.setLiga(team.getLiga());
-		ligaEintrag.setPlatzierung(1);
 		ligaEintrag.setTeamName(team.getName());
-		//TODO Vervollständigen
+		ligaEintrag.setSiege(teamService.siegeEinesTeamsInEinerSaison(team, saison));
+		ligaEintrag.setUnentschieden(teamService.unentschiedenEinesTeamsInEinerSaison(team, saison));
+		ligaEintrag.setNiederlagen(teamService.niederlagenEinesTeamsInEinerSaison(team, saison));
+		ligaEintrag.setSpiele(ligaEintrag.getNiederlagen() + ligaEintrag.getUnentschieden() + ligaEintrag.getSiege());
+		ligaEintrag.setTore(teamService.toreEinesTeamsInEinerSaison(team, saison));
+		ligaEintrag.setGegentore(teamService.gegenToreEinesTeamsInEinerSaison(team, saison));
+		ligaEintrag.setTorDifferenz(ligaEintrag.getTore() - ligaEintrag.getGegentore());
+		ligaEintrag.setPunkte(teamService.punkteEinesTeamsInEinerSaison(team, saison));
+		ligaEintrag.setGelbeKarten(teamService.gelbeKartenEinesTeamsInEinerSaison(team, saison));
+		ligaEintrag.setGelbRoteKarten(teamService.gelbeRoteKartenEinesTeamsInEinerSaison(team, saison));
+		ligaEintrag.setRoteKarten(teamService.roteKartenEinesTeamsInEinerSaison(team, saison));
+		
 		return ligaEintrag;
 	}
 	

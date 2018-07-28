@@ -62,6 +62,7 @@ public class TeamController {
 		model.addAttribute("alleAufstellungsPositionsTypen", aktuellesTeam.getFormationsTyp().getAufstellungsPositionsTypen());
 		model.addAttribute("alleSpielerAufErsatzbank", spielerService.findeAlleSpielerEinesTeamsAufErsatzbank(aktuellesTeam));
 		model.addAttribute("einzuwechselnderSpieler", new Spieler());
+		model.addAttribute("anzahlDerEinwechslungen", teamService.findeTeam(id).getAnzahlAuswechselungen());
 		
 		return "spielerliste";
 	}
@@ -98,6 +99,7 @@ public class TeamController {
 		Team team = teamService.findeTeam(id);
 		List<Spieler> spielerInAufstellung = spielerService.findeAlleSpielerEinesTeamsInAufstellung(team);
 		
+		team.setAnzahlAuswechselungen(team.getAnzahlAuswechselungen() - 1);
 		for(Spieler spieler : spielerInAufstellung) {
 			if(spieler.getAufstellungsPositionsTyp().equals(einzuwechselnderSpieler.getAufstellungsPositionsTyp())) {
 				spieler.setAufstellungsPositionsTyp(AufstellungsPositionsTypen.ERSATZ);

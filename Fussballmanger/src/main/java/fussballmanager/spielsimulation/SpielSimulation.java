@@ -11,7 +11,6 @@ import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import fussballmanager.service.saison.spieltag.SpieltagService;
@@ -64,45 +63,11 @@ public class SpielSimulation {
 		
 	}
 	
-//	@Scheduled(cron = "0 15-59 12 * * ?", zone="Europe/Berlin")
-//	public void simuliereTurnierspielErsteHalbzeit() {
-//		simuliereSpielMinuteAllerSpieleErsteHalbzeit(SpieleTypen.TURNIERSPIEL);
-//	}
-//	
-//	@Scheduled(cron = "0 15-59 13 * * ?", zone="Europe/Berlin")
-//	public void simuliereTurnierspielZweiteHalbzeit() {
-//		simuliereSpielMinuteAllerSpieleZweiteHalbzeit(SpieleTypen.TURNIERSPIEL);
-//	}
-//	
-//	@Scheduled(cron = "0 15-59 15 * * ?", zone="Europe/Berlin")
-//	public void simuliereFreundschaftsspielErsteHalbzeit() {
-//		simuliereSpielMinuteAllerSpieleErsteHalbzeit(SpieleTypen.FREUNDSCHAFTSSPIEL);
-//	}
-//	
-//	@Scheduled(cron = "0 15-59 16 * * ?", zone="Europe/Berlin")
-//	public void simuliereFreundschaftsspielZweiteHalbzeit() {
-//		simuliereSpielMinuteAllerSpieleZweiteHalbzeit(SpieleTypen.FREUNDSCHAFTSSPIEL);
-//	}
-	
-	@Scheduled(cron = "0 15-59 18 * * ?", zone="Europe/Berlin")
-	public void simuliereLigaspielErsteHalbzeit() {
-		simuliereSpielMinuteAllerSpieleErsteHalbzeit(SpieleTypen.LIGASPIEL);
-	}
-	
-	@Scheduled(cron = "0 15-59 19 * * ?", zone="Europe/Berlin")
-	public void simuliereLigaspielZweiteHalbzeit() {
-		simuliereSpielMinuteAllerSpieleZweiteHalbzeit(SpieleTypen.LIGASPIEL);
-	}
-	
-//	@Scheduled(cron = "0 15-59 21 * * ?", zone="Europe/Berlin")
-//	public void simulierePokalspielErsteHalbzeit() {
-//		simuliereSpielMinuteAllerSpieleErsteHalbzeit(SpieleTypen.POKALSPIEL);
-//	}
-//	
-//	@Scheduled(cron = "0 15-59 22 * * ?", zone="Europe/Berlin")
-//	public void simulierePokalspielZweiteHalbzeit() {
-//		simuliereSpielMinuteAllerSpieleZweiteHalbzeit(SpieleTypen.POKALSPIEL);
-//	}
+	/*
+	 * TODO Wahrscheinlichkeit senken wenn ein team schon ein tor geschossen hat
+	 * TODO Torwahrscheinlichket am ende erhöhen dafür am anfang senken
+	 * TODO Aufstellung miteinbeziehen
+	 */
 	
 	public void simuliereSpielMinuteAllerSpieleErsteHalbzeit(SpieleTypen spielTyp) {	
 		List<Spiel> alleSpieleEinesSpieltages = spielService.
@@ -116,22 +81,20 @@ public class SpielSimulation {
 		for(Spiel spiel : alleSpieleEinesSpieltages) {
 			simuliereSpielminuteEinesSpieles(spiel,spielminute);
 		}
-		LOG.info("Spielminute: {}, counter: {}", spielminute, counter);
 	}
 	
 	
 	public void simuliereSpielMinuteAllerSpieleZweiteHalbzeit(SpieleTypen spielTyp) {
 		counter++;
-		LocalTime localTimeStart = spielTyp.getSpielBeginn().plusHours(1);
+		LocalTime localTimeStart = spielTyp.getSpielBeginn().plusHours(1).plusMinutes(15);
 		LocalTime localTime  = LocalTime.now(ZoneId.of("Europe/Berlin"));
 		
-		int spielminute = toIntExact(localTimeStart.until(localTime, MINUTES));
+		int spielminute = toIntExact(localTimeStart.until(localTime, MINUTES)) + 45 + 1;
 		List<Spiel> alleSpieleEinesSpieltages = spielService.findeAlleSpieleEinesSpieltages(spieltagService.findeAktuellenSpieltag());
 		
 		for(Spiel spiel : alleSpieleEinesSpieltages) {
 			simuliereSpielminuteEinesSpieles(spiel,spielminute);
 		}
-		LOG.info("Spielminute: {}, counter: {}", spielminute, counter);
 	}
 	
 	public void simuliereSpielminuteEinesSpieles(Spiel spiel, int spielminute) {
@@ -172,7 +135,6 @@ public class SpielSimulation {
 			wahrscheinlichkeitTorVersuch = wahrscheinlichkeitTorVersuch * 100;
 			
 			if(zufallsZahl < wahrscheinlichkeitTorVersuch) {
-				LOG.info("TV");
 				SpielEreignis spielEreignis = new SpielEreignis();
 				spielEreignis.setSpielereignisTyp(SpielEreignisTypen.TORVERSUCH);
 				spielEreignis.setSpieler(null);
@@ -198,7 +160,6 @@ public class SpielSimulation {
 			wahrscheinlichkeitTorVersuch = wahrscheinlichkeitTorVersuch * 100;
 			
 			if(zufallsZahl < wahrscheinlichkeitTorVersuch) {
-				LOG.info("TV");
 				SpielEreignis spielEreignis = new SpielEreignis();
 				spielEreignis.setSpielereignisTyp(SpielEreignisTypen.TORVERSUCH);
 				spielEreignis.setSpieler(null);
