@@ -1,0 +1,114 @@
+package fussballmanager.mvc.sekretariat;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import fussballmanager.service.land.LandService;
+import fussballmanager.service.liga.LigaService;
+import fussballmanager.service.spieler.AufstellungsPositionsTypen;
+import fussballmanager.service.spieler.Spieler;
+import fussballmanager.service.spieler.SpielerService;
+import fussballmanager.service.team.AusrichtungsTypen;
+import fussballmanager.service.team.EinsatzTypen;
+import fussballmanager.service.team.FormationsTypen;
+import fussballmanager.service.team.Team;
+import fussballmanager.service.team.TeamService;
+import fussballmanager.service.user.User;
+import fussballmanager.service.user.UserService;
+
+@Controller
+public class SekretariatController {
+	
+	@Autowired
+	LandService landService;
+	
+	@Autowired
+	LigaService ligaService;
+	
+	@Autowired
+	TeamService teamService;
+	
+	@Autowired
+	SpielerService spielerService;
+	
+	@Autowired
+	UserService userService;
+	
+	@GetMapping("/")
+	public String getTeamListe(Model model, Authentication auth) {
+		User aktuellerUser = userService.findeUser(auth.getName());
+		
+		model.addAttribute("aktuellesTeam", aktuellerUser.getAktuellesTeam());
+		
+		List<Team> alleTeamsEinesUsers = teamService.findeAlleTeamsEinesUsers(aktuellerUser);
+		
+		model.addAttribute("alleTeamsDesAktuellenUsers", alleTeamsEinesUsers);
+		
+		
+		return "teamliste";
+	}
+	
+	@PostMapping("/team/{id}/loeschen")
+	public String teamLoeschen(Model model, Authentication auth, @PathVariable("id") Long id) {
+		for(Team t : teamService.findeAlleTeamsEinesUsers(userService.findeUser(auth.getName()))) {
+			if(t.equals(teamService.findeTeam(id))) {
+				Team team = teamService.findeTeam(id);
+				team.setUser(null);
+				team.setName("Unbennantes Team");
+				teamService.aktualisiereTeam(team);
+				return "redirect:/";
+			}
+		}
+		return "redirect:/";
+	}
+	
+	@PostMapping("/team/neu")
+	public String neuesTeam(Model model, Authentication auth) {
+		User user = userService.findeUser(auth.getName());
+		Team team = teamService.findeErstesDummyTeam(user.getLand());
+		
+		team.setUser(user);
+		teamService.aktualisiereTeam(team);
+		//TODO wenn land voll ist
+		//TODO Dummy teams
+		return "redirect:/";
+	}
+	
+	@GetMapping("/teams/umbenennen")
+	public String getTeamListeZumUmbenennen(Model model, Authentication auth) {
+		User aktuellerUser = userService.findeUser(auth.getName());
+		TeamListeWrapper teamListWrapper = new TeamListeWrapper();
+		
+		
+		model.addAttribute("aktuellesTeam", aktuellerUser.getAktuellesTeam());
+		
+		List<Team> alleTeamsEinesUsers = teamService.findeAlleTeamsEinesUsers(aktuellerUser);
+		teamListWrapper.setTeamList(alleTeamsEinesUsers);
+		
+		model.addAttribute("alleTeamsDesAktuellenUsers", alleTeamsEinesUsers);
+		model.addAttribute("teamWrapper", teamListWrapper);
+		
+		return "teamlistezumumbenennen";
+	}
+	
+	@PostMapping("/teams/umbenennen")
+	public String teamUmbennenen(Model model, Authentication auth, @ModelAttribute("teamWrapper") TeamListeWrapper teamWrapper) {		
+		List<Team> alleTeamsEinesUsers = teamWrapper.getTeamList();
+		
+		for(Team t : alleTeamsEinesUsers) {
+			Team team = teamService.findeTeam(t.getId());
+			team.setName(t.getName());
+			teamService.aktualisiereTeam(team);
+		}
+		return "redirect:/";
+	}
+}
+

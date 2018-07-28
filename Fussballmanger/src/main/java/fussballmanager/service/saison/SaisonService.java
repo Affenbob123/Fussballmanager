@@ -98,7 +98,6 @@ public class SaisonService {
 	}
 	
 	private void erstelleSpieleFuerEineSaison(Saison saison) {
-		spielService.erstelleSpieleFuerEineLiga(ligaService.findeLiga(1L));
 		for(Liga liga : ligaService.findeAlleLigen()) {
 			spielService.erstelleSpieleFuerEineLiga(liga);
 			LOG.info("Spiele für die Saison: {} und Liga: {} wurde angelegt.", saison.getSaisonNummer(), liga.getLigaNameTyp().getName());

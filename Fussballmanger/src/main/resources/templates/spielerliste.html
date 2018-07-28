@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
-<head th:replace="fragments/header :: head" />
+<head th:replace="fragments/header :: head">
+	<link rel="stylesheet" href="/spielliste.css" />
+</head>
 <body>
 	<div th:replace="fragments/header :: header"></div>
 	<div class="container">
@@ -46,6 +48,25 @@
 						  th:value="${ausrichtungsTyp}">
 					</option>
 				</select>
+			</form>
+			<p>Auswechslung:</p>
+			<form action="#" th:action="@{/team/}+${aktuellesTeam.id}+'/einwechseln'" th:object="${einzuwechselnderSpieler}"
+					method="post">
+			<select class="custom-select" th:field="*{id}">
+				<option
+					  th:each="spieler : ${alleSpielerAufErsatzbank}" 
+					  th:text="${spieler.position.positionsName}+' | '+${spieler.name}"
+					  th:value="${spieler.id}">
+				</option>
+			</select>
+				<select class="custom-select" th:field="*{aufstellungsPositionsTyp}">
+					<option 
+						  th:each="aufstellungsPositionsTyp : ${alleAufstellungsPositionsTypen}" 
+						  th:text="${aufstellungsPositionsTyp.positionsName}"
+						  th:value="${aufstellungsPositionsTyp}">
+					</option>
+				</select>
+				<button type="submit" value="submit" class="btn btn-sm btn-primary">Submit</button>
 			</form>
 			<table class="table table-hover table-condensed" style="border-collapse:collapse;">
 				<thead>
@@ -99,6 +120,9 @@
 		       		</tr>
 		       	</tbody>
 			</table>
+		</div>
+		<div>
+			<a class="" th:href="@{/team/}+${aktuellesTeam.id}+'/spieler/umbenennen'">Spieler umbenennen</a>
 		</div>
 	</div>
 	<th:block th:replace="fragments/header :: scripts">

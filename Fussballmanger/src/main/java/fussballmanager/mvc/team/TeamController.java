@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import fussballmanager.service.land.LandService;
 import fussballmanager.service.liga.LigaService;
+import fussballmanager.service.spieler.AufstellungsPositionsTypen;
 import fussballmanager.service.spieler.Spieler;
 import fussballmanager.service.spieler.SpielerService;
 import fussballmanager.service.team.AusrichtungsTypen;
@@ -41,20 +42,6 @@ public class TeamController {
 	@Autowired
 	UserService userService;
 	
-	@GetMapping("/")
-	public String getTeamListe(Model model, Authentication auth) {
-		User aktuellerUser = userService.findeUser(auth.getName());
-		
-		model.addAttribute("aktuellesTeam", aktuellerUser.getAktuellesTeam());
-		
-		List<Team> alleTeamsEinesUsers = teamService.findeAlleTeamsEinesUsers(aktuellerUser);
-		
-		model.addAttribute("alleTeamsDesAktuellenUsers", alleTeamsEinesUsers);
-		
-		
-		return "teamliste";
-	}
-	
 	@GetMapping("/team/{id}")
 	public String getTeamListe(Model model, Authentication auth, @PathVariable("id") Long id) {
 		User aktuellerUser = userService.findeUser(auth.getName());
@@ -69,6 +56,9 @@ public class TeamController {
 		model.addAttribute("alleFormationsTypen", FormationsTypen.values());
 		model.addAttribute("alleEinsatzTypen", EinsatzTypen.values());
 		model.addAttribute("alleAusrichtungsTypen", AusrichtungsTypen.values());
+		model.addAttribute("alleAufstellungsPositionsTypen", aktuellesTeam.getFormationsTyp().getAufstellungsPositionsTypen());
+		model.addAttribute("alleSpielerAufErsatzbank", spielerService.findeAlleSpielerEinesTeamsAufErsatzbank(aktuellesTeam));
+		model.addAttribute("einzuwechselnderSpieler", new Spieler());
 		
 		return "spielerliste";
 	}
@@ -97,6 +87,24 @@ public class TeamController {
 		team.setAusrichtungsTyp(aktuellesTeam.getAusrichtungsTyp());
 		teamService.aktualisiereTeam(team);
 		
+		return "redirect:/team/{id}";
+	}
+	
+	@PostMapping("/team/{id}/einwechseln")
+	public String aendereFormation(Model model, Authentication auth, @PathVariable("id") Long id, @ModelAttribute("einzuwechselnderSpieler") Spieler einzuwechselnderSpieler) {
+		Team team = teamService.findeTeam(id);
+		List<Spieler> spielerInAufstellung = spielerService.findeAlleSpielerEinesTeamsInAufstellung(team);
+		
+		for(Spieler spieler : spielerInAufstellung) {
+			if(spieler.getAufstellungsPositionsTyp().equals(einzuwechselnderSpieler.getAufstellungsPositionsTyp())) {
+				spieler.setAufstellungsPositionsTyp(AufstellungsPositionsTypen.ERSATZ);
+				Spieler eingewechselterSpieler = spielerService.findeSpieler(einzuwechselnderSpieler.getId());
+				eingewechselterSpieler.setAufstellungsPositionsTyp(einzuwechselnderSpieler.getAufstellungsPositionsTyp());
+				
+				spielerService.aktualisiereSpieler(eingewechselterSpieler);
+				spielerService.aktualisiereSpieler(spieler);
+			}
+		}
 		return "redirect:/team/{id}";
 	}
 }

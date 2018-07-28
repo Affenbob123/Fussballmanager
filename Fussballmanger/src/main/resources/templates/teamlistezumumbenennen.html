@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head th:replace="fragments/header :: head">
+	<link rel="stylesheet" href="/teamliste.css" />
+</head>
+<body>
+	<div th:replace="fragments/header :: header"></div>
+	<div class="container">
+		<h2>Teams umbenennen</h2>
+	</div>
+	<div class="container" id="containerBody">
+		<div class="alert alert-success" th:if="${successMessage}">
+  			<strong><p th:utext="${successMessage}"></p></strong>
+		</div>
+		<div class="alert alert-danger" th:if="${errorMessage}">
+  			<strong><p th:utext="${errorMessage}"></p></strong>
+		</div>
+		<div class="col-md-12">
+			<form th:action="@{/teams/umbenennen}" th:object="${teamWrapper}"
+				method="post">
+				<table class="table table-hover">
+					<thead>
+						<tr class="table-active">
+							<th scope="col"></th>
+							<th scope="col">Name</th>
+							<th scope="col">Liga</th>
+							<th scope="col">Stärke</th>
+							<th scope="col">Geld</th>
+						</tr>
+					</thead>
+					<tr class=""  th:each="team, stat : ${alleTeamsDesAktuellenUsers}">
+						<td> 
+							<div class="form-group">
+			    				<input type="hidden" readonly="readonly"
+			    				th:name="|teamList[${stat.index}]|"
+                				th:value="${team.id}"
+			    				th:field="*{teamList[__${stat.index}__].id}"
+			    				class="form-control" />
+							</div>
+						</td>
+						<td> 
+							<div class="form-group">
+			    				<input type="text"
+			    				th:name="|teamList[${stat.index}]|"
+                				th:value="${team.name}"
+			    				th:field="*{teamList[__${stat.index}__].name}"
+			    				class="form-control" />
+							</div>
+						</td>
+						<td th:text="${team.liga.ligaNameTyp.getName()}" />
+					</tr>
+				</table>
+				<button type="submit" value="submit" class="btn btn-sm btn-primary">Submit</button>
+			</form>
+		</div>
+	</div>
+	<th:block th:replace="fragments/header :: scripts" />
+</body>
+</html>

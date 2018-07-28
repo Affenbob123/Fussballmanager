@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
-<head th:replace="fragments/header :: head" />
+<head th:replace="fragments/header :: head">
+	<link rel="stylesheet" href="/teamliste.css" />
+</head>
 <body>
 	<div th:replace="fragments/header :: header"></div>
 	<div class="container">
@@ -14,6 +16,22 @@
   			<strong><p th:utext="${errorMessage}"></p></strong>
 		</div>
 		<div class="col-md-12">
+			<div>
+				<form method="POST" th:action="@{/team/neu}">
+					<button type="submit" name="submit" value="value"
+						class="btn btn-success btn-sm button-toggle">
+						<span aria-hidden="true">Neues Team</span>
+					</button>
+				</form>
+			</div>
+			<div>
+				<form method="GET" th:action="@{/teams/umbenennen}">
+					<button type="submit" name="submit" value="value"
+						class="btn btn-primary btn-sm button-toggle">
+						<span aria-hidden="true">Teams umbenennen</span>
+					</button>
+				</form>
+			</div>
 			<table class="table table-hover">
 				<thead>
 					<tr class="table-active">
@@ -21,6 +39,7 @@
 						<th scope="col">Name</th>
 						<th scope="col">Liga</th>
 						<th scope="col">Geld</th>
+						<th scope="col"></th>
 					</tr>
 				</thead>
 
@@ -31,6 +50,14 @@
 					</td>
 					<td th:text="${team.liga.ligaNameTyp.getName()}" />
 					<td th:text="${team.geld}" />
+					<td>
+						<form method="POST" th:action="@{/team/}+${team.id}+'/loeschen'">
+							<button type="submit" name="submit" value="value"
+								class="btn btn-danger btn-sm button-toggle">
+								<span aria-hidden="true">L&#246;schen</span>
+							</button>
+						</form>
+					</td>
 				</tr>
 			</table>
 		</div>

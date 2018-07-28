@@ -68,6 +68,17 @@ public class SpielerService {
 		return alleSpielerEinesTeams;
 	}
 	
+	public List<Spieler> findeAlleSpielerEinesTeamsAufErsatzbank(Team aktuellesTeam) {
+		List<Spieler> alleSpielerEinesTeamsAufErsatzbank =  new ArrayList<>();
+		
+		for(Spieler spieler : findeAlleSpielerEinesTeams(aktuellesTeam)) {
+			if(spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.ERSATZ)) {
+				alleSpielerEinesTeamsAufErsatzbank.add(spieler);
+			}
+		}
+		return alleSpielerEinesTeamsAufErsatzbank;
+	}
+	
 	public void legeSpielerAn(Spieler spieler) {
 		spielerRepository.save(spieler);
 //		LOG.info("Spieler mit Talentwert: {} und der Position: {} im Team: {} wurde angelegt.", spieler.getTalentwert(), 
@@ -100,7 +111,7 @@ public class SpielerService {
 				}
 			}
 
-			Spieler spieler = new Spieler(nationalitaet, PositionenTypen.DM , aufstellungsPositionsTyp, alter, reinStaerke, staerke, talentwert, team);
+			Spieler spieler = new Spieler(nationalitaet, positionenTyp, aufstellungsPositionsTyp, alter, reinStaerke, staerke, talentwert, team);
 			legeSpielerAn(spieler);
 			LOG.info("Spielerstaerke: {}", spieler.getStaerke().getDurchschnittsStaerke());
 		}

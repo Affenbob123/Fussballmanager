@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head th:replace="fragments/header :: head">
+	<link rel="stylesheet" href="/teamliste.css" />
+</head>
+<body>
+	<div th:replace="fragments/header :: header"></div>
+	<div class="container">
+		<h2>Teams umbenennen</h2>
+	</div>
+	<div class="container" id="containerBody">
+		<div class="alert alert-success" th:if="${successMessage}">
+  			<strong><p th:utext="${successMessage}"></p></strong>
+		</div>
+		<div class="alert alert-danger" th:if="${errorMessage}">
+  			<strong><p th:utext="${errorMessage}"></p></strong>
+		</div>
+		<div class="col-md-12">
+			<form th:action="@{/team/}+${aktuellesTeam.id}+'/spieler/umbenennen'" th:object="${spielerListeWrapper}"
+				method="post">
+				<table class="table table-hover">
+					<thead>
+						<tr class="table-active">
+							<th scope="col"></th>
+							<th scope="col">Position</th>
+							<th scope="col">Name</th>
+							<th scope="col">Team</th>
+							<th scope="col">Stärke</th>
+						</tr>
+					</thead>
+					<tr class=""  th:each="spieler, stat : ${alleSpielerDesAktuellenTeams}">
+						<td> 
+							<div class="form-group">
+			    				<input type="hidden" readonly="readonly"
+			    				th:name="|spielerListe[${stat.index}]|"
+                				th:value="${spieler.id}"
+			    				th:field="*{spielerListe[__${stat.index}__].id}"
+			    				class="form-control" />
+							</div>
+						</td>
+						<td th:text="${spieler.position.positionsName}" />
+						<td> 
+							<div class="form-group">
+			    				<input type="text"
+			    				th:name="|spielerListe[${stat.index}]|"
+                				th:value="${spieler.name}"
+			    				th:field="*{spielerListe[__${stat.index}__].name}"
+			    				class="form-control" />
+							</div>
+						</td>
+						<td th:text="${spieler.team.name}" />
+						<td th:text="${spieler.staerke.durchschnittsStaerke}" />
+					</tr>
+				</table>
+				<button type="submit" value="submit" class="btn btn-sm btn-primary">Submit</button>
+			</form>
+		</div>
+	</div>
+	<th:block th:replace="fragments/header :: scripts" />
+</body>
+</html>

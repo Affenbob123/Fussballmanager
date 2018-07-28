@@ -82,7 +82,7 @@ public class FussballmanagerErstellung {
 			}
 			saisonService.ersteSaisonErstellen();
 			spieltagService.checkAktuellerSpieltag();
-			spielSimulation.simuliereSpiele();
+			//spielSimulation.simuliereSpiele();
 		}
 	}
 }
