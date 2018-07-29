@@ -1,5 +1,7 @@
 package fussballmanager.mvc.liga;
 
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import fussballmanager.helper.SpielstatusHelper;
+import fussballmanager.mvc.spiel.SpielEintrag;
 import fussballmanager.service.land.Land;
 import fussballmanager.service.land.LandService;
 import fussballmanager.service.liga.Liga;
@@ -25,6 +28,7 @@ import fussballmanager.service.saison.Saison;
 import fussballmanager.service.saison.SaisonService;
 import fussballmanager.service.saison.spieltag.Spieltag;
 import fussballmanager.service.saison.spieltag.SpieltagService;
+import fussballmanager.service.spiel.Spiel;
 import fussballmanager.service.spiel.SpielService;
 import fussballmanager.service.spiel.spielereignisse.SpielEreignisService;
 import fussballmanager.service.team.Team;
@@ -70,7 +74,6 @@ public class LigaController {
 		
 		model.addAttribute("spielstatusHelper", new SpielstatusHelper());
 		model.addAttribute("aktuellesTeam", aktuellerUser.getAktuellesTeam());
-		model.addAttribute("spielEreignisService", spielEreignisService);
 		
 		Land ausgewaehltesLand = landService.findeLandDurchLandName(landName);;
 		Liga ausgewaehlteLiga = ligaService.findeLiga(landName, ligaName);
@@ -102,9 +105,10 @@ public class LigaController {
 		model.addAttribute("alleSpieltage", spieltagService.findeAlleSpieltageEinerSaison(ausgewaehlteSaison));
 		
 		model.addAttribute("findeAlleSpieleEinerLigaEinerSaisonEinesSpieltages", 
-				spielService.findeAlleSpieleEinerLigaEinerSaisonEinesSpieltages(ligaService.findeLiga(landName, ligaName), ausgewaehlteSaison, ausgewaehlterSpieltag));
+				erstelleSpielEintraegeEinerLiga(landName, ligaName, ausgewaehlteSaison, ausgewaehlterSpieltag));
 		model.addAttribute("alleTeamsDerAktuellenLiga", erstelleLigaTabelle(landName, ligaName, ausgewaehlteSaison));
-		
+		model.addAttribute("spielEreignisService", spielEreignisService);
+
 		return "tabelle";
 	}
 	
@@ -183,4 +187,48 @@ public class LigaController {
 		return ligaEintrag;
 	}
 	
+	public List<SpielEintrag> erstelleSpielEintraegeEinerLiga(String land, String ligaName, Saison saison, Spieltag spieltag) {
+		List<SpielEintrag> spielEintraege = new ArrayList<>();
+		List<Spiel> alleSpieleEinerLigaEinesSpieltages = 
+				spielService.findeAlleSpieleEinerLigaEinerSaisonEinesSpieltages(ligaService.findeLiga(land, ligaName), saison, spieltag);
+		for (Spiel spiel : alleSpieleEinerLigaEinesSpieltages) {
+			spielEintraege.add(erstelleSpielEintragEinerLiga(spiel));
+		}
+		return spielEintraege;
+	}
+	
+	public SpielEintrag erstelleSpielEintragEinerLiga(Spiel spiel) {
+		SpielEintrag spielEintrag = new SpielEintrag();
+		
+		LocalTime aktuelleUhrzeit = LocalTime.now(ZoneId.of("Europe/Berlin"));
+		
+		if((spiel.getSpieltag().getSpieltagNummer() > spieltagService.findeAktuellenSpieltag().getSpieltagNummer()) ||
+				aktuelleUhrzeit.isBefore(spiel.getSpielTyp().getSpielBeginn())) {
+			spielEintrag.setToreHeimmannschaft(-1);
+			spielEintrag.setToreGastmannschaft(-1);
+			spielEintrag.setToreHeimmannschaftHalbzeit(-1);
+			spielEintrag.setToreGastmannschaftHalbzeit(-1);
+		} else {
+			spielEintrag.setToreHeimmannschaft(spiel.getToreHeimmannschaft());
+			spielEintrag.setToreGastmannschaft(spiel.getToreGastmannschaft());
+			if(spiel.getSpielTyp().getSpielBeginn().plusHours(1).isBefore(aktuelleUhrzeit)) {
+				spielEintrag.setToreHeimmannschaftHalbzeit(-1);
+				spielEintrag.setToreGastmannschaftHalbzeit(-1);
+			} else {
+				spielEintrag.setToreHeimmannschaftHalbzeit(spiel.getToreHeimmannschaftZurHalbzeit());
+				spielEintrag.setToreGastmannschaftHalbzeit(spiel.getToreGastmannschaftZurHalbzeit());
+			}
+			
+		}
+		
+		spielEintrag.setId(spiel.getId());
+		spielEintrag.setSpieltag(spiel.getSpieltag().getSpieltagNummer());
+		spielEintrag.setSpielbeginn(spiel.getSpielTyp().getSpielBeginn());
+		spielEintrag.setNameHeimmannschaft(spiel.getHeimmannschaft().getName());
+		spielEintrag.setNameGastmannschaft(spiel.getGastmannschaft().getName());
+		spielEintrag.setStaerkeHeimmannschaft(spiel.getHeimmannschaft().getStaerke());
+		spielEintrag.setStaerkeGastmannschaft(spiel.getGastmannschaft().getStaerke());
+		
+		return spielEintrag;
+	}
 }

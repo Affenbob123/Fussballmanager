@@ -33,10 +33,14 @@ public class Spiel {
 	
 	private int toreHeimmannschaft;
 	
+	private int toreHeimmannschaftZurHalbzeit;
+	
 	@OneToOne
 	private Team gastmannschaft;
 	
 	private int toreGastmannschaft;
+	
+	private int toreGastmannschaftZurHalbzeit;
 	
 	@ManyToOne
 	private Spieltag spieltag;
@@ -157,6 +161,22 @@ public class Spiel {
 
 	public void setToreGastmannschaft(int toreGastmannschaft) {
 		this.toreGastmannschaft = toreGastmannschaft;
+	}
+
+	public int getToreHeimmannschaftZurHalbzeit() {
+		return toreHeimmannschaftZurHalbzeit;
+	}
+
+	public void setToreHeimmannschaftZurHalbzeit(int toreHeimmannschaftZurHalbzeit) {
+		this.toreHeimmannschaftZurHalbzeit = toreHeimmannschaftZurHalbzeit;
+	}
+
+	public int getToreGastmannschaftZurHalbzeit() {
+		return toreGastmannschaftZurHalbzeit;
+	}
+
+	public void setToreGastmannschaftZurHalbzeit(int toreGastmannschaftZurHalbzeit) {
+		this.toreGastmannschaftZurHalbzeit = toreGastmannschaftZurHalbzeit;
 	}
 
 	public boolean isVorbei() {

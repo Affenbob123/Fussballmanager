@@ -80,6 +80,7 @@ public class SpielSimulation {
 		
 		for(Spiel spiel : alleSpieleEinesSpieltages) {
 			simuliereSpielminuteEinesSpieles(spiel,spielminute);
+			spielService.anzahlToreEinesSpielSetzen(spiel);
 		}
 	}
 	
@@ -94,6 +95,7 @@ public class SpielSimulation {
 		
 		for(Spiel spiel : alleSpieleEinesSpieltages) {
 			simuliereSpielminuteEinesSpieles(spiel,spielminute);
+			spielService.anzahlToreEinesSpielSetzen(spiel);
 		}
 	}
 	
@@ -137,7 +139,7 @@ public class SpielSimulation {
 			if(zufallsZahl < wahrscheinlichkeitTorVersuch) {
 				SpielEreignis spielEreignis = new SpielEreignis();
 				spielEreignis.setSpielereignisTyp(SpielEreignisTypen.TORVERSUCH);
-				spielEreignis.setSpieler(null);
+				spielEreignis.setSpieler(spielerService.findeAlleSpielerEinesTeams(spiel.getHeimmannschaft()).get(0));
 				spielEreignis.setTeam(spiel.getHeimmannschaft());
 				spielEreignis.setSpielminute(spielminute);
 				
@@ -162,7 +164,7 @@ public class SpielSimulation {
 			if(zufallsZahl < wahrscheinlichkeitTorVersuch) {
 				SpielEreignis spielEreignis = new SpielEreignis();
 				spielEreignis.setSpielereignisTyp(SpielEreignisTypen.TORVERSUCH);
-				spielEreignis.setSpieler(null);
+				spielEreignis.setSpieler(spielerService.findeAlleSpielerEinesTeams(spiel.getHeimmannschaft()).get(0));
 				spielEreignis.setTeam(spiel.getGastmannschaft());
 				spielEreignis.setSpielminute(spielminute);
 				

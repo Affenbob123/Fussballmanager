@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head th:replace="fragments/header :: head" />
+<body>
+	<div th:replace="fragments/header :: header"></div>
+	<div class="container">
+		<h2>Spiel</h2>
+	</div>
+	<div class="container" id="containerBody">
+		<div class="alert alert-success" th:if="${successMessage}">
+  			<strong><p th:utext="${successMessage}"></p></strong>
+		</div>
+		<div class="alert alert-danger" th:if="${errorMessage}">
+  			<strong><p th:utext="${errorMessage}"></p></strong>
+		</div>
+		<div class="col-md-12">
+			<div>
+				<table class="table table-hover">
+					<thead>
+						<tr class="table-active">
+							<th scope="col">Spieltag</th>
+							<th scope="col">Spielbeginn</th>
+							<th scope="col">Heimmannschaft</th>
+							<th scope="col">Ergebnis</th>
+							<th scope="col">Gastmannschaft</th>
+						</tr>
+					</thead>
+					<tr class="">
+						<td th:text="${spielEintrag.spieltag}" />
+						<td th:text="${spielEintrag.spielbeginnToString()}" />
+						<td th:text="${spielEintrag.heimmannschasftUndStaerkeToString()}" />
+						<td class="ergebnisInTabelle">
+							<a class="" th:href="@{/spiel/}+${spielEintrag.id}">
+								<span th:text="${spielEintrag.spielErgebnisToString()}"></span><br>
+								<span th:text="${spielEintrag.spielErgebnisHalbzeitToString()}"></span>
+							</a>
+						</td>
+						<td th:text="${spielEintrag.gastmannschasftUndStaerkeToString()}" />
+					</tr>
+				</table>
+			</div>
+			<div class="container">
+				<div class="" th:each="spielEreignisEintrag : ${spielEreignisEintaerge}">
+					<p>
+						<span th:text="${spielEreignisEintrag.spielEreignisEintragToString()}"></span>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<th:block th:replace="fragments/header :: scripts" />
+</body>
+</html>

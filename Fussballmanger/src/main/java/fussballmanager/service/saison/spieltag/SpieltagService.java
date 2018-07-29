@@ -94,7 +94,7 @@ public class SpieltagService {
 		legeSpieltagAn(ersterSpieltagDerSaison);
 		LOG.info("Spieltag: {}, Saison: {}, Status: {}", 0, saison.getSaisonNummer(), findeSpieltagDurchSpieltagUndSaison(0, saison).isAktuellerSpieltag());
 		
-		for(int i = 1; i <= saison.getSpieltage(); i++) {
+		for(int i = 1; i < saison.getSpieltage(); i++) {
 			legeSpieltagAn(new Spieltag(i, saison));
 			LOG.info("Spieltag: {}, Saison: {}, Status: {}", i, saison.getSaisonNummer(), findeSpieltagDurchSpieltagUndSaison(i, saison).isAktuellerSpieltag());
 		}

@@ -65,7 +65,7 @@ public class ScheduldTasks {
 		spielSimulation.simuliereSpielMinuteAllerSpieleErsteHalbzeit(SpieleTypen.LIGASPIEL);
 	}
 	
-	@Scheduled(cron = "0 15-59 19 * * ?", zone="Europe/Berlin")
+	@Scheduled(cron = "15-59 33 11 * * ?", zone="Europe/Berlin")
 	public void simuliereLigaspielZweiteHalbzeit() {
 		spielSimulation.simuliereSpielMinuteAllerSpieleZweiteHalbzeit(SpieleTypen.LIGASPIEL);
 	}
@@ -86,8 +86,18 @@ public class ScheduldTasks {
 		List<Spiel> alleSpieleEinesSpieltages = spielService.findeAlleSpieleEinesSpieltages(spieltagService.findeAktuellenSpieltag());
 		
 		for(Spiel spiel : alleSpieleEinesSpieltages) {
+			Team heimTeam = spiel.getHeimmannschaft();
+			Team gastTeam = spiel.getGastmannschaft();
 			if(!spiel.isVorbei() && (spiel.getSpielTyp().getSpielBeginn().isBefore(aktuelleZeitMinusZweiStunden))) {
-				spielService.anzahlToreNachDemSpielSetzen(spiel);
+				spielService.anzahlToreEinesSpielSetzen(spiel);
+				spiel.setVorbei(true);
+				
+				heimTeam.setAnzahlAuswechselungen(3);
+				gastTeam.setAnzahlAuswechselungen(3);
+				
+				spielService.aktualisiereSpiel(spiel);
+				teamService.aktualisiereTeam(heimTeam);
+				teamService.aktualisiereTeam(gastTeam);
 			}
 		}
 	}
@@ -98,8 +108,18 @@ public class ScheduldTasks {
 		List<Spiel> alleSpieleEinesSpieltages = spielService.findeAlleSpieleEinesSpieltages(spieltagService.findeAktuellenSpieltag());
 		
 		for(Spiel spiel : alleSpieleEinesSpieltages) {
+			Team heimTeam = spiel.getHeimmannschaft();
+			Team gastTeam = spiel.getGastmannschaft();
 			if(!spiel.isVorbei() && (spiel.getSpielTyp().getSpielBeginn().isBefore(aktuelleZeitMinusZweiStunden))) {
-				spielService.anzahlToreNachDemSpielSetzen(spiel);
+				spielService.anzahlToreEinesSpielSetzen(spiel);
+				spiel.setVorbei(true);
+				
+				heimTeam.setAnzahlAuswechselungen(3);
+				gastTeam.setAnzahlAuswechselungen(3);
+				
+				spielService.aktualisiereSpiel(spiel);
+				teamService.aktualisiereTeam(heimTeam);
+				teamService.aktualisiereTeam(gastTeam);
 			}
 		}
 	}
@@ -108,11 +128,20 @@ public class ScheduldTasks {
 	public void setzeErgebnisseUndSetzteAuswechselungenZurueckLigaspiel() {
 		LocalTime aktuelleZeitMinusZweiStunden = LocalTime.now(ZoneId.of("Europe/Berlin")).minusHours(2);
 		List<Spiel> alleSpieleEinesSpieltages = spielService.findeAlleSpieleEinesSpieltages(spieltagService.findeAktuellenSpieltag());
-		int counter = 0;
+
 		for(Spiel spiel : alleSpieleEinesSpieltages) {
+			Team heimTeam = spiel.getHeimmannschaft();
+			Team gastTeam = spiel.getGastmannschaft();
 			if(!spiel.isVorbei() && (spiel.getSpielTyp().getSpielBeginn().isBefore(aktuelleZeitMinusZweiStunden))) {
-				spielService.anzahlToreNachDemSpielSetzen(spiel);
-				LOG.info("counter: {}", counter++);
+				spielService.anzahlToreEinesSpielSetzen(spiel);
+				spiel.setVorbei(true);
+				
+				heimTeam.setAnzahlAuswechselungen(3);
+				gastTeam.setAnzahlAuswechselungen(3);
+				
+				spielService.aktualisiereSpiel(spiel);
+				teamService.aktualisiereTeam(heimTeam);
+				teamService.aktualisiereTeam(gastTeam);
 			}
 		}
 	}
@@ -126,11 +155,13 @@ public class ScheduldTasks {
 			Team heimTeam = spiel.getHeimmannschaft();
 			Team gastTeam = spiel.getGastmannschaft();
 			if(!spiel.isVorbei() && (spiel.getSpielTyp().getSpielBeginn().isBefore(aktuelleZeitMinusZweiStunden))) {
-				spielService.anzahlToreNachDemSpielSetzen(spiel);
+				spielService.anzahlToreEinesSpielSetzen(spiel);
+				spiel.setVorbei(true);
 				
 				heimTeam.setAnzahlAuswechselungen(3);
 				gastTeam.setAnzahlAuswechselungen(3);
 				
+				spielService.aktualisiereSpiel(spiel);
 				teamService.aktualisiereTeam(heimTeam);
 				teamService.aktualisiereTeam(gastTeam);
 			}

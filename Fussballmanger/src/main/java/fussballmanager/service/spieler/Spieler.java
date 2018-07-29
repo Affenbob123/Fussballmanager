@@ -61,7 +61,7 @@ public class Spieler implements Comparable<Spieler> {
 		this.nationalitaet = nationalitaet;
 		this.position = position;
 		this.aufstellungsPositionsTyp = aufstellungsPositionsTyp;
-		this.name = "Unbennanter Spieler";
+		this.name = "Unbenannter Spieler";
 		this.alter = alter;
 		this.reinStaerke = reinStaerke;
 		this.staerke = staerke;

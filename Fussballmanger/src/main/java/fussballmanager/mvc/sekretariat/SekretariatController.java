@@ -58,7 +58,7 @@ public class SekretariatController {
 			if(t.equals(teamService.findeTeam(id))) {
 				Team team = teamService.findeTeam(id);
 				team.setUser(null);
-				team.setName("Unbennantes Team");
+				team.setName("Unbenanntes Team");
 				teamService.aktualisiereTeam(team);
 				return "redirect:/";
 			}

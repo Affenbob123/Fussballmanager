@@ -43,13 +43,15 @@ public class Team implements Comparable<Team> {
 	
 	private int anzahlAuswechselungen = 3;
 	
+	private double staerke = 0.0;
+	
 	public Team(Land land, String name, User user, Liga liga) {
 		this.land = land;
 		this.name = name;
 		this.geld = 500000.0;
 		this.user = user;
 		this.liga = liga;
-		this.spielort = "Unbennantes Stadion";
+		this.spielort = "Unbenanntes Stadion";
 		this.formationsTyp = FormationsTypen.VIERVIERZWEI;
 		this.einsatzTyp = EinsatzTypen.NORMAL;
 		this.ausrichtungsTyp = AusrichtungsTypen.NORMAL;
@@ -149,6 +151,14 @@ public class Team implements Comparable<Team> {
 
 	public void setAnzahlAuswechselungen(int anzahlAuswechselungen) {
 		this.anzahlAuswechselungen = anzahlAuswechselungen;
+	}
+
+	public double getStaerke() {
+		return staerke;
+	}
+
+	public void setStaerke(double staerke) {
+		this.staerke = staerke;
 	}
 
 	@Override

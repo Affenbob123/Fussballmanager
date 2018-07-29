@@ -116,7 +116,6 @@ public class SpielService {
 						if(spiel.getSpielTyp().equals(spielTyp)) {
 							alleSpieleEinesSpieltages.add(spiel);
 						}
-						
 					}
 				}
 			}
@@ -220,24 +219,33 @@ public class SpielService {
 		}
 	}
 	
-	public void anzahlToreNachDemSpielSetzen(Spiel spiel) {
+	public void anzahlToreEinesSpielSetzen(Spiel spiel) {
 		int toreHeimmannschaft = 0;
 		int toreGastmannschaft = 0;
+		int toreHeimmannschaftZurHalbzeit = 0;
+		int toreGastmannschaftZurHalbzeit = 0;
 		
 		for(SpielEreignis spielEreignis : spiel.getSpielEreignisse()) {
 			if(spielEreignis.getTeam().equals(spiel.getHeimmannschaft())) {
-				if(spielEreignis.getSpielereignisTyp().equals(SpielEreignisTypen.TORVERSUCH)) {
+				if(spielEreignis.getSpielereignisTyp().equals(SpielEreignisTypen.TORVERSUCHGETROFFEN)) {
 					toreHeimmannschaft++;
+					if(spielEreignis.getSpielminute() <= 45) {
+						toreHeimmannschaftZurHalbzeit++;
+					}
 				}
 			} else {
-				if(spielEreignis.getSpielereignisTyp().equals(SpielEreignisTypen.TORVERSUCH)) {
+				if(spielEreignis.getSpielereignisTyp().equals(SpielEreignisTypen.TORVERSUCHGETROFFEN)) {
 					toreGastmannschaft++;
+					if(spielEreignis.getSpielminute() <= 45) {
+						toreGastmannschaftZurHalbzeit++;
+					}
 				}
 			}
 		}
 		spiel.setToreHeimmannschaft(toreHeimmannschaft);
 		spiel.setToreGastmannschaft(toreGastmannschaft);
-		spiel.setVorbei(true);
+		spiel.setToreHeimmannschaftZurHalbzeit(toreHeimmannschaftZurHalbzeit);
+		spiel.setToreGastmannschaftZurHalbzeit(toreGastmannschaftZurHalbzeit);
 		aktualisiereSpiel(spiel);
 	}
 }

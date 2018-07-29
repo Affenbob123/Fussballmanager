@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
-<head th:replace="fragments/header :: head" />
+<head th:replace="fragments/header :: head">
+	<link rel="stylesheet" href="/tabelle.css" />
+</head>
 <body>
 	<div th:replace="fragments/header :: header"></div>
 	<div class="container">
@@ -40,23 +42,24 @@
 				<thead>
 					<tr class="table-active">
 						<th scope="col">Spieltag</th>
-						<th scope="col">Saison</th>
+						<th scope="col">Spielbeginn</th>
 						<th scope="col">Heimmannschaft</th>
-						<th scope="col">GastMannschaft</th>
-						<th scope="col">Tore Heimmannschaft</th>
-						<th scope="col">Tore Gastmannschaft</th>
+						<th scope="col">Ergebnis</th>
+						<th scope="col">Gastmannschaft</th>
 					</tr>
 				</thead>
-
-				<tr class="" th:each="spiel : ${findeAlleSpieleEinerLigaEinerSaisonEinesSpieltages}">
-					<td th:text="${spiel.spieltag.spieltagNummer}" />
-					<td th:text="${spiel.saison.saisonNummer}" />
-					<td th:text="${spiel.heimmannschaft.getName()}" />
-					<td th:text="${spiel.gastmannschaft.getName()}" />
-					<td th:text="${spielEreignisService.berechneAnzahlTorVersucheHeimmannschaft(spiel)}" />
-					<td th:text="${spielEreignisService.berechneAnzahlTorVersucheGastmannschaft(spiel)}" />
+				<tr class="" th:each="spielEintrag : ${findeAlleSpieleEinerLigaEinerSaisonEinesSpieltages}">
+					<td th:text="${spielEintrag.spieltag}" />
+					<td th:text="${spielEintrag.spielbeginnToString()}" />
+					<td th:text="${spielEintrag.heimmannschasftUndStaerkeToString()}" />
+					<td class="ergebnisInTabelle">
+						<a class="" th:href="@{/spiel/}+${spielEintrag.id}">
+							<span th:text="${spielEintrag.spielErgebnisToString()}"></span><br>
+							<span th:text="${spielEintrag.spielErgebnisHalbzeitToString()}"></span>
+						</a>
+					</td>
+					<td th:text="${spielEintrag.gastmannschasftUndStaerkeToString()}" />
 				</tr>
-				
 			</table>
 			<p>Saison:</p>
 			<form action="#" th:action="@{/liga/}+${landName}+'/'+${ligaName}+'/saison'" th:object="${saison}"
