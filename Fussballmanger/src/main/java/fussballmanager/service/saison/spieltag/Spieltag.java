@@ -20,7 +20,7 @@ public class Spieltag {
 	@ManyToOne
 	private Saison saison;
 	
-	private boolean AktuellerSpieltag = false;
+	private boolean aktuellerSpieltag = false;
 	
 	public Spieltag(int spieltagNummer, Saison saison) {
 		this.spieltagNummer = spieltagNummer;
@@ -56,10 +56,10 @@ public class Spieltag {
 	}
 
 	public boolean isAktuellerSpieltag() {
-		return AktuellerSpieltag;
+		return aktuellerSpieltag;
 	}
 
 	public void setAktuellerSpieltag(boolean istAktuellerSpieltag) {
-		this.AktuellerSpieltag = istAktuellerSpieltag;
+		this.aktuellerSpieltag = istAktuellerSpieltag;
 	}
 }

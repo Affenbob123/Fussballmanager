@@ -36,7 +36,7 @@ public class SaisonService {
 			Saison saison = new Saison(1);
 			saison.setAktuelleSaison(true);
 			legeSaisonAn(saison);
-			spieltagService.findeSpieltagDurchSpieltagUndSaison(0, saison).setAktuellerSpieltag(true);
+			spieltagService.findeSpieltagDurchSaisonUndSpieltagNummer(saison, 0).setAktuellerSpieltag(true);
 		}
 		LOG.info("aktuelle Saison: {} aktueller Spieltag: {}", findeAktuelleSaison().getSaisonNummer(), 
 				spieltagService.findeAktuellenSpieltag().getSpieltagNummer());
@@ -51,12 +51,7 @@ public class SaisonService {
 	}
 	
 	public Saison findeSaisonDurchSaisonNummer(int saisonNummer) {
-		for(Saison saison : findeAlleSaisons()) {
-			if(saison.getSaisonNummer() == saisonNummer) {
-				return saison;
-			}
-		}
-		return null;
+		return saisonRepository.findBySaisonNummer(saisonNummer);
 	}
 	
 	public List<Saison> findeAlleSaisons() {
@@ -64,13 +59,7 @@ public class SaisonService {
 	}
 	
 	public Saison findeAktuelleSaison() {
-		for(Saison saison : findeAlleSaisons()) {
-			if(saison.isAktuelleSaison()) {
-				return saison;
-			}
-		}
-		LOG.error("FEHLER BEIM FINDEN DER AKTUELLEN SAISON!!!");
-		return findeAlleSaisons().get(findeAlleSaisons().size() - 1 );
+		return saisonRepository.findByAktuelleSaisonTrue();
 	}
 	
 	public void legeSaisonAn(Saison saison) {

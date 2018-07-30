@@ -49,52 +49,23 @@ public class TeamService {
 	}
 	
 	public Team findeTeamNachTeamName(String teamname) {
-		for(Team team : findeAlleTeams()) {
-			if(team.getName().equals(teamname)) {
-				return team;
-			}
-		}
-		return null;
+		return teamRepository.findByName(teamname);
 	}
 	
 	public Team findeErstesDummyTeam(Land land) {
-		for(Team team : findeAlleTeams()) {
-			if(team.getLand().equals(land)) {
-				if(team.getUser() == null) {
-					return team;
-				}
-			}
-		}
-		//TODO Land ist voll
-		return null;
+		return teamRepository.findFirstByLandAndUser(land, null);
 	}
 	
 	public List<Team> findeAlleTeams() {
 		return teamRepository.findAll();
 	}
 	
-	public List<Team> findeAlleTeamsEinesUsers(User aktuellerUser) {
-		List<Team> alleTeamsEinesUsers =  new ArrayList<>();
-		
-		for(Team team : findeAlleTeams()) {
-			if(team.getUser() != null) {
-				if(team.getUser().equals(aktuellerUser)) {
-					alleTeamsEinesUsers.add(team);
-				}
-			}
-		}
-		return alleTeamsEinesUsers;
+	public List<Team> findeAlleTeamsEinesUsers(User user) {
+		return teamRepository.findByUser(user);
 	}
 	
 	public List<Team> findeAlleTeamsEinerLiga(Liga liga) {		
-		List<Team> alleTeamsEinerLiga =  new ArrayList<>();
-		
-		for(Team team : findeAlleTeams()) {
-			if(team.getLiga().equals(liga)) {
-				alleTeamsEinerLiga.add(team);
-			}
-		}
-		return alleTeamsEinerLiga;
+		return teamRepository.findByLiga(liga);
 	}
 	
 	public void legeTeamAn(Team team) {

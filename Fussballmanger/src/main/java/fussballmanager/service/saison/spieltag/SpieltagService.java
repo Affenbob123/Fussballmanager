@@ -34,15 +34,8 @@ public class SpieltagService {
 		return spieltagRepository.getOne(id);
 	}
 	
-	public Spieltag findeSpieltagDurchSpieltagUndSaison(int spieltag, Saison saison) {
-		for(Spieltag s : findeAlleSpieltage()) {
-			if(s.getSaison().equals(saison)) {
-				if(s.getSpieltagNummer() == (spieltag)) {
-					return s;
-				}
-			}
-		}
-		return null;
+	public Spieltag findeSpieltagDurchSaisonUndSpieltagNummer(Saison saison, int spieltagNummer) {
+		return spieltagRepository.findBySaisonAndSpieltagNummer(saison, spieltagNummer);
 	}
 	
 	public List<Spieltag> findeAlleSpieltage() {
@@ -50,28 +43,15 @@ public class SpieltagService {
 	}
 	
 	public Spieltag findeAktuellenSpieltag() {
-		for(Spieltag spieltage : findeAlleSpieltage()) {
-			if(spieltage.isAktuellerSpieltag()) {
-				return spieltage;
-			}
-		}
-		LOG.error("FEHLER BEIM FINDEN DER AKTUELLEN SPIELTAGES!!!");
-		return findeAlleSpieltage().get(findeAlleSpieltage().size() - 1 );
+		return spieltagRepository.findByAktuellerSpieltagTrue();
 	}
 	
 	public Spieltag findeNaechstenSpieltag() {
-		return findeSpieltagDurchSpieltagUndSaison(findeAktuellenSpieltag().getSpieltagNummer() + 1, saisonService.findeAktuelleSaison());
+		return findeSpieltagDurchSaisonUndSpieltagNummer(saisonService.findeAktuelleSaison(), findeAktuellenSpieltag().getSpieltagNummer() + 1);
 	}
 	
 	public List<Spieltag> findeAlleSpieltageEinerSaison(Saison saison) {
-		List<Spieltag> alleSpieltageEinerSaison = new ArrayList<>();
-		for(Spieltag spieltag : findeAlleSpieltage()) {
-			if(spieltag.getSaison().equals(saison)) {
-				alleSpieltageEinerSaison.add(spieltag);
-			}
-		}
-		
-		return alleSpieltageEinerSaison;
+		return spieltagRepository.findBySaison(saison);
 	}
 	
 	public void legeSpieltagAn(Spieltag spieltag) {
@@ -92,11 +72,11 @@ public class SpieltagService {
 		ersterSpieltagDerSaison.setAktuellerSpieltag(true);
 		
 		legeSpieltagAn(ersterSpieltagDerSaison);
-		LOG.info("Spieltag: {}, Saison: {}, Status: {}", 0, saison.getSaisonNummer(), findeSpieltagDurchSpieltagUndSaison(0, saison).isAktuellerSpieltag());
+		LOG.info("Spieltag: {}, Saison: {}, Status: {}", 0, saison.getSaisonNummer(), findeSpieltagDurchSaisonUndSpieltagNummer(saison, 0).isAktuellerSpieltag());
 		
 		for(int i = 1; i < saison.getSpieltage(); i++) {
 			legeSpieltagAn(new Spieltag(i, saison));
-			LOG.info("Spieltag: {}, Saison: {}, Status: {}", i, saison.getSaisonNummer(), findeSpieltagDurchSpieltagUndSaison(i, saison).isAktuellerSpieltag());
+			LOG.info("Spieltag: {}, Saison: {}, Status: {}", i, saison.getSaisonNummer(), findeSpieltagDurchSaisonUndSpieltagNummer(saison, i).isAktuellerSpieltag());
 		}
 	}
 	

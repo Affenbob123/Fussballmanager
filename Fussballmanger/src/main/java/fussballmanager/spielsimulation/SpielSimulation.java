@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import fussballmanager.service.saison.SaisonService;
 import fussballmanager.service.saison.spieltag.SpieltagService;
 import fussballmanager.service.spiel.Spiel;
 import fussballmanager.service.spiel.SpielService;
@@ -52,6 +53,9 @@ public class SpielSimulation {
 	@Autowired
 	SpieltagService spieltagService;
 	
+	@Autowired
+	SaisonService saisonService;
+	
 	Random random = new Random();
 	
 	private boolean heimmannschaftAngreifer;
@@ -71,7 +75,7 @@ public class SpielSimulation {
 	
 	public void simuliereSpielMinuteAllerSpieleErsteHalbzeit(SpieleTypen spielTyp) {	
 		List<Spiel> alleSpieleEinesSpieltages = spielService.
-				findeAlleSpieleEinesSpieltagesNachSpielTyp(spieltagService.findeAktuellenSpieltag(), spielTyp);
+				findeAlleSpieleEinerSaisonUndSpieltagesNachSpielTyp(saisonService.findeAktuelleSaison(), spieltagService.findeAktuellenSpieltag(), spielTyp);
 		LocalTime localTimeStart = spielTyp.getSpielBeginn().plusMinutes(15);
 		LocalTime localTime  = LocalTime.now(ZoneId.of("Europe/Berlin"));
 		
@@ -91,7 +95,8 @@ public class SpielSimulation {
 		LocalTime localTime  = LocalTime.now(ZoneId.of("Europe/Berlin"));
 		
 		int spielminute = toIntExact(localTimeStart.until(localTime, MINUTES)) + 45 + 1;
-		List<Spiel> alleSpieleEinesSpieltages = spielService.findeAlleSpieleEinesSpieltages(spieltagService.findeAktuellenSpieltag());
+		List<Spiel> alleSpieleEinesSpieltages = 
+				spielService.findeAlleSpieleEinerSaisonUndSpieltages(saisonService.findeAktuelleSaison(), spieltagService.findeAktuellenSpieltag());
 		
 		for(Spiel spiel : alleSpieleEinesSpieltages) {
 			simuliereSpielminuteEinesSpieles(spiel,spielminute);

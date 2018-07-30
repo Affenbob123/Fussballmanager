@@ -47,15 +47,8 @@ public class LigaService {
 		return ligaRepository.findAll();
 	}
 	
-	public List<Liga> findeAlleLigenEinesLandes(String landName) {
-		List<Liga> alleLigenEinesLandes = new ArrayList<>();
-		
-		for(Liga liga : findeAlleLigen()) {
-			if(liga.getLand().getLandNameTyp().getName().equals(landName)) {
-				alleLigenEinesLandes.add(liga);
-			}
-		}
-		return alleLigenEinesLandes;
+	public List<Liga> findeAlleLigenEinesLandes(Land land) {
+		return ligaRepository.findByLand(land);
 	}
 	
 	public Liga findeNaechsteFreieHauptteamLiga() {
@@ -95,13 +88,11 @@ public class LigaService {
 	private int zaehleTeamsVonLiga(Liga liga) {
 		int counterTeamsVonLiga = 0;
 		
-		for(Team team : teamService.findeAlleTeams()) {
-			if(team.getLiga().equals(liga)) {
-				if(team.getUser() != null) {
-					counterTeamsVonLiga++;
-					if(counterTeamsVonLiga == 18) {
-						break;
-					}
+		for(Team team : teamService.findeAlleTeamsEinerLiga(liga)) {
+			if(team.getUser() != null) {
+				counterTeamsVonLiga++;
+				if(counterTeamsVonLiga == 18) {
+					break;
 				}
 			}
 		}

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import fussballmanager.service.saison.SaisonService;
 import fussballmanager.service.saison.spieltag.SpieltagService;
 import fussballmanager.service.spiel.Spiel;
 import fussballmanager.service.spiel.SpielService;
@@ -30,6 +31,9 @@ public class LiveTickerController {
 	
 	@Autowired
 	TeamService teamService;
+	
+	@Autowired
+	SaisonService saisonService;
 
 	@GetMapping("/liveticker")
 	public String getLiveticker(Model model, Authentication auth) {
@@ -38,7 +42,7 @@ public class LiveTickerController {
 		Team hauptteam = teamService.findeAlleTeamsEinesUsers(aktuellerUser).get(0);
 		
 		List<Spiel> alleSpieleDesUsers = 
-				spielService.findeAlleSpieleEinesSpieltagesEinesTeams(spieltagService.findeAktuellenSpieltag(), hauptteam);
+				spielService.findeAlleSpieleEinerSaisonUndSpieltagesEinesTeams(saisonService.findeAktuelleSaison(),spieltagService.findeAktuellenSpieltag(), hauptteam);
 		model.addAttribute("alleSpieleDesUsers", alleSpieleDesUsers);
 		
 		return "liveticker";

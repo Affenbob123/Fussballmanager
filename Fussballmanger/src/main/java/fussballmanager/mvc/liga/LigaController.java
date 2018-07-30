@@ -89,14 +89,14 @@ public class LigaController {
 		if(spieltag.getSpieltagNummer() == 0) {
 			ausgewaehlterSpieltag = spieltagService.findeAktuellenSpieltag();
 		} else {
-			ausgewaehlterSpieltag = spieltagService.findeSpieltagDurchSpieltagUndSaison(spieltag.getSpieltagNummer(), ausgewaehlteSaison);
+			ausgewaehlterSpieltag = spieltagService.findeSpieltagDurchSaisonUndSpieltagNummer(ausgewaehlteSaison, spieltag.getSpieltagNummer());
 		}
 		
 		model.addAttribute("land", ausgewaehltesLand);
 		model.addAttribute("alleLaender", landService.findeAlleLaender());
 		
 		model.addAttribute("liga", ausgewaehlteLiga);
-		model.addAttribute("alleLigenEinesLandes", ligaService.findeAlleLigenEinesLandes(landName));
+		model.addAttribute("alleLigenEinesLandes", ligaService.findeAlleLigenEinesLandes(landService.findeLandDurchLandName(landName)));
 				
 		model.addAttribute("saison", ausgewaehlteSaison);
 		model.addAttribute("alleSaisons", saisonService.findeAlleSaisons());
@@ -190,7 +190,7 @@ public class LigaController {
 	public List<SpielEintrag> erstelleSpielEintraegeEinerLiga(String land, String ligaName, Saison saison, Spieltag spieltag) {
 		List<SpielEintrag> spielEintraege = new ArrayList<>();
 		List<Spiel> alleSpieleEinerLigaEinesSpieltages = 
-				spielService.findeAlleSpieleEinerLigaEinerSaisonEinesSpieltages(ligaService.findeLiga(land, ligaName), saison, spieltag);
+				spielService.findeAlleSpieleEinerLigaUndSaisonUndSpieltag(ligaService.findeLiga(land, ligaName), saison, spieltag);
 		for (Spiel spiel : alleSpieleEinerLigaEinesSpieltages) {
 			spielEintraege.add(erstelleSpielEintragEinerLiga(spiel));
 		}

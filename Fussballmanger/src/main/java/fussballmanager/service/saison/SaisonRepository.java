@@ -7,4 +7,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SaisonRepository extends JpaRepository<Saison, Long> {
 
+	Saison findBySaisonNummer(int saisonNummer);
+	
+	Saison findByAktuelleSaisonTrue();
 }

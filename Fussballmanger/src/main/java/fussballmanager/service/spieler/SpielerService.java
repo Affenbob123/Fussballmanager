@@ -37,41 +37,31 @@ public class SpielerService {
 		return spielerRepository.findAll();
 	}
 	
-	public List<Spieler> findeAlleSpielerEinesTeams(Team aktuellesTeam) {
+	public List<Spieler> findeAlleSpielerEinesTeams(Team team) {
+		List<Spieler> alleSpielerEinesTeams =  spielerRepository.findByTeam(team);
+		
+		Collections.sort(alleSpielerEinesTeams);
+		return alleSpielerEinesTeams;
+	}
+	
+	public List<Spieler> findeAlleSpielerEinesTeamsInAufstellung(Team team) {
 		List<Spieler> alleSpielerEinesTeams =  new ArrayList<>();
 		
-		for(Spieler spieler : findeAlleSpieler()) {
-			if(spieler.getTeam() != null) {
-				if(spieler.getTeam().equals(aktuellesTeam)) {
-					alleSpielerEinesTeams.add(spieler);
-				}
+		for(Spieler spieler : findeAlleSpielerEinesTeams(team)) {
+			if(!(spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.TRANSFERMARKT)
+					|| spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.ERSATZ))) {
+				alleSpielerEinesTeams.add(spieler);
 			}
+
 		}
 		Collections.sort(alleSpielerEinesTeams);
 		return alleSpielerEinesTeams;
 	}
 	
-	public List<Spieler> findeAlleSpielerEinesTeamsInAufstellung(Team aktuellesTeam) {
-		List<Spieler> alleSpielerEinesTeams =  new ArrayList<>();
-		
-		for(Spieler spieler : findeAlleSpieler()) {
-			if(spieler.getTeam() != null) {
-				if(spieler.getTeam().equals(aktuellesTeam)) {
-					if(!(spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.TRANSFERMARKT)
-							|| spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.ERSATZ))) {
-						alleSpielerEinesTeams.add(spieler);
-					}
-				}
-			}
-		}
-		Collections.sort(alleSpielerEinesTeams);
-		return alleSpielerEinesTeams;
-	}
-	
-	public List<Spieler> findeAlleSpielerEinesTeamsAufErsatzbank(Team aktuellesTeam) {
+	public List<Spieler> findeAlleSpielerEinesTeamsAufErsatzbank(Team team) {
 		List<Spieler> alleSpielerEinesTeamsAufErsatzbank =  new ArrayList<>();
 		
-		for(Spieler spieler : findeAlleSpielerEinesTeams(aktuellesTeam)) {
+		for(Spieler spieler : findeAlleSpielerEinesTeams(team)) {
 			if(spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.ERSATZ)) {
 				alleSpielerEinesTeamsAufErsatzbank.add(spieler);
 			}
@@ -81,8 +71,6 @@ public class SpielerService {
 	
 	public void legeSpielerAn(Spieler spieler) {
 		spielerRepository.save(spieler);
-//		LOG.info("Spieler mit Talentwert: {} und der Position: {} im Team: {} wurde angelegt.", spieler.getTalentwert(), 
-//			spieler.getPosition().getPositionsName(), spieler.getTeam().getName());
 	}
 	
 	public void aktualisiereSpieler(Spieler spieler) {

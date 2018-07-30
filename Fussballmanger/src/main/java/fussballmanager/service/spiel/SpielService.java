@@ -50,32 +50,38 @@ public class SpielService {
 	}
 	
 	public List<Spiel> findeAlleSpieleEinesTeams(Team team) {
-		List<Spiel> alleSpieleEinesTeams = new ArrayList<>();
-		for(Spiel spiel : findeAlleSpiele()) {
-			if(spiel.getGastmannschaft().equals(team) || spiel.getHeimmannschaft().equals(team)) {
-				alleSpieleEinesTeams.add(spiel);
-			}
+		List<Spiel> alleSpieleEinesTeams = spielRepository.findByGastmannschaft(team);
+		alleSpieleEinesTeams.addAll(spielRepository.findByHeimmannschaft(team));
+		return alleSpieleEinesTeams;
+	}
+	
+	public List<Spiel> findeAlleSpieleEinesTeamsInEinerSaison(Team team, Saison saison) {
+		List<Spiel> alleSpieleEinesTeams = findeAlleSpieleEinesTeams(team);
+		List<Spiel> alleSpieleEinesTeamsInEinerSaison = new ArrayList<>();
+		
+		for(Spiel spiel : alleSpieleEinesTeams) {
+			if(spiel.getSaison().equals(saison))
+			alleSpieleEinesTeamsInEinerSaison.add(spiel);
 		}
 		return alleSpieleEinesTeams;
 	}
 	
 	public List<Spiel> findeAlleSpieleEinerLiga(Liga liga) {
 		List<Spiel> alleSpieleEinerLiga = new ArrayList<>();
+		List<Team> alleTeamsDerLiga = teamService.findeAlleTeamsEinerLiga(liga);
 		
-		for(Spiel spiel : findeAlleSpiele()) {
-			if(spiel.getGastmannschaft().getLiga().equals(liga)) {
-				alleSpieleEinerLiga.add(spiel);
-			}
+		for(Team team : alleTeamsDerLiga) {
+			alleSpieleEinerLiga.addAll(findeAlleSpieleEinesTeams(team));
 		}
 		return alleSpieleEinerLiga;
 	}
 	
-	public List<Spiel> findeAlleSpieleEinerLigaEinerSaisonEinesSpieltages(Liga liga, Saison saison, Spieltag spieltag) {
+	public List<Spiel> findeAlleSpieleEinerLigaUndSaisonUndSpieltag(Liga liga, Saison saison, Spieltag spieltag) {
+		List<Spiel> alleSpieleEinerSaisonEinesSpieltages = spielRepository.findBySaisonAndSpieltag(saison, spieltag);
 		List<Spiel> alleSpieleEinerLigaEinerSaisonEinesSpieltages = new ArrayList<>();
 		
-		for(Spiel spiel : findeAlleSpiele()) {
-			if(spiel.getGastmannschaft().getLiga().equals(liga) && spiel.getSpieltag().getSaison().equals(saison)
-					&& spiel.getSpieltag().equals(spieltag)) {
+		for(Spiel spiel : alleSpieleEinerSaisonEinesSpieltages) {
+			if(spiel.getGastmannschaft().getLiga().equals(liga) && spiel.getHeimmannschaft().getLiga().equals(liga)) {
 				alleSpieleEinerLigaEinerSaisonEinesSpieltages.add(spiel);
 			}
 		}
@@ -83,56 +89,34 @@ public class SpielService {
 		return alleSpieleEinerLigaEinerSaisonEinesSpieltages;
 	}
 	
-	public List<Spiel> findeAlleSpieleEinesSpieltages(Spieltag spieltag) {
-		List<Spiel> alleSpieleEinesSpieltages = new ArrayList<>();
-		
-		for(Spiel spiel : findeAlleSpiele()) {
-			if(spiel.getSpieltag().equals(spieltag)) {
-				alleSpieleEinesSpieltages.add(spiel);
-			}
-		}
-		return alleSpieleEinesSpieltages;
+	public List<Spiel> findeAlleSpieleEinerSaisonUndSpieltages(Saison saison, Spieltag spieltag) {
+		return spielRepository.findBySaisonAndSpieltag(saison, spieltag);
 	}
 	
-	public List<Spiel> findeAlleSpieleEinesSpieltagesNachSpielTyp(Spieltag spieltag, SpieleTypen spielTyp) {
-		List<Spiel> alleSpieleEinesSpieltages = new ArrayList<>();
-		
-		for(Spiel spiel : findeAlleSpiele()) {
-			if(spiel.getSpieltag().equals(spieltag)) {
-				if(spiel.getSpielTyp().equals(spielTyp))
-				alleSpieleEinesSpieltages.add(spiel);
-			}
-		}
-		return alleSpieleEinesSpieltages;
+	public List<Spiel> findeAlleSpieleEinerSaisonUndSpieltagesNachSpielTyp(Saison saison, Spieltag spieltag, SpieleTypen spielTyp) {
+		return spielRepository.findBySaisonAndSpieltagAndSpielTyp(saison, spieltag, spielTyp);
 	}
 	
-	public List<Spiel> findeAlleSpieleEinesSpieltagesEinesTeams(Spieltag spieltag, Team team) {
+	public List<Spiel> findeAlleSpieleEinerSaisonUndSpieltagesEinesTeams(Saison saison, Spieltag spieltag, Team team) {
 		List<Spiel> alleSpieleEinesSpieltagesEinesTeams = new ArrayList<>();
 		
-		for(Spiel spiel : findeAlleSpiele()) {
-			if(spiel.getSpieltag().equals(spieltag)) {
-				if(spiel.getHeimmannschaft().equals(team) || spiel.getGastmannschaft().equals(team))
-					alleSpieleEinesSpieltagesEinesTeams.add(spiel);
+		for(Spiel spiel : findeAlleSpieleEinesTeams(team)) {
+			if(spiel.getHeimmannschaft().equals(team) || spiel.getGastmannschaft().equals(team)) {
+				alleSpieleEinesSpieltagesEinesTeams.add(spiel);
 			}
 		}
 		return alleSpieleEinesSpieltagesEinesTeams;
 	}
 	
 	public List<Spiel> findeAlleSpieleEinesTeamsNachSpielTypUndSaison(Team team, SpieleTypen spielTyp, Saison saison) {
-		List<Spiel> alleSpieleEinesSpieltages = new ArrayList<>();
+		List<Spiel> alleSpieleEinesTeamsInEinerSaison = findeAlleSpieleEinesTeamsInEinerSaison(team, saison);
 		
-		for(Spiel spiel : findeAlleSpiele()) {
-			if(spiel.getSaison().equals(saison)) {
-				if(spiel.isVorbei()) {
-					if(spiel.getGastmannschaft().equals(team) || spiel.getHeimmannschaft().equals(team)) {
-						if(spiel.getSpielTyp().equals(spielTyp)) {
-							alleSpieleEinesSpieltages.add(spiel);
-						}
-					}
-				}
+		for(Spiel spiel : alleSpieleEinesTeamsInEinerSaison) {
+			if(spiel.isVorbei() && spiel.getSpielTyp().equals(spielTyp)) {
+				alleSpieleEinesTeamsInEinerSaison.add(spiel);
 			}
 		}
-		return alleSpieleEinesSpieltages;
+		return alleSpieleEinesTeamsInEinerSaison;
 	}
 	
 	public void legeSpielAn(Spiel spiel) {
@@ -156,8 +140,8 @@ public class SpielService {
 				int spieltagRueckspielZahl = 18;
 				
 			    for (int j=i+1; j < alleTeamsEinerLiga.size(); j++) {
-			    	Spieltag spieltagHinspiel = spieltagService.findeSpieltagDurchSpieltagUndSaison(spieltagHinspielZahl, aktuelleSaison);
-					Spieltag spieltagRueckspiel = spieltagService.findeSpieltagDurchSpieltagUndSaison(spieltagRueckspielZahl, aktuelleSaison);
+			    	Spieltag spieltagHinspiel = spieltagService.findeSpieltagDurchSaisonUndSpieltagNummer(aktuelleSaison, spieltagHinspielZahl);
+					Spieltag spieltagRueckspiel = spieltagService.findeSpieltagDurchSaisonUndSpieltagNummer(aktuelleSaison, spieltagRueckspielZahl);
 			    	Spiel spielHinspiel = new Spiel();
 			    	Spiel spielRueckspiel = new Spiel();
 			    	
@@ -194,8 +178,8 @@ public class SpielService {
 				int spieltagRueckspielZahl = 34;
 				
 			    for (int j=i+1; j < alleTeamsEinerLiga.size(); j++) {
-			    	Spieltag spieltagHinspiel = spieltagService.findeSpieltagDurchSpieltagUndSaison(spieltagHinspielZahl, aktuelleSaison);
-					Spieltag spieltagRueckspiel = spieltagService.findeSpieltagDurchSpieltagUndSaison(spieltagRueckspielZahl, aktuelleSaison);
+			    	Spieltag spieltagHinspiel = spieltagService.findeSpieltagDurchSaisonUndSpieltagNummer(aktuelleSaison,spieltagHinspielZahl);
+					Spieltag spieltagRueckspiel = spieltagService.findeSpieltagDurchSaisonUndSpieltagNummer(aktuelleSaison, spieltagRueckspielZahl);
 			    	Spiel spielHinspiel = new Spiel();
 			    	Spiel spielRueckspiel = new Spiel();
 			    	

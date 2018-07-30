@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import fussballmanager.service.saison.SaisonService;
 import fussballmanager.service.saison.spieltag.SpieltagService;
 import fussballmanager.service.spiel.Spiel;
 import fussballmanager.service.spiel.SpielService;
@@ -39,6 +40,9 @@ public class ScheduldTasks {
 	
 	@Autowired
 	TeamService teamService;
+	
+	@Autowired
+	SaisonService saisonService;
 
 //	@Scheduled(cron = "0 15-59 12 * * ?", zone="Europe/Berlin")
 //	public void simuliereTurnierspielErsteHalbzeit() {
@@ -83,7 +87,7 @@ public class ScheduldTasks {
 	@Scheduled(cron = "0 0 14 * * ?", zone="Europe/Berlin")
 	public void setzeErgebnisseUndSetzteAuswechselungenZurueckTurnierspiel() {
 		LocalTime aktuelleZeitMinusZweiStunden = LocalTime.now(ZoneId.of("Europe/Berlin")).minusHours(2);
-		List<Spiel> alleSpieleEinesSpieltages = spielService.findeAlleSpieleEinesSpieltages(spieltagService.findeAktuellenSpieltag());
+		List<Spiel> alleSpieleEinesSpieltages = spielService.findeAlleSpieleEinerSaisonUndSpieltages(saisonService.findeAktuelleSaison(), spieltagService.findeAktuellenSpieltag());
 		
 		for(Spiel spiel : alleSpieleEinesSpieltages) {
 			Team heimTeam = spiel.getHeimmannschaft();
@@ -105,7 +109,7 @@ public class ScheduldTasks {
 	@Scheduled(cron = "0 0 17 * * ?", zone="Europe/Berlin")
 	public void setzeErgebnisseUndSetzteAuswechselungenZurueckFreundschaftsspiel() {
 		LocalTime aktuelleZeitMinusZweiStunden = LocalTime.now(ZoneId.of("Europe/Berlin")).minusHours(2);
-		List<Spiel> alleSpieleEinesSpieltages = spielService.findeAlleSpieleEinesSpieltages(spieltagService.findeAktuellenSpieltag());
+		List<Spiel> alleSpieleEinesSpieltages = spielService.findeAlleSpieleEinerSaisonUndSpieltages(saisonService.findeAktuelleSaison(), spieltagService.findeAktuellenSpieltag());
 		
 		for(Spiel spiel : alleSpieleEinesSpieltages) {
 			Team heimTeam = spiel.getHeimmannschaft();
@@ -127,7 +131,7 @@ public class ScheduldTasks {
 	@Scheduled(cron = "0 00 20 * * ?", zone="Europe/Berlin")
 	public void setzeErgebnisseUndSetzteAuswechselungenZurueckLigaspiel() {
 		LocalTime aktuelleZeitMinusZweiStunden = LocalTime.now(ZoneId.of("Europe/Berlin")).minusHours(2);
-		List<Spiel> alleSpieleEinesSpieltages = spielService.findeAlleSpieleEinesSpieltages(spieltagService.findeAktuellenSpieltag());
+		List<Spiel> alleSpieleEinesSpieltages = spielService.findeAlleSpieleEinerSaisonUndSpieltages(saisonService.findeAktuelleSaison(), spieltagService.findeAktuellenSpieltag());
 
 		for(Spiel spiel : alleSpieleEinesSpieltages) {
 			Team heimTeam = spiel.getHeimmannschaft();
@@ -149,7 +153,7 @@ public class ScheduldTasks {
 	@Scheduled(cron = "0 0 23 * * ?", zone="Europe/Berlin")
 	public void setzeErgebnisseUndSetzteAuswechselungenZurueckPokalspiel() {
 		LocalTime aktuelleZeitMinusZweiStunden = LocalTime.now(ZoneId.of("Europe/Berlin")).minusHours(2);
-		List<Spiel> alleSpieleEinesSpieltages = spielService.findeAlleSpieleEinesSpieltages(spieltagService.findeAktuellenSpieltag());
+		List<Spiel> alleSpieleEinesSpieltages = spielService.findeAlleSpieleEinerSaisonUndSpieltages(saisonService.findeAktuelleSaison(), spieltagService.findeAktuellenSpieltag());
 		
 		for(Spiel spiel : alleSpieleEinesSpieltages) {
 			Team heimTeam = spiel.getHeimmannschaft();
