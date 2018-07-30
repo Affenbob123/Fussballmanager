@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends JpaRepository<User, String> {
 	List<User> findByIsAdmin(boolean b);
+	
+	User findByUsername(String username);
 }

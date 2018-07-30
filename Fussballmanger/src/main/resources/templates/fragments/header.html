@@ -16,7 +16,6 @@
 </head>
 <body>
 	<div th:fragment="header" id="header">
-		<div class="container container-header">
 			<nav class="navbar navbar-expand-lg">
 				<div class="container">
 					<div class="collapse navbar-collapse" id="navbarNavDropdown">
@@ -30,6 +29,10 @@
 							<li class="nav-item">
 								<a class="nav-link" 
 								th:href="@{/liga/}+${aktuellesTeam.land.getLandNameTyp().getName()}+'/'+${aktuellesTeam.liga.ligaNameTyp.getName()}">Tabelle</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" onClick="window.open('liveticker','liveticker','resizable,height=800,width=600'); return false;"
+								href="/liveticker" >Liveticker</a> 
 							</li>
 							<li class="nav-item">
 								<a class="nav-link" href="/transfermarkt">Transfermarkt</a>
@@ -66,7 +69,6 @@
 				<p th:text="${spielstatusHelper.getAktuellenSpielstatus()}"></p>
 			</div>
 		</div>
-	</div>
 	<th:block th:fragment="scripts">
 		<script
 			src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>

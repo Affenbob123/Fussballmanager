@@ -106,6 +106,18 @@ public class SpielService {
 		return alleSpieleEinesSpieltages;
 	}
 	
+	public List<Spiel> findeAlleSpieleEinesSpieltagesEinesTeams(Spieltag spieltag, Team team) {
+		List<Spiel> alleSpieleEinesSpieltagesEinesTeams = new ArrayList<>();
+		
+		for(Spiel spiel : findeAlleSpiele()) {
+			if(spiel.getSpieltag().equals(spieltag)) {
+				if(spiel.getHeimmannschaft().equals(team) || spiel.getGastmannschaft().equals(team))
+					alleSpieleEinesSpieltagesEinesTeams.add(spiel);
+			}
+		}
+		return alleSpieleEinesSpieltagesEinesTeams;
+	}
+	
 	public List<Spiel> findeAlleSpieleEinesTeamsNachSpielTypUndSaison(Team team, SpieleTypen spielTyp, Saison saison) {
 		List<Spiel> alleSpieleEinesSpieltages = new ArrayList<>();
 		

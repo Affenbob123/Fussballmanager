@@ -64,10 +64,6 @@ public class UserService implements UserDetailsService {
 		return userRepository.getOne(login);
 	}
 	
-	public User findeUserDurchUserName(String username) {
-		return userRepository.getOne(getLoginDurchUsername(username));
-	}
-	
 	public List<User> findeAlleNormalenUser() {
 		return userRepository.findByIsAdmin(false);
 	}
