@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head th:replace="fragments/header :: head">
+	<link rel="stylesheet" href="/spielliste.css" />
+</head>
+<body>
+	<div th:replace="fragments/header :: header"></div>
+	<div class="container">
+		<h2 th:text="Teamname"></h2>
+	</div>
+	<div class="container" id="containerBody">
+		<div class="alert alert-success" th:if="${successMessage}">
+  			<strong><p th:utext="${successMessage}"></p></strong>
+		</div>
+		<div class="alert alert-danger" th:if="${errorMessage}">
+  			<strong><p th:utext="${errorMessage}"></p></strong>
+		</div>
+		<div class="col-md-12">
+			<div>
+				<form>
+				</form>
+			</div>
+			<table class="table table-hover table-condensed" style="border-collapse:collapse;">
+				<thead>
+					<tr class="table-active">
+						<th scope="col">Position</th>
+						<th scope="col">Name</th>
+						<th scope="col">Reinst&auml;rke</th>
+						<th scope="col"></th>
+					</tr>
+				</thead>
+				<tbody th:each="spieler : ${alleTransfermarktSpieler}">
+					<tr>
+						<td th:text="${spieler.position}" />
+						<td th:text="${spieler.name}" />
+						<td th:text="${spieler.reinStaerke.durchschnittsStaerke}" />
+						<td>
+							<form method="POST" th:action="@{/transfermarkt/}+${spieler.id}">
+								<button type="submit"
+									name="submit" value="value"
+									class="btn btn-sm btn-success button-toggle" th:text="Kaufen" >
+								</button>
+							</form>
+
+						</td>
+						
+					</tr>
+		       	</tbody>
+			</table>
+		</div>
+	</div>
+	<th:block th:replace="fragments/header :: scripts">
+		<script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css"></script>
+		<script src="https://raw.githubusercontent.com/SteveSanderson/knockout.mapping/master/build/output/knockout.mapping-latest.debug.js"></script>
+	</th:block>
+</body>
+</html>

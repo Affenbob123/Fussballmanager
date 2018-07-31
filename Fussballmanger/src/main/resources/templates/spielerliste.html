@@ -82,6 +82,7 @@
 						<th scope="col">Position</th>
 						<th scope="col">Aufstellungsposition</th>
 						<th scope="col">Name</th>
+						<th scope="col">Alter</th>
 						<th scope="col">St&auml;rke</th>
 						<th scope="col">Reinst&auml;rke</th>
 						<th scope="col">Erfahrung</th>
@@ -97,6 +98,7 @@
 						<td> 
 							<a class="" th:text="${spieler.name}" th:href="@{/spieler/}+${spieler.id}"></a>
 						</td>
+						<td th:text="${spieler.alter}" />
 						<td th:text="${spieler.staerke.durchschnittsStaerke}" />
 						<td th:text="${spieler.reinStaerke.durchschnittsStaerke}" />
 						<td th:text="${spieler.erfahrung}" />

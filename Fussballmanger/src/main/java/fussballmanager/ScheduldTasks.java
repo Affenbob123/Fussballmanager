@@ -17,6 +17,7 @@ import fussballmanager.service.saison.spieltag.SpieltagService;
 import fussballmanager.service.spiel.Spiel;
 import fussballmanager.service.spiel.SpielService;
 import fussballmanager.service.spiel.SpieleTypen;
+import fussballmanager.service.spieler.SpielerService;
 import fussballmanager.service.team.Team;
 import fussballmanager.service.team.TeamService;
 import fussballmanager.spielsimulation.SpielSimulation;
@@ -44,6 +45,9 @@ public class ScheduldTasks {
 	@Autowired
 	SaisonService saisonService;
 
+	@Autowired
+	SpielerService spielerService;
+	
 //	@Scheduled(cron = "0 15-59 12 * * ?", zone="Europe/Berlin")
 //	public void simuliereTurnierspielErsteHalbzeit() {
 //		spielSimulation.simuliereSpielMinuteAllerSpieleErsteHalbzeit(SpieleTypen.TURNIERSPIEL);
@@ -170,5 +174,11 @@ public class ScheduldTasks {
 				teamService.aktualisiereTeam(gastTeam);
 			}
 		}
+	}
+	
+	@Scheduled(cron = "0 32 * * * ?", zone="Europe/Berlin")
+	public void erstelleNeueSpielerFuerTransfermarkt() {
+		spielerService.loescheSpielerVomTransfermarkt();
+		spielerService.erstelleSpielerFuerTransfermarkt();
 	}
 }

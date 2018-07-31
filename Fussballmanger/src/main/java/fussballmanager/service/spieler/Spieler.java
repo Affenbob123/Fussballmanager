@@ -55,6 +55,8 @@ public class Spieler implements Comparable<Spieler> {
 	private int trainingslagerTage;
 	
 	private int verletzungsTage;
+	
+	private double gehalt;
 
 	public Spieler(Land nationalitaet, PositionenTypen position, AufstellungsPositionsTypen aufstellungsPositionsTyp,
 			int alter, Staerke reinStaerke, Staerke staerke, int talentwert, Team team) {
@@ -71,6 +73,7 @@ public class Spieler implements Comparable<Spieler> {
 		this.team = team;
 		this.trainingslagerTage = 10;
 		this.verletzungsTage = 0;
+		this.gehalt = staerke.getDurchschnittsStaerke() * 100;
 	}
 
 	public Spieler() {
@@ -128,8 +131,6 @@ public class Spieler implements Comparable<Spieler> {
 	public Staerke getStaerke() {
 		return staerke;
 	}
-
-
 
 	public int getErfahrung() {
 		return erfahrung;
@@ -193,6 +194,18 @@ public class Spieler implements Comparable<Spieler> {
 
 	public void setAufstellungsPositionsTyp(AufstellungsPositionsTypen aufstellungsPositionsTyp) {
 		this.aufstellungsPositionsTyp = aufstellungsPositionsTyp;
+	}
+
+	public double getGehalt() {
+		return gehalt;
+	}
+
+	public void setGehalt(double gehalt) {
+		this.gehalt = gehalt;
+	}
+
+	public void setStaerke(Staerke staerke) {
+		this.staerke = staerke;
 	}
 
 	@Override

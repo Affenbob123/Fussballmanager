@@ -23,8 +23,9 @@ public class SpielerService {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(SpielerService.class);
 	
-	int minTalentwert = 0;
-	int maxTalentwert = 100;
+	private final int  minTalentwert = 0;
+	private final int maxTalentwert = 100;
+	private final int anzahlSpielerProPositionUndAlter = 5;
 		
 	@Autowired
 	SpielerRepository spielerRepository;
@@ -42,6 +43,10 @@ public class SpielerService {
 		
 		Collections.sort(alleSpielerEinesTeams);
 		return alleSpielerEinesTeams;
+	}
+	
+	public List<Spieler> findeAlleSpielerNachAufstellungsPositionsTyp(AufstellungsPositionsTypen aufstellungsPositionsTyp) {
+		return spielerRepository.findByAufstellungsPositionsTyp(aufstellungsPositionsTyp);
 	}
 	
 	public List<Spieler> findeAlleSpielerEinesTeamsInAufstellung(Team team) {
@@ -87,9 +92,10 @@ public class SpielerService {
 		Land nationalitaet = team.getLiga().getLand();
 		
 		for(PositionenTypen positionenTyp : PositionenTypen.values()) {
+			double anfangsStaerke = 200.0;
 			int talentwert = erzeugeZufaelligenTalentwert();
-			Staerke staerke = new Staerke(200.0, 200.0, 200.0, 200.0, 200.0, 200.0);
-			Staerke reinStaerke = new Staerke(200.0, 200.0, 200.0, 200.0, 200.0, 200.0);
+			Staerke staerke = new Staerke(anfangsStaerke, anfangsStaerke, anfangsStaerke, anfangsStaerke, anfangsStaerke, anfangsStaerke);
+			Staerke reinStaerke = new Staerke(anfangsStaerke, anfangsStaerke, anfangsStaerke, anfangsStaerke, anfangsStaerke, anfangsStaerke);
 			AufstellungsPositionsTypen aufstellungsPositionsTyp = AufstellungsPositionsTypen.ERSATZ;
 			FormationsTypen formationsTypTeam = team.getFormationsTyp();
 			
@@ -106,10 +112,6 @@ public class SpielerService {
 	}
 	
 	public int erzeugeZufaelligenTalentwert() {
-		if (minTalentwert >= maxTalentwert) {
-			throw new IllegalArgumentException("max must be greater than min");
-		}
-
 		Random r = new Random();
 		return r.nextInt((maxTalentwert - minTalentwert) + 1) + minTalentwert;
 	}
@@ -237,5 +239,60 @@ public class SpielerService {
 		}
 		
 		return staerkeFaktor;
+	}
+
+	public void erstelleSpielerFuerTransfermarkt() {
+		double anfangsStaerke = 50.0;
+		
+		for(PositionenTypen positionenTyp : PositionenTypen.values()) {
+			for(int i = 0; i < getAnzahlSpielerProPositionUndAlter(); i++) {
+				for(int alter = 13; alter < 19; alter++) {
+					int staerkeFaktor = alter - 12;
+					double anfangsStaerkeMitFaktor = anfangsStaerke * staerkeFaktor;
+					
+					Staerke reinStaerke = new Staerke(anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor, 
+							anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor);
+					Staerke staerke = new Staerke(anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor, 
+							anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor);
+					Spieler spieler = new Spieler(null, positionenTyp, AufstellungsPositionsTypen.TRANSFERMARKT, 
+							alter, reinStaerke, staerke, erzeugeZufaelligenTalentwert(), null);
+					
+					legeSpielerAn(spieler);
+					LOG.info("Alter: {}, Position: {}, Team: {}, Aufstellungspos.: {}", spieler.getAlter(), spieler.getPosition().getPositionsName(), 
+							spieler.getTeam(), spieler.getAufstellungsPositionsTyp().getPositionsName());
+				}	
+			}
+		}
+	}
+
+	public int getMinTalentwert() {
+		return minTalentwert;
+	}
+
+	public int getMaxTalentwert() {
+		return maxTalentwert;
+	}
+
+	public int getAnzahlSpielerProPositionUndAlter() {
+		return anzahlSpielerProPositionUndAlter;
+	}
+
+	public void loescheSpielerVomTransfermarkt() {
+		spielerRepository.deleteInBatch(spielerRepository.findByNationalitaetAndTeam(null, null));
+	}
+
+	public void spielerVomTransfermarktKaufen(Spieler spieler, Team team) {
+		if(spieler.getNationalitaet().equals(null)) {
+			spieler.setNationalitaet(team.getLand());
+			spieler.setTeam(team);
+			spieler.setAufstellungsPositionsTyp(AufstellungsPositionsTypen.ERSATZ);
+		} else {
+			spieler.setTeam(team);
+			spieler.setAufstellungsPositionsTyp(AufstellungsPositionsTypen.ERSATZ);
+		}
+		
+		aktualisiereSpieler(spieler);
+		
+		LOG.info("Spieler: {}", spieler);
 	}
 }
