@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import fussballmanager.service.land.LaenderNamenTypen;
 import fussballmanager.service.land.Land;
 import fussballmanager.service.spieler.staerke.Staerke;
 import fussballmanager.service.team.FormationsTypen;
@@ -249,6 +250,7 @@ public class SpielerService {
 				for(int alter = 13; alter < 19; alter++) {
 					int staerkeFaktor = alter - 12;
 					double anfangsStaerkeMitFaktor = anfangsStaerke * staerkeFaktor;
+					double preis = anfangsStaerkeMitFaktor * 100;
 					
 					Staerke reinStaerke = new Staerke(anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor, 
 							anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor);
@@ -256,10 +258,11 @@ public class SpielerService {
 							anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor);
 					Spieler spieler = new Spieler(null, positionenTyp, AufstellungsPositionsTypen.TRANSFERMARKT, 
 							alter, reinStaerke, staerke, erzeugeZufaelligenTalentwert(), null);
+					spieler.setPreis(preis);
 					
 					legeSpielerAn(spieler);
-					LOG.info("Alter: {}, Position: {}, Team: {}, Aufstellungspos.: {}", spieler.getAlter(), spieler.getPosition().getPositionsName(), 
-							spieler.getTeam(), spieler.getAufstellungsPositionsTyp().getPositionsName());
+					LOG.info("Alter: {}, Position: {}, Team: {}, Aufstellungspos.: {}, Preis: {}", spieler.getAlter(), spieler.getPosition().getPositionsName(), 
+							spieler.getTeam(), spieler.getAufstellungsPositionsTyp().getPositionsName(), spieler.getPreis());
 				}	
 			}
 		}
@@ -282,7 +285,7 @@ public class SpielerService {
 	}
 
 	public void spielerVomTransfermarktKaufen(Spieler spieler, Team team) {
-		if(spieler.getNationalitaet().equals(null)) {
+		if(spieler.getNationalitaet() == null) {
 			spieler.setNationalitaet(team.getLand());
 			spieler.setTeam(team);
 			spieler.setAufstellungsPositionsTyp(AufstellungsPositionsTypen.ERSATZ);
@@ -292,7 +295,98 @@ public class SpielerService {
 		}
 		
 		aktualisiereSpieler(spieler);
-		
-		LOG.info("Spieler: {}", spieler);
 	}
+	
+	public List<Spieler> findeAlleSpielerAnhandDerSuchEingaben(PositionenTypen position, LaenderNamenTypen land,
+			int minimalesAlter, int maximalesAlter, double minimaleStaerke, double maximaleStaerke,
+			double minimalerPreis, double maximalerPreis) {
+		List<Spieler> endResultat = new ArrayList<>();
+		List<Spieler> zwischenResultat = spielerRepository.findByAufstellungsPositionsTypAndAlterBetweenAndPreisBetween(AufstellungsPositionsTypen.TRANSFERMARKT,
+				minimalesAlter, maximalesAlter, minimalerPreis, maximalerPreis);
+		
+		for(Spieler spieler : zwischenResultat) {
+			if(spieler.getStaerke().getDurchschnittsStaerke() <= maximaleStaerke && 
+					spieler.getStaerke().getDurchschnittsStaerke() >= minimaleStaerke) {
+				if(position == null) {
+					if(land == null || spieler.getNationalitaet() == null) {
+						endResultat.add(spieler);
+						continue;
+					}
+					
+					if(spieler.getNationalitaet().getLandNameTyp().equals(land)) {
+						endResultat.add(spieler);
+						continue;
+					}
+				}
+				
+				if(spieler.getPosition().equals(position)) {
+					if(land == null || spieler.getNationalitaet() == null) {
+						endResultat.add(spieler);
+						continue;
+					}
+					
+					if(spieler.getNationalitaet().getLandNameTyp().equals(land)) {
+						endResultat.add(spieler);
+						continue;
+					}
+				}
+			}
+		}
+		return endResultat;
+	}
+//		List<Spieler> alleSpielerAufTransfermarkt = findeAlleSpielerNachAufstellungsPositionsTyp(AufstellungsPositionsTypen.TRANSFERMARKT);
+//		List<Spieler> alleSpielerNachSuche =  new ArrayList<>();
+//		
+//		for(Spieler spieler : alleSpielerAufTransfermarkt) {
+//			if(position == null) {
+//				if(land == null) {
+//					if(spieler.getAlter() >= minimalesAlter && spieler.getAlter() <= maximalesAlter) {
+//						if(spieler.getStaerke().getDurchschnittsStaerke() >= minimaleStaerke && 
+//								spieler.getStaerke().getDurchschnittsStaerke() <= maximaleStaerke) {
+//							if(spieler.getPreis() >= minimalerPreis && spieler.getPreis() <= maximalerPreis) {
+//								alleSpielerNachSuche.add(spieler);
+//							}
+//						}
+//					}
+//				} else {
+//					if(spieler.getNationalitaet().getLandNameTyp().equals(land)) {
+//						if(spieler.getAlter() >= minimalesAlter && spieler.getAlter() <= maximalesAlter) {
+//							if(spieler.getStaerke().getDurchschnittsStaerke() >= minimaleStaerke && 
+//									spieler.getStaerke().getDurchschnittsStaerke() <= maximaleStaerke) {
+//								if(spieler.getPreis() >= minimalerPreis && spieler.getPreis() <= maximalerPreis) {
+//									alleSpielerNachSuche.add(spieler);
+//								}
+//							}
+//						}
+//					}	
+//				}
+//			}
+//			
+//			if(spieler.getPosition().equals(position)) {
+//				if(land == null) {
+//					if(spieler.getAlter() >= minimalesAlter && spieler.getAlter() <= maximalesAlter) {
+//						if(spieler.getStaerke().getDurchschnittsStaerke() >= minimaleStaerke && 
+//								spieler.getStaerke().getDurchschnittsStaerke() <= maximaleStaerke) {
+//							if(spieler.getPreis() >= minimalerPreis && spieler.getPreis() <= maximalerPreis) {
+//								alleSpielerNachSuche.add(spieler);
+//							}
+//						}
+//					}
+//				} else {
+//					if(spieler.getNationalitaet().getLandNameTyp().equals(land)) {
+//						if(spieler.getAlter() >= minimalesAlter && spieler.getAlter() <= maximalesAlter) {
+//							if(spieler.getStaerke().getDurchschnittsStaerke() >= minimaleStaerke && 
+//									spieler.getStaerke().getDurchschnittsStaerke() <= maximaleStaerke) {
+//								if(spieler.getPreis() >= minimalerPreis && spieler.getPreis() <= maximalerPreis) {
+//									alleSpielerNachSuche.add(spieler);
+//								}
+//							}
+//						}
+//					}
+//				}
+//			}
+//		}
+//		
+//		return alleSpielerNachSuche;
+//	}
 }

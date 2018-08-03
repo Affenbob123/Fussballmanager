@@ -57,6 +57,8 @@ public class Spieler implements Comparable<Spieler> {
 	private int verletzungsTage;
 	
 	private double gehalt;
+	
+	private double preis;
 
 	public Spieler(Land nationalitaet, PositionenTypen position, AufstellungsPositionsTypen aufstellungsPositionsTyp,
 			int alter, Staerke reinStaerke, Staerke staerke, int talentwert, Team team) {
@@ -206,6 +208,14 @@ public class Spieler implements Comparable<Spieler> {
 
 	public void setStaerke(Staerke staerke) {
 		this.staerke = staerke;
+	}
+
+	public double getPreis() {
+		return preis;
+	}
+
+	public void setPreis(double preis) {
+		this.preis = preis;
 	}
 
 	@Override

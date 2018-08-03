@@ -82,6 +82,7 @@ public class FussballmanagerErstellung {
 			}
 			saisonService.ersteSaisonErstellen();
 			spieltagService.checkAktuellerSpieltag();
+			spielerService.erstelleSpielerFuerTransfermarkt();
 		}
 	}
 }

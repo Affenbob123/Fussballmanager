@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import fussballmanager.helper.SpielstatusHelper;
-import fussballmanager.service.spieler.AufstellungsPositionsTypen;
+import fussballmanager.service.land.LaenderNamenTypen;
+import fussballmanager.service.spieler.PositionenTypen;
 import fussballmanager.service.spieler.Spieler;
 import fussballmanager.service.spieler.SpielerService;
 import fussballmanager.service.team.Team;
@@ -34,19 +36,21 @@ public class TransfermarktController {
 	UserService userService;
 	
 	@GetMapping("/transfermarkt")
-	public String getTransfermarkt(Model model, Authentication auth, @ModelAttribute("minimumWerteSpielerSuche") Spieler minimumWerteSpielerSuche, 
-			@ModelAttribute("maximumWerteSpielerSuche") Spieler maximumWerteSpielerSuche) {
+	public String getTransfermarkt(Model model, Authentication auth, @ModelAttribute("spielerSuche") SpielerSuche spielerSuche) {
 		User aktuellerUser = userService.findeUser(auth.getName());
 		
 		model.addAttribute("spielstatusHelper", new SpielstatusHelper());
 		model.addAttribute("aktuellesTeam", aktuellerUser.getAktuellesTeam());
 		
-		List<Spieler> alleTransfermarktSpieler = spielerService.findeAlleSpielerNachAufstellungsPositionsTyp(AufstellungsPositionsTypen.TRANSFERMARKT);
-		Collections.sort(alleTransfermarktSpieler);
+		List<Spieler> gesuchteSpielerDesTransfermarktes = spielerService.findeAlleSpielerAnhandDerSuchEingaben(spielerSuche.getPosition(), 
+				spielerSuche.getLand(), spielerSuche.getMinimalesAlter(), spielerSuche.getMaximalesAlter(), spielerSuche.getMinimaleStaerke(), 
+				spielerSuche.getMaximaleStaerke(), spielerSuche.getMinimalerPreis(), spielerSuche.getMaximalerPreis());
+		SpielerSuche spielerSucheFormular = spielerSuche;
 		
-		model.addAttribute("alleTransfermarktSpieler", alleTransfermarktSpieler);
-		model.addAttribute("minimumWerteSpielerSuche", new Spieler());
-		model.addAttribute("maximumWerteSpielerSuche", new Spieler());
+		model.addAttribute("alleTransfermarktSpieler", gesuchteSpielerDesTransfermarktes);
+		model.addAttribute("spielerSucheFormular", spielerSucheFormular);
+		model.addAttribute("positionenTypen", PositionenTypen.values());
+		model.addAttribute("laenderNamenTypen", LaenderNamenTypen.values());
 		
 		return "transfermarkt";
 	}
@@ -63,8 +67,10 @@ public class TransfermarktController {
 	}
 	
 	@PostMapping("/transfermarkt")
-	public String spielerSuche(Model model, Authentication auth, @ModelAttribute("minimumWerteSpielerSuche") Spieler minimumWerteSpielerSuche, 
-			@ModelAttribute("maximumWerteSpielerSuche") Spieler maximumWerteSpielerSuche) {
+	public String spielerSuche(Model model, Authentication auth, RedirectAttributes redirectAttributes, 
+			@ModelAttribute("spielerSucheFormular") SpielerSuche spielerSuche) {
+	
+		redirectAttributes.addFlashAttribute("spielerSuche", spielerSuche);	
 		
 		return "redirect:/transfermarkt"; 
 	}

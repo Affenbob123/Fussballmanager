@@ -17,23 +17,58 @@
 		</div>
 		<div class="col-md-12">
 			<div>
-				<form>
+				<form method="POST" th:action="@{/transfermarkt/}" th:object="${spielerSucheFormular}">
+					<label>Position:</label>
+					<select class="custom-select" th:field="*{position}">
+						<option th:value="${null}"  th:text="Alle"></option>
+						<option
+							  th:each="positionenTyp : ${positionenTypen}" 
+							  th:text="${positionenTyp.positionsName}"
+							  th:value="${positionenTyp}">
+						</option>
+					</select>
+					<label>Land:</label>
+					<select class="custom-select" th:field="*{land}">
+						<option th:value="${null}" th:text="Alle"></option>
+						<option
+							  th:each="laenderNameTyp : ${laenderNamenTypen}" 
+							  th:text="${laenderNameTyp.name}"
+							  th:value="${laenderNameTyp}">
+						</option>
+					</select>
+					<label>Alter:</label>
+					<input class="form-control" type="text" th:field="*{minimalesAlter}"> - 
+					<input class="form-control" type="text" th:field="*{maximalesAlter}">
+					<label>St&auml;rke:</label>
+					<input class="form-control" type="text" th:field="*{minimaleStaerke}"> - 
+					<input class="form-control" type="text" th:field="*{maximaleStaerke}">
+					<label>Preis:</label>
+					<input class="form-control" type="text" th:field="*{minimalerPreis}"> - 
+					<input class="form-control" type="text" th:field="*{maximalerPreis}">
+					<button type="submit"
+						name="submit" value="value"
+						class="btn btn-sm btn-success button-toggle" th:text="Submit" >
+					</button>
 				</form>
 			</div>
 			<table class="table table-hover table-condensed" style="border-collapse:collapse;">
 				<thead>
 					<tr class="table-active">
 						<th scope="col">Position</th>
+						<th scope="col">Alter</th>
 						<th scope="col">Name</th>
 						<th scope="col">Reinst&auml;rke</th>
+						<th scope="col">Preis</th>
 						<th scope="col"></th>
 					</tr>
 				</thead>
 				<tbody th:each="spieler : ${alleTransfermarktSpieler}">
 					<tr>
 						<td th:text="${spieler.position}" />
+						<td th:text="${spieler.alter}" />
 						<td th:text="${spieler.name}" />
 						<td th:text="${spieler.reinStaerke.durchschnittsStaerke}" />
+						<td th:text="${spieler.preis}" />
 						<td>
 							<form method="POST" th:action="@{/transfermarkt/}+${spieler.id}">
 								<button type="submit"
@@ -41,7 +76,6 @@
 									class="btn btn-sm btn-success button-toggle" th:text="Kaufen" >
 								</button>
 							</form>
-
 						</td>
 						
 					</tr>

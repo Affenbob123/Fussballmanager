@@ -73,7 +73,7 @@ public class ScheduldTasks {
 		spielSimulation.simuliereSpielMinuteAllerSpieleErsteHalbzeit(SpieleTypen.LIGASPIEL);
 	}
 	
-	@Scheduled(cron = "15-59 33 11 * * ?", zone="Europe/Berlin")
+	@Scheduled(cron = "0 15-59 19 * * ?", zone="Europe/Berlin")
 	public void simuliereLigaspielZweiteHalbzeit() {
 		spielSimulation.simuliereSpielMinuteAllerSpieleZweiteHalbzeit(SpieleTypen.LIGASPIEL);
 	}
@@ -176,7 +176,7 @@ public class ScheduldTasks {
 		}
 	}
 	
-	@Scheduled(cron = "0 32 * * * ?", zone="Europe/Berlin")
+	//@Scheduled(cron = "0 15 * * * ?", zone="Europe/Berlin")
 	public void erstelleNeueSpielerFuerTransfermarkt() {
 		spielerService.loescheSpielerVomTransfermarkt();
 		spielerService.erstelleSpielerFuerTransfermarkt();
