@@ -2,9 +2,9 @@ package fussballmanager.service.liga;
 
 public enum LigenNamenTypen {
 
-	ERSTELIGA("1"),
-	ZWEITELIGA("2"),
-	DRITTELIGA_A("3A");
+	ERSTELIGA("1");
+//	ZWEITELIGA("2"),
+//	DRITTELIGA_A("3A");
 //	DRITTELIGA_B("3B"),
 //	VIERTELIGA_A("4A"),
 //	VIERTELIGA_B("4B"),

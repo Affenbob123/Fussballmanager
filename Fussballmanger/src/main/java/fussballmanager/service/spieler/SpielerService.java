@@ -17,6 +17,7 @@ import fussballmanager.service.land.Land;
 import fussballmanager.service.spieler.staerke.Staerke;
 import fussballmanager.service.team.FormationsTypen;
 import fussballmanager.service.team.Team;
+import fussballmanager.service.team.TeamService;
 
 @Service
 @Transactional
@@ -30,6 +31,9 @@ public class SpielerService {
 		
 	@Autowired
 	SpielerRepository spielerRepository;
+	
+	@Autowired
+	TeamService teamService;
 
 	public Spieler findeSpieler(Long id) {
 		return spielerRepository.getOne(id);
@@ -54,8 +58,7 @@ public class SpielerService {
 		List<Spieler> alleSpielerEinesTeams =  new ArrayList<>();
 		
 		for(Spieler spieler : findeAlleSpielerEinesTeams(team)) {
-			if(!(spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.TRANSFERMARKT)
-					|| spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.ERSATZ))) {
+			if(!spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.ERSATZ)) {
 				alleSpielerEinesTeams.add(spieler);
 			}
 
@@ -256,8 +259,9 @@ public class SpielerService {
 							anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor);
 					Staerke staerke = new Staerke(anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor, 
 							anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor);
-					Spieler spieler = new Spieler(null, positionenTyp, AufstellungsPositionsTypen.TRANSFERMARKT, 
+					Spieler spieler = new Spieler(null, positionenTyp, AufstellungsPositionsTypen.ERSATZ, 
 							alter, reinStaerke, staerke, erzeugeZufaelligenTalentwert(), null);
+					spieler.setTransfermarkt(true);
 					spieler.setPreis(preis);
 					
 					legeSpielerAn(spieler);
@@ -286,14 +290,12 @@ public class SpielerService {
 
 	public void spielerVomTransfermarktKaufen(Spieler spieler, Team team) {
 		if(spieler.getNationalitaet() == null) {
-			spieler.setNationalitaet(team.getLand());
-			spieler.setTeam(team);
-			spieler.setAufstellungsPositionsTyp(AufstellungsPositionsTypen.ERSATZ);
-		} else {
-			spieler.setTeam(team);
-			spieler.setAufstellungsPositionsTyp(AufstellungsPositionsTypen.ERSATZ);
+			spieler.setNationalitaet(team.getLand());	
 		}
 		
+		spieler.setTeam(team);
+		spieler.setAufstellungsPositionsTyp(AufstellungsPositionsTypen.ERSATZ);
+		spieler.setTransfermarkt(false);
 		aktualisiereSpieler(spieler);
 	}
 	
@@ -301,7 +303,7 @@ public class SpielerService {
 			int minimalesAlter, int maximalesAlter, double minimaleStaerke, double maximaleStaerke,
 			double minimalerPreis, double maximalerPreis) {
 		List<Spieler> endResultat = new ArrayList<>();
-		List<Spieler> zwischenResultat = spielerRepository.findByAufstellungsPositionsTypAndAlterBetweenAndPreisBetween(AufstellungsPositionsTypen.TRANSFERMARKT,
+		List<Spieler> zwischenResultat = spielerRepository.findByTransfermarktAndAlterBetweenAndPreisBetween(true,
 				minimalesAlter, maximalesAlter, minimalerPreis, maximalerPreis);
 		
 		for(Spieler spieler : zwischenResultat) {
@@ -334,59 +336,65 @@ public class SpielerService {
 		}
 		return endResultat;
 	}
-//		List<Spieler> alleSpielerAufTransfermarkt = findeAlleSpielerNachAufstellungsPositionsTyp(AufstellungsPositionsTypen.TRANSFERMARKT);
-//		List<Spieler> alleSpielerNachSuche =  new ArrayList<>();
-//		
-//		for(Spieler spieler : alleSpielerAufTransfermarkt) {
-//			if(position == null) {
-//				if(land == null) {
-//					if(spieler.getAlter() >= minimalesAlter && spieler.getAlter() <= maximalesAlter) {
-//						if(spieler.getStaerke().getDurchschnittsStaerke() >= minimaleStaerke && 
-//								spieler.getStaerke().getDurchschnittsStaerke() <= maximaleStaerke) {
-//							if(spieler.getPreis() >= minimalerPreis && spieler.getPreis() <= maximalerPreis) {
-//								alleSpielerNachSuche.add(spieler);
-//							}
-//						}
-//					}
-//				} else {
-//					if(spieler.getNationalitaet().getLandNameTyp().equals(land)) {
-//						if(spieler.getAlter() >= minimalesAlter && spieler.getAlter() <= maximalesAlter) {
-//							if(spieler.getStaerke().getDurchschnittsStaerke() >= minimaleStaerke && 
-//									spieler.getStaerke().getDurchschnittsStaerke() <= maximaleStaerke) {
-//								if(spieler.getPreis() >= minimalerPreis && spieler.getPreis() <= maximalerPreis) {
-//									alleSpielerNachSuche.add(spieler);
-//								}
-//							}
-//						}
-//					}	
-//				}
-//			}
-//			
-//			if(spieler.getPosition().equals(position)) {
-//				if(land == null) {
-//					if(spieler.getAlter() >= minimalesAlter && spieler.getAlter() <= maximalesAlter) {
-//						if(spieler.getStaerke().getDurchschnittsStaerke() >= minimaleStaerke && 
-//								spieler.getStaerke().getDurchschnittsStaerke() <= maximaleStaerke) {
-//							if(spieler.getPreis() >= minimalerPreis && spieler.getPreis() <= maximalerPreis) {
-//								alleSpielerNachSuche.add(spieler);
-//							}
-//						}
-//					}
-//				} else {
-//					if(spieler.getNationalitaet().getLandNameTyp().equals(land)) {
-//						if(spieler.getAlter() >= minimalesAlter && spieler.getAlter() <= maximalesAlter) {
-//							if(spieler.getStaerke().getDurchschnittsStaerke() >= minimaleStaerke && 
-//									spieler.getStaerke().getDurchschnittsStaerke() <= maximaleStaerke) {
-//								if(spieler.getPreis() >= minimalerPreis && spieler.getPreis() <= maximalerPreis) {
-//									alleSpielerNachSuche.add(spieler);
-//								}
-//							}
-//						}
-//					}
-//				}
-//			}
-//		}
-//		
-//		return alleSpielerNachSuche;
-//	}
+
+	public void ermittleTalentwert(Spieler spieler) {
+		spieler.setTalentwertErmittelt(true);
+		aktualisiereSpieler(spieler);
+	}
+
+	public void spielerAufTransfermarktStellen(Spieler spieler, double preis) {
+		spieler.setPreis(preis);
+		spieler.setTransfermarkt(true);
+		aktualisiereSpieler(spieler);
+	}
+
+	public void spielerVonTransfermarktNehmen(Spieler spieler) {
+		spieler.setAufstellungsPositionsTyp(AufstellungsPositionsTypen.ERSATZ);
+		spieler.setPreis(spieler.getStaerke().getDurchschnittsStaerke() * 1000);
+		spieler.setTransfermarkt(false);
+		aktualisiereSpieler(spieler);
+	}
+
+	public void spielerEntlassen(Spieler spieler) {
+		spieler.setTransfermarkt(true);
+		spieler.setTeam(null);
+		aktualisiereSpieler(spieler);		
+	}
+
+	public void wechsleSpielerEin(Spieler einzuwechselnderSpieler, Spieler auszuwechselnderSpieler) {
+		if(auszuwechselnderSpieler != null) {
+			auszuwechselnderSpieler.setAufstellungsPositionsTyp(AufstellungsPositionsTypen.ERSATZ);
+			aktualisiereSpieler(auszuwechselnderSpieler);
+		}
+		
+		einzuwechselnderSpieler.setAufstellungsPositionsTyp(einzuwechselnderSpieler.getAufstellungsPositionsTyp());
+		aktualisiereSpieler(einzuwechselnderSpieler);
+	}
+
+	public void wechsleSpielerEin(Spieler einzugewechselterSpieler, AufstellungsPositionsTypen aufstellungsPositionsTyp) {
+		Team team = teamService.findeTeam(einzugewechselterSpieler.getTeam().getId());
+		List<Spieler> spielerInAufstellung = findeAlleSpielerEinesTeamsInAufstellung(team);
+		
+		for(AufstellungsPositionsTypen position : team.getFormationsTyp().getAufstellungsPositionsTypen()) {
+			if(position.equals(aufstellungsPositionsTyp)) {
+				for(Spieler auszuwechselnderSpieler : spielerInAufstellung) {
+					if(auszuwechselnderSpieler.getAufstellungsPositionsTyp().equals(position)) {
+						aenderPositionenEinesSpielers(auszuwechselnderSpieler, AufstellungsPositionsTypen.ERSATZ);
+						break;
+					}
+				}
+				aenderPositionenEinesSpielers(einzugewechselterSpieler, position);
+				break;
+			}
+		}
+		team.setAnzahlAuswechselungen(team.getAnzahlAuswechselungen() - 1);
+		teamService.aktualisiereTeam(team);
+	}
+	
+	public void aenderPositionenEinesSpielers(Spieler spieler, AufstellungsPositionsTypen aufstellungsPositionsTyp) {
+		Spieler s = spieler;
+		s.setAufstellungsPositionsTyp(aufstellungsPositionsTyp);
+		
+		aktualisiereSpieler(s);
+	}
 }

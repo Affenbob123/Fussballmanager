@@ -16,8 +16,7 @@ public enum AufstellungsPositionsTypen {
 	LS("Linkes Stürmer", 12, RollenTypen.ANGREIFER),
 	MS("Mittelstürmer", 13, RollenTypen.ANGREIFER),
 	RS("Rechtes Stürmer", 14, RollenTypen.ANGREIFER),
-	ERSATZ("Ersatzbank", 15, null),
-	TRANSFERMARKT("Transfermarkt", 16, null);
+	ERSATZ("Ersatzbank", 15, null);
     
     private final String positionsName;
     private final int rangfolge;

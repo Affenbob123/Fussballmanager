@@ -47,6 +47,8 @@ public class Spieler implements Comparable<Spieler> {
 	
 	private int talentwert;
 	
+	private boolean talentwertErmittelt;
+	
 	private int motivation;
 	
 	@ManyToOne
@@ -59,6 +61,8 @@ public class Spieler implements Comparable<Spieler> {
 	private double gehalt;
 	
 	private double preis;
+	
+	private boolean transfermarkt;
 
 	public Spieler(Land nationalitaet, PositionenTypen position, AufstellungsPositionsTypen aufstellungsPositionsTyp,
 			int alter, Staerke reinStaerke, Staerke staerke, int talentwert, Team team) {
@@ -70,12 +74,15 @@ public class Spieler implements Comparable<Spieler> {
 		this.reinStaerke = reinStaerke;
 		this.staerke = staerke;
 		this.talentwert = talentwert;
+		this.talentwertErmittelt =  false;
 		this.erfahrung = 0;
 		this.motivation = 0;
 		this.team = team;
 		this.trainingslagerTage = 10;
 		this.verletzungsTage = 0;
 		this.gehalt = staerke.getDurchschnittsStaerke() * 100;
+		this.preis = staerke.getDurchschnittsStaerke() * 1000;
+		this.transfermarkt = false;
 	}
 
 	public Spieler() {
@@ -216,6 +223,22 @@ public class Spieler implements Comparable<Spieler> {
 
 	public void setPreis(double preis) {
 		this.preis = preis;
+	}
+
+	public boolean isTalentwertErmittelt() {
+		return talentwertErmittelt;
+	}
+
+	public void setTalentwertErmittelt(boolean talentwertErmittelt) {
+		this.talentwertErmittelt = talentwertErmittelt;
+	}
+
+	public boolean isTransfermarkt() {
+		return transfermarkt;
+	}
+
+	public void setTransfermarkt(boolean istTransfermarkt) {
+		this.transfermarkt = istTransfermarkt;
 	}
 
 	@Override

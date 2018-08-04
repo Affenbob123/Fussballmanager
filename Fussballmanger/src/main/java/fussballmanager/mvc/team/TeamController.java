@@ -2,6 +2,8 @@ package fussballmanager.mvc.team;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -27,6 +29,8 @@ import fussballmanager.service.user.UserService;
 
 @Controller
 public class TeamController {
+	
+	private static final Logger LOG = LoggerFactory.getLogger(TeamController.class);
 	
 	@Autowired
 	LandService landService;
@@ -95,21 +99,12 @@ public class TeamController {
 	}
 	
 	@PostMapping("/team/{id}/einwechseln")
-	public String aendereFormation(Model model, Authentication auth, @PathVariable("id") Long id, @ModelAttribute("einzuwechselnderSpieler") Spieler einzuwechselnderSpieler) {
-		Team team = teamService.findeTeam(id);
-		List<Spieler> spielerInAufstellung = spielerService.findeAlleSpielerEinesTeamsInAufstellung(team);
+	public String aendereFormation(Model model, Authentication auth, @PathVariable("id") Long id, @ModelAttribute("einzuwechselnderSpieler") Spieler spieler) {
+		Spieler einzugewechselterSpieler = spielerService.findeSpieler(spieler.getId());
+		LOG.info("{}, {}, {}, {}, {}", einzugewechselterSpieler.getId(), einzugewechselterSpieler.getName(), einzugewechselterSpieler.getAlter(), 
+				einzugewechselterSpieler.getPosition().getPositionsName(), einzugewechselterSpieler.getTeam());
+		spielerService.wechsleSpielerEin(einzugewechselterSpieler, spieler.getAufstellungsPositionsTyp());
 		
-		team.setAnzahlAuswechselungen(team.getAnzahlAuswechselungen() - 1);
-		for(Spieler spieler : spielerInAufstellung) {
-			if(spieler.getAufstellungsPositionsTyp().equals(einzuwechselnderSpieler.getAufstellungsPositionsTyp())) {
-				spieler.setAufstellungsPositionsTyp(AufstellungsPositionsTypen.ERSATZ);
-				Spieler eingewechselterSpieler = spielerService.findeSpieler(einzuwechselnderSpieler.getId());
-				eingewechselterSpieler.setAufstellungsPositionsTyp(einzuwechselnderSpieler.getAufstellungsPositionsTyp());
-				
-				spielerService.aktualisiereSpieler(eingewechselterSpieler);
-				spielerService.aktualisiereSpieler(spieler);
-			}
-		}
 		return "redirect:/team/{id}";
 	}
 }

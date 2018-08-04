@@ -86,47 +86,24 @@
 						<th scope="col">St&auml;rke</th>
 						<th scope="col">Reinst&auml;rke</th>
 						<th scope="col">Erfahrung</th>
-						<th scope="col">Talentwert</th>
 						<th scope="col">Motivation</th>
 					</tr>
 				</thead>
 				<tbody th:each="spieler : ${alleSpielerDesAktuellenTeams}">
-					<tr data-toggle="collapse" th:attr="data-target='#'+${spieler.id}" class="accordion-toggle" >
+					<tr>
 						<td th:text="${spieler.nationalitaet.getLandNameTyp().getName()}" />
 						<td th:text="${spieler.position}" />
 						<td th:text="${spieler.aufstellungsPositionsTyp}" />
 						<td> 
-							<a class="" th:text="${spieler.name}" th:href="@{/spieler/}+${spieler.id}"></a>
+							<a th:text="${spieler.name}" th:id="${spieler.id}" onClick="openWindowInNewWindow(this.id)"
+								href="#"></a>
 						</td>
 						<td th:text="${spieler.alter}" />
 						<td th:text="${spieler.staerke.durchschnittsStaerke}" />
 						<td th:text="${spieler.reinStaerke.durchschnittsStaerke}" />
 						<td th:text="${spieler.erfahrung}" />
-						<td th:text="${spieler.talentwert}" />
 						<td th:text="${spieler.motivation}" />
 					</tr>
-					<tr class="collapse" th:id="${spieler.id}">
-		           		<td class="hiddenRow">
-		           			<div class="accordian-body">
-		           				<p>Geschwindigkeit:</p>
-		           				<p>Schuss:</p>
-		           				<p>Passen:</p>
-		           				<p>Dribbeln:</p>
-		           				<p>Verteidigung:</p>
-		           				<p>Physis:</p>
-		           			</div>
-		           		</td>
-		           		<td class="hiddenRow">
-		           			<div class="accordian-body">
-		           				<p th:text="${spieler.reinStaerke.geschwindigkeit}"></p>
-		           				<p th:text="${spieler.reinStaerke.schiessen}"></p>
-		           				<p th:text="${spieler.reinStaerke.passen}"></p>
-		           				<p th:text="${spieler.reinStaerke.dribbeln}"></p>
-		           				<p th:text="${spieler.reinStaerke.verteidigen}"></p>
-		           				<p th:text="${spieler.reinStaerke.physis}"></p>
-		           			</div>
-		           		</td>
-		       		</tr>
 		       	</tbody>
 			</table>
 		</div>
@@ -134,9 +111,20 @@
 			<a class="" th:href="@{/team/}+${aktuellesTeam.id}+'/spieler/umbenennen'">Spieler umbenennen</a>
 		</div>
 	</div>
-	<th:block th:replace="fragments/header :: scripts">
+	<th:block>
+		<script
+			src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
+		<script src = "http://rvera.github.io/image-picker/image-picker/image-picker.min.js" type = "text/javascript"></script>
 		<script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css"></script>
 		<script src="https://raw.githubusercontent.com/SteveSanderson/knockout.mapping/master/build/output/knockout.mapping-latest.debug.js"></script>
+		<script>
+			function openWindowInNewWindow(id) {
+				var spielerId = id
+				window.open('../spieler/' + spielerId,'spieler','resizable,height=700,width=700'); 
+				return false;
+			}
+		</script>
 	</th:block>
 </body>
 </html>

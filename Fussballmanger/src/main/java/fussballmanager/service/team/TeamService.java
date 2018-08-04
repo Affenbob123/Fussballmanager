@@ -146,8 +146,7 @@ public class TeamService {
 		if(fehlendePositionen.size() > 0) {
 			for(AufstellungsPositionsTypen a : aufstellung) {
 				for(Spieler spieler: spielerDesTeams) {
-					if((spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.ERSATZ) || 
-							spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.TRANSFERMARKT)) && fehlendePositionen.contains(a)) {
+					if((spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.ERSATZ)) && fehlendePositionen.contains(a)) {
 						if(a.getRollenTyp().equals(RollenTypen.ANGREIFER)) {
 							if(spieler.getPosition().getRollenTyp().equals(a.getRollenTyp())) {
 								spieler.setAufstellungsPositionsTyp(a);
@@ -186,8 +185,7 @@ public class TeamService {
 			
 			for(AufstellungsPositionsTypen a : aufstellung) {
 				for(Spieler spieler: spielerDesTeams) {
-					if((spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.ERSATZ) || 
-							spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.TRANSFERMARKT)) && fehlendePositionen.contains(a)) {
+					if((spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.ERSATZ)) && fehlendePositionen.contains(a)) {
 						if(a.getRollenTyp().equals(RollenTypen.ANGREIFER)) {
 							if(spieler.getPosition().getRollenTyp().equals(RollenTypen.MITTELFELD)) {
 								spieler.setAufstellungsPositionsTyp(a);
@@ -226,8 +224,7 @@ public class TeamService {
 			
 			for(AufstellungsPositionsTypen a : aufstellung) {
 				for(Spieler spieler: spielerDesTeams) {
-					if((spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.ERSATZ) || 
-							spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.TRANSFERMARKT)) && fehlendePositionen.contains(a)) {
+					if((spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.ERSATZ)) && fehlendePositionen.contains(a)) {
 						if(a.getRollenTyp().equals(RollenTypen.ANGREIFER)) {
 							if(spieler.getPosition().getRollenTyp().equals(RollenTypen.VERTEIDIGER)) {
 								spieler.setAufstellungsPositionsTyp(a);
@@ -266,8 +263,7 @@ public class TeamService {
 			
 			for(AufstellungsPositionsTypen a : aufstellung) {
 				for(Spieler spieler: spielerDesTeams) {
-					if((spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.ERSATZ) || 
-							spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.TRANSFERMARKT)) && fehlendePositionen.contains(a)) {
+					if((spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.ERSATZ)) && fehlendePositionen.contains(a)) {
 						if(a.getRollenTyp().equals(RollenTypen.ANGREIFER)) {
 							if(spieler.getPosition().getRollenTyp().equals(RollenTypen.TORWART)) {
 								spieler.setAufstellungsPositionsTyp(a);
@@ -306,8 +302,7 @@ public class TeamService {
 			
 			for(AufstellungsPositionsTypen a : aufstellung) {
 				for(Spieler spieler: spielerDesTeams) {
-					if((spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.ERSATZ) || 
-							spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.TRANSFERMARKT)) && fehlendePositionen.contains(a)) {
+					if((spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.ERSATZ)) && fehlendePositionen.contains(a)) {
 						if(a.getRollenTyp().equals(RollenTypen.TORWART)) {
 							spieler.setAufstellungsPositionsTyp(a);
 							fehlendePositionen.remove(a);

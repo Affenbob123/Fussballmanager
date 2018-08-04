@@ -21,6 +21,6 @@ public interface SpielerRepository extends JpaRepository<Spieler, Long> {
 	List<Spieler> findByPositionAndNationalitaetAndAlterBetweenAndStaerkeBetweenAndPreisBetween(PositionenTypen position, LaenderNamenTypen land,
 			int minimalesAlter, int maximalesAlter, double minimaleStaerke, double maximaleStaerke,double minimalerPreis, double maximalerPreis);
 	
-	List<Spieler> findByAufstellungsPositionsTypAndAlterBetweenAndPreisBetween(AufstellungsPositionsTypen aufstellungsPositionsTyp,
+	List<Spieler> findByTransfermarktAndAlterBetweenAndPreisBetween(boolean transfermarkt,
 			int minimalesAlter, int maximalesAlter, double minimalerPreis, double maximalerPreis);
 }
