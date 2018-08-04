@@ -17,9 +17,9 @@ public class SpielerSuche {
 		
 	private double maximaleStaerke = 9999999999999999.9;
 	
-	private double minimalerPreis = 0.0;
+	private long minimalerPreis = 0;
 	
-	private double maximalerPreis = 9999999999999999.9;
+	private long maximalerPreis = 99999999999999999L;
 
 	public PositionenTypen getPosition() {
 		return position;
@@ -69,19 +69,19 @@ public class SpielerSuche {
 		this.maximaleStaerke = maximaleStaerke;
 	}
 
-	public double getMinimalerPreis() {
+	public long getMinimalerPreis() {
 		return minimalerPreis;
 	}
 
-	public void setMinimalerPreis(double minimalerPreis) {
+	public void setMinimalerPreis(long minimalerPreis) {
 		this.minimalerPreis = minimalerPreis;
 	}
 
-	public double getMaximalerPreis() {
+	public long getMaximalerPreis() {
 		return maximalerPreis;
 	}
 
-	public void setMaximalerPreis(double maximalerPreis) {
+	public void setMaximalerPreis(long maximalerPreis) {
 		this.maximalerPreis = maximalerPreis;
 	}
 	

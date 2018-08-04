@@ -23,7 +23,7 @@ public class Team implements Comparable<Team> {
 	
 	private String name;
 		
-	private double geld;
+	private long geld;
 	
 	@ManyToOne
 	private User user;
@@ -48,7 +48,7 @@ public class Team implements Comparable<Team> {
 	public Team(Land land, String name, User user, Liga liga) {
 		this.land = land;
 		this.name = name;
-		this.geld = 500000.0;
+		this.geld = 500000;
 		this.user = user;
 		this.liga = liga;
 		this.spielort = "Unbenanntes Stadion";
@@ -85,11 +85,11 @@ public class Team implements Comparable<Team> {
 		this.name = name;
 	}
 
-	public double getGeld() {
+	public long getGeld() {
 		return geld;
 	}
 
-	public void setGeld(double geld) {
+	public void setGeld(long geld) {
 		this.geld = geld;
 	}
 

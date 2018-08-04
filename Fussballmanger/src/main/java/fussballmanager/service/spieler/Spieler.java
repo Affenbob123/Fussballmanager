@@ -58,9 +58,9 @@ public class Spieler implements Comparable<Spieler> {
 	
 	private int verletzungsTage;
 	
-	private double gehalt;
+	private long gehalt;
 	
-	private double preis;
+	private long preis;
 	
 	private boolean transfermarkt;
 
@@ -80,8 +80,8 @@ public class Spieler implements Comparable<Spieler> {
 		this.team = team;
 		this.trainingslagerTage = 10;
 		this.verletzungsTage = 0;
-		this.gehalt = staerke.getDurchschnittsStaerke() * 100;
-		this.preis = staerke.getDurchschnittsStaerke() * 1000;
+		this.gehalt = (long) (staerke.getDurchschnittsStaerke() * 100);
+		this.preis = (long) (staerke.getDurchschnittsStaerke() * 1000);
 		this.transfermarkt = false;
 	}
 
@@ -205,11 +205,11 @@ public class Spieler implements Comparable<Spieler> {
 		this.aufstellungsPositionsTyp = aufstellungsPositionsTyp;
 	}
 
-	public double getGehalt() {
+	public long getGehalt() {
 		return gehalt;
 	}
 
-	public void setGehalt(double gehalt) {
+	public void setGehalt(long gehalt) {
 		this.gehalt = gehalt;
 	}
 
@@ -217,11 +217,11 @@ public class Spieler implements Comparable<Spieler> {
 		this.staerke = staerke;
 	}
 
-	public double getPreis() {
+	public long getPreis() {
 		return preis;
 	}
 
-	public void setPreis(double preis) {
+	public void setPreis(long preis) {
 		this.preis = preis;
 	}
 

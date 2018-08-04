@@ -22,5 +22,5 @@ public interface SpielerRepository extends JpaRepository<Spieler, Long> {
 			int minimalesAlter, int maximalesAlter, double minimaleStaerke, double maximaleStaerke,double minimalerPreis, double maximalerPreis);
 	
 	List<Spieler> findByTransfermarktAndAlterBetweenAndPreisBetween(boolean transfermarkt,
-			int minimalesAlter, int maximalesAlter, double minimalerPreis, double maximalerPreis);
+			int minimalesAlter, int maximalesAlter, long minimalerPreis, long maximalerPreis);
 }

@@ -253,7 +253,7 @@ public class SpielerService {
 				for(int alter = 13; alter < 19; alter++) {
 					int staerkeFaktor = alter - 12;
 					double anfangsStaerkeMitFaktor = anfangsStaerke * staerkeFaktor;
-					double preis = anfangsStaerkeMitFaktor * 100;
+					long preis = (long) (anfangsStaerkeMitFaktor * 1000);
 					
 					Staerke reinStaerke = new Staerke(anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor, 
 							anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor);
@@ -301,7 +301,7 @@ public class SpielerService {
 	
 	public List<Spieler> findeAlleSpielerAnhandDerSuchEingaben(PositionenTypen position, LaenderNamenTypen land,
 			int minimalesAlter, int maximalesAlter, double minimaleStaerke, double maximaleStaerke,
-			double minimalerPreis, double maximalerPreis) {
+			long minimalerPreis, long maximalerPreis) {
 		List<Spieler> endResultat = new ArrayList<>();
 		List<Spieler> zwischenResultat = spielerRepository.findByTransfermarktAndAlterBetweenAndPreisBetween(true,
 				minimalesAlter, maximalesAlter, minimalerPreis, maximalerPreis);
@@ -342,7 +342,7 @@ public class SpielerService {
 		aktualisiereSpieler(spieler);
 	}
 
-	public void spielerAufTransfermarktStellen(Spieler spieler, double preis) {
+	public void spielerAufTransfermarktStellen(Spieler spieler, long preis) {
 		spieler.setPreis(preis);
 		spieler.setTransfermarkt(true);
 		aktualisiereSpieler(spieler);
@@ -350,7 +350,7 @@ public class SpielerService {
 
 	public void spielerVonTransfermarktNehmen(Spieler spieler) {
 		spieler.setAufstellungsPositionsTyp(AufstellungsPositionsTypen.ERSATZ);
-		spieler.setPreis(spieler.getStaerke().getDurchschnittsStaerke() * 1000);
+		spieler.setPreis((long) (spieler.getStaerke().getDurchschnittsStaerke() * 1000));
 		spieler.setTransfermarkt(false);
 		aktualisiereSpieler(spieler);
 	}
