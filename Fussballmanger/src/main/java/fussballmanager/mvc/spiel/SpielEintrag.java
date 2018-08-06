@@ -146,14 +146,14 @@ public class SpielEintrag {
 		return s;
 	}
 	
-	public String heimmannschasftUndStaerkeToString() {
+	public String heimmannschaftUndStaerkeToString() {
 		String s = "";
 		
 		s = heimmannschaft.getName() + " (" + staerkeHeimmannschaft + ")";
 		return s;
 	}
 	
-	public String gastmannschasftUndStaerkeToString() {
+	public String gastmannschaftUndStaerkeToString() {
 		String s = "";
 		
 		s = gastmannschaft.getName() + " (" + staerkeGastmannschaft + ")";

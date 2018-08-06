@@ -1,5 +1,7 @@
 package fussballmanager.spielsimulation.torversuch;
 
+import java.time.LocalTime;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -37,6 +39,8 @@ public class Torversuch {
 	TorversuchTypen richtung;
 	
 	TorversuchTypen richtungVomUser;
+	
+	LocalTime erstellZeit;
 	
 	public Torversuch() {
 		
@@ -112,5 +116,13 @@ public class Torversuch {
 
 	public void setRichtungVomUser(TorversuchTypen richtungVomUser) {
 		this.richtungVomUser = richtungVomUser;
+	}
+
+	public LocalTime getErstellZeit() {
+		return erstellZeit;
+	}
+
+	public void setErstellZeit(LocalTime erstellZeit) {
+		this.erstellZeit = erstellZeit;
 	}
 }

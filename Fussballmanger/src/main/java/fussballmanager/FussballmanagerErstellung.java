@@ -60,13 +60,16 @@ public class FussballmanagerErstellung {
 	
 	@Autowired
 	SpielSimulation spielSimulation;
+		
+	@Autowired
+	FussballmanagerTestData ftd;
 	
 	public FussballmanagerErstellung() {
 
 	}
 	
 	@PostConstruct
-	public void checkTimeForCreation() {
+	public void checkTimeForCreation() throws InterruptedException {
 		LocalDateTime aktuellesDatum = LocalDateTime.now(ZoneId.of("Europe/Berlin"));
 		LocalDateTime erstellDatum = LocalDateTime.of(2018, 7, 23, 10, 03);
 		
@@ -74,9 +77,7 @@ public class FussballmanagerErstellung {
 			erstelleSpiel();
 		}
 		
-		for(int i = 0; i < 90; i++) {
-			spielSimulation.simuliereSpielMinuteAllerSpieleErsteHalbzeit(SpieleTypen.LIGASPIEL);
-		}
+		ftd.erzeugeTestDaten();
 	}
 	
 	public void erstelleSpiel() {
@@ -88,7 +89,6 @@ public class FussballmanagerErstellung {
 			saisonService.ersteSaisonErstellen();
 			spieltagService.checkAktuellerSpieltag();
 			spielerService.erstelleSpielerFuerTransfermarkt();
-
 		}
 	}
 }

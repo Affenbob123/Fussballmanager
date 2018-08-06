@@ -28,14 +28,14 @@
 					<tr class="">
 						<td th:text="${spielEintrag.spieltag}" />
 						<td th:text="${spielEintrag.spielbeginnToString()}" />
-						<td th:text="${spielEintrag.heimmannschasftUndStaerkeToString()}" />
+						<td th:text="${spielEintrag.heimmannschaftUndStaerkeToString()}" />
 						<td class="ergebnisInTabelle">
 							<a class="" th:href="@{/spiel/}+${spielEintrag.id}">
 								<span th:text="${spielEintrag.spielErgebnisToString()}"></span><br>
 								<span th:text="${spielEintrag.spielErgebnisHalbzeitToString()}"></span>
 							</a>
 						</td>
-						<td th:text="${spielEintrag.gastmannschasftUndStaerkeToString()}" />
+						<td th:text="${spielEintrag.gastmannschaftUndStaerkeToString()}" />
 					</tr>
 				</table>
 			</div>

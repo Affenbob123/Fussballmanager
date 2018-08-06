@@ -114,6 +114,8 @@ public class SpielSimulation {
 		List<Spieler> spielerHeimmannschaft = spielerService.findeAlleSpielerEinesTeams(spiel.getHeimmannschaft());
 		List<Spieler> spielerGastmannschaft = spielerService.findeAlleSpielerEinesTeams(spiel.getGastmannschaft());
 		
+		LocalTime aktuelleZeit = LocalTime.now(ZoneId.of("Europe/Berlin"));
+		
 		spiel = spielService.findeSpiel(spiel.getId());
 		
 		int zufallsZahl = random.nextInt(100 - 1 + 1) + 1;
@@ -150,7 +152,7 @@ public class SpielSimulation {
 			if(zufallsZahl < wahrscheinlichkeitTorVersuch) {
 				Torversuch torversuch = new Torversuch();
 				//TODO richtung
-				torversuch.setRichtung(TorversuchTypen.LINKS);
+				torversuch.setRichtung(zufaelligeTorversuchRichtung());
 				//TODO SPieler bestimmen
 				torversuch.setTorschuetze(spielerService.findeAlleSpielerEinesTeams(spiel.getHeimmannschaft()).get(0));
 				torversuch.setAngreifer(spiel.getHeimmannschaft());
@@ -158,7 +160,9 @@ public class SpielSimulation {
 				torversuch.setVerteidiger(spiel.getGastmannschaft());
 				torversuch.setSpiel(spiel);
 				torversuch.setSpielminute(spielminute);
+				torversuch.setErstellZeit(aktuelleZeit);
 				
+				LOG.info("tor heim");
 				torversuchService.legeTorversuchAn(torversuch);
 			}	
 		} else {
@@ -179,7 +183,7 @@ public class SpielSimulation {
 			if(zufallsZahl < wahrscheinlichkeitTorVersuch) {
 				Torversuch torversuch = new Torversuch();
 				//TODO richtung
-				torversuch.setRichtung(TorversuchTypen.LINKS);
+				torversuch.setRichtung(zufaelligeTorversuchRichtung());
 				//TODO SPieler bestimmen
 				torversuch.setTorschuetze(spielerService.findeAlleSpielerEinesTeams(spiel.getGastmannschaft()).get(0));
 				torversuch.setAngreifer(spiel.getGastmannschaft());
@@ -187,18 +191,20 @@ public class SpielSimulation {
 				torversuch.setVerteidiger(spiel.getHeimmannschaft());
 				torversuch.setSpiel(spiel);
 				torversuch.setSpielminute(spielminute);
+				torversuch.setErstellZeit(aktuelleZeit);
 				
+				LOG.info("tor gast: {}, {},");
 				torversuchService.legeTorversuchAn(torversuch);
 			} 
 		}
 		
-		//LOG.info("Heimmannscahftangreifer: {}, zufallszahl: {}, tvwahrscheinlichkeit: {}", heimmannschaftAngreifer, zufallsZahl, wahrscheinlichkeitTorVersuch);
-		//LOG.info("Spiel: {} : {}, Ausrichtung: {} : {}, Einsatz: {} : {}", spiel.getHeimmannschaft().getName(), spiel.getGastmannschaft().getName(), 
-		//		spiel.getHeimmannschaft().getAusrichtungsTyp(), spiel.getGastmannschaft().getAusrichtungsTyp(), spiel.getHeimmannschaft().getEinsatzTyp(),
-		//		spiel.getGastmannschaft().getEinsatzTyp());
-		//LOG.info("Heimmannschaft Angreifer: {}, Torwart: {}, Abwehr: {}, Mittelfeld: {}, Angriff: {}, Torversuch: {}", heimmannschaftAngreifer, 
-		//		erfolgsWahrscheinlichkeitTorwart, erfolgsWahrscheinlichkeitAbwehr, erfolgsWahrscheinlichkeitMittelfeld, erfolgsWahrscheinlichkeitAngriff,
-		//		wahrscheinlichkeitTorVersuch);
+//		LOG.info("Heimmannscahftangreifer: {}, zufallszahl: {}, tvwahrscheinlichkeit: {}", heimmannschaftAngreifer, zufallsZahl, wahrscheinlichkeitTorVersuch);
+//		LOG.info("Spiel: {} : {}, Ausrichtung: {} : {}, Einsatz: {} : {}", spiel.getHeimmannschaft().getName(), spiel.getGastmannschaft().getName(), 
+//				spiel.getHeimmannschaft().getAusrichtungsTyp(), spiel.getGastmannschaft().getAusrichtungsTyp(), spiel.getHeimmannschaft().getEinsatzTyp(),
+//				spiel.getGastmannschaft().getEinsatzTyp());
+//		LOG.info("Heimmannschaft Angreifer: {}, Torwart: {}, Abwehr: {}, Mittelfeld: {}, Angriff: {}, Torversuch: {}", heimmannschaftAngreifer, 
+//				erfolgsWahrscheinlichkeitTorwart, erfolgsWahrscheinlichkeitAbwehr, erfolgsWahrscheinlichkeitMittelfeld, erfolgsWahrscheinlichkeitAngriff,
+//				wahrscheinlichkeitTorVersuch);
 	}
 
 	public boolean isHeimmannschaftAngreifer() {
@@ -257,5 +263,18 @@ public class SpielSimulation {
 		staerkeFaktor = Math.pow(tatsaechlicherFaktor, 1.0/5);
 		
 		return staerkeFaktor;
+	}
+	
+	private TorversuchTypen zufaelligeTorversuchRichtung() {
+		int zufallsZahl = random.nextInt(2);
+		
+		if(zufallsZahl == 2) {
+			return TorversuchTypen.LINKS;
+		}
+		
+		if(zufallsZahl == 1) {
+			return TorversuchTypen.MITTE;
+		}
+		return TorversuchTypen.RECHTS;
 	}
 }

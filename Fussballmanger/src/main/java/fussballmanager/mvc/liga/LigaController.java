@@ -183,7 +183,7 @@ public class LigaController {
 		ligaEintrag.setGelbeKarten(teamService.gelbeKartenEinesTeamsInEinerSaison(team, saison));
 		ligaEintrag.setGelbRoteKarten(teamService.gelbeRoteKartenEinesTeamsInEinerSaison(team, saison));
 		ligaEintrag.setRoteKarten(teamService.roteKartenEinesTeamsInEinerSaison(team, saison));
-		
+				
 		return ligaEintrag;
 	}
 	

@@ -59,10 +59,11 @@ public class SpielService {
 	public List<Spiel> findeAlleSpiele() {
 		return spielRepository.findAll();
 	}
-	
+		
 	public List<Spiel> findeAlleSpieleEinesTeams(Team team) {
 		List<Spiel> alleSpieleEinesTeams = spielRepository.findByGastmannschaft(team);
 		alleSpieleEinesTeams.addAll(spielRepository.findByHeimmannschaft(team));
+		
 		return alleSpieleEinesTeams;
 	}
 	
@@ -119,7 +120,7 @@ public class SpielService {
 		return alleSpieleEinesSpieltagesEinesTeams;
 	}
 	
-	public List<Spiel> findeAlleSpieleEinesTeamsNachSpielTypUndSaison(Team team, SpieleTypen spielTyp, Saison saison) {
+	public List<Spiel> findeAlleAbgeschlossenenSpieleEinesTeamsNachSpielTypUndSaison(Team team, SpieleTypen spielTyp, Saison saison) {
 		List<Spiel> alleSpieleEinesTeamsInEinerSaison = findeAlleSpieleEinesTeamsInEinerSaison(team, saison);
 		
 		for(Spiel spiel : alleSpieleEinesTeamsInEinerSaison) {

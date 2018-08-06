@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -50,7 +51,7 @@ public class Spiel {
 	
 	private String spielort;
 	
-	@OneToMany(cascade = {CascadeType.ALL})
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private List<SpielEreignis> spielEreignisse;
 	
 	private double heimVorteil = 1.3;

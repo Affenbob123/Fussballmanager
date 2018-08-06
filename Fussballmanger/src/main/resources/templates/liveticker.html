@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta http-equiv="refresh" content="30">
+		<meta http-equiv="refresh" content="10">
 		<link rel="stylesheet" href="/liveticker.css" />
 		<head th:insert="fragments/header :: head" />
 	</head>
@@ -10,6 +10,11 @@
 		<div class="container" id="containerBody">
 			<div class="col-md-12">
 				<div th:if="${torversuch}">
+					<div type="hidden">
+						<audio controls autoplay>
+						  	<source src="torjubel.mp3" type="audio/mpeg">
+						</audio> 
+					</div>
 					<p th:text="${torversuch.spiel.heimmannschaft.name}"></p> - 
 					<p th:text="${torversuch.spiel.gastmannschaft.name}"></p>
 					<form method="POST" th:action="@{/liveticker}" th:object="${torversuch}">
@@ -43,7 +48,7 @@
 							<td th:text="${livetickerEintrag.spielEintrag.spieltag}" />
 							<td th:text="${livetickerEintrag.spielEintrag.spielbeginnToString()}" />
 							<td>
-								<a th:text="${livetickerEintrag.spielEintrag.heimmannschasftUndStaerkeToString()}" 
+								<a th:text="${livetickerEintrag.spielEintrag.heimmannschaftUndStaerkeToString()}" 
 								th:href="@{/team/}+${livetickerEintrag.spielEintrag.heimmannschaft.id}"></a>
 							</td>
 							<td class="ergebnisInTabelle">
@@ -51,7 +56,7 @@
 								<span th:text="${livetickerEintrag.spielEintrag.spielErgebnisHalbzeitToString()}"></span>
 							</td>
 							<td>
-								<a th:text="${livetickerEintrag.spielEintrag.gastmannschasftUndStaerkeToString()}" 
+								<a th:text="${livetickerEintrag.spielEintrag.gastmannschaftUndStaerkeToString()}" 
 								th:href="@{/team/}+${livetickerEintrag.spielEintrag.gastmannschaft.id}"></a>
 							</td>
 						</tr>

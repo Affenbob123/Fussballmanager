@@ -58,6 +58,9 @@ public class LiveTickerController {
 
 	@GetMapping("/liveticker")
 	public String getLiveticker(Model model, Authentication auth) {
+		//löscht schon abgegebene Torversuche
+		torversuchService.ueberPruefeObTorversucheNochAktuell();
+		
 		User aktuellerUser = userService.findeUser(auth.getName());
 		List<Team> alleTeamsDesUsersImLiveticker = teamService.findeAlleTeamsEinesUsersImLiveticker(aktuellerUser, true);
 		List<Spiel> alleSpieleDerTeamsImLiveticker = new ArrayList<>();
@@ -82,7 +85,7 @@ public class LiveTickerController {
 	public String versucheTorversuchHalten(Model model, Authentication auth, @ModelAttribute("torversuchRichtungSpeichern") Torversuch torversuch) {
 		Torversuch versuchteTorversuch = torversuchService.findeTorversuch(torversuch.getId());
 		versuchteTorversuch.setRichtungVomUser(torversuch.getRichtungVomUser());
-		torversuchService.versucheTorversuchHalten(versuchteTorversuch);
+		torversuchService.erstelleSpielEreignisAusTorversuch(versuchteTorversuch);
 		
 		return "redirect:/liveticker";
 	}

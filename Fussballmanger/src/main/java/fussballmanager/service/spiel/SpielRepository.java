@@ -19,4 +19,6 @@ public interface SpielRepository extends JpaRepository<Spiel, Long> {
 	List<Spiel> findBySaisonAndSpieltag(Saison saison, Spieltag spieltag);
 	
 	List<Spiel> findBySaisonAndSpieltagAndSpielTyp(Saison saison, Spieltag spieltag, SpieleTypen spielTyp);
+	
+	List<Spiel> findBySaison(Saison saison);
 }
