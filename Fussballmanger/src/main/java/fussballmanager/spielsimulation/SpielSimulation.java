@@ -25,6 +25,9 @@ import fussballmanager.service.spieler.Spieler;
 import fussballmanager.service.spieler.SpielerService;
 import fussballmanager.service.team.AusrichtungsTypen;
 import fussballmanager.service.team.TeamService;
+import fussballmanager.spielsimulation.torversuch.Torversuch;
+import fussballmanager.spielsimulation.torversuch.TorversuchService;
+import fussballmanager.spielsimulation.torversuch.TorversuchTypen;
 
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static java.lang.Math.toIntExact;
@@ -55,6 +58,9 @@ public class SpielSimulation {
 	
 	@Autowired
 	SaisonService saisonService;
+	
+	@Autowired
+	TorversuchService torversuchService;
 	
 	Random random = new Random();
 	
@@ -142,14 +148,18 @@ public class SpielSimulation {
 			wahrscheinlichkeitTorVersuch = wahrscheinlichkeitTorVersuch * 100;
 			
 			if(zufallsZahl < wahrscheinlichkeitTorVersuch) {
-				SpielEreignis spielEreignis = new SpielEreignis();
-				spielEreignis.setSpielereignisTyp(SpielEreignisTypen.TORVERSUCH);
-				spielEreignis.setSpieler(spielerService.findeAlleSpielerEinesTeams(spiel.getHeimmannschaft()).get(0));
-				spielEreignis.setTeam(spiel.getHeimmannschaft());
-				spielEreignis.setSpielminute(spielminute);
+				Torversuch torversuch = new Torversuch();
+				//TODO richtung
+				torversuch.setRichtung(TorversuchTypen.LINKS);
+				//TODO SPieler bestimmen
+				torversuch.setTorschuetze(spielerService.findeAlleSpielerEinesTeams(spiel.getHeimmannschaft()).get(0));
+				torversuch.setAngreifer(spiel.getHeimmannschaft());
+				torversuch.setTorwart(spielerService.findeAlleSpielerEinesTeams(spiel.getGastmannschaft()).get(0));
+				torversuch.setVerteidiger(spiel.getGastmannschaft());
+				torversuch.setSpiel(spiel);
+				torversuch.setSpielminute(spielminute);
 				
-				spiel.addSpielEreignis(spielEreignis);
-				spielService.aktualisiereSpiel(spiel);
+				torversuchService.legeTorversuchAn(torversuch);
 			}	
 		} else {
 			ausrichtungsTypAngreifer = spiel.getGastmannschaft().getAusrichtungsTyp();
@@ -167,14 +177,18 @@ public class SpielSimulation {
 			wahrscheinlichkeitTorVersuch = wahrscheinlichkeitTorVersuch * 100;
 			
 			if(zufallsZahl < wahrscheinlichkeitTorVersuch) {
-				SpielEreignis spielEreignis = new SpielEreignis();
-				spielEreignis.setSpielereignisTyp(SpielEreignisTypen.TORVERSUCH);
-				spielEreignis.setSpieler(spielerService.findeAlleSpielerEinesTeams(spiel.getHeimmannschaft()).get(0));
-				spielEreignis.setTeam(spiel.getGastmannschaft());
-				spielEreignis.setSpielminute(spielminute);
+				Torversuch torversuch = new Torversuch();
+				//TODO richtung
+				torversuch.setRichtung(TorversuchTypen.LINKS);
+				//TODO SPieler bestimmen
+				torversuch.setTorschuetze(spielerService.findeAlleSpielerEinesTeams(spiel.getGastmannschaft()).get(0));
+				torversuch.setAngreifer(spiel.getGastmannschaft());
+				torversuch.setTorwart(spielerService.findeAlleSpielerEinesTeams(spiel.getHeimmannschaft()).get(0));
+				torversuch.setVerteidiger(spiel.getHeimmannschaft());
+				torversuch.setSpiel(spiel);
+				torversuch.setSpielminute(spielminute);
 				
-				spiel.addSpielEreignis(spielEreignis);
-				spielService.aktualisiereSpiel(spiel);
+				torversuchService.legeTorversuchAn(torversuch);
 			} 
 		}
 		

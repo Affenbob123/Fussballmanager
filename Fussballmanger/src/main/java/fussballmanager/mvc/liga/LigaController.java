@@ -224,8 +224,8 @@ public class LigaController {
 		spielEintrag.setId(spiel.getId());
 		spielEintrag.setSpieltag(spiel.getSpieltag().getSpieltagNummer());
 		spielEintrag.setSpielbeginn(spiel.getSpielTyp().getSpielBeginn());
-		spielEintrag.setNameHeimmannschaft(spiel.getHeimmannschaft().getName());
-		spielEintrag.setNameGastmannschaft(spiel.getGastmannschaft().getName());
+		spielEintrag.setHeimmannschaft(spiel.getHeimmannschaft());
+		spielEintrag.setGastmannschaft(spiel.getGastmannschaft());
 		spielEintrag.setStaerkeHeimmannschaft(spiel.getHeimmannschaft().getStaerke());
 		spielEintrag.setStaerkeGastmannschaft(spiel.getGastmannschaft().getStaerke());
 		

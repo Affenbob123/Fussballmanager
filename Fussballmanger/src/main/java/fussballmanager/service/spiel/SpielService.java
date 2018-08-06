@@ -45,6 +45,17 @@ public class SpielService {
 		return spielRepository.getOne(id);
 	}
 	
+	public Spiel findeSpielEinesTeamsInSaisonUndSpieltagUndSpielTyp(Team team, Saison saison, Spieltag spieltag, SpieleTypen spielTyp) {
+		List<Spiel> spiele = findeAlleSpieleEinerSaisonUndSpieltagesNachSpielTyp(saison, spieltag, spielTyp);
+		
+		for(Spiel spiel : spiele) {
+			if(spiel.getHeimmannschaft().equals(team) || spiel.getGastmannschaft().equals(team)) {
+				return spiel;
+			}
+		}
+		return null;
+	}
+	
 	public List<Spiel> findeAlleSpiele() {
 		return spielRepository.findAll();
 	}
@@ -222,7 +233,7 @@ public class SpielService {
 		int toreGastmannschaftZurHalbzeit = 0;
 		
 		for(SpielEreignis spielEreignis : spiel.getSpielEreignisse()) {
-			if(spielEreignis.getTeam().equals(spiel.getHeimmannschaft())) {
+			if(spielEreignis.getAngreifer().equals(spiel.getHeimmannschaft())) {
 				if(spielEreignis.getSpielereignisTyp().equals(SpielEreignisTypen.TORVERSUCHGETROFFEN)) {
 					toreHeimmannschaft++;
 					if(spielEreignis.getSpielminute() <= 45) {

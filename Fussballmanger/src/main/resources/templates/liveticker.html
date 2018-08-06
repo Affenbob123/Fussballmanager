@@ -1,9 +1,66 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<meta http-equiv="refresh" content="30">
 		<link rel="stylesheet" href="/liveticker.css" />
+		<head th:insert="fragments/header :: head" />
 	</head>
 	<body>
-		kldfjgskdlöfg
+		<h2>Liveticker</h2>
+		<div class="container" id="containerBody">
+			<div class="col-md-12">
+				<div th:if="${torversuch}">
+					<p th:text="${torversuch.spiel.heimmannschaft.name}"></p> - 
+					<p th:text="${torversuch.spiel.gastmannschaft.name}"></p>
+					<form method="POST" th:action="@{/liveticker}" th:object="${torversuch}">
+						<label>Richtung:</label>
+						<select class="custom-select" th:field="*{richtungVomUser}">
+							<option
+								  th:each="torversuchTyp : ${torversuchTypen}" 
+								  th:text="${torversuchTyp.bezeichnung}"
+								  th:value="${torversuchTyp}">
+							</option>
+						</select>
+						<input type="hidden" th:field="*{id}">
+						<button type="submit"
+							name="submit" value="value"
+							class="btn btn-sm btn-success button-toggle" th:text="Submit" >
+						</button>
+					</form>
+				</div>
+				<div th:each="livetickerEintrag : ${livetickerEintraege}">
+					<table class="table table-hover" >
+						<thead>
+							<tr class="table-active">
+								<th scope="col">Spieltag</th>
+								<th scope="col">Spielbeginn</th>
+								<th scope="col">Heimmannschaft</th>
+								<th scope="col">Ergebnis</th>
+								<th scope="col">Gastmannschaft</th>
+							</tr>
+						</thead>
+						<tr class="">
+							<td th:text="${livetickerEintrag.spielEintrag.spieltag}" />
+							<td th:text="${livetickerEintrag.spielEintrag.spielbeginnToString()}" />
+							<td>
+								<a th:text="${livetickerEintrag.spielEintrag.heimmannschasftUndStaerkeToString()}" 
+								th:href="@{/team/}+${livetickerEintrag.spielEintrag.heimmannschaft.id}"></a>
+							</td>
+							<td class="ergebnisInTabelle">
+								<span th:text="${livetickerEintrag.spielEintrag.spielErgebnisToString()}"></span><br>
+								<span th:text="${livetickerEintrag.spielEintrag.spielErgebnisHalbzeitToString()}"></span>
+							</td>
+							<td>
+								<a th:text="${livetickerEintrag.spielEintrag.gastmannschasftUndStaerkeToString()}" 
+								th:href="@{/team/}+${livetickerEintrag.spielEintrag.gastmannschaft.id}"></a>
+							</td>
+						</tr>
+					</table>
+					<div class="container" th:each="spielEreignisEintrag : ${livetickerEintrag.spielEreignisEintraege}">
+							<span th:text="${spielEreignisEintrag.spielEreignisEintragToString()}"></span>
+					</div>
+				</div>
+			</div>
+		</div>
 	</body>
 </html>

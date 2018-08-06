@@ -18,6 +18,7 @@ import fussballmanager.service.liga.LigaService;
 import fussballmanager.service.saison.SaisonService;
 import fussballmanager.service.saison.spieltag.SpieltagService;
 import fussballmanager.service.spiel.SpielService;
+import fussballmanager.service.spiel.SpieleTypen;
 import fussballmanager.service.spiel.spielereignisse.SpielEreignisService;
 import fussballmanager.service.spieler.SpielerService;
 import fussballmanager.service.team.TeamService;
@@ -72,7 +73,11 @@ public class FussballmanagerErstellung {
 		if(aktuellesDatum.isAfter(erstellDatum) || aktuellesDatum.isEqual(erstellDatum)) {
 			erstelleSpiel();
 		}
-}
+		
+		for(int i = 0; i < 90; i++) {
+			spielSimulation.simuliereSpielMinuteAllerSpieleErsteHalbzeit(SpieleTypen.LIGASPIEL);
+		}
+	}
 	
 	public void erstelleSpiel() {
 		if(landService.findeAlleLaender().size() == 0) {
@@ -82,7 +87,8 @@ public class FussballmanagerErstellung {
 			}
 			saisonService.ersteSaisonErstellen();
 			spieltagService.checkAktuellerSpieltag();
-			//spielerService.erstelleSpielerFuerTransfermarkt();
+			spielerService.erstelleSpielerFuerTransfermarkt();
+
 		}
 	}
 }

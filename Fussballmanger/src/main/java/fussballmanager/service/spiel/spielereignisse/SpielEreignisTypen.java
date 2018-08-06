@@ -2,7 +2,6 @@ package fussballmanager.service.spiel.spielereignisse;
 
 public enum SpielEreignisTypen {
 	TORVERSUCHGEHALTEN("Torversuch wurde gehalten!"),
-	TORVERSUCH("Torversuch!"),
 	TORVERSUCHGETROFFEN("Tor wurde geschossen!"),
 	GELBEKARTE("gelbe Karte"),
 	GELBROTEKARTE("gelbrote Karte"),

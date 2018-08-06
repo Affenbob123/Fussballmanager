@@ -2,6 +2,8 @@ package fussballmanager.mvc.spiel;
 
 import java.time.LocalTime;
 
+import fussballmanager.service.team.Team;
+
 public class SpielEintrag {
 	
 	private long id;
@@ -10,9 +12,9 @@ public class SpielEintrag {
 	
 	private LocalTime spielbeginn;
 	
-	private String nameHeimmannschaft;
+	private Team heimmannschaft;
 	
-	private String nameGastmannschaft;
+	private Team gastmannschaft;
 	
 	private int toreHeimmannschaft;
 	
@@ -50,20 +52,20 @@ public class SpielEintrag {
 		this.spielbeginn = spielbeginn;
 	}
 
-	public String getNameHeimmannschaft() {
-		return nameHeimmannschaft;
+	public Team getHeimmannschaft() {
+		return heimmannschaft;
 	}
 
-	public void setNameHeimmannschaft(String nameHeimmannschaft) {
-		this.nameHeimmannschaft = nameHeimmannschaft;
+	public void setHeimmannschaft(Team heimmannschaft) {
+		this.heimmannschaft = heimmannschaft;
 	}
 
-	public String getNameGastmannschaft() {
-		return nameGastmannschaft;
+	public Team getGastmannschaft() {
+		return gastmannschaft;
 	}
 
-	public void setNameGastmannschaft(String nameGastmannschaft) {
-		this.nameGastmannschaft = nameGastmannschaft;
+	public void setGastmannschaft(Team gastmannschaft) {
+		this.gastmannschaft = gastmannschaft;
 	}
 
 	public int getToreHeimmannschaft() {
@@ -147,14 +149,14 @@ public class SpielEintrag {
 	public String heimmannschasftUndStaerkeToString() {
 		String s = "";
 		
-		s = nameHeimmannschaft + " (" + staerkeHeimmannschaft + ")";
+		s = heimmannschaft.getName() + " (" + staerkeHeimmannschaft + ")";
 		return s;
 	}
 	
 	public String gastmannschasftUndStaerkeToString() {
 		String s = "";
 		
-		s = nameGastmannschaft + " (" + staerkeGastmannschaft + ")";
+		s = gastmannschaft.getName() + " (" + staerkeGastmannschaft + ")";
 		return s;
 	}
 }

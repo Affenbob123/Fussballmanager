@@ -21,6 +21,7 @@ import fussballmanager.service.saison.spieltag.SpieltagService;
 import fussballmanager.service.spiel.Spiel;
 import fussballmanager.service.spiel.SpielService;
 import fussballmanager.service.spiel.spielereignisse.SpielEreignis;
+import fussballmanager.service.spiel.spielereignisse.SpielEreignisTypen;
 import fussballmanager.service.user.User;
 import fussballmanager.service.user.UserService;
 
@@ -58,7 +59,8 @@ public class SpielController {
 		List<SpielEreignis> alleSpielEreignisseEinesSpiels = spielService.findeSpiel(id).getSpielEreignisse();
 		LOG.info("{}", alleSpielEreignisseEinesSpiels);
 		for (SpielEreignis spielEreignis : alleSpielEreignisseEinesSpiels) {
-			spielEreignisEintraege.add(erstelleEinenSpielEreignisEintrag(spielEreignis));
+				spielEreignisEintraege.add(erstelleEinenSpielEreignisEintrag(spielEreignis));
+			
 		}
 		Collections.sort(spielEreignisEintraege);
 
@@ -67,12 +69,20 @@ public class SpielController {
 	}
 	
 	public SpielEreignisEintrag erstelleEinenSpielEreignisEintrag(SpielEreignis spielEreignis) {
-		SpielEreignisEintrag spielEreignisEintrag = new SpielEreignisEintrag();		
+		SpielEreignisEintrag spielEreignisEintrag = new SpielEreignisEintrag();
 		
+		if(spielEreignis.getSpielereignisTyp().equals(SpielEreignisTypen.TORVERSUCHGEHALTEN)) {
+			spielEreignisEintrag.setSpielerName(spielEreignis.getTorwart().getName());
+			spielEreignisEintrag.setTeam(spielEreignis.getVerteidiger());
+		}
+		
+		if(spielEreignis.getSpielereignisTyp().equals(SpielEreignisTypen.TORVERSUCHGETROFFEN)) {
+			spielEreignisEintrag.setSpielerName(spielEreignis.getTorschuetze().getName());
+			spielEreignisEintrag.setTeam(spielEreignis.getAngreifer());
+		}
 		spielEreignisEintrag.setSpielminute(spielEreignis.getSpielminute());
-		spielEreignisEintrag.setSpielerName(spielEreignis.getSpieler().getName());
-		spielEreignisEintrag.setTeamName(spielEreignis.getTeam().getName());
 		spielEreignisEintrag.setSpielEreignisName(spielEreignis.getSpielereignisTyp().getBeschreibung());
+		spielEreignisEintrag.setSpielEreignisTyp(spielEreignis.getSpielereignisTyp());
 		
 		return spielEreignisEintrag;
 	}
@@ -104,8 +114,8 @@ public class SpielController {
 		spielEintrag.setId(spiel.getId());
 		spielEintrag.setSpieltag(spiel.getSpieltag().getSpieltagNummer());
 		spielEintrag.setSpielbeginn(spiel.getSpielTyp().getSpielBeginn());
-		spielEintrag.setNameHeimmannschaft(spiel.getHeimmannschaft().getName());
-		spielEintrag.setNameGastmannschaft(spiel.getGastmannschaft().getName());
+		spielEintrag.setHeimmannschaft(spiel.getHeimmannschaft());
+		spielEintrag.setGastmannschaft(spiel.getGastmannschaft());
 		spielEintrag.setStaerkeHeimmannschaft(spiel.getHeimmannschaft().getStaerke());
 		spielEintrag.setStaerkeGastmannschaft(spiel.getGastmannschaft().getStaerke());
 		

@@ -31,7 +31,7 @@
 								th:href="@{/liga/}+${aktuellesTeam.land.getLandNameTyp().getName()}+'/'+${aktuellesTeam.liga.ligaNameTyp.getName()}">Tabelle</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" onClick="window.open('liveticker','liveticker','resizable,height=800,width=600'); return false;"
+								<a class="nav-link" onClick="window.open('/liveticker','liveticker','resizable,height=600,width=900'); return false;"
 								href="/liveticker" >Liveticker</a> 
 							</li>
 							<li class="nav-item">
@@ -73,7 +73,6 @@
 		<script
 			src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
-		<script src = "http://rvera.github.io/image-picker/image-picker/image-picker.min.js" type = "text/javascript"></script>
 	</th:block>
 </body>
 </html>

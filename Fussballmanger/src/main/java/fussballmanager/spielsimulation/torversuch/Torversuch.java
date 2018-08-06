@@ -1,4 +1,4 @@
-package fussballmanager.service.spiel.spielereignisse;
+package fussballmanager.spielsimulation.torversuch;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,46 +11,43 @@ import fussballmanager.service.spieler.Spieler;
 import fussballmanager.service.team.Team;
 
 @Entity
-public class SpielEreignis {
+public class Torversuch {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE)
-	private long id;
+	Long id;
 	
-	private int Spielminute;
-	
-	@OneToOne
-	private Spieler torschuetze;
+	int spielminute;
 	
 	@OneToOne
-	private Spieler torwart;
+	Spieler torschuetze;
 	
 	@OneToOne
-	private Team angreifer;
+	Spieler torwart;
 	
 	@OneToOne
-	private Team verteidiger;
+	Team angreifer;
 	
-	SpielEreignisTypen spielereignisTyp;
+	@OneToOne
+	Team verteidiger;
 	
-	public SpielEreignis() {
-
-	}
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
+	@OneToOne
+	Spiel spiel;
+	
+	TorversuchTypen richtung;
+	
+	TorversuchTypen richtungVomUser;
+	
+	public Torversuch() {
+		
 	}
 
 	public int getSpielminute() {
-		return Spielminute;
+		return spielminute;
 	}
 
 	public void setSpielminute(int spielminute) {
-		Spielminute = spielminute;
+		this.spielminute = spielminute;
 	}
 
 	public Spieler getTorschuetze() {
@@ -85,11 +82,35 @@ public class SpielEreignis {
 		this.verteidiger = verteidiger;
 	}
 
-	public SpielEreignisTypen getSpielereignisTyp() {
-		return spielereignisTyp;
+	public TorversuchTypen getRichtung() {
+		return richtung;
 	}
 
-	public void setSpielereignisTyp(SpielEreignisTypen spielereignisTyp) {
-		this.spielereignisTyp = spielereignisTyp;
+	public void setRichtung(TorversuchTypen richtung) {
+		this.richtung = richtung;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Spiel getSpiel() {
+		return spiel;
+	}
+
+	public void setSpiel(Spiel spiel) {
+		this.spiel = spiel;
+	}
+
+	public TorversuchTypen getRichtungVomUser() {
+		return richtungVomUser;
+	}
+
+	public void setRichtungVomUser(TorversuchTypen richtungVomUser) {
+		this.richtungVomUser = richtungVomUser;
 	}
 }

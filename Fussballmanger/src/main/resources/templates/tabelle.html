@@ -51,14 +51,18 @@
 				<tr class="" th:each="spielEintrag : ${findeAlleSpieleEinerLigaEinerSaisonEinesSpieltages}">
 					<td th:text="${spielEintrag.spieltag}" />
 					<td th:text="${spielEintrag.spielbeginnToString()}" />
-					<td th:text="${spielEintrag.heimmannschasftUndStaerkeToString()}" />
+					<td>
+						<a th:text="${spielEintrag.heimmannschasftUndStaerkeToString()}" th:href="@{/team/}+${spielEintrag.heimmannschaft.id}"></a>
+					</td>
 					<td class="ergebnisInTabelle">
 						<a class="" th:href="@{/spiel/}+${spielEintrag.id}">
 							<span th:text="${spielEintrag.spielErgebnisToString()}"></span><br>
 							<span th:text="${spielEintrag.spielErgebnisHalbzeitToString()}"></span>
 						</a>
 					</td>
-					<td th:text="${spielEintrag.gastmannschasftUndStaerkeToString()}" />
+					<td>
+						<a th:text="${spielEintrag.gastmannschasftUndStaerkeToString()}" th:href="@{/team/}+${spielEintrag.gastmannschaft.id}"></a>
+					</td>
 				</tr>
 			</table>
 			<p>Saison:</p>

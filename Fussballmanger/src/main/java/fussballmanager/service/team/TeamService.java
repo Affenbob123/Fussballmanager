@@ -64,6 +64,10 @@ public class TeamService {
 		return teamRepository.findByUser(user);
 	}
 	
+	public List<Team> findeAlleTeamsEinesUsersImLiveticker(User user, boolean imLiveticker) {
+		return teamRepository.findByUserAndImLiveticker(user, imLiveticker);
+	}
+	
 	public List<Team> findeAlleTeamsEinerLiga(Liga liga) {		
 		return teamRepository.findByLiga(liga);
 	}
@@ -419,7 +423,7 @@ public class TeamService {
 		for(Spiel spiel : alleSpieleEinesTeams) {
 			if(spiel.getSaison().equals(saison)) {
 				for(SpielEreignis spielEreignis :spiel.getSpielEreignisse()) {
-					if(spielEreignis.getTeam().equals(team)) {
+					if(spielEreignis.getVerteidiger().equals(team)) {
 						if(spielEreignis.getSpielereignisTyp().equals(SpielEreignisTypen.GELBEKARTE)) {
 							gelbeKarten++;
 						}
@@ -438,7 +442,7 @@ public class TeamService {
 		for(Spiel spiel : alleSpieleEinesTeams) {
 			if(spiel.getSaison().equals(saison)) {
 				for(SpielEreignis spielEreignis :spiel.getSpielEreignisse()) {
-					if(spielEreignis.getTeam().equals(team)) {
+					if(spielEreignis.getVerteidiger().equals(team)) {
 						if(spielEreignis.getSpielereignisTyp().equals(SpielEreignisTypen.GELBROTEKARTE)) {
 							gelbeRoteKarten++;
 						}
@@ -457,7 +461,7 @@ public class TeamService {
 		for(Spiel spiel : alleSpieleEinesTeams) {
 			if(spiel.getSaison().equals(saison)) {
 				for(SpielEreignis spielEreignis :spiel.getSpielEreignisse()) {
-					if(spielEreignis.getTeam().equals(team)) {
+					if(spielEreignis.getVerteidiger().equals(team)) {
 						if(spielEreignis.getSpielereignisTyp().equals(SpielEreignisTypen.ROTEKARTE)) {
 							roteKarten++;
 						}

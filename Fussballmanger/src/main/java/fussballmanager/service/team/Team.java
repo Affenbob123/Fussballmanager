@@ -45,6 +45,8 @@ public class Team implements Comparable<Team> {
 	
 	private double staerke = 0.0;
 	
+	private boolean imLiveticker = true;
+	
 	public Team(Land land, String name, User user, Liga liga) {
 		this.land = land;
 		this.name = name;
@@ -159,6 +161,14 @@ public class Team implements Comparable<Team> {
 
 	public void setStaerke(double staerke) {
 		this.staerke = staerke;
+	}
+
+	public boolean isImLiveticker() {
+		return imLiveticker;
+	}
+
+	public void setImLiveticker(boolean imLiveticker) {
+		this.imLiveticker = imLiveticker;
 	}
 
 	@Override
