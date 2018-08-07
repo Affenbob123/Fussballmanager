@@ -6,7 +6,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-import fussballmanager.mvc.liga.LigaEintrag;
 import fussballmanager.service.liga.Liga;
 import fussballmanager.service.saison.Saison;
 import fussballmanager.service.team.Team;
