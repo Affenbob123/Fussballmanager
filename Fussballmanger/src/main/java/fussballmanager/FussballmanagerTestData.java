@@ -27,6 +27,7 @@ import fussballmanager.service.spiel.Spiel;
 import fussballmanager.service.spiel.SpielService;
 import fussballmanager.service.spiel.SpieleTypen;
 import fussballmanager.service.spieler.SpielerService;
+import fussballmanager.service.spieler.spielerzuwachs.SpielerZuwachsService;
 import fussballmanager.service.tabelle.TabellenEintragService;
 import fussballmanager.service.team.Team;
 import fussballmanager.service.team.TeamService;
@@ -71,6 +72,9 @@ public class FussballmanagerTestData {
 	
 	@Autowired
 	TabellenEintragService tabellenEintragService;
+	
+	@Autowired
+	SpielerZuwachsService spielerZuwachsService;
 	
 	String LoginA = "a";
 		
@@ -137,5 +141,11 @@ public class FussballmanagerTestData {
 	public void erstelleNeueSpielerFuerTransfermarkt() {
 		spielerService.loescheSpielerVomTransfermarkt();
 		spielerService.erstelleSpielerFuerTransfermarkt();
+	}
+	
+	@Scheduled(cron = "0 * * * * ?", zone="Europe/Berlin")
+	public void wechsleDenSpieltag() {
+		spieltagService.wechsleAktuellenSpieltag();
+		spielerZuwachsService.legeSpielerZuwachsFuerAlleSpielerAn();
 	}
 }

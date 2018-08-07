@@ -42,9 +42,6 @@ public class Spieler implements Comparable<Spieler> {
 	
 	private int erfahrung;
 	
-	@OneToMany
-	private List<SpielerZuwachs> spielerZuwachs;
-	
 	private int talentwert;
 	
 	private boolean talentwertErmittelt;
@@ -147,14 +144,6 @@ public class Spieler implements Comparable<Spieler> {
 
 	public void setErfahrung(int erfahrung) {
 		this.erfahrung = erfahrung;
-	}
-
-	public List<SpielerZuwachs> getSpielerZuwachs() {
-		return spielerZuwachs;
-	}
-
-	public void setSpielerZuwachs(List<SpielerZuwachs> spielerZuwachs) {
-		this.spielerZuwachs = spielerZuwachs;
 	}
 
 	public int getTalentwert() {

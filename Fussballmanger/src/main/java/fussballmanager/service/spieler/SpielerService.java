@@ -50,6 +50,10 @@ public class SpielerService {
 		return alleSpielerEinesTeams;
 	}
 	
+	public List<Spieler> findeAlleSpielerMitTeam() {
+		return spielerRepository.findByTeamIsNotNull();
+	}
+	
 	public List<Spieler> findeAlleSpielerNachAufstellungsPositionsTyp(AufstellungsPositionsTypen aufstellungsPositionsTyp) {
 		return spielerRepository.findByAufstellungsPositionsTyp(aufstellungsPositionsTyp);
 	}
@@ -128,6 +132,18 @@ public class SpielerService {
 		spieler.getStaerke().setSchiessen(spieler.getReinStaerke().getSchiessen() * staerkeAenderungsFaktor);
 		spieler.getStaerke().setVerteidigen(spieler.getReinStaerke().getVerteidigen() * staerkeAenderungsFaktor);
 		spieler.getStaerke().setDurchschnittsStaerke(spieler.getReinStaerke().getDurchschnittsStaerke() * staerkeAenderungsFaktor);
+		
+		aktualisiereSpieler(spieler);
+	}
+	
+	public void kompletteReinStaerkeAendern(Spieler spieler, double zuwachs) {
+		spieler.getReinStaerke().setDribbeln(spieler.getReinStaerke().getDribbeln() + zuwachs);
+		spieler.getReinStaerke().setGeschwindigkeit(spieler.getReinStaerke().getGeschwindigkeit() + zuwachs);
+		spieler.getReinStaerke().setPassen(spieler.getReinStaerke().getPassen() + zuwachs);
+		spieler.getReinStaerke().setPhysis(spieler.getReinStaerke().getPhysis() + zuwachs);
+		spieler.getReinStaerke().setSchiessen(spieler.getReinStaerke().getSchiessen() + zuwachs);
+		spieler.getReinStaerke().setVerteidigen(spieler.getReinStaerke().getVerteidigen() + zuwachs);
+		spieler.getReinStaerke().setDurchschnittsStaerke(spieler.getReinStaerke().getDurchschnittsStaerke() + zuwachs);
 		
 		aktualisiereSpieler(spieler);
 	}

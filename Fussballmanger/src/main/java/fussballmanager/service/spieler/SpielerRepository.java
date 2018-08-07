@@ -23,4 +23,6 @@ public interface SpielerRepository extends JpaRepository<Spieler, Long> {
 	
 	List<Spieler> findByTransfermarktAndAlterBetweenAndPreisBetween(boolean transfermarkt,
 			int minimalesAlter, int maximalesAlter, long minimalerPreis, long maximalerPreis);
+
+	List<Spieler> findByTeamIsNotNull();
 }
