@@ -86,9 +86,8 @@ public class TorversuchService {
 		spielEreignisService.legeSpielEreignisAn(spielEreignis);
 	}
 	
-	@Scheduled(fixedRate=30000)
 	public void ueberPruefeObTorversucheNochAktuell() {
-		LocalTime aktuelleZeit = LocalTime.now(ZoneId.of("Europe/Berlin")).minusSeconds(10);
+		LocalTime aktuelleZeit = LocalTime.now(ZoneId.of("Europe/Berlin"));
 		List<Torversuch> alleTorversuche = findeAlleTorversuche();
 		
 		for(Torversuch torversuch : alleTorversuche) {

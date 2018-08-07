@@ -27,6 +27,7 @@ import fussballmanager.service.spieler.AufstellungsPositionsTypen;
 import fussballmanager.service.spieler.RollenTypen;
 import fussballmanager.service.spieler.Spieler;
 import fussballmanager.service.spieler.SpielerService;
+import fussballmanager.service.tabelle.TabellenEintragService;
 import fussballmanager.service.user.User;
 
 @Service
@@ -49,6 +50,9 @@ public class TeamService {
 	
 	@Autowired
 	SpieltagService spieltagService;
+	
+	@Autowired
+	TabellenEintragService tabellenEintragService;
 	
 	public Team findeTeam(Long id) {
 		return teamRepository.getOne(id);
@@ -99,7 +103,6 @@ public class TeamService {
 			String standardName = sb.toString();
 			
 			legeTeamAn(new Team(liga.getLand(), standardName, null, liga));
-			//LOG.info("DummyHauptTeam: {} wurde in der Liga: {} angelegt.", standardName, liga.getLigaNameTyp());
 		}
 	}
 
@@ -350,10 +353,11 @@ public class TeamService {
 	public int unentschiedenEinesTeamsInEinerSaison(Team team, Saison saison) {
 		int unentschieden = 0;
 		List<Spiel> alleSpieleEinesTeams = spielService.findeAlleAbgeschlossenenSpieleEinesTeamsNachSpielTypUndSaison(team, SpieleTypen.LIGASPIEL, saison);
+		int aktuellerSpieltagNummer = spieltagService.findeAktuellenSpieltag().getSpieltagNummer();
 		
 		for(Spiel spiel : alleSpieleEinesTeams) {
 			if(spiel.getSaison().equals(saison)) {
-				if(spiel.getSpieltag().getSpieltagNummer() <= spieltagService.findeAktuellenSpieltag().getSpieltagNummer()) {
+				if(spiel.getSpieltag().getSpieltagNummer() <= aktuellerSpieltagNummer) {
 					if(spiel.getSpielTyp().getSpielBeginn().isBefore(LocalTime.now(ZoneId.of("Europe/Berlin")))) {
 						if(spiel.getToreHeimmannschaft() == spiel.getToreGastmannschaft()) {
 							unentschieden++;

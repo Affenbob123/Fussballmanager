@@ -23,6 +23,7 @@ import fussballmanager.service.spiel.spielereignisse.SpielEreignisService;
 import fussballmanager.service.spiel.spielereignisse.SpielEreignisTypen;
 import fussballmanager.service.spieler.Spieler;
 import fussballmanager.service.spieler.SpielerService;
+import fussballmanager.service.tabelle.TabellenEintragService;
 import fussballmanager.service.team.AusrichtungsTypen;
 import fussballmanager.service.team.TeamService;
 import fussballmanager.spielsimulation.torversuch.Torversuch;
@@ -61,6 +62,9 @@ public class SpielSimulation {
 	
 	@Autowired
 	TorversuchService torversuchService;
+	
+	@Autowired
+	TabellenEintragService tabellenEintragService;
 	
 	Random random = new Random();
 	
@@ -106,7 +110,6 @@ public class SpielSimulation {
 		
 		for(Spiel spiel : alleSpieleEinesSpieltages) {
 			simuliereSpielminuteEinesSpieles(spiel,spielminute);
-			spielService.anzahlToreEinesSpielSetzen(spiel);
 		}
 	}
 	
@@ -151,7 +154,6 @@ public class SpielSimulation {
 			
 			if(zufallsZahl < wahrscheinlichkeitTorVersuch) {
 				Torversuch torversuch = new Torversuch();
-				//TODO richtung
 				torversuch.setRichtung(zufaelligeTorversuchRichtung());
 				//TODO SPieler bestimmen
 				torversuch.setTorschuetze(spielerService.findeAlleSpielerEinesTeams(spiel.getHeimmannschaft()).get(0));
@@ -164,6 +166,14 @@ public class SpielSimulation {
 				
 				LOG.info("tor heim");
 				torversuchService.legeTorversuchAn(torversuch);
+				torversuchService.ueberPruefeObTorversucheNochAktuell();
+				
+				//aktualisiert spiel und die Tabelle
+				spielService.anzahlToreEinesSpielSetzen(spiel);
+				tabellenEintragService.einenTabellenEintragAktualisieren(
+						tabellenEintragService.findeTabellenEintragDurchTeamUndSaison(spiel.getHeimmannschaft(), saisonService.findeAktuelleSaison()));
+				tabellenEintragService.einenTabellenEintragAktualisieren(
+						tabellenEintragService.findeTabellenEintragDurchTeamUndSaison(spiel.getGastmannschaft(), saisonService.findeAktuelleSaison()));
 			}	
 		} else {
 			ausrichtungsTypAngreifer = spiel.getGastmannschaft().getAusrichtungsTyp();
@@ -182,7 +192,6 @@ public class SpielSimulation {
 			
 			if(zufallsZahl < wahrscheinlichkeitTorVersuch) {
 				Torversuch torversuch = new Torversuch();
-				//TODO richtung
 				torversuch.setRichtung(zufaelligeTorversuchRichtung());
 				//TODO SPieler bestimmen
 				torversuch.setTorschuetze(spielerService.findeAlleSpielerEinesTeams(spiel.getGastmannschaft()).get(0));
@@ -193,8 +202,16 @@ public class SpielSimulation {
 				torversuch.setSpielminute(spielminute);
 				torversuch.setErstellZeit(aktuelleZeit);
 				
-				LOG.info("tor gast: {}, {},");
+				LOG.info("tor gast");
 				torversuchService.legeTorversuchAn(torversuch);
+				torversuchService.ueberPruefeObTorversucheNochAktuell();
+				
+				//aktualisiert spiel und die Tabelle
+				spielService.anzahlToreEinesSpielSetzen(spiel);
+				tabellenEintragService.einenTabellenEintragAktualisieren(
+						tabellenEintragService.findeTabellenEintragDurchTeamUndSaison(spiel.getHeimmannschaft(), saisonService.findeAktuelleSaison()));
+				tabellenEintragService.einenTabellenEintragAktualisieren(
+						tabellenEintragService.findeTabellenEintragDurchTeamUndSaison(spiel.getGastmannschaft(), saisonService.findeAktuelleSaison()));
 			} 
 		}
 		

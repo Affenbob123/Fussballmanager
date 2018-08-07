@@ -104,12 +104,12 @@
 						<th scope="col">Punkte</th>
 					</tr>
 				</thead>
-				<tr th:if="${ligaName} != '1'" class="" th:each="eintrag, stat : ${alleTeamsDerAktuellenLiga}" 
+				<tr th:if="${ligaName} != '1'" class="" th:each="eintrag, stat : ${alleTabellenEintraegeEinerLiga}" 
 					th:classappend="${(stat.index == 0 or stat.index == 1 ? 'table-success' : '') + 
 					(stat.index == 14 or stat.index == 15 or stat.index == 16 or stat.index == 17 ? 'table-danger' : '')}" >
 					<td th:text="${eintrag.platzierung}" />
 					<td> 
-						<a class="" th:text="${eintrag.teamName}" th:href="@{/team/}+${eintrag.id}"></a>
+						<a class="" th:text="${eintrag.team.name}" th:href="@{/team/}+${eintrag.team.id}"></a>
 					</td>
 					<td th:text="${eintrag.spiele}" />
 					<td th:text="${eintrag.siege}" />
@@ -120,13 +120,13 @@
 					<td th:text="${eintrag.torDifferenz}" />
 					<td th:text="${eintrag.punkte}" />
 				</tr>
-				<tr th:if="${ligaName} == '1'" class="" th:each="eintrag, stat : ${alleTeamsDerAktuellenLiga}" 
+				<tr th:if="${ligaName} == '1'" class="" th:each="eintrag, stat : ${alleTabellenEintraegeEinerLiga}" 
 					th:classappend="${(stat.index == 0 or stat.index == 1 ? 'table-success' : '') + 
 					(stat.index == 2 or stat.index == 3 ? 'table-primary' : '') +
 					(stat.index == 14 or stat.index == 15 or stat.index == 16 or stat.index == 17 ? 'table-danger' : '')}" >
 					<td th:text="${eintrag.platzierung}" />
 					<td> 
-						<a class="" th:text="${eintrag.teamName}" th:href="@{/team/}+${eintrag.id}"></a>
+						<a class="" th:text="${eintrag.team.name}" th:href="@{/team/}+${eintrag.team.id}"></a>
 					</td>
 					<td th:text="${eintrag.spiele}" />
 					<td th:text="${eintrag.siege}" />

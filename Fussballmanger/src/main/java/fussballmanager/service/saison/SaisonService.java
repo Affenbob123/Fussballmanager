@@ -12,6 +12,7 @@ import fussballmanager.service.liga.Liga;
 import fussballmanager.service.liga.LigaService;
 import fussballmanager.service.saison.spieltag.SpieltagService;
 import fussballmanager.service.spiel.SpielService;
+import fussballmanager.service.tabelle.TabellenEintragService;
 
 @Service
 @Transactional
@@ -30,6 +31,9 @@ public class SaisonService {
 	
 	@Autowired
 	SpieltagService spieltagService;
+	
+	@Autowired
+	TabellenEintragService tabellenEintragService;
 	
 	public synchronized void ersteSaisonErstellen() {
 		if(findeAlleSaisons().size() < 1) {
@@ -76,6 +80,7 @@ public class SaisonService {
 		
 		spieltagService.erstelleAlleSpieltageFuerEineSaison(findeLetzteSasion());
 		erstelleSpieleFuerEineSaison(saison);
+		tabellenEintragService.erstelleTabellenEintragFuerJedesTeam();
 	}
 
 	public void aktualisiereSaison(Saison saison) {

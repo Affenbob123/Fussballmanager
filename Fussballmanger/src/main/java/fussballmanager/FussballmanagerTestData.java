@@ -27,6 +27,7 @@ import fussballmanager.service.spiel.Spiel;
 import fussballmanager.service.spiel.SpielService;
 import fussballmanager.service.spiel.SpieleTypen;
 import fussballmanager.service.spieler.SpielerService;
+import fussballmanager.service.tabelle.TabellenEintragService;
 import fussballmanager.service.team.Team;
 import fussballmanager.service.team.TeamService;
 import fussballmanager.service.user.User;
@@ -67,6 +68,9 @@ public class FussballmanagerTestData {
 	
 	@Autowired
 	SpielSimulation spielSimulation;
+	
+	@Autowired
+	TabellenEintragService tabellenEintragService;
 	
 	String LoginA = "a";
 		
@@ -118,7 +122,6 @@ public class FussballmanagerTestData {
 			Team heimTeam = spiel.getHeimmannschaft();
 			Team gastTeam = spiel.getGastmannschaft();
 			if(!spiel.isVorbei() && (spiel.getSpielTyp().getSpielBeginn().isAfter(aktuelleZeitMinusZweiStunden))) {
-				spielService.anzahlToreEinesSpielSetzen(spiel);
 				spiel.setVorbei(true);
 				heimTeam.setAnzahlAuswechselungen(3);
 				gastTeam.setAnzahlAuswechselungen(3);
