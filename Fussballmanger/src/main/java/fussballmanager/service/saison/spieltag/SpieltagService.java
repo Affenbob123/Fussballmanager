@@ -92,16 +92,16 @@ public class SpieltagService {
 		LOG.info("Alter Spieltag: {}, Status: {}", alterSpieltag.getSpieltagNummer(), alterSpieltag.isAktuellerSpieltag());
 	}
 	
-//	public void checkAktuellerSpieltag() {
-//		if(findeAktuellenSpieltag().getSpieltagNummer() >= saisonService.findeAktuelleSaison().getSpieltage()) {
-//			// aktuellen Spieltag der alten Saison auf false setzten
-//			Spieltag aktuellerSpieltagDerAltenSaison = findeAktuellenSpieltag();
-//			aktuellerSpieltagDerAltenSaison.setAktuellerSpieltag(false);
-//			aktualisiereSpieltag(aktuellerSpieltagDerAltenSaison);
-//			
-//			saisonService.legeSaisonAn(new Saison(saisonService.findeLetzteSasion().getSaisonNummer() + 1));
-//		} else {
-//			wechsleAktuellenSpieltag();
-//		}
-//	}
+	public void wechsleSpieltag() {
+		if(findeAktuellenSpieltag().getSpieltagNummer() >= saisonService.findeAktuelleSaison().getSpieltage() - 1) {
+			// aktuellen Spieltag der alten Saison auf false setzten
+			Spieltag aktuellerSpieltagDerAltenSaison = findeAktuellenSpieltag();
+			aktuellerSpieltagDerAltenSaison.setAktuellerSpieltag(false);
+			aktualisiereSpieltag(aktuellerSpieltagDerAltenSaison);
+			
+			saisonService.legeSaisonAn(new Saison(saisonService.findeLetzteSasion().getSaisonNummer() + 1));
+		} else {
+			wechsleAktuellenSpieltag();
+		}
+	}
 }

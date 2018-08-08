@@ -56,8 +56,7 @@ public class SpielerZuwachsService {
 		Spieltag aktuellerSpieltag = spieltagService.findeAktuellenSpieltag();
 		for(Spieler spieler : alleSpieler) {
 			SpielerZuwachs spielerZuwachs = new SpielerZuwachs(aktuelleSaison, aktuellerSpieltag, spieler);
-			//TODO berechnung
-			spielerZuwachs.setZuwachs(5.0);
+			spielerZuwachs.setZuwachs(spielerZuwachs.berechneSpielerZuwachsFuerEinenSpieler(spieler));
 			legeSpielerZuwachsAn(spielerZuwachs);
 			
 			spielerService.kompletteReinStaerkeAendern(spieler, spielerZuwachs.getZuwachs());

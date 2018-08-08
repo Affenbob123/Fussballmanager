@@ -26,6 +26,8 @@ import fussballmanager.service.saison.spieltag.SpieltagService;
 import fussballmanager.service.spiel.Spiel;
 import fussballmanager.service.spiel.SpielService;
 import fussballmanager.service.spiel.SpieleTypen;
+import fussballmanager.service.spieler.AufstellungsPositionsTypen;
+import fussballmanager.service.spieler.Spieler;
 import fussballmanager.service.spieler.SpielerService;
 import fussballmanager.service.spieler.spielerzuwachs.SpielerZuwachsService;
 import fussballmanager.service.tabelle.TabellenEintragService;
@@ -92,7 +94,7 @@ public class FussballmanagerTestData {
 		userService.legeUserAn(userA);
 	}
 	
-	@Scheduled(cron = "*/2 * * * * ?", zone="Europe/Berlin")
+	//@Scheduled(cron = "*/2 * * * * ?", zone="Europe/Berlin")
 	public void simuliereSpiele() {
 		counter++;
 		if(counter < 46) {
@@ -106,7 +108,7 @@ public class FussballmanagerTestData {
 		}
 		
 		if(counter > 90) {
-			setzeErgebnisseUndSetzteAuswechselungenZurueckLigaspiel();
+			setzeErfahrungeUndSetzteAuswechselungenZurueckLigaspiel();
 			LOG.info("Nach dem Spiel: {}", counter);
 		}
 	}
@@ -118,10 +120,10 @@ public class FussballmanagerTestData {
 		spielSimulation.simuliereSpielMinuteAllerSpieleZweiteHalbzeit(SpieleTypen.LIGASPIEL);
 	}
 	
-	public void setzeErgebnisseUndSetzteAuswechselungenZurueckLigaspiel() {
+	public void setzeErfahrungeUndSetzteAuswechselungenZurueckLigaspiel() {
 		LocalTime aktuelleZeitMinusZweiStunden = LocalTime.now(ZoneId.of("Europe/Berlin")).minusHours(2);
 		List<Spiel> alleSpieleEinesSpieltages = spielService.findeAlleSpieleEinerSaisonUndSpieltages(saisonService.findeAktuelleSaison(), spieltagService.findeAktuellenSpieltag());
-
+		
 		for(Spiel spiel : alleSpieleEinesSpieltages) {
 			Team heimTeam = spiel.getHeimmannschaft();
 			Team gastTeam = spiel.getGastmannschaft();
@@ -135,6 +137,14 @@ public class FussballmanagerTestData {
 				teamService.aktualisiereTeam(gastTeam);
 			}
 		}
+		
+		//Erfahrung nach spiel um eins erhöhen
+		for(Spieler spieler : spielerService.findeAlleSpieler()) {
+			if(!spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.ERSATZ)) {
+				spieler.setErfahrung(spieler.getErfahrung() + 1);
+				spielerService.aktualisiereSpieler(spieler);
+			}
+		}
 	}
 	
 	@Scheduled(cron = "0 * * * * ?", zone="Europe/Berlin")
@@ -143,9 +153,9 @@ public class FussballmanagerTestData {
 		spielerService.erstelleSpielerFuerTransfermarkt();
 	}
 	
-	@Scheduled(cron = "0 * * * * ?", zone="Europe/Berlin")
+	@Scheduled(cron = "0/2 * * * * ?", zone="Europe/Berlin")
 	public void wechsleDenSpieltag() {
-		spieltagService.wechsleAktuellenSpieltag();
+		spieltagService.wechsleSpieltag();
 		spielerZuwachsService.legeSpielerZuwachsFuerAlleSpielerAn();
 	}
 }

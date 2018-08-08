@@ -12,6 +12,7 @@ import fussballmanager.service.liga.Liga;
 import fussballmanager.service.liga.LigaService;
 import fussballmanager.service.saison.spieltag.SpieltagService;
 import fussballmanager.service.spiel.SpielService;
+import fussballmanager.service.spieler.SpielerService;
 import fussballmanager.service.tabelle.TabellenEintragService;
 
 @Service
@@ -34,6 +35,9 @@ public class SaisonService {
 	
 	@Autowired
 	TabellenEintragService tabellenEintragService;
+	
+	@Autowired
+	SpielerService spielerService;
 	
 	public synchronized void ersteSaisonErstellen() {
 		if(findeAlleSaisons().size() < 1) {
@@ -67,11 +71,13 @@ public class SaisonService {
 	}
 	
 	public void legeSaisonAn(Saison saison) {
-		if(findeAlleSaisons().size() > 1) {
+		if(findeAlleSaisons().size() >= 1) {
 			Saison alteSaison = findeAktuelleSaison();
 			alteSaison.setAktuelleSaison(false);
 			aktualisiereSaison(alteSaison);
 			LOG.info("Saison: {} angelegt und ist: {}", findeSaison(alteSaison.getId()).getSaisonNummer(), findeSaison(alteSaison.getId()).isAktuelleSaison());
+			
+			spielerService.alleSpielerAltern();
 		}
 			
 		saison.setAktuelleSaison(true);

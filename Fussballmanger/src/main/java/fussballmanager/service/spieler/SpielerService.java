@@ -266,8 +266,8 @@ public class SpielerService {
 		
 		for(PositionenTypen positionenTyp : PositionenTypen.values()) {
 			for(int i = 0; i < getAnzahlSpielerProPositionUndAlter(); i++) {
-				for(int alter = 13; alter < 19; alter++) {
-					int staerkeFaktor = alter - 12;
+				for(int alter = 14; alter < 20; alter++) {
+					int staerkeFaktor = alter - 13;
 					double anfangsStaerkeMitFaktor = anfangsStaerke * staerkeFaktor;
 					long preis = (long) (anfangsStaerkeMitFaktor * 1000);
 					
@@ -412,5 +412,16 @@ public class SpielerService {
 		s.setAufstellungsPositionsTyp(aufstellungsPositionsTyp);
 		
 		aktualisiereSpieler(s);
+	}
+
+	public void alleSpielerAltern() {
+		List<Spieler> alleSpieler = findeAlleSpieler();
+		
+		for(Spieler spieler : alleSpieler) {
+			spieler.setAlter(spieler.getAlter() + 1);
+			if(spieler.getAlter() >= 35) {
+				
+			}
+		}
 	}
 }
