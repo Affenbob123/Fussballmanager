@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fussballmanager.service.land.LaenderNamenTypen;
 import fussballmanager.service.land.Land;
+import fussballmanager.service.spieler.spielerzuwachs.SpielerZuwachsService;
 import fussballmanager.service.spieler.staerke.Staerke;
 import fussballmanager.service.team.FormationsTypen;
 import fussballmanager.service.team.Team;
@@ -34,6 +35,9 @@ public class SpielerService {
 	
 	@Autowired
 	TeamService teamService;
+	
+	@Autowired
+	SpielerZuwachsService spielerZuwachsService;
 
 	public Spieler findeSpieler(Long id) {
 		return spielerRepository.getOne(id);
@@ -91,11 +95,12 @@ public class SpielerService {
 	}
 	
 	public void loescheSpieler(Spieler spieler) {
+		spielerZuwachsService.loescheAlleSpielerZuwaechseEinesSpielers(spieler);
 		spielerRepository.delete(spieler);
 	}
 	
 	public void erstelleStandardSpielerFuerEinTeam(Team team) {
-		int alter = 17;
+		int alter = 16;
 		
 		Land nationalitaet = team.getLiga().getLand();
 		
@@ -420,7 +425,7 @@ public class SpielerService {
 		for(Spieler spieler : alleSpieler) {
 			spieler.setAlter(spieler.getAlter() + 1);
 			if(spieler.getAlter() >= 35) {
-				
+				loescheSpieler(spieler);
 			}
 		}
 	}

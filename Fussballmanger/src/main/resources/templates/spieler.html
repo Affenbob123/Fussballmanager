@@ -37,7 +37,7 @@
 					<tr>
 					<tr>
 						<td class="table-active">Reinst&auml;rke</td>
-						<td th:text="${spieler.reinStaerke.durchschnittsStaerke}" />
+						<td th:text="${zahlenFormat.format(spieler.reinStaerke.durchschnittsStaerke)}" />
 					<tr>
 					<tr>
 						<td class="table-active">Erfahrung</td>
@@ -49,27 +49,27 @@
 					<tr>
 					<tr>
 						<td class="table-active">Geschwindigkeit</td>
-						<td th:text="${spieler.reinStaerke.geschwindigkeit}" />
+						<td th:text="${zahlenFormat.format(spieler.reinStaerke.geschwindigkeit)}" />
 					<tr>
 					<tr>
 						<td class="table-active">Schießen</td>
-						<td th:text="${spieler.reinStaerke.schiessen}" />
+						<td th:text="${zahlenFormat.format(spieler.reinStaerke.schiessen)}" />
 					<tr>
 					<tr>
 						<td class="table-active">Passen</td>
-						<td th:text="${spieler.reinStaerke.passen}" />
+						<td th:text="${zahlenFormat.format(spieler.reinStaerke.passen)}" />
 					<tr>
 					<tr>
 						<td class="table-active">Dribbeln</td>
-						<td th:text="${spieler.reinStaerke.dribbeln}" />
+						<td th:text="${zahlenFormat.format(spieler.reinStaerke.dribbeln)}" />
 					<tr>
 					<tr>
 						<td class="table-active">Verteidigen</td>
-						<td th:text="${spieler.reinStaerke.verteidigen}" />
+						<td th:text="${zahlenFormat.format(spieler.reinStaerke.verteidigen)}" />
 					<tr>
 					<tr>
 						<td class="table-active">Physis</td>
-						<td th:text="${spieler.reinStaerke.physis}" />
+						<td th:text="${zahlenFormat.format(spieler.reinStaerke.physis)}" />
 					<tr>
 					<tr>
 						<td class="table-active">Gehalt</td>

@@ -332,39 +332,35 @@ public class TeamService {
 	
 	public int siegeEinesTeamsInEinerSaison(Team team, Saison saison) {
 		int siege = 0;
-		List<Spiel> alleSpieleEinesTeams = spielService.findeAlleAbgeschlossenenSpieleEinesTeamsNachSpielTypUndSaison(team, SpieleTypen.LIGASPIEL, saison);
+		List<Spiel> alleSpieleEinesTeams = spielService.findeAlleAbgeschlossenenUndAngefangenenSpieleEinesTeamsNachSpielTypUndSaison(team, SpieleTypen.LIGASPIEL, saison);
 		
 		for(Spiel spiel : alleSpieleEinesTeams) {
-			if(spiel.getSaison().equals(saison)) {
-				if(team.equals(spiel.getHeimmannschaft())) {
-					if(spiel.getToreHeimmannschaft() > spiel.getToreGastmannschaft()) {
-						siege++;
-					}
-				} else {
-					if(spiel.getToreGastmannschaft() > spiel.getToreHeimmannschaft()) {
-						siege++;
-					}
-				}	
-			}
+			if(team.equals(spiel.getHeimmannschaft())) {
+				if(spiel.getToreHeimmannschaft() > spiel.getToreGastmannschaft()) {
+					siege++;
+				}
+			} else {
+				if(spiel.getToreGastmannschaft() > spiel.getToreHeimmannschaft()) {
+					siege++;
+				}
+			}	
 		}
 		return siege;
 	}
 
 	public int unentschiedenEinesTeamsInEinerSaison(Team team, Saison saison) {
 		int unentschieden = 0;
-		List<Spiel> alleSpieleEinesTeams = spielService.findeAlleAbgeschlossenenSpieleEinesTeamsNachSpielTypUndSaison(team, SpieleTypen.LIGASPIEL, saison);
+		List<Spiel> alleSpieleEinesTeams = spielService.findeAlleAbgeschlossenenUndAngefangenenSpieleEinesTeamsNachSpielTypUndSaison(team, SpieleTypen.LIGASPIEL, saison);
 		int aktuellerSpieltagNummer = spieltagService.findeAktuellenSpieltag().getSpieltagNummer();
 		
 		for(Spiel spiel : alleSpieleEinesTeams) {
-			if(spiel.getSaison().equals(saison)) {
-				if(spiel.getSpieltag().getSpieltagNummer() <= aktuellerSpieltagNummer) {
-					if(spiel.getSpielTyp().getSpielBeginn().isBefore(LocalTime.now(ZoneId.of("Europe/Berlin")))) {
-						if(spiel.getToreHeimmannschaft() == spiel.getToreGastmannschaft()) {
-							unentschieden++;
-						}
+			if(spiel.getSpieltag().getSpieltagNummer() <= aktuellerSpieltagNummer) {
+				if(spiel.isAngefangen()) {
+					if(spiel.getToreHeimmannschaft() == spiel.getToreGastmannschaft()) {
+						unentschieden++;
 					}
-
 				}
+
 			}
 		}
 		return unentschieden;
@@ -372,51 +368,45 @@ public class TeamService {
 	
 	public int niederlagenEinesTeamsInEinerSaison(Team team, Saison saison) {
 		int niederlagen = 0;
-		List<Spiel> alleSpieleEinesTeams = spielService.findeAlleAbgeschlossenenSpieleEinesTeamsNachSpielTypUndSaison(team, SpieleTypen.LIGASPIEL, saison);
+		List<Spiel> alleSpieleEinesTeams = spielService.findeAlleAbgeschlossenenUndAngefangenenSpieleEinesTeamsNachSpielTypUndSaison(team, SpieleTypen.LIGASPIEL, saison);
 		
 		for(Spiel spiel : alleSpieleEinesTeams) {
-			if(spiel.getSaison().equals(saison)) {
-				if(team.equals(spiel.getHeimmannschaft())) {
-					if(spiel.getToreHeimmannschaft() < spiel.getToreGastmannschaft()) {
-						niederlagen++;
-					}
-				} else {
-					if(spiel.getToreGastmannschaft() < spiel.getToreHeimmannschaft()) {
-						niederlagen++;
-					}
-				}	
-			}
+			if(team.equals(spiel.getHeimmannschaft())) {
+				if(spiel.getToreHeimmannschaft() < spiel.getToreGastmannschaft()) {
+					niederlagen++;
+				}
+			} else {
+				if(spiel.getToreGastmannschaft() < spiel.getToreHeimmannschaft()) {
+					niederlagen++;
+				}
+			}	
 		}
 		return niederlagen;
 	}
 	
 	public int toreEinesTeamsInEinerSaison(Team team, Saison saison) {
 		int tore = 0;
-		List<Spiel> alleSpieleEinesTeams = spielService.findeAlleAbgeschlossenenSpieleEinesTeamsNachSpielTypUndSaison(team, SpieleTypen.LIGASPIEL, saison);
+		List<Spiel> alleSpieleEinesTeams = spielService.findeAlleAbgeschlossenenUndAngefangenenSpieleEinesTeamsNachSpielTypUndSaison(team, SpieleTypen.LIGASPIEL, saison);
 		for(Spiel spiel : alleSpieleEinesTeams) {
-			if(spiel.getSaison().equals(saison)) {
-				if(team.equals(spiel.getHeimmannschaft())) {
-					tore = tore + spiel.getToreHeimmannschaft();
-				} else {
-					tore = tore + spiel.getToreGastmannschaft();
-				}	
-			}
+			if(team.equals(spiel.getHeimmannschaft())) {
+				tore = tore + spiel.getToreHeimmannschaft();
+			} else {
+				tore = tore + spiel.getToreGastmannschaft();
+			}	
 		}
 		return tore;
 	}
 	
 	public int gegenToreEinesTeamsInEinerSaison(Team team, Saison saison) {
 		int gegenTore = 0;
-		List<Spiel> alleSpieleEinesTeams = spielService.findeAlleAbgeschlossenenSpieleEinesTeamsNachSpielTypUndSaison(team, SpieleTypen.LIGASPIEL, saison);
+		List<Spiel> alleSpieleEinesTeams = spielService.findeAlleAbgeschlossenenUndAngefangenenSpieleEinesTeamsNachSpielTypUndSaison(team, SpieleTypen.LIGASPIEL, saison);
 		
 		for(Spiel spiel : alleSpieleEinesTeams) {
-			if(spiel.getSaison().equals(saison)) {
-				if(team.equals(spiel.getHeimmannschaft())) {
-					gegenTore = gegenTore + spiel.getToreGastmannschaft();
-				} else {
-					gegenTore = gegenTore + spiel.getToreHeimmannschaft();
-				}	
-			}
+			if(team.equals(spiel.getHeimmannschaft())) {
+				gegenTore = gegenTore + spiel.getToreGastmannschaft();
+			} else {
+				gegenTore = gegenTore + spiel.getToreHeimmannschaft();
+			}	
 		}
 		return gegenTore;
 	}
@@ -432,18 +422,16 @@ public class TeamService {
 	
 	public int gelbeKartenEinesTeamsInEinerSaison(Team team, Saison saison) {
 		int gelbeKarten = 0;
-		List<Spiel> alleSpieleEinesTeams = spielService.findeAlleAbgeschlossenenSpieleEinesTeamsNachSpielTypUndSaison(team, SpieleTypen.LIGASPIEL, saison);
+		List<Spiel> alleSpieleEinesTeams = spielService.findeAlleAbgeschlossenenUndAngefangenenSpieleEinesTeamsNachSpielTypUndSaison(team, SpieleTypen.LIGASPIEL, saison);
 		
 		for(Spiel spiel : alleSpieleEinesTeams) {
-			if(spiel.getSaison().equals(saison)) {
-				for(SpielEreignis spielEreignis :spiel.getSpielEreignisse()) {
-					if(spielEreignis.getVerteidiger().equals(team)) {
-						if(spielEreignis.getSpielereignisTyp().equals(SpielEreignisTypen.GELBEKARTE)) {
-							gelbeKarten++;
-						}
+			for(SpielEreignis spielEreignis :spiel.getSpielEreignisse()) {
+				if(spielEreignis.getVerteidiger().equals(team)) {
+					if(spielEreignis.getSpielereignisTyp().equals(SpielEreignisTypen.GELBEKARTE)) {
+						gelbeKarten++;
 					}
-
 				}
+
 			}
 		}
 		return gelbeKarten;
@@ -451,18 +439,16 @@ public class TeamService {
 	
 	public int gelbeRoteKartenEinesTeamsInEinerSaison(Team team, Saison saison) {
 		int gelbeRoteKarten = 0;
-		List<Spiel> alleSpieleEinesTeams = spielService.findeAlleAbgeschlossenenSpieleEinesTeamsNachSpielTypUndSaison(team, SpieleTypen.LIGASPIEL, saison);
+		List<Spiel> alleSpieleEinesTeams = spielService.findeAlleAbgeschlossenenUndAngefangenenSpieleEinesTeamsNachSpielTypUndSaison(team, SpieleTypen.LIGASPIEL, saison);
 		
 		for(Spiel spiel : alleSpieleEinesTeams) {
-			if(spiel.getSaison().equals(saison)) {
-				for(SpielEreignis spielEreignis :spiel.getSpielEreignisse()) {
-					if(spielEreignis.getVerteidiger().equals(team)) {
-						if(spielEreignis.getSpielereignisTyp().equals(SpielEreignisTypen.GELBROTEKARTE)) {
-							gelbeRoteKarten++;
-						}
+			for(SpielEreignis spielEreignis :spiel.getSpielEreignisse()) {
+				if(spielEreignis.getVerteidiger().equals(team)) {
+					if(spielEreignis.getSpielereignisTyp().equals(SpielEreignisTypen.GELBROTEKARTE)) {
+						gelbeRoteKarten++;
 					}
-
 				}
+
 			}
 		}
 		return gelbeRoteKarten;
@@ -470,18 +456,16 @@ public class TeamService {
 	
 	public int roteKartenEinesTeamsInEinerSaison(Team team, Saison saison) {
 		int roteKarten = 0;
-		List<Spiel> alleSpieleEinesTeams = spielService.findeAlleAbgeschlossenenSpieleEinesTeamsNachSpielTypUndSaison(team, SpieleTypen.LIGASPIEL, saison);
+		List<Spiel> alleSpieleEinesTeams = spielService.findeAlleAbgeschlossenenUndAngefangenenSpieleEinesTeamsNachSpielTypUndSaison(team, SpieleTypen.LIGASPIEL, saison);
 		
 		for(Spiel spiel : alleSpieleEinesTeams) {
-			if(spiel.getSaison().equals(saison)) {
-				for(SpielEreignis spielEreignis :spiel.getSpielEreignisse()) {
-					if(spielEreignis.getVerteidiger().equals(team)) {
-						if(spielEreignis.getSpielereignisTyp().equals(SpielEreignisTypen.ROTEKARTE)) {
-							roteKarten++;
-						}
+			for(SpielEreignis spielEreignis :spiel.getSpielEreignisse()) {
+				if(spielEreignis.getVerteidiger().equals(team)) {
+					if(spielEreignis.getSpielereignisTyp().equals(SpielEreignisTypen.ROTEKARTE)) {
+						roteKarten++;
 					}
-
 				}
+
 			}
 		}
 		return roteKarten;

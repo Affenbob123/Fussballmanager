@@ -50,12 +50,17 @@ public class SpielerZuwachsService {
 		spielerZuwachsRepository.delete(spielerZuwachs);
 	}
 	
+	public void loescheAlleSpielerZuwaechseEinesSpielers(Spieler spieler) {
+		spielerZuwachsRepository.deleteAll(spieler.getSpielerZuwaechse());
+	}
+	
 	public void legeSpielerZuwachsFuerAlleSpielerAn() {
 		List<Spieler> alleSpieler = spielerService.findeAlleSpielerMitTeam();
 		Saison aktuelleSaison = saisonService.findeAktuelleSaison();
 		Spieltag aktuellerSpieltag = spieltagService.findeAktuellenSpieltag();
 		for(Spieler spieler : alleSpieler) {
-			SpielerZuwachs spielerZuwachs = new SpielerZuwachs(aktuelleSaison, aktuellerSpieltag, spieler);
+			SpielerZuwachs spielerZuwachs = new SpielerZuwachs(aktuelleSaison, aktuellerSpieltag);
+			spieler.addSpielerZuwaechse(spielerZuwachs);
 			spielerZuwachs.setZuwachs(spielerZuwachs.berechneSpielerZuwachsFuerEinenSpieler(spieler));
 			legeSpielerZuwachsAn(spielerZuwachs);
 			

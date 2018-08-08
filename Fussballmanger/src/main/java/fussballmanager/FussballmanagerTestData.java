@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import fussballmanager.service.land.LaenderNamenTypen;
 import fussballmanager.service.land.LandService;
+import fussballmanager.service.liga.Liga;
 import fussballmanager.service.liga.LigaService;
 import fussballmanager.service.saison.SaisonService;
 import fussballmanager.service.saison.spieltag.SpieltagService;
@@ -30,6 +31,7 @@ import fussballmanager.service.spieler.AufstellungsPositionsTypen;
 import fussballmanager.service.spieler.Spieler;
 import fussballmanager.service.spieler.SpielerService;
 import fussballmanager.service.spieler.spielerzuwachs.SpielerZuwachsService;
+import fussballmanager.service.tabelle.TabellenEintrag;
 import fussballmanager.service.tabelle.TabellenEintragService;
 import fussballmanager.service.team.Team;
 import fussballmanager.service.team.TeamService;
@@ -94,24 +96,48 @@ public class FussballmanagerTestData {
 		userService.legeUserAn(userA);
 	}
 	
-	//@Scheduled(cron = "*/2 * * * * ?", zone="Europe/Berlin")
-	public void simuliereSpiele() {
-		counter++;
-		if(counter < 46) {
-			simuliereLigaspielErsteHalbzeit();
-			LOG.info("erste halbzeit: {}", counter);
+	@Scheduled(cron = "0 0/3 * * * ?", zone="Europe/Berlin")
+	public void spielAnfang() {
+		List<Spiel> alleSpieleDesSpieltages = spielService.findeAlleSpieleEinerSaisonUndSpieltages(
+				saisonService.findeAktuelleSaison(), spieltagService.findeAktuellenSpieltag());
+		for(Spiel spiel :alleSpieleDesSpieltages) {
+			spiel.setAngefangen(true);
+			spielService.aktualisiereSpiel(spiel);
+			LOG.info("spiel angefangen");
 		}
-		
-		if(counter >= 46 &&counter < 91) {
-			simuliereLigaspielZweiteHalbzeit();
-			LOG.info("zweite halbzeit: {}", counter);
-		}
-		
-		if(counter > 90) {
-			setzeErfahrungeUndSetzteAuswechselungenZurueckLigaspiel();
-			LOG.info("Nach dem Spiel: {}", counter);
+		tabellenEintragService.alleTabellenEintraegeAktualisieren();
+	}
+	
+	@Scheduled(cron = "0 1/3 * * * ?", zone="Europe/Berlin")
+	public void spielHalbzeit() {
+		List<Spiel> alleSpieleDesSpieltages = spielService.findeAlleSpieleEinerSaisonUndSpieltages(
+				saisonService.findeAktuelleSaison(), spieltagService.findeAktuellenSpieltag());
+		for(Spiel spiel :alleSpieleDesSpieltages) {
+			spiel.setHalbzeitAngefangen(true);
+			spielService.aktualisiereSpiel(spiel);
 		}
 	}
+	
+	@Scheduled(cron = "15-59 0/3 * * * ?", zone="Europe/Berlin")
+	public void simuliereSpieleErsteHalbzeit() {
+		counter++;
+			simuliereLigaspielErsteHalbzeit();
+			LOG.info("erste halbzeit: {}", counter);
+	}
+	
+	@Scheduled(cron = "15-59 1/3 * * * ?", zone="Europe/Berlin")
+	public void simuliereSpieleZweiteHalbzeit() {
+		counter++;
+			simuliereLigaspielZweiteHalbzeit();
+			LOG.info("zweite halbzeit: {}", counter);
+	}
+	
+	@Scheduled(cron = "0 2/3 * * * ?", zone="Europe/Berlin")
+	public void simuliereSpielEnde() {
+		setzeErfahrungeUndSetzteAuswechselungenZurueckLigaspiel();
+		counter = 0;
+	}
+	
 	public void simuliereLigaspielErsteHalbzeit() {
 		spielSimulation.simuliereSpielMinuteAllerSpieleErsteHalbzeit(SpieleTypen.LIGASPIEL);
 	}
@@ -147,13 +173,13 @@ public class FussballmanagerTestData {
 		}
 	}
 	
-	@Scheduled(cron = "0 * * * * ?", zone="Europe/Berlin")
+	@Scheduled(cron = "0/30 * * * * ?", zone="Europe/Berlin")
 	public void erstelleNeueSpielerFuerTransfermarkt() {
 		spielerService.loescheSpielerVomTransfermarkt();
 		spielerService.erstelleSpielerFuerTransfermarkt();
 	}
 	
-	@Scheduled(cron = "0/2 * * * * ?", zone="Europe/Berlin")
+	@Scheduled(cron = "15 2/3 * * * ?", zone="Europe/Berlin")
 	public void wechsleDenSpieltag() {
 		spieltagService.wechsleSpieltag();
 		spielerZuwachsService.legeSpielerZuwachsFuerAlleSpielerAn();

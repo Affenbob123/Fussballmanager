@@ -68,14 +68,13 @@ public class SpielService {
 	}
 	
 	public List<Spiel> findeAlleSpieleEinesTeamsInEinerSaison(Team team, Saison saison) {
-		List<Spiel> alleSpieleEinesTeams = findeAlleSpieleEinesTeams(team);
+		List<Spiel> alleSpieleEinerSaison = spielRepository.findBySaison(saison);
 		List<Spiel> alleSpieleEinesTeamsInEinerSaison = new ArrayList<>();
-		
-		for(Spiel spiel : alleSpieleEinesTeams) {
-			if(spiel.getSaison().equals(saison))
+		for(Spiel spiel : alleSpieleEinerSaison) {
+			if(spiel.getHeimmannschaft().equals(team) || spiel.getGastmannschaft().equals(team))
 			alleSpieleEinesTeamsInEinerSaison.add(spiel);
 		}
-		return alleSpieleEinesTeams;
+		return alleSpieleEinesTeamsInEinerSaison;
 	}
 	
 	public List<Spiel> findeAlleSpieleEinerLiga(Liga liga) {
@@ -97,7 +96,6 @@ public class SpielService {
 				alleSpieleEinerLigaEinerSaisonEinesSpieltages.add(spiel);
 			}
 		}
-		
 		return alleSpieleEinerLigaEinerSaisonEinesSpieltages;
 	}
 	
@@ -120,15 +118,15 @@ public class SpielService {
 		return alleSpieleEinesSpieltagesEinesTeams;
 	}
 	
-	public List<Spiel> findeAlleAbgeschlossenenSpieleEinesTeamsNachSpielTypUndSaison(Team team, SpieleTypen spielTyp, Saison saison) {
-		List<Spiel> alleSpieleEinesTeamsInEinerSaison = findeAlleSpieleEinesTeamsInEinerSaison(team, saison);
-		
-		for(Spiel spiel : alleSpieleEinesTeamsInEinerSaison) {
-			if(spiel.isVorbei() && spiel.getSpielTyp().equals(spielTyp)) {
-				alleSpieleEinesTeamsInEinerSaison.add(spiel);
+	public List<Spiel> findeAlleAbgeschlossenenUndAngefangenenSpieleEinesTeamsNachSpielTypUndSaison(Team team, SpieleTypen spielTyp, Saison saison) {
+		List<Spiel> alleSpieleEinerSaison = findeAlleSpieleEinesTeamsInEinerSaison(team, saison);
+		List<Spiel> alleAbgeschlossenenUndAngefangenenSpieleEinesTeamsInEinerSaison = new ArrayList<>();
+		for(Spiel spiel : alleSpieleEinerSaison) {
+			if((spiel.isAngefangen()) && spiel.getSpielTyp().equals(spielTyp)) {
+				alleAbgeschlossenenUndAngefangenenSpieleEinesTeamsInEinerSaison.add(spiel);
 			}
 		}
-		return alleSpieleEinesTeamsInEinerSaison;
+		return alleAbgeschlossenenUndAngefangenenSpieleEinesTeamsInEinerSaison;
 	}
 	
 	public void legeSpielAn(Spiel spiel) {
@@ -143,90 +141,132 @@ public class SpielService {
 		spielRepository.delete(spiel);
 	}
 
+	/*
+	 * https://www.inf-schule.de/algorithmen/algorithmen/bedeutung/fallstudie_turnierplanung/station_algorithmen
+	 */
 	public void erstelleSpieleFuerEineLiga(Liga liga) {
-    	List<Team> alleTeamsEinerLiga = teamService.findeAlleTeamsEinerLiga(liga);
-    	Saison aktuelleSaison = saisonService.findeAktuelleSaison();
-		for (int i=0; i < alleTeamsEinerLiga.size() - 1; i++) {
-			if(i%2 == 0) {
-				int spieltagHinspielZahl = 1;
-				int spieltagRueckspielZahl = 18;
-				
-			    for (int j=i+1; j < alleTeamsEinerLiga.size(); j++) {
-			    	Spieltag spieltagHinspiel = spieltagService.findeSpieltagDurchSaisonUndSpieltagNummer(aktuelleSaison, spieltagHinspielZahl);
-					Spieltag spieltagRueckspiel = spieltagService.findeSpieltagDurchSaisonUndSpieltagNummer(aktuelleSaison, spieltagRueckspielZahl);
-			    	Spiel spielHinspiel = new Spiel();
-			    	Spiel spielRueckspiel = new Spiel();
+		List<Team> alleTeamsEinerLiga = teamService.findeAlleTeamsEinerLiga(liga);
+		Saison aktuelleSaison = saisonService.findeAktuelleSaison();
+		
+		int anzahlTeams = alleTeamsEinerLiga.size();
+		int spieltag = 0;
+		while(spieltag < anzahlTeams - 1) {
+			Spiel spielHinspiel = new Spiel();
+	    	Spiel spielRueckspiel = new Spiel();
+	    	
+	    	//Hinspiel
+	    	spielHinspiel.setSpielTyp(SpieleTypen.LIGASPIEL);
+	    	spielHinspiel.setHeimmannschaft(alleTeamsEinerLiga.get(anzahlTeams - 1));
+	    	spielHinspiel.setGastmannschaft(alleTeamsEinerLiga.get(spieltag));
+	    	spielHinspiel.setSpielort(alleTeamsEinerLiga.get(anzahlTeams - 1).getSpielort());
+	    	spielHinspiel.setSaison(aktuelleSaison);
+	    	spielHinspiel.setSpieltag(spieltagService.findeSpieltagDurchSaisonUndSpieltagNummer(aktuelleSaison, spieltag + 1));
+	    	
+	    	LOG.info("Spieltag: {}, {} : {}, Liga: {}", spielHinspiel.getSpieltag().getSpieltagNummer(), spielHinspiel.getHeimmannschaft().getName(), 
+	    			spielHinspiel.getGastmannschaft().getName(), liga.getLigaNameTyp().getName());
+	    	legeSpielAn(spielHinspiel);
+	    	
+	    	//Rückspiel
+	    	spielRueckspiel.setSpielTyp(SpieleTypen.LIGASPIEL);
+	    	spielRueckspiel.setHeimmannschaft(alleTeamsEinerLiga.get(spieltag));
+	    	spielRueckspiel.setGastmannschaft(alleTeamsEinerLiga.get(anzahlTeams - 1));
+	    	spielRueckspiel.setSpielort(alleTeamsEinerLiga.get(spieltag).getSpielort());
+	    	spielRueckspiel.setSaison(aktuelleSaison);
+	    	spielRueckspiel.setSpieltag(spieltagService.findeSpieltagDurchSaisonUndSpieltagNummer(aktuelleSaison, 17 + spieltag + 1));
+	    	
+	    	LOG.info("Spieltag: {}, {} : {}, Liga: {}", spielRueckspiel.getSpieltag().getSpieltagNummer(), spielRueckspiel.getHeimmannschaft().getName(), 
+	    			spielRueckspiel.getGastmannschaft().getName(), liga.getLigaNameTyp().getName());
+	    	legeSpielAn(spielRueckspiel);
+	    	
+	    	int j = 1;
+	    	
+	    	// Modulo damit die teams abwechselnd heim und auswärts spielen
+	    	while(j < anzahlTeams/2) {
+	    		if(j % 2 == 0) {
+	    			int a = spieltag - j;
+		    		int b = spieltag + j;
+		    		
+		    		if(a < 0) {
+		    			a = a + (anzahlTeams - 1);
+		    		}
+		    		
+		    		if(b > anzahlTeams - 2) {
+		    			b = b - (anzahlTeams - 1);
+		    		}
+		    		
+					Spiel spielHinspiel2 = new Spiel();
+			    	Spiel spielRueckspiel2 = new Spiel();
 			    	
 			    	//Hinspiel
-			    	spielHinspiel.setSpielTyp(SpieleTypen.LIGASPIEL);
-			    	spielHinspiel.setHeimmannschaft(alleTeamsEinerLiga.get(i));
-			    	spielHinspiel.setGastmannschaft(alleTeamsEinerLiga.get(j));
-			    	spielHinspiel.setSpielort(alleTeamsEinerLiga.get(i).getSpielort());
-			    	spielHinspiel.setSpieltag(spieltagHinspiel);
-			    	spielHinspiel.setSaison(aktuelleSaison);
+			    	spielHinspiel2.setSpielTyp(SpieleTypen.LIGASPIEL);
+			    	spielHinspiel2.setHeimmannschaft(alleTeamsEinerLiga.get(b));
+			    	spielHinspiel2.setGastmannschaft(alleTeamsEinerLiga.get(a));
+			    	spielHinspiel2.setSpielort(alleTeamsEinerLiga.get(b).getSpielort());
+			    	spielHinspiel2.setSaison(aktuelleSaison);
+			    	spielHinspiel2.setSpieltag(spieltagService.findeSpieltagDurchSaisonUndSpieltagNummer(aktuelleSaison, spieltag + 1));
 			    	
-//			    	LOG.info("Spieltag: {}, Heimmannschaft: {}, Gastmannschaft: {}, Liga: {}", spieltagHinspiel, spielHinspiel.getHeimmannschaft().getName(), 
-//			    			spielHinspiel.getGastmannschaft().getName(), liga.getLigaNameTyp().getName());
-			    	legeSpielAn(spielHinspiel);
+			    	LOG.info("Spieltag: {}, {} : {}, Liga: {}", spielHinspiel2.getSpieltag().getSpieltagNummer(), spielHinspiel2.getHeimmannschaft().getName(), 
+			    			spielHinspiel2.getGastmannschaft().getName(), liga.getLigaNameTyp().getName());
+			    	legeSpielAn(spielHinspiel2);
 			    	
 			    	//Rückspiel
-			    	spielRueckspiel.setSpielTyp(SpieleTypen.LIGASPIEL);
-			    	spielRueckspiel.setHeimmannschaft(alleTeamsEinerLiga.get(j));
-			    	spielRueckspiel.setGastmannschaft(alleTeamsEinerLiga.get(i));
-			    	spielRueckspiel.setSpielort(alleTeamsEinerLiga.get(j).getSpielort());
-			    	spielRueckspiel.setSpieltag(spieltagRueckspiel);
-			    	spielRueckspiel.setSaison(aktuelleSaison);
+			    	spielRueckspiel2.setSpielTyp(SpieleTypen.LIGASPIEL);
+			    	spielRueckspiel2.setHeimmannschaft(alleTeamsEinerLiga.get(a));
+			    	spielRueckspiel2.setGastmannschaft(alleTeamsEinerLiga.get(b));
+			    	spielRueckspiel2.setSpielort(alleTeamsEinerLiga.get(a).getSpielort());
+			    	spielRueckspiel2.setSaison(aktuelleSaison);
+			    	spielRueckspiel2.setSpieltag(spieltagService.findeSpieltagDurchSaisonUndSpieltagNummer(aktuelleSaison, 17 + spieltag + 1));
 			    	
-//			    	LOG.info("Spieltag: {}, Heimmannschaft: {}, Gastmannschaft: {}, Liga: {}", spieltagRueckspiel, spielRueckspiel.getHeimmannschaft().getName(), 
-//			    			spielRueckspiel.getGastmannschaft().getName(), liga.getLigaNameTyp().getName());
-			    	
-			    	legeSpielAn(spielRueckspiel);
-			    	spieltagHinspielZahl++;
-			    	spieltagRueckspielZahl++;
-			    	
-			    }
-			} else {
-				int spieltagHinspielZahl = 17;
-				int spieltagRueckspielZahl = 34;
-				
-			    for (int j=i+1; j < alleTeamsEinerLiga.size(); j++) {
-			    	Spieltag spieltagHinspiel = spieltagService.findeSpieltagDurchSaisonUndSpieltagNummer(aktuelleSaison,spieltagHinspielZahl);
-					Spieltag spieltagRueckspiel = spieltagService.findeSpieltagDurchSaisonUndSpieltagNummer(aktuelleSaison, spieltagRueckspielZahl);
-			    	Spiel spielHinspiel = new Spiel();
-			    	Spiel spielRueckspiel = new Spiel();
+			    	LOG.info("Spieltag: {}, {} : {}, Liga: {}", spielRueckspiel2.getSpieltag().getSpieltagNummer(), spielRueckspiel2.getHeimmannschaft().getName(), 
+			    			spielRueckspiel2.getGastmannschaft().getName(), liga.getLigaNameTyp().getName());
+			    	legeSpielAn(spielRueckspiel2);
+	    		} else {
+	    			int a = spieltag - j;
+		    		int b = spieltag + j;
+		    		
+		    		if(a < 0) {
+		    			a = a + (anzahlTeams - 1);
+		    		}
+		    		
+		    		if(b > anzahlTeams - 2) {
+		    			b = b - (anzahlTeams - 1);
+		    		}
+		    		
+					Spiel spielHinspiel2 = new Spiel();
+			    	Spiel spielRueckspiel2 = new Spiel();
 			    	
 			    	//Hinspiel
-			    	spielHinspiel.setSpielTyp(SpieleTypen.LIGASPIEL);
-			    	spielHinspiel.setHeimmannschaft(alleTeamsEinerLiga.get(i));
-			    	spielHinspiel.setGastmannschaft(alleTeamsEinerLiga.get(j));
-			    	spielHinspiel.setSpielort(alleTeamsEinerLiga.get(i).getSpielort());
-			    	spielHinspiel.setSpieltag(spieltagHinspiel);
-			    	spielHinspiel.setSaison(aktuelleSaison);
+			    	spielHinspiel2.setSpielTyp(SpieleTypen.LIGASPIEL);
+			    	spielHinspiel2.setHeimmannschaft(alleTeamsEinerLiga.get(a));
+			    	spielHinspiel2.setGastmannschaft(alleTeamsEinerLiga.get(b));
+			    	spielHinspiel2.setSpielort(alleTeamsEinerLiga.get(a).getSpielort());
+			    	spielHinspiel2.setSaison(aktuelleSaison);
+			    	spielHinspiel2.setSpieltag(spieltagService.findeSpieltagDurchSaisonUndSpieltagNummer(aktuelleSaison, spieltag + 1));
 			    	
-//			    	LOG.info("Spieltag: {}, Heimmannschaft: {}, Gastmannschaft: {}, Liga: {}", spieltagHinspiel, spielHinspiel.getHeimmannschaft().getName(), 
-//			    			spielHinspiel.getGastmannschaft().getName(), liga.getLigaNameTyp().getName());
-			    	legeSpielAn(spielHinspiel);
+			    	LOG.info("Spieltag: {}, {} : {}, Liga: {}", spielHinspiel2.getSpieltag().getSpieltagNummer(), spielHinspiel2.getHeimmannschaft().getName(), 
+			    			spielHinspiel2.getGastmannschaft().getName(), liga.getLigaNameTyp().getName());
+			    	legeSpielAn(spielHinspiel2);
 			    	
 			    	//Rückspiel
-			    	spielRueckspiel.setSpielTyp(SpieleTypen.LIGASPIEL);
-			    	spielRueckspiel.setHeimmannschaft(alleTeamsEinerLiga.get(j));
-			    	spielRueckspiel.setGastmannschaft(alleTeamsEinerLiga.get(i));
-			    	spielRueckspiel.setSpielort(alleTeamsEinerLiga.get(j).getSpielort());
-			    	spielRueckspiel.setSpieltag(spieltagRueckspiel);
-			    	spielRueckspiel.setSaison(aktuelleSaison);
+			    	spielRueckspiel2.setSpielTyp(SpieleTypen.LIGASPIEL);
+			    	spielRueckspiel2.setHeimmannschaft(alleTeamsEinerLiga.get(b));
+			    	spielRueckspiel2.setGastmannschaft(alleTeamsEinerLiga.get(a));
+			    	spielRueckspiel2.setSpielort(alleTeamsEinerLiga.get(b).getSpielort());
+			    	spielRueckspiel2.setSaison(aktuelleSaison);
+			    	spielRueckspiel2.setSpieltag(spieltagService.findeSpieltagDurchSaisonUndSpieltagNummer(aktuelleSaison, 17 + spieltag + 1));
 			    	
-//			    	LOG.info("Spieltag: {}, Heimmannschaft: {}, Gastmannschaft: {}, Liga: {}", spieltagRueckspiel, spielRueckspiel.getHeimmannschaft().getName(), 
-//			    			spielRueckspiel.getGastmannschaft().getName(), liga.getLigaNameTyp().getName());
-			    	
-			    	legeSpielAn(spielRueckspiel);
-			    	spieltagHinspielZahl--;
-			    	spieltagRueckspielZahl--;
-			    	
-			    }
-			}
+			    	LOG.info("Spieltag: {}, {} : {}, Liga: {}", spielRueckspiel2.getSpieltag().getSpieltagNummer(), spielRueckspiel2.getHeimmannschaft().getName(), 
+			    			spielRueckspiel2.getGastmannschaft().getName(), liga.getLigaNameTyp().getName());
+			    	legeSpielAn(spielRueckspiel2);
+	    		}
+	    		
+	    		
+	    		j = j + 1;
+	    	}
+	    	spieltag = spieltag + 1;
 		}
 	}
-	
+
 	public void anzahlToreEinesSpielSetzen(Spiel spiel) {
 		int toreHeimmannschaft = 0;
 		int toreGastmannschaft = 0;

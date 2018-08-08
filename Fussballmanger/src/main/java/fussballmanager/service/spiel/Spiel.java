@@ -54,9 +54,15 @@ public class Spiel {
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private List<SpielEreignis> spielEreignisse;
 	
-	private double heimVorteil = 1.3;
+	private double heimVorteil = 1.2;
+	
+	private boolean angefangen = false;
+	
+	private boolean halbzeitAngefangen = false;
 	
 	private boolean vorbei = false;
+	
+	private int aktuelleSpielminute = 0;
 
 	public Spiel(SpieleTypen spielTyp, Team heimmannschaft, Team gastmannschaft, LocalTime spielbeginn, 
 			Spieltag spieltag, Saison saison,String spielort) {
@@ -186,5 +192,29 @@ public class Spiel {
 
 	public void setVorbei(boolean vorbei) {
 		this.vorbei = vorbei;
+	}
+
+	public boolean isHalbzeitAngefangen() {
+		return halbzeitAngefangen;
+	}
+
+	public void setHalbzeitAngefangen(boolean halbzeitAngefangen) {
+		this.halbzeitAngefangen = halbzeitAngefangen;
+	}
+
+	public boolean isAngefangen() {
+		return angefangen;
+	}
+
+	public void setAngefangen(boolean angefangen) {
+		this.angefangen = angefangen;
+	}
+
+	public int getAktuelleSpielminute() {
+		return aktuelleSpielminute;
+	}
+
+	public void setAktuelleSpielminute(int aktuelleSpielminute) {
+		this.aktuelleSpielminute = aktuelleSpielminute;
 	}
 }

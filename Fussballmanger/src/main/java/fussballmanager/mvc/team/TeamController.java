@@ -1,5 +1,6 @@
 package fussballmanager.mvc.team;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -58,7 +59,9 @@ public class TeamController {
 		model.addAttribute("aktuellesTeam", aktuellerUser.getAktuellesTeam());
 		
 		List<Spieler> alleSpielerEinesTeams = spielerService.findeAlleSpielerEinesTeams(aktuellesTeam);
+		DecimalFormat zahlenFormat = new DecimalFormat("#.0");
 		
+		model.addAttribute("zahlenFormat", zahlenFormat);
 		model.addAttribute("alleSpielerDesAktuellenTeams", alleSpielerEinesTeams);
 		model.addAttribute("alleFormationsTypen", FormationsTypen.values());
 		model.addAttribute("alleEinsatzTypen", EinsatzTypen.values());

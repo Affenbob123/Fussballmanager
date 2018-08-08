@@ -69,10 +69,7 @@ public class SpielSimulation {
 	Random random = new Random();
 	
 	private boolean heimmannschaftAngreifer;
-	
-	int counter = 0;
-	int spielminute;
-	
+		
 	public SpielSimulation() {
 		
 	}
@@ -86,34 +83,29 @@ public class SpielSimulation {
 	public void simuliereSpielMinuteAllerSpieleErsteHalbzeit(SpieleTypen spielTyp) {	
 		List<Spiel> alleSpieleEinesSpieltages = spielService.
 				findeAlleSpieleEinerSaisonUndSpieltagesNachSpielTyp(saisonService.findeAktuelleSaison(), spieltagService.findeAktuellenSpieltag(), spielTyp);
-		LocalTime localTimeStart = spielTyp.getSpielBeginn().plusMinutes(15);
-		LocalTime localTime  = LocalTime.now(ZoneId.of("Europe/Berlin"));
-		
-		int spielminute = toIntExact(localTimeStart.until(localTime, MINUTES));
-		counter++;
+		int spielminute = 1;
 		
 		for(Spiel spiel : alleSpieleEinesSpieltages) {
-			simuliereSpielminuteEinesSpieles(spiel,spielminute);
-			spielService.anzahlToreEinesSpielSetzen(spiel);
+			spiel.setAktuelleSpielminute(spielminute);
+			spielService.aktualisiereSpiel(spiel);
+			simuliereSpielminuteEinesSpieles(spiel);
+			spielminute++;
 		}
 	}
-	
 	
 	public void simuliereSpielMinuteAllerSpieleZweiteHalbzeit(SpieleTypen spielTyp) {
-		counter++;
-		LocalTime localTimeStart = spielTyp.getSpielBeginn().plusHours(1).plusMinutes(15);
-		LocalTime localTime  = LocalTime.now(ZoneId.of("Europe/Berlin"));
-		
-		int spielminute = toIntExact(localTimeStart.until(localTime, MINUTES)) + 45 + 1;
 		List<Spiel> alleSpieleEinesSpieltages = 
 				spielService.findeAlleSpieleEinerSaisonUndSpieltages(saisonService.findeAktuelleSaison(), spieltagService.findeAktuellenSpieltag());
+		int spielminute = 46;
 		
 		for(Spiel spiel : alleSpieleEinesSpieltages) {
-			simuliereSpielminuteEinesSpieles(spiel,spielminute);
+			spiel.setAktuelleSpielminute(spielminute);
+			spielService.aktualisiereSpiel(spiel);
+			simuliereSpielminuteEinesSpieles(spiel);
 		}
 	}
 	
-	public void simuliereSpielminuteEinesSpieles(Spiel spiel, int spielminute) {
+	public void simuliereSpielminuteEinesSpieles(Spiel spiel) {
 		List<Spieler> spielerHeimmannschaft = spielerService.findeAlleSpielerEinesTeams(spiel.getHeimmannschaft());
 		List<Spieler> spielerGastmannschaft = spielerService.findeAlleSpielerEinesTeams(spiel.getGastmannschaft());
 		
@@ -161,7 +153,7 @@ public class SpielSimulation {
 				torversuch.setTorwart(spielerService.findeAlleSpielerEinesTeams(spiel.getGastmannschaft()).get(0));
 				torversuch.setVerteidiger(spiel.getGastmannschaft());
 				torversuch.setSpiel(spiel);
-				torversuch.setSpielminute(spielminute);
+				torversuch.setSpielminute(spiel.getAktuelleSpielminute());
 				torversuch.setErstellZeit(aktuelleZeit);
 				
 				LOG.info("tor heim");
@@ -199,7 +191,7 @@ public class SpielSimulation {
 				torversuch.setTorwart(spielerService.findeAlleSpielerEinesTeams(spiel.getHeimmannschaft()).get(0));
 				torversuch.setVerteidiger(spiel.getHeimmannschaft());
 				torversuch.setSpiel(spiel);
-				torversuch.setSpielminute(spielminute);
+				torversuch.setSpielminute(spiel.getAktuelleSpielminute());
 				torversuch.setErstellZeit(aktuelleZeit);
 				
 				LOG.info("tor gast");

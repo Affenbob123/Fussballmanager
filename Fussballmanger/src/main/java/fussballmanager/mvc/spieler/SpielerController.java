@@ -1,5 +1,6 @@
 package fussballmanager.mvc.spieler;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +38,9 @@ public class SpielerController {
 		model.addAttribute("spielstatusHelper", new SpielstatusHelper());
 		model.addAttribute("aktuellesTeam", aktuellerUser.getAktuellesTeam());
 		
+		DecimalFormat zahlenFormat = new DecimalFormat("#.0");
+		
+		model.addAttribute("zahlenFormat", zahlenFormat);
 		model.addAttribute("spieler", spielerService.findeSpieler(id));
 		
 		return "spieler";

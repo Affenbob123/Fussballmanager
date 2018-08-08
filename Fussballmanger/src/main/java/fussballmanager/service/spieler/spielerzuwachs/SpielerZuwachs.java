@@ -26,9 +26,6 @@ public class SpielerZuwachs {
 	
 	private double zuwachs;
 	
-	@ManyToOne
-	Spieler spieler;
-	
 	Trainingslager trainingslager;
 	
 	ZuwachsFaktorAlter zuwachsFaktorAlter;
@@ -37,10 +34,9 @@ public class SpielerZuwachs {
 	
 	public final int maximaleErfahrung = 75;
 	
-	public SpielerZuwachs(Saison saison, Spieltag spieltag, Spieler spieler) {
+	public SpielerZuwachs(Saison saison, Spieltag spieltag) {
 		this.saison = saison;
 		this.spieltag = spieltag;
-		this.spieler = spieler;
 	}
 	
 	public SpielerZuwachs() {
@@ -79,14 +75,6 @@ public class SpielerZuwachs {
 		this.zuwachs = zuwachs;
 	}
 
-	public Spieler getSpieler() {
-		return spieler;
-	}
-
-	public void setSpieler(Spieler spieler) {
-		this.spieler = spieler;
-	}
-
 	public Trainingslager getTrainingslager() {
 		return trainingslager;
 	}
@@ -108,9 +96,16 @@ public class SpielerZuwachs {
 		int talentwert = spieler.getTalentwert();
 		int erfahrung = spieler.getErfahrung();
 		int anzahlDerSaisonsDesSpielers = alter - 13;
+		double zuwachsFaktorNachAlterDesSpielers = 1.0;
+		for(ZuwachsFaktorAlter zFA : ZuwachsFaktorAlter.values()) {
+			if(zFA.getAlter() == spieler.getAlter()) {
+				zuwachsFaktorNachAlterDesSpielers = zFA.getZuwachsFaktor();
+			}
+		}
+		
 		double erfahrungsFaktorRechnungEins  = erfahrung * 1.0 / (maximaleErfahrung * anzahlDerSaisonsDesSpielers);
 		double erfahrungsFaktor = (erfahrungsFaktorRechnungEins + 1) / 2;
-		double zuwachsOhneErfahrung = defaultZuwachs * (100 + (talentwert * 2)) / 100;
+		double zuwachsOhneErfahrung = defaultZuwachs * zuwachsFaktorNachAlterDesSpielers * (100 + (talentwert * 2)) / 100;
 		double zuwachsMitErfahrung = zuwachsOhneErfahrung * erfahrungsFaktor;
 		
 		return zuwachsMitErfahrung;

@@ -25,6 +25,8 @@ public class TabellenEintrag implements Comparable<TabellenEintrag>{
 	
 	private int platzierung;
 	
+	private int platzierungVortag;
+	
 	@ManyToOne
 	private Team team;
 	
@@ -199,6 +201,14 @@ public class TabellenEintrag implements Comparable<TabellenEintrag>{
 		this.roteKarten = roteKarten;
 	}
 	
+	public int getPlatzierungVortag() {
+		return platzierungVortag;
+	}
+
+	public void setPlatzierungVortag(int platzierungVortag) {
+		this.platzierungVortag = platzierungVortag;
+	}
+
 	@Override
 	public int compareTo(TabellenEintrag compareTo) {
 		if(this.punkte - compareTo.getPunkte() == 0) {

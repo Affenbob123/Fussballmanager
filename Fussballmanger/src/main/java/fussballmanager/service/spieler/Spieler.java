@@ -40,6 +40,9 @@ public class Spieler implements Comparable<Spieler> {
 	@OneToOne(cascade = {CascadeType.ALL})
 	private Staerke staerke;
 	
+	@OneToMany
+	private List<SpielerZuwachs> spielerZuwaechse;
+	
 	private int erfahrung;
 	
 	private int talentwert;
@@ -204,6 +207,18 @@ public class Spieler implements Comparable<Spieler> {
 
 	public void setStaerke(Staerke staerke) {
 		this.staerke = staerke;
+	}
+
+	public List<SpielerZuwachs> getSpielerZuwaechse() {
+		return spielerZuwaechse;
+	}
+
+	public void setSpielerZuwaechse(List<SpielerZuwachs> spielerZuwaechse) {
+		this.spielerZuwaechse = spielerZuwaechse;
+	}
+	
+	public void addSpielerZuwaechse(SpielerZuwachs spielerZuwachs) {
+		this.spielerZuwaechse.add(spielerZuwachs);
 	}
 
 	public long getPreis() {

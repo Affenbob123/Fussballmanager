@@ -1,5 +1,6 @@
 package fussballmanager.mvc.transfermarkt;
 
+import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.List;
 
@@ -46,7 +47,9 @@ public class TransfermarktController {
 				spielerSuche.getLand(), spielerSuche.getMinimalesAlter(), spielerSuche.getMaximalesAlter(), spielerSuche.getMinimaleStaerke(), 
 				spielerSuche.getMaximaleStaerke(), spielerSuche.getMinimalerPreis(), spielerSuche.getMaximalerPreis());
 		SpielerSuche spielerSucheFormular = spielerSuche;
+		DecimalFormat zahlenFormat = new DecimalFormat("#.0");
 		
+		model.addAttribute("zahlenFormat", zahlenFormat);
 		model.addAttribute("alleTransfermarktSpieler", gesuchteSpielerDesTransfermarktes);
 		model.addAttribute("spielerSucheFormular", spielerSucheFormular);
 		model.addAttribute("positionenTypen", PositionenTypen.values());
