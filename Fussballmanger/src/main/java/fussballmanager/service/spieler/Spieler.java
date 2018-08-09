@@ -30,7 +30,7 @@ public class Spieler implements Comparable<Spieler> {
 	
 	private AufstellungsPositionsTypen aufstellungsPositionsTyp;
 	
-	private String name;
+	private String name = "Unbenannter Spieler";
 	
 	private int alter;
 	
@@ -49,35 +49,44 @@ public class Spieler implements Comparable<Spieler> {
 	
 	private boolean talentwertErmittelt;
 	
-	private int motivation;
+	private int motivation = 0;
 	
 	@ManyToOne
 	private Team team;
 	
-	private int trainingslagerTage;
+	private int trainingslagerTage = 10;
 	
-	private int verletzungsTage;
+	private int verletzungsTage = 0;
 	
 	private long gehalt;
 	
 	private long preis;
 	
-	private boolean transfermarkt;
+	private boolean transfermarkt = false;
+	
+	private int tore = 0;
+	
+	private boolean gelbeKarte = false;
+	
+	private int gelbeKarten = 0;
+	
+	private int gelbRoteKarten = 0;
+	
+	private int roteKarten = 0;
 
 	public Spieler(Land nationalitaet, PositionenTypen position, AufstellungsPositionsTypen aufstellungsPositionsTyp,
 			int alter, Staerke reinStaerke, Staerke staerke, int talentwert, Team team) {
 		this.nationalitaet = nationalitaet;
 		this.position = position;
 		this.aufstellungsPositionsTyp = aufstellungsPositionsTyp;
-		this.name = "Unbenannter Spieler";
 		this.alter = alter;
 		this.reinStaerke = reinStaerke;
 		this.staerke = staerke;
 		this.talentwert = talentwert;
+		this.team = team;
 		this.talentwertErmittelt =  false;
 		this.erfahrung = 0;
 		this.motivation = 0;
-		this.team = team;
 		this.trainingslagerTage = 10;
 		this.verletzungsTage = 0;
 		this.gehalt = (long) (staerke.getDurchschnittsStaerke() * 100);
@@ -86,7 +95,7 @@ public class Spieler implements Comparable<Spieler> {
 	}
 
 	public Spieler() {
-
+		
 	}
 
 	public long getId() {
@@ -243,6 +252,46 @@ public class Spieler implements Comparable<Spieler> {
 
 	public void setTransfermarkt(boolean istTransfermarkt) {
 		this.transfermarkt = istTransfermarkt;
+	}
+
+	public int getTore() {
+		return tore;
+	}
+
+	public void setTore(int tore) {
+		this.tore = tore;
+	}
+
+	public int getGelbeKarten() {
+		return gelbeKarten;
+	}
+
+	public void setGelbeKarten(int gelbeKarten) {
+		this.gelbeKarten = gelbeKarten;
+	}
+
+	public int getGelbRoteKarten() {
+		return gelbRoteKarten;
+	}
+
+	public void setGelbRoteKarten(int gelbRoteKarten) {
+		this.gelbRoteKarten = gelbRoteKarten;
+	}
+
+	public int getRoteKarten() {
+		return roteKarten;
+	}
+
+	public void setRoteKarten(int roteKarten) {
+		this.roteKarten = roteKarten;
+	}
+
+	public boolean isGelbeKarte() {
+		return gelbeKarte;
+	}
+
+	public void setGelbeKarte(boolean gelbeKarte) {
+		this.gelbeKarte = gelbeKarte;
 	}
 
 	@Override

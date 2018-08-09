@@ -30,7 +30,6 @@ import fussballmanager.service.saison.spieltag.Spieltag;
 import fussballmanager.service.saison.spieltag.SpieltagService;
 import fussballmanager.service.spiel.Spiel;
 import fussballmanager.service.spiel.SpielService;
-import fussballmanager.service.spiel.spielereignisse.SpielEreignisService;
 import fussballmanager.service.tabelle.TabellenEintrag;
 import fussballmanager.service.tabelle.TabellenEintragService;
 import fussballmanager.service.team.Team;
@@ -63,9 +62,6 @@ public class LigaController {
 	
 	@Autowired
 	SpieltagService spieltagService;
-	
-	@Autowired
-	SpielEreignisService spielEreignisService;
 	
 	@Autowired
 	TabellenEintragService tabellenEintragService;
@@ -115,7 +111,6 @@ public class LigaController {
 		model.addAttribute("findeAlleSpieleEinerLigaEinerSaisonEinesSpieltages", 
 				erstelleSpielEintraegeEinerLiga(landName, ligaName, ausgewaehlteSaison, ausgewaehlterSpieltag));
 		model.addAttribute("alleTabellenEintraegeEinerLiga", alleTabellenEintraegeEinerLiga);
-		model.addAttribute("spielEreignisService", spielEreignisService);
 
 		return "tabelle";
 	}
@@ -173,8 +168,10 @@ public class LigaController {
 		
 		LocalTime aktuelleUhrzeit = LocalTime.now(ZoneId.of("Europe/Berlin"));
 		
-		if((spiel.getSpieltag().getSpieltagNummer() > spieltagService.findeAktuellenSpieltag().getSpieltagNummer()) ||
-				aktuelleUhrzeit.isBefore(spiel.getSpielTyp().getSpielBeginn())) {
+		//TODO WIEDER IN IF EINFÜGEN
+		//(spiel.getSpieltag().getSpieltagNummer() > spieltagService.findeAktuellenSpieltag().getSpieltagNummer()) ||
+		//aktuelleUhrzeit.isBefore(spiel.getSpielTyp().getSpielBeginn())
+		if(false) {
 			spielEintrag.setToreHeimmannschaft(-1);
 			spielEintrag.setToreGastmannschaft(-1);
 			spielEintrag.setToreHeimmannschaftHalbzeit(-1);

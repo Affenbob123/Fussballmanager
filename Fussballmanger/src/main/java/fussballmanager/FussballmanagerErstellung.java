@@ -19,7 +19,6 @@ import fussballmanager.service.saison.SaisonService;
 import fussballmanager.service.saison.spieltag.SpieltagService;
 import fussballmanager.service.spiel.SpielService;
 import fussballmanager.service.spiel.SpieleTypen;
-import fussballmanager.service.spiel.spielereignisse.SpielEreignisService;
 import fussballmanager.service.spieler.SpielerService;
 import fussballmanager.service.team.TeamService;
 import fussballmanager.service.user.UserService;
@@ -51,9 +50,6 @@ public class FussballmanagerErstellung {
 	
 	@Autowired
 	UserService userService;
-	
-	@Autowired
-	SpielEreignisService spielEreignisService;
 	
 	@Autowired
 	SpielService spielService;

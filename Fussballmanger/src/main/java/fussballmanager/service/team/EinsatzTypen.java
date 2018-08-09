@@ -5,8 +5,8 @@ public enum EinsatzTypen {
 	GEMUETLICH("Gemütlich", 0.70, 0.5),
 	LOCKER("Locker", 0.85, 0.75),
 	NORMAL("Normal", 1.0, 1.0),
-	AGGRESSIV("Aggressiv", 1.15, 1.25),
-	BRUTAL("Brutal", 1.3, 1.5);
+	AGGRESSIV("Aggressiv", 1.15, 1.75),
+	BRUTAL("Brutal", 1.3, 3);
 	
 	private final String bezeichnung;
 	private final double staerkenFaktor;

@@ -16,6 +16,7 @@ import fussballmanager.service.saison.spieltag.Spieltag;
 import fussballmanager.service.saison.spieltag.SpieltagService;
 import fussballmanager.service.spiel.spielereignisse.SpielEreignis;
 import fussballmanager.service.spiel.spielereignisse.SpielEreignisTypen;
+import fussballmanager.service.spieler.Spieler;
 import fussballmanager.service.team.Team;
 import fussballmanager.service.team.TeamService;
 import fussballmanager.spielsimulation.SpielSimulation;

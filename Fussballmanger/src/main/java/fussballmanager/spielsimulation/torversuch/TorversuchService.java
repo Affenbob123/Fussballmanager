@@ -9,14 +9,11 @@ import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import fussballmanager.mvc.liveticker.LiveTickerController;
 import fussballmanager.service.spiel.Spiel;
 import fussballmanager.service.spiel.SpielService;
 import fussballmanager.service.spiel.spielereignisse.SpielEreignis;
-import fussballmanager.service.spiel.spielereignisse.SpielEreignisService;
 import fussballmanager.service.spiel.spielereignisse.SpielEreignisTypen;
 import fussballmanager.service.team.Team;
 
@@ -28,9 +25,6 @@ public class TorversuchService {
 
 	@Autowired
 	TorversuchRepository torversuchRepository;
-	
-	@Autowired
-	SpielEreignisService spielEreignisService;
 	
 	@Autowired
 	SpielService spielService;
@@ -78,12 +72,11 @@ public class TorversuchService {
 				spielEreignis.setSpielereignisTyp(SpielEreignisTypen.TORVERSUCHGETROFFEN);
 			}
 		}
+		LOG.info("tor von Spieler: {}, vom Team: {}", spielEreignis.getTorschuetze().getPosition().getPositionsName(), spielEreignis.getAngreifer().getName());
 		loescheTorversuch(torversuch);
 		spiel.addSpielEreignis(spielEreignis);
 		
-		
 		spielService.aktualisiereSpiel(spiel);
-		spielEreignisService.legeSpielEreignisAn(spielEreignis);
 	}
 	
 	public void ueberPruefeObTorversucheNochAktuell() {

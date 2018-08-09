@@ -84,7 +84,8 @@ public class FussballmanagerTestData {
 		
 	Random r = new Random();
 	
-	int counter = 0;
+	//TODO Wieder mit LocalTime in SpielMinutesimulation machen
+	int spielminute = 0;
 
 	public void erzeugeTestDaten() {
 		erzeugeTestUser();
@@ -120,30 +121,30 @@ public class FussballmanagerTestData {
 	
 	@Scheduled(cron = "15-59 0/3 * * * ?", zone="Europe/Berlin")
 	public void simuliereSpieleErsteHalbzeit() {
-		counter++;
-			simuliereLigaspielErsteHalbzeit();
-			LOG.info("erste halbzeit: {}", counter);
+		spielminute++;
+		simuliereLigaspielErsteHalbzeit(spielminute);
+		LOG.info("erste halbzeit: {}", spielminute);
 	}
 	
 	@Scheduled(cron = "15-59 1/3 * * * ?", zone="Europe/Berlin")
 	public void simuliereSpieleZweiteHalbzeit() {
-		counter++;
-			simuliereLigaspielZweiteHalbzeit();
-			LOG.info("zweite halbzeit: {}", counter);
+		spielminute++;
+		simuliereLigaspielZweiteHalbzeit(spielminute);
+		LOG.info("zweite halbzeit: {}", spielminute);
 	}
 	
-	@Scheduled(cron = "0 2/3 * * * ?", zone="Europe/Berlin")
+	@Scheduled(cron = "05 2/3 * * * ?", zone="Europe/Berlin")
 	public void simuliereSpielEnde() {
 		setzeErfahrungeUndSetzteAuswechselungenZurueckLigaspiel();
-		counter = 0;
+		spielminute = 0;
 	}
 	
-	public void simuliereLigaspielErsteHalbzeit() {
-		spielSimulation.simuliereSpielMinuteAllerSpieleErsteHalbzeit(SpieleTypen.LIGASPIEL);
+	public void simuliereLigaspielErsteHalbzeit(int spielminute) {
+		spielSimulation.simuliereSpielMinuteAllerSpieleErsteHalbzeit(SpieleTypen.LIGASPIEL, spielminute);
 	}
 	
-	public void simuliereLigaspielZweiteHalbzeit() {
-		spielSimulation.simuliereSpielMinuteAllerSpieleZweiteHalbzeit(SpieleTypen.LIGASPIEL);
+	public void simuliereLigaspielZweiteHalbzeit(int spielminute) {
+		spielSimulation.simuliereSpielMinuteAllerSpieleZweiteHalbzeit(SpieleTypen.LIGASPIEL, spielminute);
 	}
 	
 	public void setzeErfahrungeUndSetzteAuswechselungenZurueckLigaspiel() {
@@ -154,6 +155,7 @@ public class FussballmanagerTestData {
 			Team heimTeam = spiel.getHeimmannschaft();
 			Team gastTeam = spiel.getGastmannschaft();
 			if(!spiel.isVorbei() && (spiel.getSpielTyp().getSpielBeginn().isAfter(aktuelleZeitMinusZweiStunden))) {
+				spielService.anzahlToreEinesSpielSetzen(spiel);
 				spiel.setVorbei(true);
 				heimTeam.setAnzahlAuswechselungen(3);
 				gastTeam.setAnzahlAuswechselungen(3);

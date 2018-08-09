@@ -2,6 +2,7 @@ package fussballmanager.spielsimulation;
 
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -19,28 +20,23 @@ import fussballmanager.service.spiel.Spiel;
 import fussballmanager.service.spiel.SpielService;
 import fussballmanager.service.spiel.SpieleTypen;
 import fussballmanager.service.spiel.spielereignisse.SpielEreignis;
-import fussballmanager.service.spiel.spielereignisse.SpielEreignisService;
 import fussballmanager.service.spiel.spielereignisse.SpielEreignisTypen;
+import fussballmanager.service.spieler.AufstellungsPositionsTypen;
 import fussballmanager.service.spieler.Spieler;
 import fussballmanager.service.spieler.SpielerService;
 import fussballmanager.service.tabelle.TabellenEintragService;
 import fussballmanager.service.team.AusrichtungsTypen;
+import fussballmanager.service.team.Team;
 import fussballmanager.service.team.TeamService;
 import fussballmanager.spielsimulation.torversuch.Torversuch;
 import fussballmanager.spielsimulation.torversuch.TorversuchService;
 import fussballmanager.spielsimulation.torversuch.TorversuchTypen;
-
-import static java.time.temporal.ChronoUnit.MINUTES;
-import static java.lang.Math.toIntExact;
 
 @Service
 @Transactional
 public class SpielSimulation {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(SpielSimulation.class);
-	
-	@Autowired
-	SpielEreignisService spielEreignisService;
 	
 	@Autowired
 	SpielService spielService;
@@ -66,8 +62,6 @@ public class SpielSimulation {
 	@Autowired
 	TabellenEintragService tabellenEintragService;
 	
-	Random random = new Random();
-	
 	private boolean heimmannschaftAngreifer;
 		
 	public SpielSimulation() {
@@ -80,140 +74,41 @@ public class SpielSimulation {
 	 * TODO Aufstellung miteinbeziehen
 	 */
 	
-	public void simuliereSpielMinuteAllerSpieleErsteHalbzeit(SpieleTypen spielTyp) {	
+	public void simuliereSpielMinuteAllerSpieleErsteHalbzeit(SpieleTypen spielTyp, int spielminute) {	
 		List<Spiel> alleSpieleEinesSpieltages = spielService.
 				findeAlleSpieleEinerSaisonUndSpieltagesNachSpielTyp(saisonService.findeAktuelleSaison(), spieltagService.findeAktuellenSpieltag(), spielTyp);
-		int spielminute = 1;
 		
 		for(Spiel spiel : alleSpieleEinesSpieltages) {
 			spiel.setAktuelleSpielminute(spielminute);
 			spielService.aktualisiereSpiel(spiel);
-			simuliereSpielminuteEinesSpieles(spiel);
-			spielminute++;
+			simuliereSpielminuteEinesSpieles(spiel, spielminute);
 		}
+		torversuchService.ueberPruefeObTorversucheNochAktuell();
 	}
 	
-	public void simuliereSpielMinuteAllerSpieleZweiteHalbzeit(SpieleTypen spielTyp) {
+	public void simuliereSpielMinuteAllerSpieleZweiteHalbzeit(SpieleTypen spielTyp, int spielminute) {
 		List<Spiel> alleSpieleEinesSpieltages = 
 				spielService.findeAlleSpieleEinerSaisonUndSpieltages(saisonService.findeAktuelleSaison(), spieltagService.findeAktuellenSpieltag());
-		int spielminute = 46;
 		
 		for(Spiel spiel : alleSpieleEinesSpieltages) {
 			spiel.setAktuelleSpielminute(spielminute);
 			spielService.aktualisiereSpiel(spiel);
-			simuliereSpielminuteEinesSpieles(spiel);
+			simuliereSpielminuteEinesSpieles(spiel, spielminute);
+			spielminute++;
 		}
+		torversuchService.ueberPruefeObTorversucheNochAktuell();
 	}
 	
-	public void simuliereSpielminuteEinesSpieles(Spiel spiel) {
+	public void simuliereSpielminuteEinesSpieles(Spiel spiel, int spielminute) {
 		List<Spieler> spielerHeimmannschaft = spielerService.findeAlleSpielerEinesTeams(spiel.getHeimmannschaft());
-		List<Spieler> spielerGastmannschaft = spielerService.findeAlleSpielerEinesTeams(spiel.getGastmannschaft());
-		
-		LocalTime aktuelleZeit = LocalTime.now(ZoneId.of("Europe/Berlin"));
-		
+		List<Spieler> spielerGastmannschaft = spielerService.findeAlleSpielerEinesTeams(spiel.getGastmannschaft());		
 		spiel = spielService.findeSpiel(spiel.getId());
 		
-		int zufallsZahl = random.nextInt(100 - 1 + 1) + 1;
-		double wahrscheinlichkeitTorVersuch;
-		
-		AusrichtungsTypen ausrichtungsTypAngreifer;
-		AusrichtungsTypen ausrichtungsTypVerteidiger;
-		
-		double erfolgsWahrscheinlichkeitTorwart;
-		double erfolgsWahrscheinlichkeitAbwehr;
-		double erfolgsWahrscheinlichkeitMittelfeld;
-		double erfolgsWahrscheinlichkeitAngriff;
-		
-		double staerkeFaktorHeimmannschaft = staerkeFaktorHeimmannschaft(spiel);
-		double staerkeFaktorGastmannschaft = 1 / staerkeFaktorHeimmannschaft(spiel);
-		
 		bestimmeAngreifer(spiel.getHeimVorteil(), spielerHeimmannschaft, spielerGastmannschaft);
-		
-		if(heimmannschaftAngreifer) {
-			ausrichtungsTypAngreifer = spiel.getHeimmannschaft().getAusrichtungsTyp();
-			ausrichtungsTypVerteidiger = spiel.getGastmannschaft().getAusrichtungsTyp();
-			
-			erfolgsWahrscheinlichkeitTorwart = torVersuchWahrscheinlichkeit.wahrscheinlichkeitTorwartGegenTorwart(spielerHeimmannschaft, spielerGastmannschaft, staerkeFaktorHeimmannschaft);
-			erfolgsWahrscheinlichkeitAbwehr = torVersuchWahrscheinlichkeit.wahrscheinlichkeitAbwehrGegenAngriff(spielerHeimmannschaft, spielerGastmannschaft, staerkeFaktorHeimmannschaft);
-			erfolgsWahrscheinlichkeitMittelfeld = torVersuchWahrscheinlichkeit.wahrscheinlichkeitMittelfeldGegenMittelfeld(spielerHeimmannschaft, spielerGastmannschaft, staerkeFaktorHeimmannschaft);
-			erfolgsWahrscheinlichkeitAngriff = torVersuchWahrscheinlichkeit.wahrscheinlichkeitAngriffGegenAbwehr(spielerHeimmannschaft, spielerGastmannschaft, staerkeFaktorHeimmannschaft);
-			
-			wahrscheinlichkeitTorVersuch = erfolgsWahrscheinlichkeitAbwehr * erfolgsWahrscheinlichkeitMittelfeld * erfolgsWahrscheinlichkeitAngriff * erfolgsWahrscheinlichkeitTorwart;
-			wahrscheinlichkeitTorVersuch = wahrscheinlichkeitTorVersuch * ausrichtungsTypAngreifer.getWahrscheinlichkeitTorZuErzielen() * 
-					ausrichtungsTypVerteidiger.getWahrscheinlichkeitTorZuKassieren();
-			
-			wahrscheinlichkeitTorVersuch = wahrscheinlichkeitTorVersuch * 100;
-			
-			if(zufallsZahl < wahrscheinlichkeitTorVersuch) {
-				Torversuch torversuch = new Torversuch();
-				torversuch.setRichtung(zufaelligeTorversuchRichtung());
-				//TODO SPieler bestimmen
-				torversuch.setTorschuetze(spielerService.findeAlleSpielerEinesTeams(spiel.getHeimmannschaft()).get(0));
-				torversuch.setAngreifer(spiel.getHeimmannschaft());
-				torversuch.setTorwart(spielerService.findeAlleSpielerEinesTeams(spiel.getGastmannschaft()).get(0));
-				torversuch.setVerteidiger(spiel.getGastmannschaft());
-				torversuch.setSpiel(spiel);
-				torversuch.setSpielminute(spiel.getAktuelleSpielminute());
-				torversuch.setErstellZeit(aktuelleZeit);
-				
-				LOG.info("tor heim");
-				torversuchService.legeTorversuchAn(torversuch);
-				torversuchService.ueberPruefeObTorversucheNochAktuell();
-				
-				//aktualisiert spiel und die Tabelle
-				spielService.anzahlToreEinesSpielSetzen(spiel);
-				tabellenEintragService.einenTabellenEintragAktualisieren(
-						tabellenEintragService.findeTabellenEintragDurchTeamUndSaison(spiel.getHeimmannschaft(), saisonService.findeAktuelleSaison()));
-				tabellenEintragService.einenTabellenEintragAktualisieren(
-						tabellenEintragService.findeTabellenEintragDurchTeamUndSaison(spiel.getGastmannschaft(), saisonService.findeAktuelleSaison()));
-			}	
-		} else {
-			ausrichtungsTypAngreifer = spiel.getGastmannschaft().getAusrichtungsTyp();
-			ausrichtungsTypVerteidiger = spiel.getHeimmannschaft().getAusrichtungsTyp();
-			
-			erfolgsWahrscheinlichkeitTorwart = torVersuchWahrscheinlichkeit.wahrscheinlichkeitTorwartGegenTorwart(spielerGastmannschaft, spielerHeimmannschaft, staerkeFaktorGastmannschaft);
-			erfolgsWahrscheinlichkeitAbwehr = torVersuchWahrscheinlichkeit.wahrscheinlichkeitAbwehrGegenAngriff(spielerGastmannschaft, spielerHeimmannschaft, staerkeFaktorGastmannschaft);
-			erfolgsWahrscheinlichkeitMittelfeld = torVersuchWahrscheinlichkeit.wahrscheinlichkeitMittelfeldGegenMittelfeld(spielerGastmannschaft, spielerHeimmannschaft, staerkeFaktorGastmannschaft);
-			erfolgsWahrscheinlichkeitAngriff = torVersuchWahrscheinlichkeit.wahrscheinlichkeitAngriffGegenAbwehr(spielerGastmannschaft, spielerHeimmannschaft, staerkeFaktorGastmannschaft);
-			
-			wahrscheinlichkeitTorVersuch = erfolgsWahrscheinlichkeitAbwehr * erfolgsWahrscheinlichkeitMittelfeld * erfolgsWahrscheinlichkeitAngriff * erfolgsWahrscheinlichkeitTorwart;
-			wahrscheinlichkeitTorVersuch = wahrscheinlichkeitTorVersuch * ausrichtungsTypAngreifer.getWahrscheinlichkeitTorZuErzielen() * 
-					ausrichtungsTypVerteidiger.getWahrscheinlichkeitTorZuKassieren();
-			
-			wahrscheinlichkeitTorVersuch = wahrscheinlichkeitTorVersuch * 100;
-			
-			if(zufallsZahl < wahrscheinlichkeitTorVersuch) {
-				Torversuch torversuch = new Torversuch();
-				torversuch.setRichtung(zufaelligeTorversuchRichtung());
-				//TODO SPieler bestimmen
-				torversuch.setTorschuetze(spielerService.findeAlleSpielerEinesTeams(spiel.getGastmannschaft()).get(0));
-				torversuch.setAngreifer(spiel.getGastmannschaft());
-				torversuch.setTorwart(spielerService.findeAlleSpielerEinesTeams(spiel.getHeimmannschaft()).get(0));
-				torversuch.setVerteidiger(spiel.getHeimmannschaft());
-				torversuch.setSpiel(spiel);
-				torversuch.setSpielminute(spiel.getAktuelleSpielminute());
-				torversuch.setErstellZeit(aktuelleZeit);
-				
-				LOG.info("tor gast");
-				torversuchService.legeTorversuchAn(torversuch);
-				torversuchService.ueberPruefeObTorversucheNochAktuell();
-				
-				//aktualisiert spiel und die Tabelle
-				spielService.anzahlToreEinesSpielSetzen(spiel);
-				tabellenEintragService.einenTabellenEintragAktualisieren(
-						tabellenEintragService.findeTabellenEintragDurchTeamUndSaison(spiel.getHeimmannschaft(), saisonService.findeAktuelleSaison()));
-				tabellenEintragService.einenTabellenEintragAktualisieren(
-						tabellenEintragService.findeTabellenEintragDurchTeamUndSaison(spiel.getGastmannschaft(), saisonService.findeAktuelleSaison()));
-			} 
-		}
-		
-//		LOG.info("Heimmannscahftangreifer: {}, zufallszahl: {}, tvwahrscheinlichkeit: {}", heimmannschaftAngreifer, zufallsZahl, wahrscheinlichkeitTorVersuch);
-//		LOG.info("Spiel: {} : {}, Ausrichtung: {} : {}, Einsatz: {} : {}", spiel.getHeimmannschaft().getName(), spiel.getGastmannschaft().getName(), 
-//				spiel.getHeimmannschaft().getAusrichtungsTyp(), spiel.getGastmannschaft().getAusrichtungsTyp(), spiel.getHeimmannschaft().getEinsatzTyp(),
-//				spiel.getGastmannschaft().getEinsatzTyp());
-//		LOG.info("Heimmannschaft Angreifer: {}, Torwart: {}, Abwehr: {}, Mittelfeld: {}, Angriff: {}, Torversuch: {}", heimmannschaftAngreifer, 
-//				erfolgsWahrscheinlichkeitTorwart, erfolgsWahrscheinlichkeitAbwehr, erfolgsWahrscheinlichkeitMittelfeld, erfolgsWahrscheinlichkeitAngriff,
-//				wahrscheinlichkeitTorVersuch);
+		ermittleObEinTorversuchStattfindet(heimmannschaftAngreifer, spiel);
+		ermittleObEsEineVerletzungGibt(heimmannschaftAngreifer, spiel, spielminute);
+		ermittleObEsEineGelbeKarteGibt(heimmannschaftAngreifer, spiel, spielminute);
+		ermittleObEsEineRoteKarteGibt(heimmannschaftAngreifer, spiel, spielminute);
 	}
 
 	public boolean isHeimmannschaftAngreifer() {
@@ -275,6 +170,7 @@ public class SpielSimulation {
 	}
 	
 	private TorversuchTypen zufaelligeTorversuchRichtung() {
+		Random random = new Random();
 		int zufallsZahl = random.nextInt(2);
 		
 		if(zufallsZahl == 2) {
@@ -285,5 +181,255 @@ public class SpielSimulation {
 			return TorversuchTypen.MITTE;
 		}
 		return TorversuchTypen.RECHTS;
+	}
+	
+	private void ermittleObEinTorversuchStattfindet(boolean heimmannschaftAngreifer, Spiel spiel) {
+		List<Spieler> spielerHeimmannschaft = spielerService.findeAlleSpielerEinesTeams(spiel.getHeimmannschaft());
+		List<Spieler> spielerGastmannschaft = spielerService.findeAlleSpielerEinesTeams(spiel.getGastmannschaft());		
+		Random random = new Random();
+		
+		int zufallsZahl = random.nextInt(100 - 1 + 1) + 1;
+		double wahrscheinlichkeitTorVersuch;
+		
+		AusrichtungsTypen ausrichtungsTypAngreifer;
+		AusrichtungsTypen ausrichtungsTypVerteidiger;
+		
+		double erfolgsWahrscheinlichkeitTorwart;
+		double erfolgsWahrscheinlichkeitAbwehr;
+		double erfolgsWahrscheinlichkeitMittelfeld;
+		double erfolgsWahrscheinlichkeitAngriff;
+		
+		double staerkeFaktorHeimmannschaft = staerkeFaktorHeimmannschaft(spiel);
+		double staerkeFaktorGastmannschaft = 1 / staerkeFaktorHeimmannschaft(spiel);
+		
+		if(heimmannschaftAngreifer) {
+			ausrichtungsTypAngreifer = spiel.getHeimmannschaft().getAusrichtungsTyp();
+			ausrichtungsTypVerteidiger = spiel.getGastmannschaft().getAusrichtungsTyp();
+			
+			erfolgsWahrscheinlichkeitTorwart = torVersuchWahrscheinlichkeit.wahrscheinlichkeitTorwartGegenTorwart(spielerHeimmannschaft, spielerGastmannschaft, staerkeFaktorHeimmannschaft);
+			erfolgsWahrscheinlichkeitAbwehr = torVersuchWahrscheinlichkeit.wahrscheinlichkeitAbwehrGegenAngriff(spielerHeimmannschaft, spielerGastmannschaft, staerkeFaktorHeimmannschaft);
+			erfolgsWahrscheinlichkeitMittelfeld = torVersuchWahrscheinlichkeit.wahrscheinlichkeitMittelfeldGegenMittelfeld(spielerHeimmannschaft, spielerGastmannschaft, staerkeFaktorHeimmannschaft);
+			erfolgsWahrscheinlichkeitAngriff = torVersuchWahrscheinlichkeit.wahrscheinlichkeitAngriffGegenAbwehr(spielerHeimmannschaft, spielerGastmannschaft, staerkeFaktorHeimmannschaft);
+			
+			wahrscheinlichkeitTorVersuch = erfolgsWahrscheinlichkeitAbwehr * erfolgsWahrscheinlichkeitMittelfeld * erfolgsWahrscheinlichkeitAngriff * erfolgsWahrscheinlichkeitTorwart;
+			wahrscheinlichkeitTorVersuch = wahrscheinlichkeitTorVersuch * ausrichtungsTypAngreifer.getWahrscheinlichkeitTorZuErzielen() * 
+					ausrichtungsTypVerteidiger.getWahrscheinlichkeitTorZuKassieren();
+			
+			wahrscheinlichkeitTorVersuch = wahrscheinlichkeitTorVersuch * 100;
+			if(zufallsZahl < wahrscheinlichkeitTorVersuch) {
+				erstellenEinesTorversuches(spiel.getHeimmannschaft(), spiel.getGastmannschaft(), spiel);
+			}	
+		} else {
+			ausrichtungsTypAngreifer = spiel.getGastmannschaft().getAusrichtungsTyp();
+			ausrichtungsTypVerteidiger = spiel.getHeimmannschaft().getAusrichtungsTyp();
+			
+			erfolgsWahrscheinlichkeitTorwart = torVersuchWahrscheinlichkeit.wahrscheinlichkeitTorwartGegenTorwart(spielerGastmannschaft, spielerHeimmannschaft, staerkeFaktorGastmannschaft);
+			erfolgsWahrscheinlichkeitAbwehr = torVersuchWahrscheinlichkeit.wahrscheinlichkeitAbwehrGegenAngriff(spielerGastmannschaft, spielerHeimmannschaft, staerkeFaktorGastmannschaft);
+			erfolgsWahrscheinlichkeitMittelfeld = torVersuchWahrscheinlichkeit.wahrscheinlichkeitMittelfeldGegenMittelfeld(spielerGastmannschaft, spielerHeimmannschaft, staerkeFaktorGastmannschaft);
+			erfolgsWahrscheinlichkeitAngriff = torVersuchWahrscheinlichkeit.wahrscheinlichkeitAngriffGegenAbwehr(spielerGastmannschaft, spielerHeimmannschaft, staerkeFaktorGastmannschaft);
+			
+			wahrscheinlichkeitTorVersuch = erfolgsWahrscheinlichkeitAbwehr * erfolgsWahrscheinlichkeitMittelfeld * erfolgsWahrscheinlichkeitAngriff * erfolgsWahrscheinlichkeitTorwart;
+			wahrscheinlichkeitTorVersuch = wahrscheinlichkeitTorVersuch * ausrichtungsTypAngreifer.getWahrscheinlichkeitTorZuErzielen() * 
+					ausrichtungsTypVerteidiger.getWahrscheinlichkeitTorZuKassieren();
+			
+			wahrscheinlichkeitTorVersuch = wahrscheinlichkeitTorVersuch * 100;
+			
+			if(zufallsZahl < wahrscheinlichkeitTorVersuch) {
+				erstellenEinesTorversuches(spiel.getGastmannschaft(), spiel.getHeimmannschaft(), spiel);
+			} 
+		}
+	}
+	
+	private void ermittleObEsEineRoteKarteGibt(boolean heimmannschaftAngreifer, Spiel spiel, int spielminute) {
+		Random random = new Random();
+		int zufallsZahl = random.nextInt(99999);
+		if(heimmannschaftAngreifer) {
+			int wahrscheinlichkeitGelbeKarteProMinuteMalTausend = (int) (33 * spiel.getGastmannschaft().getEinsatzTyp().getWahrscheinlichkeitKarteUndVerletzung());
+			if(zufallsZahl <= wahrscheinlichkeitGelbeKarteProMinuteMalTausend) {
+				SpielEreignis spielEreignis = new SpielEreignis();
+				spielEreignis.setSpielminute(spielminute);
+				spielEreignis.setSpielereignisTyp(SpielEreignisTypen.ROTEKARTE);
+				spielEreignis.setTeam(spiel.getGastmannschaft());
+				Spieler spieler = ermittleSpielerFuerRoteKarte(spielerService.findeAlleSpielerEinesTeamsInAufstellung(spiel.getGastmannschaft()));
+				spieler.setAufstellungsPositionsTyp(AufstellungsPositionsTypen.ERSATZ);
+				spielEreignis.setSpieler(spieler);
+				LOG.info("rotekarte gast");
+			}
+		} else {
+			int wahrscheinlichkeitGelbeKarteProMinuteMalTausend = (int) (33 * spiel.getHeimmannschaft().getEinsatzTyp().getWahrscheinlichkeitKarteUndVerletzung());
+			if(zufallsZahl <= wahrscheinlichkeitGelbeKarteProMinuteMalTausend) {
+				SpielEreignis spielEreignis = new SpielEreignis();
+				spielEreignis.setSpielminute(spielminute);
+				spielEreignis.setSpielereignisTyp(SpielEreignisTypen.ROTEKARTE);
+				spielEreignis.setTeam(spiel.getHeimmannschaft());
+				Spieler spieler = ermittleSpielerFuerRoteKarte(spielerService.findeAlleSpielerEinesTeamsInAufstellung(spiel.getHeimmannschaft()));
+				spieler.setAufstellungsPositionsTyp(AufstellungsPositionsTypen.ERSATZ);
+				spielEreignis.setSpieler(spieler);
+				LOG.info("rotekarte heim");
+			}
+		}
+	}
+	
+	private void ermittleObEsEineGelbeKarteGibt(boolean heimmannschaftAngreifer, Spiel spiel, int spielminute) {
+		Random random = new Random();
+		int zufallsZahl = random.nextInt(99999);
+		if(heimmannschaftAngreifer) {
+			int wahrscheinlichkeitGelbeKarteProMinuteMalTausend = (int) (1900 * spiel.getGastmannschaft().getEinsatzTyp().getWahrscheinlichkeitKarteUndVerletzung());
+			if(zufallsZahl <= wahrscheinlichkeitGelbeKarteProMinuteMalTausend) {
+				SpielEreignis spielEreignis = new SpielEreignis();
+				spielEreignis.setSpielminute(spielminute);
+				spielEreignis.setSpielereignisTyp(SpielEreignisTypen.GELBEKARTE);
+				spielEreignis.setTeam(spiel.getGastmannschaft());
+				Spieler spieler = ermittleSpielerFuerGelbeKarte(spielerService.findeAlleSpielerEinesTeamsInAufstellung(spiel.getGastmannschaft()));
+				if(spieler.isGelbeKarte()) {
+					spielEreignis.setSpielereignisTyp(SpielEreignisTypen.GELBROTEKARTE);
+					spieler.setAufstellungsPositionsTyp(AufstellungsPositionsTypen.ERSATZ);
+					spielerService.aktualisiereSpieler(spieler);
+				}
+				spielEreignis.setSpieler(spieler);
+				LOG.info("gelbekarte gast");
+			}
+		} else {
+			int wahrscheinlichkeitGelbeKarteProMinuteMalTausend = (int) (1900 * spiel.getHeimmannschaft().getEinsatzTyp().getWahrscheinlichkeitKarteUndVerletzung());
+			if(zufallsZahl <= wahrscheinlichkeitGelbeKarteProMinuteMalTausend) {
+				SpielEreignis spielEreignis = new SpielEreignis();
+				spielEreignis.setSpielminute(spielminute);
+				spielEreignis.setSpielereignisTyp(SpielEreignisTypen.GELBEKARTE);
+				spielEreignis.setTeam(spiel.getHeimmannschaft());
+				Spieler spieler = ermittleSpielerFuerGelbeKarte(spielerService.findeAlleSpielerEinesTeamsInAufstellung(spiel.getHeimmannschaft()));
+				if(spieler.isGelbeKarte()) {
+					spielEreignis.setSpielereignisTyp(SpielEreignisTypen.GELBROTEKARTE);
+					spieler.setAufstellungsPositionsTyp(AufstellungsPositionsTypen.ERSATZ);
+					spielerService.aktualisiereSpieler(spieler);
+				}
+				spielEreignis.setSpieler(spieler);
+				LOG.info("gelbekarte heim");
+			}
+		}
+	}
+
+	private void ermittleObEsEineVerletzungGibt(boolean heimmannschaftAngreifer, Spiel spiel, int spielminute) {
+		Random random = new Random();
+		int zufallsZahl = random.nextInt(9999);
+		if(heimmannschaftAngreifer) {
+			int wahrscheinlichkeitGelbeKarteProMinuteMalTausend = (int) (38 * spiel.getGastmannschaft().getEinsatzTyp().getWahrscheinlichkeitKarteUndVerletzung());
+			if(zufallsZahl <= wahrscheinlichkeitGelbeKarteProMinuteMalTausend) {
+				SpielEreignis spielEreignis = new SpielEreignis();
+				spielEreignis.setSpielminute(spielminute);
+				spielEreignis.setSpielereignisTyp(SpielEreignisTypen.VERLETZUNG);
+				spielEreignis.setTeam(spiel.getGastmannschaft());
+				Spieler spieler = ermittleSpielerFuerRoteKarte(spielerService.findeAlleSpielerEinesTeamsInAufstellung(spiel.getGastmannschaft()));
+				spieler.setAufstellungsPositionsTyp(AufstellungsPositionsTypen.ERSATZ);				
+				LOG.info("verletzung gast");
+			}
+		} else {
+			int wahrscheinlichkeitGelbeKarteProMinuteMalTausend = (int) (38 * spiel.getHeimmannschaft().getEinsatzTyp().getWahrscheinlichkeitKarteUndVerletzung());
+			if(zufallsZahl <= wahrscheinlichkeitGelbeKarteProMinuteMalTausend) {
+				SpielEreignis spielEreignis = new SpielEreignis();
+				spielEreignis.setSpielminute(spielminute);
+				spielEreignis.setSpielereignisTyp(SpielEreignisTypen.VERLETZUNG);
+				spielEreignis.setTeam(spiel.getHeimmannschaft());
+				Spieler spieler = ermittleSpielerFuerRoteKarte(spielerService.findeAlleSpielerEinesTeamsInAufstellung(spiel.getHeimmannschaft()));
+				spieler.setAufstellungsPositionsTyp(AufstellungsPositionsTypen.ERSATZ);		
+				LOG.info("verletzung heim");
+			}
+		}
+	}
+	
+	private void erstellenEinesTorversuches(Team angreifer, Team verteidiger, Spiel spiel) {
+		LocalTime aktuelleUhrzeit = LocalTime.now(ZoneId.of("Europe/Berlin"));
+		
+		Torversuch torversuch = new Torversuch();
+		torversuch.setRichtung(zufaelligeTorversuchRichtung());
+		torversuch.setTorschuetze(ermittleSpielerFuerTorversuch(spielerService.findeAlleSpielerEinesTeamsInAufstellung(angreifer)));
+		torversuch.setAngreifer(angreifer);
+		torversuch.setTorwart(spielerService.findeTorwartEinesTeams(verteidiger));
+		torversuch.setVerteidiger(verteidiger);
+		torversuch.setSpiel(spiel);
+		torversuch.setSpielminute(spiel.getAktuelleSpielminute());
+		torversuch.setErstellZeit(aktuelleUhrzeit);
+		
+		LOG.info("tor von Spieler: {}, vom Team: {}", torversuch.getTorschuetze().getPosition().getPositionsName(), torversuch.getAngreifer().getName());
+		torversuchService.legeTorversuchAn(torversuch);
+		
+		//Wenn der Verteidiger keinen Torwart hat, dann wird automatisch ein Tor geschossen
+		if(torversuch.getTorwart() == null) {
+			torversuchService.erstelleSpielEreignisAusTorversuch(torversuch);
+		}
+		
+		//aktualisiert spiel und die Tabelle
+		spielService.anzahlToreEinesSpielSetzen(spiel);
+		tabellenEintragService.einenTabellenEintragAktualisieren(
+				tabellenEintragService.findeTabellenEintragDurchTeamUndSaison(spiel.getHeimmannschaft(), saisonService.findeAktuelleSaison()));
+		tabellenEintragService.einenTabellenEintragAktualisieren(
+				tabellenEintragService.findeTabellenEintragDurchTeamUndSaison(spiel.getGastmannschaft(), saisonService.findeAktuelleSaison()));
+	}
+
+	private Spieler ermittleSpielerFuerTorversuch(List<Spieler> spielerDesAngreifers) {
+		Random random = new Random();
+		List<Spieler> alleSpielerEinesTeams = spielerDesAngreifers;
+		List<Spieler> listeMitAnzahlAnSpielernJeNachWahrscheinlichkeit = new ArrayList<>();
+		int summeDerWahrscheinlichkeiten = 0;
+		
+		for(Spieler spieler : alleSpielerEinesTeams) {
+			summeDerWahrscheinlichkeiten = summeDerWahrscheinlichkeiten + spieler.getAufstellungsPositionsTyp().getTorversuchWahrscheinlichkeit();
+		}
+		int zufallsZahl = random.nextInt(summeDerWahrscheinlichkeiten);
+		
+		for(Spieler spieler : alleSpielerEinesTeams) {
+			int spielerZahl = spieler.getAufstellungsPositionsTyp().getTorversuchWahrscheinlichkeit();
+			for(int i = 1; i <= spielerZahl; i++) {
+				listeMitAnzahlAnSpielernJeNachWahrscheinlichkeit.add(spieler);
+			}
+		}
+		return listeMitAnzahlAnSpielernJeNachWahrscheinlichkeit.get(zufallsZahl);
+	}
+	
+	private Spieler ermittleSpielerFuerGelbeKarte(List<Spieler> spielerDesTeams) {
+		Random random = new Random();
+		List<Spieler> alleSpielerEinesTeams = spielerDesTeams;
+		List<Spieler> listeMitAnzahlAnSpielernJeNachWahrscheinlichkeit = new ArrayList<>();
+		int summeDerWahrscheinlichkeiten = 0;
+		
+		for(Spieler spieler : alleSpielerEinesTeams) {
+			summeDerWahrscheinlichkeiten = summeDerWahrscheinlichkeiten + spieler.getAufstellungsPositionsTyp().getGelbeKarteWahrscheinlichkeit();
+		}
+		int zufallsZahl = random.nextInt(summeDerWahrscheinlichkeiten);
+		
+		for(Spieler spieler : alleSpielerEinesTeams) {
+			int spielerZahl = spieler.getAufstellungsPositionsTyp().getGelbeKarteWahrscheinlichkeit();
+			for(int i = 1; i <= spielerZahl; i++) {
+				listeMitAnzahlAnSpielernJeNachWahrscheinlichkeit.add(spieler);
+			}
+		}
+		return listeMitAnzahlAnSpielernJeNachWahrscheinlichkeit.get(zufallsZahl);
+	}
+	
+	private Spieler ermittleSpielerFuerRoteKarte(List<Spieler> spielerDesTeams) {
+		Random random = new Random();
+		List<Spieler> alleSpielerEinesTeams = spielerDesTeams;
+		List<Spieler> listeMitAnzahlAnSpielernJeNachWahrscheinlichkeit = new ArrayList<>();
+		int summeDerWahrscheinlichkeiten = 0;
+		
+		for(Spieler spieler : alleSpielerEinesTeams) {
+			summeDerWahrscheinlichkeiten = summeDerWahrscheinlichkeiten + spieler.getAufstellungsPositionsTyp().getRoteKarteWahrscheinlichkeit();
+		}
+		int zufallsZahl = random.nextInt(summeDerWahrscheinlichkeiten);
+		
+		for(Spieler spieler : alleSpielerEinesTeams) {
+			int spielerZahl = spieler.getAufstellungsPositionsTyp().getRoteKarteWahrscheinlichkeit();
+			for(int i = 1; i <= spielerZahl; i++) {
+				listeMitAnzahlAnSpielernJeNachWahrscheinlichkeit.add(spieler);
+			}
+		}
+		return listeMitAnzahlAnSpielernJeNachWahrscheinlichkeit.get(zufallsZahl);
+	}
+	
+	private Spieler ermittleSpielerFuerVerletzung(List<Spieler> spielerDesTeams) {
+		Random random = new Random();
+		List<Spieler> alleSpielerEinesTeams = spielerDesTeams;
+		
+		int zufallsZahl = random.nextInt(alleSpielerEinesTeams.size()-1);
+		return alleSpielerEinesTeams.get(zufallsZahl);
 	}
 }

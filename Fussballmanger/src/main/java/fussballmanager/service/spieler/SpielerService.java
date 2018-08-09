@@ -58,6 +58,17 @@ public class SpielerService {
 		return spielerRepository.findByTeamIsNotNull();
 	}
 	
+	public Spieler findeTorwartEinesTeams(Team team) {
+		List<Spieler> alleSpielerEinesTeams = findeAlleSpielerEinesTeams(team);
+		
+		for(Spieler spieler : alleSpielerEinesTeams) {
+			if(spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.TW)) {
+				return spieler;
+			}
+		}
+		return null;
+	}
+	
 	public List<Spieler> findeAlleSpielerNachAufstellungsPositionsTyp(AufstellungsPositionsTypen aufstellungsPositionsTyp) {
 		return spielerRepository.findByAufstellungsPositionsTyp(aufstellungsPositionsTyp);
 	}

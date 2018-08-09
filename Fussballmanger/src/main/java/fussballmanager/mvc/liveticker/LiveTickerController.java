@@ -124,16 +124,15 @@ public class LiveTickerController {
 		SpielEreignisEintrag spielEreignisEintrag = new SpielEreignisEintrag();		
 		
 		if(spielEreignis.getSpielereignisTyp().equals(SpielEreignisTypen.TORVERSUCHGEHALTEN)) {
-			spielEreignisEintrag.setSpielerName(spielEreignis.getTorwart().getName());
+			spielEreignisEintrag.setSpieler(spielEreignis.getTorwart());
 			spielEreignisEintrag.setTeam(spielEreignis.getVerteidiger());
 		}
 		
 		if(spielEreignis.getSpielereignisTyp().equals(SpielEreignisTypen.TORVERSUCHGETROFFEN)) {
-			spielEreignisEintrag.setSpielerName(spielEreignis.getTorschuetze().getName());
+			spielEreignisEintrag.setSpieler(spielEreignis.getTorschuetze());
 			spielEreignisEintrag.setTeam(spielEreignis.getAngreifer());
 		}
-		spielEreignisEintrag.setSpielminute(spielEreignis.getSpielminute());
-		spielEreignisEintrag.setSpielEreignisName(spielEreignis.getSpielereignisTyp().getBeschreibung());
+		spielEreignisEintrag.setSpielEreignis(spielEreignis);
 		spielEreignisEintrag.setSpielEreignisTyp(spielEreignis.getSpielereignisTyp());
 		
 		return spielEreignisEintrag;

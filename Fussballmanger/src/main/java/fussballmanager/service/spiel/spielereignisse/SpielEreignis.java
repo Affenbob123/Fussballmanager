@@ -31,6 +31,12 @@ public class SpielEreignis {
 	@OneToOne
 	private Team verteidiger;
 	
+	@OneToOne
+	Spieler spieler;
+	
+	@OneToOne
+	Team team;
+	
 	SpielEreignisTypen spielereignisTyp;
 	
 	public SpielEreignis() {
@@ -91,5 +97,21 @@ public class SpielEreignis {
 
 	public void setSpielereignisTyp(SpielEreignisTypen spielereignisTyp) {
 		this.spielereignisTyp = spielereignisTyp;
+	}
+
+	public Spieler getSpieler() {
+		return spieler;
+	}
+
+	public void setSpieler(Spieler spieler) {
+		this.spieler = spieler;
+	}
+
+	public Team getTeam() {
+		return team;
+	}
+
+	public void setTeam(Team team) {
+		this.team = team;
 	}
 }
