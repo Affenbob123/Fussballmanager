@@ -47,7 +47,6 @@ public class SpielService {
 	
 	public Spiel findeSpielEinesTeamsInSaisonUndSpieltagUndSpielTyp(Team team, Saison saison, Spieltag spieltag, SpieleTypen spielTyp) {
 		List<Spiel> spiele = findeAlleSpieleEinerSaisonUndSpieltagesNachSpielTyp(saison, spieltag, spielTyp);
-		
 		for(Spiel spiel : spiele) {
 			if(spiel.getHeimmannschaft().equals(team) || spiel.getGastmannschaft().equals(team)) {
 				return spiel;

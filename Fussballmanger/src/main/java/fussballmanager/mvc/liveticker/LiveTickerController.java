@@ -92,8 +92,8 @@ public class LiveTickerController {
 
 	private List<LivetickerEintrag> erstelleLivetickerEintraege(List<Spiel> spiele) {
 		List<LivetickerEintrag> livetickerEintraege = new ArrayList<>();
-		if(!spiele.isEmpty()) {
-			for(Spiel spiel : spiele) {
+		for(Spiel spiel : spiele) {
+			if(spiel != null) {
 				livetickerEintraege.add(erstelleLivetickerEintrag(spiel));
 			}
 		}
