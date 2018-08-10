@@ -10,7 +10,8 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" 
 		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-	<link rel="stylesheet" href="/custom.css" />
+	<link rel="stylesheet" href="/spieler.css" />
+	<link rel="stylesheet" href="/header.css" />
 </head>
 <body>
 	<div class="container">
@@ -23,7 +24,7 @@
 		<h2 th:text="${spieler.name}"></h2>
 		<div class="col-md-12" id="containerBody">
 			<table class="table table-hover">
-					<tr>
+					<tr th:if="${spieler.nationalitaet}">
 						<td class="table-active">Nationalität</td>
 						<td th:text="${spieler.nationalitaet.getLandNameTyp().getName()}" />
 					<tr>

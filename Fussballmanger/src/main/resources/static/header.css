@@ -9,8 +9,9 @@ html, body {
 body {
 	font-family: Verdana;
 	background-color: rgb(226, 226, 226);
-	font-size: 14px;
+	font-size: 11px;
 }
+
 h2 {
 	text-transform: uppercase;
 }
@@ -33,7 +34,7 @@ h2 {
 }
 
 .dropdown-menu { 
-	font-size: 14px;
+	font-size: 11px;
 }
 
 .nav-link  {
