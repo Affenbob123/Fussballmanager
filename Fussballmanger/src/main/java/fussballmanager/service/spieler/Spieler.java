@@ -13,6 +13,7 @@ import javax.persistence.OneToOne;
 
 import fussballmanager.service.land.Land;
 import fussballmanager.service.spieler.spielerzuwachs.SpielerZuwachs;
+import fussballmanager.service.spieler.spielerzuwachs.ZuwachsFaktorAlter;
 import fussballmanager.service.spieler.staerke.Staerke;
 import fussballmanager.service.team.Team;
 
@@ -40,8 +41,7 @@ public class Spieler implements Comparable<Spieler> {
 	@OneToOne(cascade = {CascadeType.ALL})
 	private Staerke staerke;
 	
-	@OneToMany
-	private List<SpielerZuwachs> spielerZuwaechse;
+	private double spielerZuwachs = 0.0;
 	
 	private int erfahrung;
 	
@@ -222,16 +222,12 @@ public class Spieler implements Comparable<Spieler> {
 		this.staerke = staerke;
 	}
 
-	public List<SpielerZuwachs> getSpielerZuwaechse() {
-		return spielerZuwaechse;
+	public double getSpielerZuwachs() {
+		return spielerZuwachs;
 	}
 
-	public void setSpielerZuwaechse(List<SpielerZuwachs> spielerZuwaechse) {
-		this.spielerZuwaechse = spielerZuwaechse;
-	}
-	
-	public void addSpielerZuwaechse(SpielerZuwachs spielerZuwachs) {
-		this.spielerZuwaechse.add(spielerZuwachs);
+	public void setSpielerZuwachs(double spielerZuwachs) {
+		this.spielerZuwachs = spielerZuwachs;
 	}
 
 	public long getPreis() {

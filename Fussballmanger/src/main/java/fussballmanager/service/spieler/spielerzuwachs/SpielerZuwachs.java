@@ -90,24 +90,4 @@ public class SpielerZuwachs {
 	public int getMaximaleErfahrung() {
 		return maximaleErfahrung;
 	}
-	
-	public double berechneSpielerZuwachsFuerEinenSpieler(Spieler spieler) {
-		int alter = spieler.getAlter();
-		int talentwert = spieler.getTalentwert();
-		int erfahrung = spieler.getErfahrung();
-		int anzahlDerSaisonsDesSpielers = alter - 13;
-		double zuwachsFaktorNachAlterDesSpielers = 1.0;
-		for(ZuwachsFaktorAlter zFA : ZuwachsFaktorAlter.values()) {
-			if(zFA.getAlter() == spieler.getAlter()) {
-				zuwachsFaktorNachAlterDesSpielers = zFA.getZuwachsFaktor();
-			}
-		}
-		
-		double erfahrungsFaktorRechnungEins  = erfahrung * 1.0 / (maximaleErfahrung * anzahlDerSaisonsDesSpielers);
-		double erfahrungsFaktor = (erfahrungsFaktorRechnungEins + 1) / 2;
-		double zuwachsOhneErfahrung = defaultZuwachs * zuwachsFaktorNachAlterDesSpielers * (100 + (talentwert * 2)) / 100;
-		double zuwachsMitErfahrung = zuwachsOhneErfahrung * erfahrungsFaktor;
-		
-		return zuwachsMitErfahrung;
-	}
 }

@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,8 @@ import fussballmanager.service.spieler.SpielerService;
 @Service
 @Transactional
 public class SpielerZuwachsService {
+	
+	private static final Logger LOG = LoggerFactory.getLogger(SpielerZuwachsService.class);
 
 	@Autowired
 	SpielerZuwachsRepository spielerZuwachsRepository;
@@ -49,19 +53,16 @@ public class SpielerZuwachsService {
 	public void loescheSpielerZuwachs(SpielerZuwachs spielerZuwachs) {
 		spielerZuwachsRepository.delete(spielerZuwachs);
 	}
-	
-	public void loescheAlleSpielerZuwaechseEinesSpielers(Spieler spieler) {
-		spielerZuwachsRepository.deleteAll(spieler.getSpielerZuwaechse());
-	}
-	
-	public void legeSpielerZuwachsFuerEinenSpielerAn(Spieler spieler) {
-		Saison aktuelleSaison = saisonService.findeAktuelleSaison();
-		Spieltag aktuellerSpieltag = spieltagService.findeAktuellenSpieltag();
-		SpielerZuwachs spielerZuwachs = new SpielerZuwachs(aktuelleSaison, aktuellerSpieltag);
-		spieler.addSpielerZuwaechse(spielerZuwachs);
-		spielerZuwachs.setZuwachs(spielerZuwachs.berechneSpielerZuwachsFuerEinenSpieler(spieler));
-		legeSpielerZuwachsAn(spielerZuwachs);
-		
-		spielerService.kompletteReinStaerkeAendern(spieler, spielerZuwachs.getZuwachs());
-	}
+//	
+//	public void loescheAlleSpielerZuwaechseEinesSpielers(Spieler spieler) {
+//		spielerZuwachsRepository.deleteAll(spieler.getSpielerZuwaechse());
+//	}
+//	
+//	public void legeSpielerZuwachsFuerEinenSpielerAn(Spieler spieler, Saison saison, Spieltag spieltag) {
+//		SpielerZuwachs spielerZuwachs = new SpielerZuwachs(saison, spieltag);
+//		spieler.addSpielerZuwaechse(spielerZuwachs);
+//		spielerZuwachs.setZuwachs(spielerZuwachs.berechneSpielerZuwachsFuerEinenSpieler(spieler));
+//		legeSpielerZuwachsAn(spielerZuwachs);
+//		spielerService.kompletteReinStaerkeAendern(spieler, spielerZuwachs.getZuwachs());
+//	}
 }

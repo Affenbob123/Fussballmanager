@@ -16,7 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 import fussballmanager.service.land.Land;
 import fussballmanager.service.liga.Liga;
 import fussballmanager.service.liga.LigaService;
+import fussballmanager.service.liga.LigenNamenTypen;
 import fussballmanager.service.saison.Saison;
+import fussballmanager.service.saison.SaisonService;
 import fussballmanager.service.saison.spieltag.SpieltagService;
 import fussballmanager.service.spiel.Spiel;
 import fussballmanager.service.spiel.SpielService;
@@ -27,6 +29,7 @@ import fussballmanager.service.spieler.AufstellungsPositionsTypen;
 import fussballmanager.service.spieler.RollenTypen;
 import fussballmanager.service.spieler.Spieler;
 import fussballmanager.service.spieler.SpielerService;
+import fussballmanager.service.tabelle.TabellenEintrag;
 import fussballmanager.service.tabelle.TabellenEintragService;
 import fussballmanager.service.user.User;
 
@@ -53,6 +56,9 @@ public class TeamService {
 	
 	@Autowired
 	TabellenEintragService tabellenEintragService;
+	
+	@Autowired
+	SaisonService saisonService;
 	
 	public Team findeTeam(Long id) {
 		return teamRepository.getOne(id);
@@ -469,5 +475,103 @@ public class TeamService {
 		for(Team team : alleTeams) {
 			aenderFormationEinesTeams(team);
 		}
+	}
+	
+	public void aendereAufUndAbsteigerAllerLigen() {
+		List<Liga> alleLigen = ligaService.findeAlleLigen();
+		
+		for(Liga liga : alleLigen) {
+			List<Team> alleTeamsEinerLiga = findeAlleTeamsEinerLiga(liga);
+			
+			if(liga.getLigaNameTyp().equals(LigenNamenTypen.ERSTELIGA)) {
+				for(Team team : alleTeamsEinerLiga) {
+					TabellenEintrag tabellenEintrag = tabellenEintragService.findeTabellenEintragDurchTeamUndSaison(team, saisonService.findeLetzteSasion());
+					if(tabellenEintrag.getPlatzierung() == 1) {
+						teamIstMeisterGeworden(team);
+					}
+					
+					if(tabellenEintrag.getPlatzierung() == 2) {
+						teamIstVizeMeisterGeworden(team);
+					}
+					
+					if(tabellenEintrag.getPlatzierung() == 3 || tabellenEintrag.getPlatzierung() == 4) {
+						teamIstBeimWeltpokalDabei(team);
+					}
+					
+					if(tabellenEintrag.getPlatzierung() == 15 || tabellenEintrag.getPlatzierung() == 16) {
+						teamSteigtAbFuenfUndSechszehnter(team);
+					}
+					
+					if(tabellenEintrag.getPlatzierung() == 17 || tabellenEintrag.getPlatzierung() == 18) {
+						teamSteigtAbSiebenUndAchtzehnter(team);
+					}
+				}
+			} else {
+				for(Team team : alleTeamsEinerLiga) {
+					TabellenEintrag tabellenEintrag = tabellenEintragService.findeTabellenEintragDurchTeamUndSaison(team, saisonService.findeLetzteSasion());
+					if(tabellenEintrag.getPlatzierung() == 1 || tabellenEintrag.getPlatzierung() == 2) {
+						teamSteigtAuf(team);
+					}
+					
+					if(tabellenEintrag.getPlatzierung() == 15 || tabellenEintrag.getPlatzierung() == 16) {
+						teamSteigtAbFuenfUndSechszehnter(team);
+					}
+					
+					if(tabellenEintrag.getPlatzierung() == 17 || tabellenEintrag.getPlatzierung() == 18) {
+						teamSteigtAbSiebenUndAchtzehnter(team);
+					}
+				}
+			}
+		}
+		
+	}
+
+	public void teamIstMeisterGeworden(Team team) {
+		
+	}
+	
+	public void teamIstVizeMeisterGeworden(Team team) {
+		
+	}
+	
+	public void teamIstBeimWeltpokalDabei(Team team) {
+		
+	}
+	
+	public void teamSteigtAuf(Team team) {
+		int alteLigaNummer = team.getLiga().getLigaNameTyp().getLigaRangfolge();
+		int neueLigaNummer = alteLigaNummer / 2;
+		
+		for(LigenNamenTypen ligaNameTyp : LigenNamenTypen.values()) {
+			if(ligaNameTyp.getLigaRangfolge() == neueLigaNummer) {
+				team.setLiga(ligaService.findeLiga(team.getLand().getLandNameTyp().getName(), ligaNameTyp.getName()));
+			}
+		}
+	}
+	
+	public void teamSteigtAbFuenfUndSechszehnter(Team team) {
+		int alteLigaNummer = team.getLiga().getLigaNameTyp().getLigaRangfolge();
+		int neueLigaNummer = alteLigaNummer * 2;
+		
+		for(LigenNamenTypen ligaNameTyp : LigenNamenTypen.values()) {
+			if(ligaNameTyp.getLigaRangfolge() == neueLigaNummer) {
+				team.setLiga(ligaService.findeLiga(team.getLand().getLandNameTyp().getName(), ligaNameTyp.getName()));
+			}
+		}
+	}
+	
+	public void teamSteigtAbSiebenUndAchtzehnter(Team team) {
+		int alteLigaNummer = team.getLiga().getLigaNameTyp().getLigaRangfolge();
+		int neueLigaNummer = alteLigaNummer * 2 + 1;
+		
+		for(LigenNamenTypen ligaNameTyp : LigenNamenTypen.values()) {
+			if(ligaNameTyp.getLigaRangfolge() == neueLigaNummer) {
+				team.setLiga(ligaService.findeLiga(team.getLand().getLandNameTyp().getName(), ligaNameTyp.getName()));
+			}
+		}
+	}
+	
+	public void aufgabenWennSaisonVorbei() {
+		aendereAufUndAbsteigerAllerLigen();
 	}
 }

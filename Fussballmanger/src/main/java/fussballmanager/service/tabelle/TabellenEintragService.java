@@ -105,10 +105,17 @@ public class TabellenEintragService {
 
 	public void erstelleTabellenEintragFuerJedesTeam() {
 		Saison aktuelleSaison = saisonService.findeAktuelleSaison();
-		for(Team team : teamService.findeAlleTeams()) {
-			TabellenEintrag tabellenEintrag = new TabellenEintrag(team.getLiga(), aktuelleSaison, team);
-			legeTabellenEintragAn(tabellenEintrag);
-			LOG.info("tabellenEintrag: {}", team.getName());
+		List<Liga> alleLigen = ligaService.findeAlleLigen();
+		
+		for(Liga liga : alleLigen) {
+			List<Team> alleTeamsEinerLiga = teamService.findeAlleTeamsEinerLiga(liga);
+			int platzierung = 1;
+			for(Team team : alleTeamsEinerLiga) {
+				TabellenEintrag tabellenEintrag = new TabellenEintrag(team.getLiga(), aktuelleSaison, team);
+				tabellenEintrag.setPlatzierung(platzierung);
+				legeTabellenEintragAn(tabellenEintrag);
+				platzierung++;
+			}
 		}
 	}
 	

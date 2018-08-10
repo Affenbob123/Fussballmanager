@@ -14,7 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fussballmanager.service.land.LaenderNamenTypen;
 import fussballmanager.service.land.Land;
+import fussballmanager.service.saison.Saison;
+import fussballmanager.service.saison.SaisonService;
+import fussballmanager.service.saison.spieltag.Spieltag;
+import fussballmanager.service.saison.spieltag.SpieltagService;
 import fussballmanager.service.spieler.spielerzuwachs.SpielerZuwachsService;
+import fussballmanager.service.spieler.spielerzuwachs.ZuwachsFaktorAlter;
 import fussballmanager.service.spieler.staerke.Staerke;
 import fussballmanager.service.team.FormationsTypen;
 import fussballmanager.service.team.Team;
@@ -38,6 +43,12 @@ public class SpielerService {
 	
 	@Autowired
 	SpielerZuwachsService spielerZuwachsService;
+	
+	@Autowired
+	SaisonService saisonService;
+	
+	@Autowired
+	SpieltagService spieltagService;
 
 	public Spieler findeSpieler(Long id) {
 		return spielerRepository.getOne(id);
@@ -109,7 +120,6 @@ public class SpielerService {
 	}
 	
 	public void loescheSpieler(Spieler spieler) {
-		spielerZuwachsService.loescheAlleSpielerZuwaechseEinesSpielers(spieler);
 		spielerRepository.delete(spieler);
 	}
 	
@@ -511,9 +521,33 @@ public class SpielerService {
 		List<Spieler> alleSpielerMitTeam = findeAlleSpielerMitTeam();
 		
 		for(Spieler spieler: alleSpielerMitTeam) {
-			spielerZuwachsService.legeSpielerZuwachsFuerEinenSpielerAn(spieler);
+			spieler.setSpielerZuwachs(berechneSpielerZuwachsFuerEinenSpieler(spieler));
+			kompletteReinStaerkeAendern(spieler, spieler.getSpielerZuwachs());
 			reduziereVerletzungSperreTrainingslager(spieler);
 		}		
+	}
+	
+	public double berechneSpielerZuwachsFuerEinenSpieler(Spieler spieler) {
+		double defaultZuwachs = 2.0;
+		double maximaleErfahrung = 75;
+		
+		int alter = spieler.getAlter();
+		int talentwert = spieler.getTalentwert();
+		int erfahrung = spieler.getErfahrung();
+		int anzahlDerSaisonsDesSpielers = alter - 13;
+		double zuwachsFaktorNachAlterDesSpielers = 1.0;
+		for(ZuwachsFaktorAlter zFA : ZuwachsFaktorAlter.values()) {
+			if(zFA.getAlter() == spieler.getAlter()) {
+				zuwachsFaktorNachAlterDesSpielers = zFA.getZuwachsFaktor();
+			}
+		}
+		
+		double erfahrungsFaktorRechnungEins  = erfahrung * 1.0 / (maximaleErfahrung * anzahlDerSaisonsDesSpielers);
+		double erfahrungsFaktor = (erfahrungsFaktorRechnungEins + 1) / 2;
+		double zuwachsOhneErfahrung = defaultZuwachs * zuwachsFaktorNachAlterDesSpielers * (100 + (talentwert * 2)) / 100;
+		double zuwachsMitErfahrung = zuwachsOhneErfahrung * erfahrungsFaktor;
+		
+		return zuwachsMitErfahrung;
 	}
 
 	private void reduziereVerletzungSperreTrainingslager(Spieler spieler) {

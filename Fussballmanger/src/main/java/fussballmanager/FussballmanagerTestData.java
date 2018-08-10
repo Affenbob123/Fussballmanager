@@ -210,7 +210,7 @@ public class FussballmanagerTestData {
 		userService.legeUserAn(userA);
 	}
 	
-	@Scheduled(cron = "0 0/3 * * * ?", zone="Europe/Berlin")
+	//@Scheduled(cron = "0 0/3 * * * ?", zone="Europe/Berlin")
 	public void spielAnfang() {
 		List<Spiel> alleSpieleDesSpieltages = spielService.findeAlleSpieleEinerSaisonUndSpieltages(
 				saisonService.findeAktuelleSaison(), spieltagService.findeAktuellenSpieltag());
@@ -222,7 +222,7 @@ public class FussballmanagerTestData {
 		tabellenEintragService.alleTabellenEintraegeAktualisieren();
 	}
 	
-	@Scheduled(cron = "0 1/3 * * * ?", zone="Europe/Berlin")
+	//@Scheduled(cron = "0 1/3 * * * ?", zone="Europe/Berlin")
 	public void spielHalbzeit() {
 		List<Spiel> alleSpieleDesSpieltages = spielService.findeAlleSpieleEinerSaisonUndSpieltages(
 				saisonService.findeAktuelleSaison(), spieltagService.findeAktuellenSpieltag());
@@ -232,21 +232,21 @@ public class FussballmanagerTestData {
 		}
 	}
 	
-	@Scheduled(cron = "15-59 0/3 * * * ?", zone="Europe/Berlin")
+	//@Scheduled(cron = "15-59 0/3 * * * ?", zone="Europe/Berlin")
 	public void simuliereSpieleErsteHalbzeit() {
 		spielminute++;
 		simuliereLigaspielErsteHalbzeit(spielminute);
 		LOG.info("erste halbzeit: {}", spielminute);
 	}
 	
-	@Scheduled(cron = "15-59 1/3 * * * ?", zone="Europe/Berlin")
+	//@Scheduled(cron = "15-59 1/3 * * * ?", zone="Europe/Berlin")
 	public void simuliereSpieleZweiteHalbzeit() {
 		spielminute++;
 		simuliereLigaspielZweiteHalbzeit(spielminute);
 		LOG.info("zweite halbzeit: {}", spielminute);
 	}
 	
-	@Scheduled(cron = "05 2/3 * * * ?", zone="Europe/Berlin")
+	//@Scheduled(cron = "05 2/3 * * * ?", zone="Europe/Berlin")
 	public void simuliereSpielEnde() {
 		spielminute = 0;
 		aktualiserenNachSpielEnde();
@@ -265,13 +265,14 @@ public class FussballmanagerTestData {
 		spielerService.aufgabenNachSpiel();
 	}
 	
-	@Scheduled(cron = "0/30 * * * * ?", zone="Europe/Berlin")
+	//@Scheduled(cron = "0/30 * * * * ?", zone="Europe/Berlin")
 	public void erstelleNeueSpielerFuerTransfermarkt() {
 		spielerService.loescheSpielerVomTransfermarkt();
 		spielerService.erstelleSpielerFuerTransfermarkt();
 	}
 	
-	@Scheduled(cron = "15 2/3 * * * ?", zone="Europe/Berlin")
+	//@Scheduled(cron = "15 2/3 * * * ?", zone="Europe/Berlin")
+	@Scheduled(cron = "*/1 * * * * ?", zone="Europe/Berlin")
 	public void wechsleDenSpieltag() {
 		spieltagService.wechsleSpieltag();
 	}

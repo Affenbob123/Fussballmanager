@@ -102,11 +102,9 @@
 						<td th:text="${spieler.alter}" />
 						<td th:text="${zahlenFormat.format(spieler.staerke.durchschnittsStaerke)}" />
 						<td th:text="${zahlenFormat.format(spieler.reinStaerke.durchschnittsStaerke)}" />
-						<td th:if="${spieler.spielerZuwaechse.size()} == 0">+0,0</td>
-						<td th:unless="${spieler.spielerZuwaechse.size()} == 0" 
-							th:text="${spieler.spielerZuwaechse.get(spieler.spielerZuwaechse.size()-1).zuwachs} > 0 ?
-							'+'+${zahlenFormat.format(spieler.spielerZuwaechse.get(spieler.spielerZuwaechse.size()-1).zuwachs)} : 
-							${zahlenFormat.format(spieler.spielerZuwaechse.get(spieler.spielerZuwaechse.size()-1).zuwachs)}" />
+						<td th:text="${spieler.spielerZuwachs} > 0 ?
+							'+'+${zahlenFormat.format(spieler.spielerZuwachs)} : 
+							${zahlenFormat.format(spieler.spielerZuwachs}" />
 						<td th:text="${spieler.erfahrung}" />
 						<td th:text="${spieler.motivation}" />
 					</tr>

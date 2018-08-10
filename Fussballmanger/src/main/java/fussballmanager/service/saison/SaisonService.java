@@ -14,6 +14,7 @@ import fussballmanager.service.saison.spieltag.SpieltagService;
 import fussballmanager.service.spiel.SpielService;
 import fussballmanager.service.spieler.SpielerService;
 import fussballmanager.service.tabelle.TabellenEintragService;
+import fussballmanager.service.team.TeamService;
 
 @Service
 @Transactional
@@ -38,6 +39,9 @@ public class SaisonService {
 	
 	@Autowired
 	SpielerService spielerService;
+	
+	@Autowired
+	TeamService teamService;
 	
 	public synchronized void ersteSaisonErstellen() {
 		if(findeAlleSaisons().size() < 1) {
@@ -78,6 +82,7 @@ public class SaisonService {
 			LOG.info("Saison: {} angelegt und ist: {}", findeSaison(alteSaison.getId()).getSaisonNummer(), findeSaison(alteSaison.getId()).isAktuelleSaison());
 			
 			spielerService.alleSpielerAltern();
+			//teamService.aendereAufUndAbsteigerAllerLigen();
 		}
 			
 		saison.setAktuelleSaison(true);
@@ -98,7 +103,8 @@ public class SaisonService {
 	}
 	
 	private void erstelleSpieleFuerEineSaison(Saison saison) {
-		for(Liga liga : ligaService.findeAlleLigen()) {
+		List<Liga> alleLigen = ligaService.findeAlleLigen();
+		for(Liga liga : alleLigen) {
 			spielService.erstelleSpieleFuerEineLiga(liga);
 			LOG.info("Spiele für die Saison: {} und Liga: {} wurde angelegt.", saison.getSaisonNummer(), liga.getLigaNameTyp().getName());
 		}
