@@ -165,8 +165,8 @@ public class SpielService {
 	    	spielHinspiel.setSaison(aktuelleSaison);
 	    	spielHinspiel.setSpieltag(spieltagService.findeSpieltagDurchSaisonUndSpieltagNummer(aktuelleSaison, spieltag + 1));
 	    	
-	    	LOG.info("Spieltag: {}, {} : {}, Liga: {}", spielHinspiel.getSpieltag().getSpieltagNummer(), spielHinspiel.getHeimmannschaft().getName(), 
-	    			spielHinspiel.getGastmannschaft().getName(), liga.getLigaNameTyp().getName());
+//	    	LOG.info("Spieltag: {}, {} : {}, Liga: {}", spielHinspiel.getSpieltag().getSpieltagNummer(), spielHinspiel.getHeimmannschaft().getName(), 
+//	    			spielHinspiel.getGastmannschaft().getName(), liga.getLigaNameTyp().getName());
 	    	legeSpielAn(spielHinspiel);
 	    	
 	    	//Rückspiel
@@ -177,8 +177,8 @@ public class SpielService {
 	    	spielRueckspiel.setSaison(aktuelleSaison);
 	    	spielRueckspiel.setSpieltag(spieltagService.findeSpieltagDurchSaisonUndSpieltagNummer(aktuelleSaison, 17 + spieltag + 1));
 	    	
-	    	LOG.info("Spieltag: {}, {} : {}, Liga: {}", spielRueckspiel.getSpieltag().getSpieltagNummer(), spielRueckspiel.getHeimmannschaft().getName(), 
-	    			spielRueckspiel.getGastmannschaft().getName(), liga.getLigaNameTyp().getName());
+//	    	LOG.info("Spieltag: {}, {} : {}, Liga: {}", spielRueckspiel.getSpieltag().getSpieltagNummer(), spielRueckspiel.getHeimmannschaft().getName(), 
+//	    			spielRueckspiel.getGastmannschaft().getName(), liga.getLigaNameTyp().getName());
 	    	legeSpielAn(spielRueckspiel);
 	    	
 	    	int j = 1;
@@ -246,8 +246,8 @@ public class SpielService {
 			    	spielHinspiel2.setSaison(aktuelleSaison);
 			    	spielHinspiel2.setSpieltag(spieltagService.findeSpieltagDurchSaisonUndSpieltagNummer(aktuelleSaison, spieltag + 1));
 			    	
-			    	LOG.info("Spieltag: {}, {} : {}, Liga: {}", spielHinspiel2.getSpieltag().getSpieltagNummer(), spielHinspiel2.getHeimmannschaft().getName(), 
-			    			spielHinspiel2.getGastmannschaft().getName(), liga.getLigaNameTyp().getName());
+//			    	LOG.info("Spieltag: {}, {} : {}, Liga: {}", spielHinspiel2.getSpieltag().getSpieltagNummer(), spielHinspiel2.getHeimmannschaft().getName(), 
+//			    			spielHinspiel2.getGastmannschaft().getName(), liga.getLigaNameTyp().getName());
 			    	legeSpielAn(spielHinspiel2);
 			    	
 			    	//Rückspiel

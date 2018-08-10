@@ -46,8 +46,6 @@ import fussballmanager.service.team.TeamService;
 import fussballmanager.service.user.User;
 import fussballmanager.service.user.UserService;
 import fussballmanager.spielsimulation.SpielSimulation;
-import fussballmanager.spielsimulation.torversuch.TorversuchService;
-
 
 @Component
 public class FussballmanagerTestData {

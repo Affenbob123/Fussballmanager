@@ -1,19 +1,16 @@
 package fussballmanager.service.spieler;
 
-import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import fussballmanager.service.land.Land;
-import fussballmanager.service.spieler.spielerzuwachs.SpielerZuwachs;
-import fussballmanager.service.spieler.spielerzuwachs.ZuwachsFaktorAlter;
 import fussballmanager.service.spieler.staerke.Staerke;
 import fussballmanager.service.team.Team;
 
@@ -21,11 +18,15 @@ import fussballmanager.service.team.Team;
 public class Spieler implements Comparable<Spieler> {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE)
+	@GeneratedValue(strategy= GenerationType.AUTO, generator="native")
+	@GenericGenerator(name = "native", strategy = "native")
 	private long id;
 	
 	@OneToOne
 	private Land nationalitaet;
+	
+	@ManyToOne
+	private Team team;
 	
 	private PositionenTypen position;
 	
@@ -50,9 +51,6 @@ public class Spieler implements Comparable<Spieler> {
 	private boolean talentwertErmittelt;
 	
 	private int motivation = 0;
-	
-	@ManyToOne
-	private Team team;
 	
 	private int uebrigeTrainingslagerTage = 10;
 	

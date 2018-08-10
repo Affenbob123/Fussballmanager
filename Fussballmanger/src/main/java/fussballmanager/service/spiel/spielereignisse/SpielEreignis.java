@@ -6,7 +6,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
-import fussballmanager.service.spiel.Spiel;
+import org.hibernate.annotations.GenericGenerator;
+
 import fussballmanager.service.spieler.Spieler;
 import fussballmanager.service.team.Team;
 
@@ -14,10 +15,11 @@ import fussballmanager.service.team.Team;
 public class SpielEreignis {
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE)
+	@GeneratedValue(strategy= GenerationType.AUTO, generator="native")
+	@GenericGenerator(name = "native", strategy = "native")
 	private long id;
 	
-	private int Spielminute;
+	private int spielminute;
 	
 	@OneToOne
 	private Spieler torschuetze;
@@ -52,11 +54,11 @@ public class SpielEreignis {
 	}
 
 	public int getSpielminute() {
-		return Spielminute;
+		return spielminute;
 	}
 
 	public void setSpielminute(int spielminute) {
-		Spielminute = spielminute;
+		this.spielminute = spielminute;
 	}
 
 	public Spieler getTorschuetze() {

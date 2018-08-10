@@ -1,6 +1,5 @@
 package fussballmanager.service.spiel;
 
-import java.time.LocalTime;
 import java.util.List;
 
 import javax.persistence.Cacheable;
@@ -14,6 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import fussballmanager.service.saison.Saison;
 import fussballmanager.service.saison.spieltag.Spieltag;
 import fussballmanager.service.spiel.spielereignisse.SpielEreignis;
@@ -24,7 +25,8 @@ import fussballmanager.service.team.Team;
 public class Spiel {
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE)
+	@GeneratedValue(strategy= GenerationType.AUTO, generator="native")
+	@GenericGenerator(name = "native", strategy = "native")
 	private long id;
 	
 	private SpieleTypen spielTyp;

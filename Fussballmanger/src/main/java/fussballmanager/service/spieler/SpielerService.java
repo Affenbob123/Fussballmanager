@@ -60,7 +60,6 @@ public class SpielerService {
 	
 	public List<Spieler> findeAlleSpielerEinesTeams(Team team) {
 		List<Spieler> alleSpielerEinesTeams =  spielerRepository.findByTeam(team);
-		
 		Collections.sort(alleSpielerEinesTeams);
 		return alleSpielerEinesTeams;
 	}
@@ -187,6 +186,7 @@ public class SpielerService {
 			}
 		});
 		return alleSpielerDesTeams;
+		
 	}
 	
 	public double staerkeFaktorWennAufstellungsPositionNichtPositionIst(Spieler spieler) {
@@ -550,7 +550,7 @@ public class SpielerService {
 		return zuwachsMitErfahrung;
 	}
 
-	private void reduziereVerletzungSperreTrainingslager(Spieler spieler) {
+	public void reduziereVerletzungSperreTrainingslager(Spieler spieler) {
 		if(spieler.getGesperrteTage() > 0) {
 			spieler.setGesperrteTage(spieler.getGesperrteTage() - 1);
 			if(spieler.getGesperrteTage() == 0) {

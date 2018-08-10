@@ -6,6 +6,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import fussballmanager.service.land.Land;
 import fussballmanager.service.liga.Liga;
 import fussballmanager.service.user.User;
@@ -15,7 +17,8 @@ import fussballmanager.service.user.User;
 public class Team implements Comparable<Team> {
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE)
+	@GeneratedValue(strategy= GenerationType.AUTO, generator="native")
+	@GenericGenerator(name = "native", strategy = "native")
 	private long id;
 	
 	@ManyToOne

@@ -7,6 +7,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import fussballmanager.service.saison.Saison;
 import fussballmanager.service.saison.spieltag.Spieltag;
 import fussballmanager.service.spieler.Spieler;
@@ -15,7 +17,8 @@ import fussballmanager.service.spieler.Spieler;
 public class SpielerZuwachs {
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE)
+	@GeneratedValue(strategy= GenerationType.AUTO, generator="native")
+	@GenericGenerator(name = "native", strategy = "native")
 	private long id;
 	
 	@OneToOne

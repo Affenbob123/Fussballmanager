@@ -8,6 +8,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import fussballmanager.service.spiel.Spiel;
 import fussballmanager.service.spieler.Spieler;
 import fussballmanager.service.team.Team;
@@ -16,7 +18,8 @@ import fussballmanager.service.team.Team;
 public class Torversuch {
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE)
+	@GeneratedValue(strategy= GenerationType.AUTO, generator="native")
+	@GenericGenerator(name = "native", strategy = "native")
 	Long id;
 	
 	int spielminute;

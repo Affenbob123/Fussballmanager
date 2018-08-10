@@ -5,6 +5,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -134,7 +135,6 @@ public class TeamService {
 
 	//TODO Wenn kein SPieler mit der Position vorhanden ist dann spielen zu wenige
 	public void aenderFormationEinesTeams(Team team) {
-		aktualisiereTeam(team);	
 		staerksteFormationEinesTeams(team);
 	}
 	
@@ -152,6 +152,7 @@ public class TeamService {
 				spielfaehigeSpielerDesTeams.add(spieler);
 			}
 		}
+		
 		for(Spieler spieler : spielfaehigeSpielerDesTeams) {
 			spieler.setAufstellungsPositionsTyp(AufstellungsPositionsTypen.ERSATZ);
 			for(AufstellungsPositionsTypen a : aufstellung) {
@@ -477,15 +478,13 @@ public class TeamService {
 		}
 	}
 	
-	public void aendereAufUndAbsteigerAllerLigen() {
+	public void aendereLigenAllerAufUndAbsteiger() {
 		List<Liga> alleLigen = ligaService.findeAlleLigen();
-		
 		for(Liga liga : alleLigen) {
 			List<Team> alleTeamsEinerLiga = findeAlleTeamsEinerLiga(liga);
-			
 			if(liga.getLigaNameTyp().equals(LigenNamenTypen.ERSTELIGA)) {
 				for(Team team : alleTeamsEinerLiga) {
-					TabellenEintrag tabellenEintrag = tabellenEintragService.findeTabellenEintragDurchTeamUndSaison(team, saisonService.findeLetzteSasion());
+					TabellenEintrag tabellenEintrag = tabellenEintragService.findeTabellenEintragDurchTeamUndSaison(team, saisonService.findeVorletzteSasion());
 					if(tabellenEintrag.getPlatzierung() == 1) {
 						teamIstMeisterGeworden(team);
 					}
@@ -505,21 +504,27 @@ public class TeamService {
 					if(tabellenEintrag.getPlatzierung() == 17 || tabellenEintrag.getPlatzierung() == 18) {
 						teamSteigtAbSiebenUndAchtzehnter(team);
 					}
+					tabellenEintrag.setPlatzierung(0);
 				}
 			} else {
 				for(Team team : alleTeamsEinerLiga) {
-					TabellenEintrag tabellenEintrag = tabellenEintragService.findeTabellenEintragDurchTeamUndSaison(team, saisonService.findeLetzteSasion());
+					TabellenEintrag tabellenEintrag = tabellenEintragService.findeTabellenEintragDurchTeamUndSaison(team, saisonService.findeVorletzteSasion());
 					if(tabellenEintrag.getPlatzierung() == 1 || tabellenEintrag.getPlatzierung() == 2) {
 						teamSteigtAuf(team);
 					}
 					
 					if(tabellenEintrag.getPlatzierung() == 15 || tabellenEintrag.getPlatzierung() == 16) {
-						teamSteigtAbFuenfUndSechszehnter(team);
+						if(liga.getLigaNameTyp().getLigaRangfolge() < 16) {
+							teamSteigtAbFuenfUndSechszehnter(team);
+						}
 					}
 					
 					if(tabellenEintrag.getPlatzierung() == 17 || tabellenEintrag.getPlatzierung() == 18) {
-						teamSteigtAbSiebenUndAchtzehnter(team);
+						if(liga.getLigaNameTyp().getLigaRangfolge() < 16) {
+							teamSteigtAbSiebenUndAchtzehnter(team);
+						}
 					}
+					tabellenEintrag.setPlatzierung(0);
 				}
 			}
 		}
@@ -545,6 +550,8 @@ public class TeamService {
 		for(LigenNamenTypen ligaNameTyp : LigenNamenTypen.values()) {
 			if(ligaNameTyp.getLigaRangfolge() == neueLigaNummer) {
 				team.setLiga(ligaService.findeLiga(team.getLand().getLandNameTyp().getName(), ligaNameTyp.getName()));
+				aktualisiereTeam(team);
+				break;
 			}
 		}
 	}
@@ -556,6 +563,8 @@ public class TeamService {
 		for(LigenNamenTypen ligaNameTyp : LigenNamenTypen.values()) {
 			if(ligaNameTyp.getLigaRangfolge() == neueLigaNummer) {
 				team.setLiga(ligaService.findeLiga(team.getLand().getLandNameTyp().getName(), ligaNameTyp.getName()));
+				aktualisiereTeam(team);
+				break;
 			}
 		}
 	}
@@ -567,11 +576,13 @@ public class TeamService {
 		for(LigenNamenTypen ligaNameTyp : LigenNamenTypen.values()) {
 			if(ligaNameTyp.getLigaRangfolge() == neueLigaNummer) {
 				team.setLiga(ligaService.findeLiga(team.getLand().getLandNameTyp().getName(), ligaNameTyp.getName()));
+				aktualisiereTeam(team);
+				break;
 			}
 		}
 	}
 	
 	public void aufgabenWennSaisonVorbei() {
-		aendereAufUndAbsteigerAllerLigen();
+		aendereLigenAllerAufUndAbsteiger();
 	}
 }

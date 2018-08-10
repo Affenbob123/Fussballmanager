@@ -43,7 +43,7 @@ public class SaisonService {
 	@Autowired
 	TeamService teamService;
 	
-	public synchronized void ersteSaisonErstellen() {
+	public void ersteSaisonErstellen() {
 		if(findeAlleSaisons().size() < 1) {
 			Saison saison = new Saison(1);
 			saison.setAktuelleSaison(true);
@@ -79,19 +79,11 @@ public class SaisonService {
 			Saison alteSaison = findeAktuelleSaison();
 			alteSaison.setAktuelleSaison(false);
 			aktualisiereSaison(alteSaison);
-			LOG.info("Saison: {} angelegt und ist: {}", findeSaison(alteSaison.getId()).getSaisonNummer(), findeSaison(alteSaison.getId()).isAktuelleSaison());
-			
-			spielerService.alleSpielerAltern();
-			//teamService.aendereAufUndAbsteigerAllerLigen();
 		}
-			
 		saison.setAktuelleSaison(true);
 		saisonRepository.save(saison);
 		LOG.info("Saison: {} angelegt und ist: {}", saison.getSaisonNummer(), saison.isAktuelleSaison());
-		
-		spieltagService.erstelleAlleSpieltageFuerEineSaison(findeLetzteSasion());
-		erstelleSpieleFuerEineSaison(saison);
-		tabellenEintragService.erstelleTabellenEintragFuerJedesTeam();
+		aufgabenBeimErstellenEinerSaison(saison);
 	}
 
 	public void aktualisiereSaison(Saison saison) {
@@ -102,11 +94,26 @@ public class SaisonService {
 		saisonRepository.delete(saison);
 	}
 	
-	private void erstelleSpieleFuerEineSaison(Saison saison) {
+	public void erstelleSpieleFuerEineSaison(Saison saison) {
 		List<Liga> alleLigen = ligaService.findeAlleLigen();
 		for(Liga liga : alleLigen) {
 			spielService.erstelleSpieleFuerEineLiga(liga);
 			LOG.info("Spiele für die Saison: {} und Liga: {} wurde angelegt.", saison.getSaisonNummer(), liga.getLigaNameTyp().getName());
 		}
+	}
+	
+	public void aufgabenBeimErstellenEinerSaison(Saison saison) {
+		spieltagService.erstelleAlleSpieltageFuerEineSaison(findeLetzteSasion());
+		if(findeAlleSaisons().size() > 1) {
+			teamService.aufgabenWennSaisonVorbei();
+			spielerService.alleSpielerAltern();
+		}
+		//erstelleSpieleFuerEineSaison(saison);
+		tabellenEintragService.erstelleTabellenEintragFuerJedesTeam();
+	}
+
+	public Saison findeVorletzteSasion() {
+		
+		return findeSaisonDurchSaisonNummer(findeAktuelleSaison().getSaisonNummer() - 1);
 	}
 }
