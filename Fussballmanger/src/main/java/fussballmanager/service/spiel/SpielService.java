@@ -16,7 +16,7 @@ import fussballmanager.service.saison.spieltag.Spieltag;
 import fussballmanager.service.saison.spieltag.SpieltagService;
 import fussballmanager.service.spiel.spielereignisse.SpielEreignis;
 import fussballmanager.service.spiel.spielereignisse.SpielEreignisTypen;
-import fussballmanager.service.spieler.Spieler;
+import fussballmanager.service.tabelle.TabellenEintragService;
 import fussballmanager.service.team.Team;
 import fussballmanager.service.team.TeamService;
 import fussballmanager.spielsimulation.SpielSimulation;
@@ -41,6 +41,9 @@ public class SpielService {
 	
 	@Autowired
 	SpielSimulation spielSimulation;
+	
+	@Autowired
+	TabellenEintragService tabellenEintragService;
 
 	public Spiel findeSpiel(Long id) {
 		return spielRepository.getOne(id);
@@ -273,27 +276,57 @@ public class SpielService {
 		int toreHeimmannschaftZurHalbzeit = 0;
 		int toreGastmannschaftZurHalbzeit = 0;
 		
-		for(SpielEreignis spielEreignis : spiel.getSpielEreignisse()) {
-			if(spielEreignis.getAngreifer().equals(spiel.getHeimmannschaft())) {
-				if(spielEreignis.getSpielereignisTyp().equals(SpielEreignisTypen.TORVERSUCHGETROFFEN)) {
-					toreHeimmannschaft++;
-					if(spielEreignis.getSpielminute() <= 45) {
-						toreHeimmannschaftZurHalbzeit++;
-					}
-				}
-			} else {
-				if(spielEreignis.getSpielereignisTyp().equals(SpielEreignisTypen.TORVERSUCHGETROFFEN)) {
-					toreGastmannschaft++;
-					if(spielEreignis.getSpielminute() <= 45) {
-						toreGastmannschaftZurHalbzeit++;
+		if(!(spiel.getSpielEreignisse().isEmpty() && (spiel.getToreHeimmannschaft() > 0 || spiel.getToreGastmannschaft() > 0))) {
+			for(SpielEreignis spielEreignis : spiel.getSpielEreignisse()) {
+				if(spielEreignis.getAngreifer() != null) {
+					if(spielEreignis.getAngreifer().equals(spiel.getHeimmannschaft())) {
+						if(spielEreignis.getSpielereignisTyp().equals(SpielEreignisTypen.TORVERSUCHGETROFFEN)) {
+							toreHeimmannschaft++;
+							if(spielEreignis.getSpielminute() <= 45) {
+								toreHeimmannschaftZurHalbzeit++;
+							}
+						}
+					} else {
+						if(spielEreignis.getSpielereignisTyp().equals(SpielEreignisTypen.TORVERSUCHGETROFFEN)) {
+							toreGastmannschaft++;
+							if(spielEreignis.getSpielminute() <= 45) {
+								toreGastmannschaftZurHalbzeit++;
+							}
+						}
 					}
 				}
 			}
+			spiel.setToreHeimmannschaft(toreHeimmannschaft);
+			spiel.setToreGastmannschaft(toreGastmannschaft);
+			spiel.setToreHeimmannschaftZurHalbzeit(toreHeimmannschaftZurHalbzeit);
+			spiel.setToreGastmannschaftZurHalbzeit(toreGastmannschaftZurHalbzeit);
+			aktualisiereSpiel(spiel);
+			tabellenEintragService.einenTabellenEintragAktualisieren(
+					tabellenEintragService.findeTabellenEintragDurchTeamUndSaison(spiel.getHeimmannschaft(), saisonService.findeAktuelleSaison()));
+			tabellenEintragService.einenTabellenEintragAktualisieren(
+					tabellenEintragService.findeTabellenEintragDurchTeamUndSaison(spiel.getGastmannschaft(), saisonService.findeAktuelleSaison()));
 		}
-		spiel.setToreHeimmannschaft(toreHeimmannschaft);
-		spiel.setToreGastmannschaft(toreGastmannschaft);
-		spiel.setToreHeimmannschaftZurHalbzeit(toreHeimmannschaftZurHalbzeit);
-		spiel.setToreGastmannschaftZurHalbzeit(toreGastmannschaftZurHalbzeit);
+	}
+	
+	public void spielIstVorbei(Spiel spiel) {
+		Team heimTeam = spiel.getHeimmannschaft();
+		Team gastTeam = spiel.getGastmannschaft();
+		
+		anzahlToreEinesSpielSetzen(spiel);
+		spiel.setVorbei(true);
+		heimTeam.setAnzahlAuswechselungen(3);
+		gastTeam.setAnzahlAuswechselungen(3);
+		
 		aktualisiereSpiel(spiel);
+		teamService.aktualisiereTeam(heimTeam);
+		teamService.aktualisiereTeam(gastTeam);
+	}
+
+	public void aufgabenNachSpiel() {
+		List<Spiel> alleSpieleEinesSpieltages = findeAlleSpieleEinerSaisonUndSpieltages(saisonService.findeAktuelleSaison(), spieltagService.findeAktuellenSpieltag());
+		
+		for(Spiel spiel : alleSpieleEinesSpieltages) {
+			spielIstVorbei(spiel);
+		}
 	}
 }

@@ -77,7 +77,10 @@ public class SpielerService {
 		List<Spieler> alleSpielerEinesTeams =  new ArrayList<>();
 		
 		for(Spieler spieler : findeAlleSpielerEinesTeams(team)) {
-			if(!spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.ERSATZ)) {
+			if(!(spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.ERSATZ) || 
+					spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.GESPERRT) ||
+					spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.VERLETZT) ||
+					spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.TRAININGSLAGER))) {
 				alleSpielerEinesTeams.add(spieler);
 			}
 
@@ -164,8 +167,8 @@ public class SpielerService {
 		aktualisiereSpieler(spieler);
 	}
 	
-	public List<Spieler> spielerEinesTeamsSortiertNachStaerke(Team team) {
-		List<Spieler> alleSpielerDesTeams = findeAlleSpielerEinesTeams(team);
+	public List<Spieler> sortiereSpielerEinesTeamsNachStaerke(List<Spieler> spieler) {
+		List<Spieler> alleSpielerDesTeams = spieler;
 		
 		Collections.sort(alleSpielerDesTeams, new Comparator<Spieler>() {
 			@Override
@@ -439,5 +442,113 @@ public class SpielerService {
 				loescheSpieler(spieler);
 			}
 		}
+	}
+	
+	public void spielerErzieltTor(Spieler spieler) {
+		spieler.setTore(spieler.getTore() + 1);
+		aktualisiereSpieler(spieler);
+	}
+	
+	public void spielerErhaeltGelbeKarte(Spieler spieler) {
+		if(spieler.isGelbeKarte()) {
+			spielerErhaeltGelbRoteKarte(spieler);
+		} else {
+			spieler.setGelbeKarte(true);
+		}
+		spieler.setGelbeKarten(spieler.getGelbeKarten() + 1);
+		//TODO Gesperrt bei 5 gelben karten
+		aktualisiereSpieler(spieler);
+	}
+	
+	public void spielerErhaeltGelbRoteKarte(Spieler spieler) {
+		spieler.setAufstellungsPositionsTyp(AufstellungsPositionsTypen.GESPERRT);
+		spieler.setGelbRoteKarten(spieler.getGelbRoteKarten() + 1);
+		spieler.setGesperrteTage(2);
+		aktualisiereSpieler(spieler);
+	}
+	
+	public void spielerErhaeltRoteKarte(Spieler spieler) {
+		spieler.setAufstellungsPositionsTyp(AufstellungsPositionsTypen.GESPERRT);
+		spieler.setRoteKarten(spieler.getRoteKarten() + 1);
+		spieler.setGesperrteTage(3);
+		aktualisiereSpieler(spieler);
+	}
+	
+	public void spielerErhaeltVerletzung(Spieler spieler) {
+		Spieler eingewechselterSpieler = findeStaerkstenSpielerFuerVerletztenSpieler(spieler);
+		if(eingewechselterSpieler != null) {
+			eingewechselterSpieler.setAufstellungsPositionsTyp(spieler.getAufstellungsPositionsTyp());
+			aktualisiereSpieler(eingewechselterSpieler);
+		}
+		Random random = new Random();
+		int zufallsZahl = random.nextInt(4);
+		spieler.setAufstellungsPositionsTyp(AufstellungsPositionsTypen.VERLETZT);
+		spieler.setVerletzungsTage(zufallsZahl + 1);
+		aktualisiereSpieler(spieler);
+		
+	}
+	
+	public Spieler findeStaerkstenSpielerFuerVerletztenSpieler(Spieler spieler) {
+		List<Spieler> alleSpielerAufErsatzbank = findeAlleSpielerEinesTeamsAufErsatzbank(spieler.getTeam());
+		alleSpielerAufErsatzbank = sortiereSpielerEinesTeamsNachStaerke(alleSpielerAufErsatzbank);
+		
+		if(alleSpielerAufErsatzbank.isEmpty()) {
+			return null;
+		}
+		return alleSpielerAufErsatzbank.get(0);
+	}
+	
+	public void setGelbeKartenZurueck() {
+		List<Spieler> alleSpielerMitGelberKarte = spielerRepository.findByGelbeKarteTrue();
+		
+		for(Spieler spieler : alleSpielerMitGelberKarte) {
+			spieler.setGelbeKarte(false);
+			aktualisiereSpieler(spieler);
+		}
+	}
+
+	public void aufgabenBeiSpieltagWechsel() {
+		List<Spieler> alleSpielerMitTeam = findeAlleSpielerMitTeam();
+		
+		for(Spieler spieler: alleSpielerMitTeam) {
+			spielerZuwachsService.legeSpielerZuwachsFuerEinenSpielerAn(spieler);
+			reduziereVerletzungSperreTrainingslager(spieler);
+		}		
+	}
+
+	private void reduziereVerletzungSperreTrainingslager(Spieler spieler) {
+		if(spieler.getGesperrteTage() > 0) {
+			spieler.setGesperrteTage(spieler.getGesperrteTage() - 1);
+			if(spieler.getGesperrteTage() == 0) {
+				spieler.setAufstellungsPositionsTyp(AufstellungsPositionsTypen.ERSATZ);
+			}
+		}
+		if(spieler.getVerletzungsTage() > 0) {
+			spieler.setVerletzungsTage(spieler.getVerletzungsTage() - 1);
+			if(spieler.getVerletzungsTage() == 0) {
+				spieler.setAufstellungsPositionsTyp(AufstellungsPositionsTypen.ERSATZ);
+			}
+		}
+		if(spieler.getTrainingslagerTage() > 0) {
+			spieler.setTrainingslagerTage(spieler.getTrainingslagerTage() - 1);
+			if(spieler.getTrainingslagerTage() == 0) {
+				spieler.setAufstellungsPositionsTyp(AufstellungsPositionsTypen.ERSATZ);
+			}
+		}
+	}
+	
+	public void aufgabenNachSpiel() {
+		List<Spieler> alleSpieler = findeAlleSpieler();
+
+		for(Spieler spieler : alleSpieler) {
+			if(!(spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.ERSATZ) ||
+					spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.VERLETZT) ||
+					spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.GESPERRT) ||
+					spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.TRAININGSLAGER))) {
+				spieler.setErfahrung(spieler.getErfahrung() + 1);
+				aktualisiereSpieler(spieler);
+			}
+		}
+		setGelbeKartenZurueck();
 	}
 }

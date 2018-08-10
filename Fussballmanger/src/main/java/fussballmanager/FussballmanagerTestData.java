@@ -19,20 +19,28 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import fussballmanager.service.land.LaenderNamenTypen;
+import fussballmanager.service.land.Land;
 import fussballmanager.service.land.LandService;
 import fussballmanager.service.liga.Liga;
 import fussballmanager.service.liga.LigaService;
+import fussballmanager.service.liga.LigenNamenTypen;
+import fussballmanager.service.saison.Saison;
 import fussballmanager.service.saison.SaisonService;
+import fussballmanager.service.saison.spieltag.Spieltag;
 import fussballmanager.service.saison.spieltag.SpieltagService;
 import fussballmanager.service.spiel.Spiel;
 import fussballmanager.service.spiel.SpielService;
 import fussballmanager.service.spiel.SpieleTypen;
+import fussballmanager.service.spiel.spielereignisse.SpielEreignis;
+import fussballmanager.service.spiel.spielereignisse.SpielEreignisTypen;
 import fussballmanager.service.spieler.AufstellungsPositionsTypen;
 import fussballmanager.service.spieler.Spieler;
 import fussballmanager.service.spieler.SpielerService;
 import fussballmanager.service.spieler.spielerzuwachs.SpielerZuwachsService;
 import fussballmanager.service.tabelle.TabellenEintrag;
 import fussballmanager.service.tabelle.TabellenEintragService;
+import fussballmanager.service.team.AusrichtungsTypen;
+import fussballmanager.service.team.EinsatzTypen;
 import fussballmanager.service.team.Team;
 import fussballmanager.service.team.TeamService;
 import fussballmanager.service.user.User;
@@ -46,7 +54,6 @@ public class FussballmanagerTestData {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(FussballmanagerTestData.class);
 
-	
 	@Autowired
 	LandService landService;
 	
@@ -81,14 +88,120 @@ public class FussballmanagerTestData {
 	SpielerZuwachsService spielerZuwachsService;
 	
 	String LoginA = "a";
+	String LoginB = "b";
 		
 	Random r = new Random();
 	
-	//TODO Wieder mit LocalTime in SpielMinutesimulation machen
 	int spielminute = 0;
+	
+	//@PostConstruct
+	public void erstelleObjekte() {
+		Land land = new Land(LaenderNamenTypen.DEUTSCHLAND);
+		landService.legeLandAn(land);
+		
+		Liga liga = new Liga(LigenNamenTypen.ERSTELIGA, land);
+		ligaService.aktualisiereLiga(liga);
+		
+		Saison saison = new Saison(1);
+		saison.setAktuelleSaison(true);
+		saisonService.aktualisiereSaison(saison);
+		
+		Team teamA = new Team(land, "Team A", null, liga);
+		teamA.setAusrichtungsTyp(AusrichtungsTypen.SEHROFFENSIV);
+		teamA.setEinsatzTyp(EinsatzTypen.BRUTAL);
+		teamService.legeTeamAn(teamA);
+		
+		TabellenEintrag tabellenEintragTeamA = new TabellenEintrag();
+		tabellenEintragTeamA.setSaison(saison);
+		tabellenEintragTeamA.setTeam(teamA);
+		tabellenEintragService.legeTabellenEintragAn(tabellenEintragTeamA);
+		
+		Team teamB = new Team(land, "Team B", null, liga);
+		teamB.setAusrichtungsTyp(AusrichtungsTypen.SEHROFFENSIV);
+		teamB.setEinsatzTyp(EinsatzTypen.BRUTAL);
+		teamService.legeTeamAn(teamB);
+		
+		TabellenEintrag tabellenEintragTeamB = new TabellenEintrag();
+		tabellenEintragTeamB.setSaison(saison);
+		tabellenEintragTeamB.setTeam(teamB);
+		tabellenEintragService.legeTabellenEintragAn(tabellenEintragTeamB);
+		
+		User userA = new User(LoginA, LoginA, false, LoginA, LoginA);
+		userA.setLand(landService.findeLand(LaenderNamenTypen.DEUTSCHLAND));
+		userService.legeUserAn(userA);
+		teamB.setUser(userA);
+		teamService.aktualisiereTeam(teamB);
+		
+		for(int i = 1; i < 36; i++) {
+			Spieltag spieltag = new Spieltag(i, saison);
+			spieltagService.legeSpieltagAn(spieltag);
+			Spiel spiel = new Spiel(SpieleTypen.LIGASPIEL, teamA, teamB, spieltag, saison,"");
+			spielService.legeSpielAn(spiel);
+		}
+		
+		Spieltag s = spieltagService.findeSpieltagDurchSaisonUndSpieltagNummer(saison, 1);
+		s.setAktuellerSpieltag(true);
+		spieltagService.aktualisiereSpieltag(s);
+		
+		for(int i = 1; i < 34; i++) {
+			spielSimulationTest();
+			wechsleDenSpieltag();
+		}
+		
+		int tore = 0;
+		int toreSpielEreignis = 0;
+		int gelbeKarten = 0;
+		int verletzungen = 0;
+		int gelbRoteKarten = 0;
+		int roteKarten = 0;
+		
+		List<Spiel> alleSpiele = spielService.findeAlleSpiele();
+		for(Spiel spiel : alleSpiele) {
+			tore = tore + spiel.getToreGastmannschaft() + spiel.getToreHeimmannschaft();
+			for(SpielEreignis spielEreignis : spiel.getSpielEreignisse()) {
+				if(spielEreignis.getSpielereignisTyp().equals(SpielEreignisTypen.GELBEKARTE)) {
+					gelbeKarten++;
+				}
+				if(spielEreignis.getSpielereignisTyp().equals(SpielEreignisTypen.GELBROTEKARTE)) {
+					gelbRoteKarten++;
+				}
+				if(spielEreignis.getSpielereignisTyp().equals(SpielEreignisTypen.ROTEKARTE)) {
+					roteKarten++;
+				}
+				if(spielEreignis.getSpielereignisTyp().equals(SpielEreignisTypen.VERLETZUNG)) {
+					verletzungen++;
+				}
+				if(spielEreignis.getSpielereignisTyp().equals(SpielEreignisTypen.TORVERSUCHGETROFFEN)) {
+					toreSpielEreignis++;
+				}
+			}
+			LOG.info("Spieltag: {}, Tore: {}, ToreSpielEreignis: {}, Gelbekarten: {}, GelbroteKarten: {}, Rotekarten: {}, Verletzungen: {}", 
+					spiel.getSpieltag().getSpieltagNummer(), tore, toreSpielEreignis, gelbeKarten, gelbRoteKarten, roteKarten, verletzungen);
+			tore = 0;
+			toreSpielEreignis = 0;
+			gelbeKarten = 0;
+			verletzungen = 0;
+			gelbRoteKarten = 0;
+			roteKarten = 0;
+		}
+	}
+	
+	public void spielSimulationTest() {
+		spielAnfang();
+		
+		for(int i = 1; i < 46; i++) {
+			spielSimulation.simuliereSpielMinuteAllerSpieleErsteHalbzeit(SpieleTypen.LIGASPIEL, i);
+		}
 
+		for(int i = 46; i < 91; i++) {
+			spielSimulation.simuliereSpielMinuteAllerSpieleZweiteHalbzeit(SpieleTypen.LIGASPIEL, i);
+		}
+		aktualiserenNachSpielEnde();
+	}
+	
 	public void erzeugeTestDaten() {
 		erzeugeTestUser();
+		spieltagService.wechsleAktuellenSpieltag();
 	}
 	
 	private void erzeugeTestUser() {
@@ -135,8 +248,8 @@ public class FussballmanagerTestData {
 	
 	@Scheduled(cron = "05 2/3 * * * ?", zone="Europe/Berlin")
 	public void simuliereSpielEnde() {
-		setzeErfahrungeUndSetzteAuswechselungenZurueckLigaspiel();
 		spielminute = 0;
+		aktualiserenNachSpielEnde();
 	}
 	
 	public void simuliereLigaspielErsteHalbzeit(int spielminute) {
@@ -147,32 +260,9 @@ public class FussballmanagerTestData {
 		spielSimulation.simuliereSpielMinuteAllerSpieleZweiteHalbzeit(SpieleTypen.LIGASPIEL, spielminute);
 	}
 	
-	public void setzeErfahrungeUndSetzteAuswechselungenZurueckLigaspiel() {
-		LocalTime aktuelleZeitMinusZweiStunden = LocalTime.now(ZoneId.of("Europe/Berlin")).minusHours(2);
-		List<Spiel> alleSpieleEinesSpieltages = spielService.findeAlleSpieleEinerSaisonUndSpieltages(saisonService.findeAktuelleSaison(), spieltagService.findeAktuellenSpieltag());
-		
-		for(Spiel spiel : alleSpieleEinesSpieltages) {
-			Team heimTeam = spiel.getHeimmannschaft();
-			Team gastTeam = spiel.getGastmannschaft();
-			if(!spiel.isVorbei() && (spiel.getSpielTyp().getSpielBeginn().isAfter(aktuelleZeitMinusZweiStunden))) {
-				spielService.anzahlToreEinesSpielSetzen(spiel);
-				spiel.setVorbei(true);
-				heimTeam.setAnzahlAuswechselungen(3);
-				gastTeam.setAnzahlAuswechselungen(3);
-				
-				spielService.aktualisiereSpiel(spiel);
-				teamService.aktualisiereTeam(heimTeam);
-				teamService.aktualisiereTeam(gastTeam);
-			}
-		}
-		
-		//Erfahrung nach spiel um eins erhöhen
-		for(Spieler spieler : spielerService.findeAlleSpieler()) {
-			if(!spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.ERSATZ)) {
-				spieler.setErfahrung(spieler.getErfahrung() + 1);
-				spielerService.aktualisiereSpieler(spieler);
-			}
-		}
+	public void aktualiserenNachSpielEnde() {
+		spielService.aufgabenNachSpiel();
+		spielerService.aufgabenNachSpiel();
 	}
 	
 	@Scheduled(cron = "0/30 * * * * ?", zone="Europe/Berlin")
@@ -184,6 +274,5 @@ public class FussballmanagerTestData {
 	@Scheduled(cron = "15 2/3 * * * ?", zone="Europe/Berlin")
 	public void wechsleDenSpieltag() {
 		spieltagService.wechsleSpieltag();
-		spielerZuwachsService.legeSpielerZuwachsFuerAlleSpielerAn();
 	}
 }

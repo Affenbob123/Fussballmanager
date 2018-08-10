@@ -132,6 +132,12 @@ public class LiveTickerController {
 			spielEreignisEintrag.setSpieler(spielEreignis.getTorschuetze());
 			spielEreignisEintrag.setTeam(spielEreignis.getAngreifer());
 		}
+		
+		if(!((spielEreignis.getSpielereignisTyp().equals(SpielEreignisTypen.TORVERSUCHGETROFFEN)) || 
+				(spielEreignis.getSpielereignisTyp().equals(SpielEreignisTypen.TORVERSUCHGEHALTEN)))) {
+			spielEreignisEintrag.setSpieler(spielEreignis.getSpieler());
+			spielEreignisEintrag.setTeam(spielEreignis.getTeam());
+		}
 		spielEreignisEintrag.setSpielEreignis(spielEreignis);
 		spielEreignisEintrag.setSpielEreignisTyp(spielEreignis.getSpielereignisTyp());
 		

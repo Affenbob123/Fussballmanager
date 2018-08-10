@@ -14,6 +14,9 @@ import fussballmanager.service.saison.Saison;
 import fussballmanager.service.saison.SaisonService;
 import fussballmanager.service.spiel.Spiel;
 import fussballmanager.service.spiel.SpielService;
+import fussballmanager.service.spieler.SpielerService;
+import fussballmanager.service.spieler.spielerzuwachs.SpielerZuwachsService;
+import fussballmanager.service.team.TeamService;
 
 @Service
 @Transactional
@@ -29,6 +32,15 @@ public class SpieltagService {
 	
 	@Autowired
 	SpielService spielService;
+	
+	@Autowired
+	SpielerZuwachsService spielerZuwachsService;
+	
+	@Autowired
+	SpielerService spielerService;
+	
+	@Autowired
+	TeamService teamService;
 	
 	public Spieltag findeSpieltag(Long id) {
 		return spieltagRepository.getOne(id);
@@ -101,7 +113,13 @@ public class SpieltagService {
 			
 			saisonService.legeSaisonAn(new Saison(saisonService.findeLetzteSasion().getSaisonNummer() + 1));
 		} else {
-			wechsleAktuellenSpieltag();
+			aufgabenSpieltagWechsel();
 		}
+	}
+	
+	public void aufgabenSpieltagWechsel() {
+		wechsleAktuellenSpieltag();
+		spielerService.aufgabenBeiSpieltagWechsel();
+		teamService.aufgabenBeiSpieltagWechsel();
 	}
 }

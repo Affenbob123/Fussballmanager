@@ -53,11 +53,11 @@ public class TorVersuchWahrscheinlicheit {
 		}
 		
 		if(torwartDesVerteidigers == null) {
-			return 100;
+			return 1.0;
 		}
 		
 		if(torwartDesAngreifers == null) {
-			return 10;
+			return 0.1;
 		}
 		
 		durchschnittsStaerkeTorwartAngreifer = torwartDesAngreifers.getStaerke().getDurchschnittsStaerke();

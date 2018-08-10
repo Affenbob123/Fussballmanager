@@ -56,9 +56,9 @@ public class FussballmanagerErstellung {
 	
 	@Autowired
 	SpielSimulation spielSimulation;
-		
+	
 	@Autowired
-	FussballmanagerTestData ftd;
+	FussballmanagerTestData fussballmanagerTestData;
 	
 	public FussballmanagerErstellung() {
 
@@ -73,7 +73,7 @@ public class FussballmanagerErstellung {
 			erstelleSpiel();
 		}
 		
-		ftd.erzeugeTestDaten();
+		fussballmanagerTestData.erzeugeTestDaten();
 	}
 	
 	public void erstelleSpiel() {

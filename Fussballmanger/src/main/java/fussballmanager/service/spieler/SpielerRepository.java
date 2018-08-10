@@ -25,4 +25,6 @@ public interface SpielerRepository extends JpaRepository<Spieler, Long> {
 			int minimalesAlter, int maximalesAlter, long minimalerPreis, long maximalerPreis);
 
 	List<Spieler> findByTeamIsNotNull();
+
+	List<Spieler> findByGelbeKarteTrue();
 }

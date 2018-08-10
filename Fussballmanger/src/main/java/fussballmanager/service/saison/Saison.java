@@ -14,7 +14,7 @@ public class Saison {
 	
 	private int saisonNummer;
 	
-	private final int  Spieltage = 35;
+	private final int Spieltage = 35;
 	
 	private boolean aktuelleSaison = false;
 		

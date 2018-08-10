@@ -15,8 +15,6 @@ public class SpielEreignisEintrag implements Comparable<SpielEreignisEintrag> {
 	
 	private Team team;
 	
-	
-	
 	public Spieler getSpieler() {
 		return spieler;
 	}
@@ -63,22 +61,22 @@ public class SpielEreignisEintrag implements Comparable<SpielEreignisEintrag> {
 		}
 		
 		if(spielEreignis.getSpielereignisTyp().equals(SpielEreignisTypen.GELBEKARTE)) {
-			s = spielEreignis.getSpielminute() + "min.: " + spieler.getName() + "(" + spieler.getAufstellungsPositionsTyp().getPositionsName()
+			s = spielEreignis.getSpielminute() + "min.: " + spieler.getName() + "(" + spieler.getPosition().getPositionsName()
 					+ ")" + " vom Team: " + team.getName() + " hat eine gelbe Karte erhalten.";
 		}
 		
 		if(spielEreignis.getSpielereignisTyp().equals(SpielEreignisTypen.GELBROTEKARTE)) {
-			s = spielEreignis.getSpielminute() + "min.: " + spieler.getName() + "(" + spieler.getAufstellungsPositionsTyp().getPositionsName()
+			s = spielEreignis.getSpielminute() + "min.: " + spieler.getName() + "(" + spieler.getPosition().getPositionsName()
 					+ ")" + " vom Team: " + team.getName() + " hat eine gelbrote Karte erhalten.";
 		}
 		
 		if(spielEreignis.getSpielereignisTyp().equals(SpielEreignisTypen.ROTEKARTE)) {
-			s = spielEreignis.getSpielminute() + "min.: " + spieler.getName() + "(" + spieler.getAufstellungsPositionsTyp().getPositionsName()
+			s = spielEreignis.getSpielminute() + "min.: " + spieler.getName() + "(" + spieler.getPosition().getPositionsName()
 					+ ")" + " vom Team: " + team.getName() + " hat eine rote Karte erhalten.";
 		}
 		
 		if(spielEreignis.getSpielereignisTyp().equals(SpielEreignisTypen.VERLETZUNG)) {
-			s = spielEreignis.getSpielminute() + "min.: " + spieler.getName() + "(" + spieler.getAufstellungsPositionsTyp().getPositionsName()
+			s = spielEreignis.getSpielminute() + "min.: " + spieler.getName() + "(" + spieler.getPosition().getPositionsName()
 					+ ")" + " vom Team: " + team.getName() + " hat sich verletzt.";
 		}
 		return s;

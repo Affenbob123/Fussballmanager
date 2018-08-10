@@ -128,11 +128,7 @@ public class TeamService {
 
 	//TODO Wenn kein SPieler mit der Position vorhanden ist dann spielen zu wenige
 	public void aenderFormationEinesTeams(Team team) {
-		aktualisiereTeam(team);
-		FormationsTypen formationsTypDesTeams = team.getFormationsTyp();
-		AufstellungsPositionsTypen aufstellung[] = formationsTypDesTeams.getAufstellungsPositionsTypen();
-		Collection<AufstellungsPositionsTypen> fehlendePositionen = new ArrayList<AufstellungsPositionsTypen>(Arrays.asList(aufstellung));
-	
+		aktualisiereTeam(team);	
 		staerksteFormationEinesTeams(team);
 	}
 	
@@ -140,16 +136,22 @@ public class TeamService {
 	public void staerksteFormationEinesTeams(Team team) {
 		FormationsTypen formationsTypDesTeams = team.getFormationsTyp();
 		AufstellungsPositionsTypen aufstellung[] = formationsTypDesTeams.getAufstellungsPositionsTypen();
-		List<Spieler> spielerDesTeams = spielerService.spielerEinesTeamsSortiertNachStaerke(team);
+		List<Spieler> spielerDesTeams = spielerService.sortiereSpielerEinesTeamsNachStaerke(spielerService.findeAlleSpielerEinesTeams(team));
 		Collection<AufstellungsPositionsTypen> fehlendePositionen = new ArrayList<AufstellungsPositionsTypen>(Arrays.asList(aufstellung));
-				
+		List<Spieler> spielfaehigeSpielerDesTeams = new ArrayList<>();
 		for(Spieler spieler : spielerDesTeams) {
+			if(!(spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.GESPERRT) ||
+					spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.VERLETZT) ||
+					spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.TRAININGSLAGER))) {
+				spielfaehigeSpielerDesTeams.add(spieler);
+			}
+		}
+		for(Spieler spieler : spielfaehigeSpielerDesTeams) {
 			spieler.setAufstellungsPositionsTyp(AufstellungsPositionsTypen.ERSATZ);
 			for(AufstellungsPositionsTypen a : aufstellung) {
 				if(spieler.getPosition().getPositionsName().equals(a.getPositionsName()) && fehlendePositionen.contains(a)) {
 					spieler.setAufstellungsPositionsTyp(a);
 					fehlendePositionen.remove(a);
-					LOG.info("{}", fehlendePositionen);
 					spielerService.aktualisiereSpieler(spieler);
 					break;
 				}
@@ -158,14 +160,13 @@ public class TeamService {
 		
 		if(fehlendePositionen.size() > 0) {
 			for(AufstellungsPositionsTypen a : aufstellung) {
-				for(Spieler spieler: spielerDesTeams) {
+				for(Spieler spieler: spielfaehigeSpielerDesTeams) {
 					if((spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.ERSATZ)) && fehlendePositionen.contains(a)) {
 						if(a.getRollenTyp().equals(RollenTypen.ANGREIFER)) {
 							if(spieler.getPosition().getRollenTyp().equals(a.getRollenTyp())) {
 								spieler.setAufstellungsPositionsTyp(a);
 								fehlendePositionen.remove(a);
-								spielerDesTeams.remove(spieler);
-								LOG.info("{}", fehlendePositionen);
+								spielfaehigeSpielerDesTeams.remove(spieler);
 								spielerService.aktualisiereSpieler(spieler);
 								break;
 							}
@@ -175,8 +176,7 @@ public class TeamService {
 							if(spieler.getPosition().getRollenTyp().equals(a.getRollenTyp())) {
 								spieler.setAufstellungsPositionsTyp(a);
 								fehlendePositionen.remove(a);
-								spielerDesTeams.remove(spieler);
-								LOG.info("{}", fehlendePositionen);
+								spielfaehigeSpielerDesTeams.remove(spieler);
 								spielerService.aktualisiereSpieler(spieler);
 								break;
 							}
@@ -186,8 +186,7 @@ public class TeamService {
 							if(spieler.getPosition().getRollenTyp().equals(a.getRollenTyp())) {
 								spieler.setAufstellungsPositionsTyp(a);
 								fehlendePositionen.remove(a);
-								spielerDesTeams.remove(spieler);
-								LOG.info("{}", fehlendePositionen);
+								spielfaehigeSpielerDesTeams.remove(spieler);
 								spielerService.aktualisiereSpieler(spieler);
 								break;
 							}
@@ -197,14 +196,13 @@ public class TeamService {
 			}
 			
 			for(AufstellungsPositionsTypen a : aufstellung) {
-				for(Spieler spieler: spielerDesTeams) {
+				for(Spieler spieler: spielfaehigeSpielerDesTeams) {
 					if((spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.ERSATZ)) && fehlendePositionen.contains(a)) {
 						if(a.getRollenTyp().equals(RollenTypen.ANGREIFER)) {
 							if(spieler.getPosition().getRollenTyp().equals(RollenTypen.MITTELFELD)) {
 								spieler.setAufstellungsPositionsTyp(a);
 								fehlendePositionen.remove(a);
-								spielerDesTeams.remove(spieler);
-								LOG.info("{}", fehlendePositionen);
+								spielfaehigeSpielerDesTeams.remove(spieler);
 								spielerService.aktualisiereSpieler(spieler);
 								break;
 							}
@@ -214,8 +212,7 @@ public class TeamService {
 							if(spieler.getPosition().getRollenTyp().equals(RollenTypen.VERTEIDIGER)) {
 								spieler.setAufstellungsPositionsTyp(a);
 								fehlendePositionen.remove(a);
-								spielerDesTeams.remove(spieler);
-								LOG.info("{}", fehlendePositionen);
+								spielfaehigeSpielerDesTeams.remove(spieler);
 								spielerService.aktualisiereSpieler(spieler);
 								break;
 							}
@@ -225,8 +222,7 @@ public class TeamService {
 							if(spieler.getPosition().getRollenTyp().equals(RollenTypen.ANGREIFER)) {
 								spieler.setAufstellungsPositionsTyp(a);
 								fehlendePositionen.remove(a);
-								spielerDesTeams.remove(spieler);
-								LOG.info("{}", fehlendePositionen);
+								spielfaehigeSpielerDesTeams.remove(spieler);
 								spielerService.aktualisiereSpieler(spieler);
 								break;
 							}
@@ -236,14 +232,13 @@ public class TeamService {
 			}
 			
 			for(AufstellungsPositionsTypen a : aufstellung) {
-				for(Spieler spieler: spielerDesTeams) {
+				for(Spieler spieler: spielfaehigeSpielerDesTeams) {
 					if((spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.ERSATZ)) && fehlendePositionen.contains(a)) {
 						if(a.getRollenTyp().equals(RollenTypen.ANGREIFER)) {
 							if(spieler.getPosition().getRollenTyp().equals(RollenTypen.VERTEIDIGER)) {
 								spieler.setAufstellungsPositionsTyp(a);
 								fehlendePositionen.remove(a);
-								spielerDesTeams.remove(spieler);
-								LOG.info("{}", fehlendePositionen);
+								spielfaehigeSpielerDesTeams.remove(spieler);
 								spielerService.aktualisiereSpieler(spieler);
 								break;
 							}
@@ -253,8 +248,7 @@ public class TeamService {
 							if(spieler.getPosition().getRollenTyp().equals(RollenTypen.ANGREIFER)) {
 								spieler.setAufstellungsPositionsTyp(a);
 								fehlendePositionen.remove(a);
-								spielerDesTeams.remove(spieler);
-								LOG.info("{}", fehlendePositionen);
+								spielfaehigeSpielerDesTeams.remove(spieler);
 								spielerService.aktualisiereSpieler(spieler);
 								break;
 							}
@@ -264,8 +258,7 @@ public class TeamService {
 							if(spieler.getPosition().getRollenTyp().equals(RollenTypen.MITTELFELD)) {
 								spieler.setAufstellungsPositionsTyp(a);
 								fehlendePositionen.remove(a);
-								spielerDesTeams.remove(spieler);
-								LOG.info("{}", fehlendePositionen);
+								spielfaehigeSpielerDesTeams.remove(spieler);
 								spielerService.aktualisiereSpieler(spieler);
 								break;
 							}
@@ -275,14 +268,13 @@ public class TeamService {
 			}
 			
 			for(AufstellungsPositionsTypen a : aufstellung) {
-				for(Spieler spieler: spielerDesTeams) {
+				for(Spieler spieler: spielfaehigeSpielerDesTeams) {
 					if((spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.ERSATZ)) && fehlendePositionen.contains(a)) {
 						if(a.getRollenTyp().equals(RollenTypen.ANGREIFER)) {
 							if(spieler.getPosition().getRollenTyp().equals(RollenTypen.TORWART)) {
 								spieler.setAufstellungsPositionsTyp(a);
 								fehlendePositionen.remove(a);
-								spielerDesTeams.remove(spieler);
-								LOG.info("{}", fehlendePositionen);
+								spielfaehigeSpielerDesTeams.remove(spieler);
 								spielerService.aktualisiereSpieler(spieler);
 								break;
 							}
@@ -292,8 +284,7 @@ public class TeamService {
 							if(spieler.getPosition().getRollenTyp().equals(RollenTypen.TORWART)) {
 								spieler.setAufstellungsPositionsTyp(a);
 								fehlendePositionen.remove(a);
-								spielerDesTeams.remove(spieler);
-								LOG.info("{}", fehlendePositionen);
+								spielfaehigeSpielerDesTeams.remove(spieler);
 								spielerService.aktualisiereSpieler(spieler);
 								break;
 							}
@@ -303,8 +294,7 @@ public class TeamService {
 							if(spieler.getPosition().getRollenTyp().equals(RollenTypen.TORWART)) {
 								spieler.setAufstellungsPositionsTyp(a);
 								fehlendePositionen.remove(a);
-								spielerDesTeams.remove(spieler);
-								LOG.info("{}", fehlendePositionen);
+								spielfaehigeSpielerDesTeams.remove(spieler);
 								spielerService.aktualisiereSpieler(spieler);
 								break;
 							}
@@ -314,13 +304,12 @@ public class TeamService {
 			}
 			
 			for(AufstellungsPositionsTypen a : aufstellung) {
-				for(Spieler spieler: spielerDesTeams) {
+				for(Spieler spieler: spielfaehigeSpielerDesTeams) {
 					if((spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.ERSATZ)) && fehlendePositionen.contains(a)) {
 						if(a.getRollenTyp().equals(RollenTypen.TORWART)) {
 							spieler.setAufstellungsPositionsTyp(a);
 							fehlendePositionen.remove(a);
-							spielerDesTeams.remove(spieler);
-							LOG.info("{}", fehlendePositionen);
+							spielfaehigeSpielerDesTeams.remove(spieler);
 							spielerService.aktualisiereSpieler(spieler);
 							break;
 						}
@@ -426,12 +415,13 @@ public class TeamService {
 		
 		for(Spiel spiel : alleSpieleEinesTeams) {
 			for(SpielEreignis spielEreignis :spiel.getSpielEreignisse()) {
-				if(spielEreignis.getVerteidiger().equals(team)) {
-					if(spielEreignis.getSpielereignisTyp().equals(SpielEreignisTypen.GELBEKARTE)) {
-						gelbeKarten++;
+				if(spielEreignis.getTeam() != null) {
+					if(spielEreignis.getTeam().equals(team)) {
+						if(spielEreignis.getSpielereignisTyp().equals(SpielEreignisTypen.GELBEKARTE)) {
+							gelbeKarten++;
+						}
 					}
 				}
-
 			}
 		}
 		return gelbeKarten;
@@ -443,12 +433,13 @@ public class TeamService {
 		
 		for(Spiel spiel : alleSpieleEinesTeams) {
 			for(SpielEreignis spielEreignis :spiel.getSpielEreignisse()) {
-				if(spielEreignis.getVerteidiger().equals(team)) {
-					if(spielEreignis.getSpielereignisTyp().equals(SpielEreignisTypen.GELBROTEKARTE)) {
-						gelbeRoteKarten++;
+				if(spielEreignis.getTeam() != null) {
+					if(spielEreignis.getTeam().equals(team)) {
+						if(spielEreignis.getSpielereignisTyp().equals(SpielEreignisTypen.GELBROTEKARTE)) {
+							gelbeRoteKarten++;
+						}
 					}
 				}
-
 			}
 		}
 		return gelbeRoteKarten;
@@ -460,14 +451,23 @@ public class TeamService {
 		
 		for(Spiel spiel : alleSpieleEinesTeams) {
 			for(SpielEreignis spielEreignis :spiel.getSpielEreignisse()) {
-				if(spielEreignis.getVerteidiger().equals(team)) {
-					if(spielEreignis.getSpielereignisTyp().equals(SpielEreignisTypen.ROTEKARTE)) {
-						roteKarten++;
+				if(spielEreignis.getTeam() != null) {
+					if(spielEreignis.getTeam().equals(team)) {
+						if(spielEreignis.getSpielereignisTyp().equals(SpielEreignisTypen.ROTEKARTE)) {
+							roteKarten++;
+						}
 					}
 				}
-
 			}
 		}
 		return roteKarten;
+	}
+
+	public void aufgabenBeiSpieltagWechsel() {
+		List<Team> alleTeams = findeAlleTeams();
+		
+		for(Team team : alleTeams) {
+			aenderFormationEinesTeams(team);
+		}
 	}
 }

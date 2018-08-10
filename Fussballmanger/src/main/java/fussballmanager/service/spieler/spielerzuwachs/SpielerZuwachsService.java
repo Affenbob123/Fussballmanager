@@ -54,17 +54,14 @@ public class SpielerZuwachsService {
 		spielerZuwachsRepository.deleteAll(spieler.getSpielerZuwaechse());
 	}
 	
-	public void legeSpielerZuwachsFuerAlleSpielerAn() {
-		List<Spieler> alleSpieler = spielerService.findeAlleSpielerMitTeam();
+	public void legeSpielerZuwachsFuerEinenSpielerAn(Spieler spieler) {
 		Saison aktuelleSaison = saisonService.findeAktuelleSaison();
 		Spieltag aktuellerSpieltag = spieltagService.findeAktuellenSpieltag();
-		for(Spieler spieler : alleSpieler) {
-			SpielerZuwachs spielerZuwachs = new SpielerZuwachs(aktuelleSaison, aktuellerSpieltag);
-			spieler.addSpielerZuwaechse(spielerZuwachs);
-			spielerZuwachs.setZuwachs(spielerZuwachs.berechneSpielerZuwachsFuerEinenSpieler(spieler));
-			legeSpielerZuwachsAn(spielerZuwachs);
-			
-			spielerService.kompletteReinStaerkeAendern(spieler, spielerZuwachs.getZuwachs());
-		}
+		SpielerZuwachs spielerZuwachs = new SpielerZuwachs(aktuelleSaison, aktuellerSpieltag);
+		spieler.addSpielerZuwaechse(spielerZuwachs);
+		spielerZuwachs.setZuwachs(spielerZuwachs.berechneSpielerZuwachsFuerEinenSpieler(spieler));
+		legeSpielerZuwachsAn(spielerZuwachs);
+		
+		spielerService.kompletteReinStaerkeAendern(spieler, spielerZuwachs.getZuwachs());
 	}
 }

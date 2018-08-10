@@ -11,10 +11,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import fussballmanager.service.saison.SaisonService;
 import fussballmanager.service.spiel.Spiel;
 import fussballmanager.service.spiel.SpielService;
 import fussballmanager.service.spiel.spielereignisse.SpielEreignis;
 import fussballmanager.service.spiel.spielereignisse.SpielEreignisTypen;
+import fussballmanager.service.tabelle.TabellenEintragService;
 import fussballmanager.service.team.Team;
 
 @Service
@@ -28,6 +30,12 @@ public class TorversuchService {
 	
 	@Autowired
 	SpielService spielService;
+	
+	@Autowired
+	TabellenEintragService tabellenEintragService;
+	
+	@Autowired
+	SaisonService saisonService;
 	
 	public Torversuch findeTorversuch(Long id) {
 		return torversuchRepository.getOne(id);
@@ -72,11 +80,9 @@ public class TorversuchService {
 				spielEreignis.setSpielereignisTyp(SpielEreignisTypen.TORVERSUCHGETROFFEN);
 			}
 		}
-		LOG.info("tor von Spieler: {}, vom Team: {}", spielEreignis.getTorschuetze().getPosition().getPositionsName(), spielEreignis.getAngreifer().getName());
 		loescheTorversuch(torversuch);
 		spiel.addSpielEreignis(spielEreignis);
-		
-		spielService.aktualisiereSpiel(spiel);
+		spielService.anzahlToreEinesSpielSetzen(spiel);
 	}
 	
 	public void ueberPruefeObTorversucheNochAktuell() {

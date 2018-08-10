@@ -64,7 +64,7 @@ public class Spiel {
 	
 	private int aktuelleSpielminute = 0;
 
-	public Spiel(SpieleTypen spielTyp, Team heimmannschaft, Team gastmannschaft, LocalTime spielbeginn, 
+	public Spiel(SpieleTypen spielTyp, Team heimmannschaft, Team gastmannschaft, 
 			Spieltag spieltag, Saison saison,String spielort) {
 		this.heimmannschaft = heimmannschaft;
 		this.gastmannschaft = gastmannschaft;

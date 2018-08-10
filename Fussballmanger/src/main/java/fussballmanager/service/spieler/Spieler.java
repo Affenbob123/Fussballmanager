@@ -54,9 +54,13 @@ public class Spieler implements Comparable<Spieler> {
 	@ManyToOne
 	private Team team;
 	
-	private int trainingslagerTage = 10;
+	private int uebrigeTrainingslagerTage = 10;
+	
+	private int trainingslagerTage = 0;
 	
 	private int verletzungsTage = 0;
+	
+	private int gesperrteTage = 0;
 	
 	private long gehalt;
 	
@@ -292,6 +296,22 @@ public class Spieler implements Comparable<Spieler> {
 
 	public void setGelbeKarte(boolean gelbeKarte) {
 		this.gelbeKarte = gelbeKarte;
+	}
+
+	public int getGesperrteTage() {
+		return gesperrteTage;
+	}
+
+	public void setGesperrteTage(int gesperrteTage) {
+		this.gesperrteTage = gesperrteTage;
+	}
+
+	public int getUebrigeTrainingslagerTage() {
+		return uebrigeTrainingslagerTage;
+	}
+
+	public void setUebrigeTrainingslagerTage(int uebrigeTrainingslagerTage) {
+		this.uebrigeTrainingslagerTage = uebrigeTrainingslagerTage;
 	}
 
 	@Override
