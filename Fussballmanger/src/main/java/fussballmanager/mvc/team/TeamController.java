@@ -101,13 +101,13 @@ public class TeamController {
 		return "redirect:/team/{id}";
 	}
 	
-	@PostMapping("/team/{id}/einwechseln")
-	public String aendereFormation(Model model, Authentication auth, @PathVariable("id") Long id, @ModelAttribute("einzuwechselnderSpieler") Spieler spieler) {
+	@PostMapping("/team/{teamId}/einwechseln")
+	public String aendereFormation(Model model, Authentication auth, @PathVariable("teamId") Long id, @ModelAttribute("einzuwechselnderSpieler") Spieler spieler) {
 		Spieler einzugewechselterSpieler = spielerService.findeSpieler(spieler.getId());
 		LOG.info("{}, {}, {}, {}, {}", einzugewechselterSpieler.getId(), einzugewechselterSpieler.getName(), einzugewechselterSpieler.getAlter(), 
 				einzugewechselterSpieler.getPosition().getPositionsName(), einzugewechselterSpieler.getTeam());
 		spielerService.wechsleSpielerEin(einzugewechselterSpieler, spieler.getAufstellungsPositionsTyp());
 		
-		return "redirect:/team/{id}";
+		return "redirect:/team/{teamId}";
 	}
 }
