@@ -11,7 +11,7 @@ import javax.persistence.OneToOne;
 import org.hibernate.annotations.GenericGenerator;
 
 import fussballmanager.service.land.Land;
-import fussballmanager.service.spieler.staerke.Staerke;
+import fussballmanager.service.spieler.staerke.SpielerStaerke;
 import fussballmanager.service.team.Team;
 
 @Entity
@@ -37,10 +37,7 @@ public class Spieler implements Comparable<Spieler> {
 	private int alter;
 	
 	@OneToOne(cascade = {CascadeType.ALL})
-	private Staerke reinStaerke;
-	
-	@OneToOne(cascade = {CascadeType.ALL})
-	private Staerke staerke;
+	private SpielerStaerke spielerStaerke;
 	
 	private double spielerZuwachs = 0.0;
 	
@@ -77,13 +74,12 @@ public class Spieler implements Comparable<Spieler> {
 	private int roteKarten = 0;
 
 	public Spieler(Land nationalitaet, PositionenTypen position, AufstellungsPositionsTypen aufstellungsPositionsTyp,
-			int alter, Staerke reinStaerke, Staerke staerke, int talentwert, Team team) {
+			int alter, SpielerStaerke spielerStaerke, int talentwert, Team team) {
 		this.nationalitaet = nationalitaet;
 		this.position = position;
 		this.aufstellungsPositionsTyp = aufstellungsPositionsTyp;
 		this.alter = alter;
-		this.reinStaerke = reinStaerke;
-		this.staerke = staerke;
+		this.spielerStaerke = spielerStaerke;
 		this.talentwert = talentwert;
 		this.team = team;
 		this.talentwertErmittelt =  false;
@@ -91,8 +87,8 @@ public class Spieler implements Comparable<Spieler> {
 		this.motivation = 0;
 		this.trainingslagerTage = 10;
 		this.verletzungsTage = 0;
-		this.gehalt = (long) (staerke.getDurchschnittsStaerke() * 100);
-		this.preis = (long) (staerke.getDurchschnittsStaerke() * 1000);
+		this.gehalt = (long) (spielerStaerke.getReinStaerke() * 100);
+		this.preis = (long) (spielerStaerke.getReinStaerke() * 1000);
 		this.transfermarkt = false;
 	}
 
@@ -138,18 +134,6 @@ public class Spieler implements Comparable<Spieler> {
 
 	public void setAlter(int alter) {
 		this.alter = alter;
-	}
-
-	public Staerke getReinStaerke() {
-		return reinStaerke;
-	}
-
-	public void setReinStaerke(Staerke reinStaerke) {
-		this.reinStaerke = reinStaerke;
-	}
-
-	public Staerke getStaerke() {
-		return staerke;
 	}
 
 	public int getErfahrung() {
@@ -216,8 +200,12 @@ public class Spieler implements Comparable<Spieler> {
 		this.gehalt = gehalt;
 	}
 
-	public void setStaerke(Staerke staerke) {
-		this.staerke = staerke;
+	public SpielerStaerke getSpielerStaerke() {
+		return spielerStaerke;
+	}
+
+	public void setSpielerStaerke(SpielerStaerke spielerStaerke) {
+		this.spielerStaerke = spielerStaerke;
 	}
 
 	public double getSpielerZuwachs() {

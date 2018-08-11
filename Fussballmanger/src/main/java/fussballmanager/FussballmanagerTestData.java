@@ -270,7 +270,7 @@ public class FussballmanagerTestData {
 	}
 	
 	//@Scheduled(cron = "15 2/3 * * * ?", zone="Europe/Berlin")
-	@Scheduled(cron = "*/1 * * * * ?", zone="Europe/Berlin")
+	@Scheduled(cron = "* * * * * ?", zone="Europe/Berlin")
 	public void wechsleDenSpieltag() {
 		spieltagService.wechsleSpieltag();
 	}

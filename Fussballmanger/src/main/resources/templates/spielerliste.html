@@ -100,11 +100,11 @@
 								href="#"></a>
 						</td>
 						<td th:text="${spieler.alter}" />
-						<td th:text="${zahlenFormat.format(spieler.staerke.durchschnittsStaerke)}" />
-						<td th:text="${zahlenFormat.format(spieler.reinStaerke.durchschnittsStaerke)}" />
-						<td th:text="${spieler.spielerZuwachs} > 0 ?
+						<td th:text="${zahlenFormat.format(spieler.spielerStaerke.staerke)}" />
+						<td th:text="${zahlenFormat.format(spieler.spielerStaerke.reinStaerke)}" />
+						<td th:text="${spieler.spielerZuwachs} >= 0 ?
 							'+'+${zahlenFormat.format(spieler.spielerZuwachs)} : 
-							${zahlenFormat.format(spieler.spielerZuwachs}" />
+							${zahlenFormat.format(spieler.spielerZuwachs)}" />
 						<td th:text="${spieler.erfahrung}" />
 						<td th:text="${spieler.motivation}" />
 					</tr>

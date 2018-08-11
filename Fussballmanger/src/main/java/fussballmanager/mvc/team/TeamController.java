@@ -59,7 +59,7 @@ public class TeamController {
 		model.addAttribute("aktuellesTeam", aktuellerUser.getAktuellesTeam());
 		
 		List<Spieler> alleSpielerEinesTeams = spielerService.findeAlleSpielerEinesTeams(aktuellesTeam);
-		DecimalFormat zahlenFormat = new DecimalFormat("#.0");
+		DecimalFormat zahlenFormat = new DecimalFormat("0.0");
 		
 		model.addAttribute("zahlenFormat", zahlenFormat);
 		model.addAttribute("alleSpielerDesAktuellenTeams", alleSpielerEinesTeams);

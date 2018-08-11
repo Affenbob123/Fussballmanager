@@ -119,7 +119,6 @@ public class SpieltagService {
 	
 	public void aufgabenSpieltagWechsel() {
 		wechsleAktuellenSpieltag();
-		LOG.info("start");
 		spielerService.aufgabenBeiSpieltagWechsel();
 		teamService.aufgabenBeiSpieltagWechsel();
 	}

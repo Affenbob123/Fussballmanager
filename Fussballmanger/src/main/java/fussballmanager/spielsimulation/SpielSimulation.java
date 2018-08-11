@@ -163,11 +163,11 @@ public class SpielSimulation {
 		double tatsaechlicherFaktor = 1.0;
 		
 		for(Spieler spieler : spielerHeimmannschaft) {
-			gesamtStaerkeHeimmannschaft = gesamtStaerkeHeimmannschaft + spieler.getStaerke().getDurchschnittsStaerke();
+			gesamtStaerkeHeimmannschaft = gesamtStaerkeHeimmannschaft + spieler.getSpielerStaerke().getStaerke();
 		}
 		
 		for(Spieler spieler : spielerGastmannschaft) {
-			gesamtStaerkeGastmannschaft = gesamtStaerkeGastmannschaft + spieler.getStaerke().getDurchschnittsStaerke();
+			gesamtStaerkeGastmannschaft = gesamtStaerkeGastmannschaft + spieler.getSpielerStaerke().getStaerke();
 		}
 		
 		gesamtStaerkeHeimmannschaft = gesamtStaerkeHeimmannschaft * spiel.getHeimVorteil();

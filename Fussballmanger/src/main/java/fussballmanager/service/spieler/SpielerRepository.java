@@ -18,8 +18,8 @@ public interface SpielerRepository extends JpaRepository<Spieler, Long> {
 
 	List<Spieler> findByAufstellungsPositionsTyp(AufstellungsPositionsTypen aufstellungsPositionsTyp);
 
-	List<Spieler> findByPositionAndNationalitaetAndAlterBetweenAndStaerkeBetweenAndPreisBetween(PositionenTypen position, LaenderNamenTypen land,
-			int minimalesAlter, int maximalesAlter, double minimaleStaerke, double maximaleStaerke,double minimalerPreis, double maximalerPreis);
+	List<Spieler> findByPositionAndNationalitaetAndAlterBetweenAndSpielerStaerkeBetweenAndPreisBetween(PositionenTypen position, LaenderNamenTypen land,
+			int minimalesAlter, int maximalesAlter, double minimaleStaerke, double maximaleStaerke, double minimalerPreis, double maximalerPreis);
 	
 	List<Spieler> findByTransfermarktAndAlterBetweenAndPreisBetween(boolean transfermarkt,
 			int minimalesAlter, int maximalesAlter, long minimalerPreis, long maximalerPreis);

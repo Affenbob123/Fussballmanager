@@ -14,13 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fussballmanager.service.land.LaenderNamenTypen;
 import fussballmanager.service.land.Land;
-import fussballmanager.service.saison.Saison;
 import fussballmanager.service.saison.SaisonService;
-import fussballmanager.service.saison.spieltag.Spieltag;
 import fussballmanager.service.saison.spieltag.SpieltagService;
 import fussballmanager.service.spieler.spielerzuwachs.SpielerZuwachsService;
 import fussballmanager.service.spieler.spielerzuwachs.ZuwachsFaktorAlter;
-import fussballmanager.service.spieler.staerke.Staerke;
+import fussballmanager.service.spieler.staerke.SpielerStaerke;
 import fussballmanager.service.team.FormationsTypen;
 import fussballmanager.service.team.Team;
 import fussballmanager.service.team.TeamService;
@@ -59,7 +57,7 @@ public class SpielerService {
 	}
 	
 	public List<Spieler> findeAlleSpielerEinesTeams(Team team) {
-		List<Spieler> alleSpielerEinesTeams =  spielerRepository.findByTeam(team);
+		List<Spieler> alleSpielerEinesTeams = spielerRepository.findByTeam(team);
 		Collections.sort(alleSpielerEinesTeams);
 		return alleSpielerEinesTeams;
 	}
@@ -130,8 +128,8 @@ public class SpielerService {
 		for(PositionenTypen positionenTyp : PositionenTypen.values()) {
 			double anfangsStaerke = 200.0;
 			int talentwert = erzeugeZufaelligenTalentwert();
-			Staerke staerke = new Staerke(anfangsStaerke, anfangsStaerke, anfangsStaerke, anfangsStaerke, anfangsStaerke, anfangsStaerke);
-			Staerke reinStaerke = new Staerke(anfangsStaerke, anfangsStaerke, anfangsStaerke, anfangsStaerke, anfangsStaerke, anfangsStaerke);
+			SpielerStaerke staerke = new SpielerStaerke(anfangsStaerke, anfangsStaerke, anfangsStaerke, 
+					anfangsStaerke, anfangsStaerke, anfangsStaerke, anfangsStaerke, anfangsStaerke);
 			AufstellungsPositionsTypen aufstellungsPositionsTyp = AufstellungsPositionsTypen.ERSATZ;
 			FormationsTypen formationsTypTeam = team.getFormationsTyp();
 			
@@ -141,9 +139,9 @@ public class SpielerService {
 				}
 			}
 
-			Spieler spieler = new Spieler(nationalitaet, positionenTyp, aufstellungsPositionsTyp, alter, reinStaerke, staerke, talentwert, team);
+			Spieler spieler = new Spieler(nationalitaet, positionenTyp, aufstellungsPositionsTyp, alter, staerke, talentwert, team);
 			legeSpielerAn(spieler);
-			LOG.info("Spielerstaerke: {}", spieler.getStaerke().getDurchschnittsStaerke());
+			LOG.info("Spielerstaerke: {}", spieler.getSpielerStaerke().getStaerke());
 		}
 	}
 	
@@ -153,39 +151,32 @@ public class SpielerService {
 	}
 	
 	public void kompletteStaerkeAendern(Spieler spieler, double staerkeAenderungsFaktor) {
-		spieler.getStaerke().setDribbeln(spieler.getReinStaerke().getDribbeln() * staerkeAenderungsFaktor);
-		spieler.getStaerke().setGeschwindigkeit(spieler.getReinStaerke().getGeschwindigkeit() * staerkeAenderungsFaktor);
-		spieler.getStaerke().setPassen(spieler.getReinStaerke().getPassen() * staerkeAenderungsFaktor);
-		spieler.getStaerke().setPhysis(spieler.getReinStaerke().getPhysis() * staerkeAenderungsFaktor);
-		spieler.getStaerke().setSchiessen(spieler.getReinStaerke().getSchiessen() * staerkeAenderungsFaktor);
-		spieler.getStaerke().setVerteidigen(spieler.getReinStaerke().getVerteidigen() * staerkeAenderungsFaktor);
-		spieler.getStaerke().setDurchschnittsStaerke(spieler.getReinStaerke().getDurchschnittsStaerke() * staerkeAenderungsFaktor);
+		spieler.getSpielerStaerke().setDribbeln(spieler.getSpielerStaerke().getReinStaerke() * staerkeAenderungsFaktor);
+		spieler.getSpielerStaerke().setGeschwindigkeit(spieler.getSpielerStaerke().getReinStaerke() * staerkeAenderungsFaktor);
+		spieler.getSpielerStaerke().setPassen(spieler.getSpielerStaerke().getReinStaerke() * staerkeAenderungsFaktor);
+		spieler.getSpielerStaerke().setPhysis(spieler.getSpielerStaerke().getReinStaerke() * staerkeAenderungsFaktor);
+		spieler.getSpielerStaerke().setSchiessen(spieler.getSpielerStaerke().getReinStaerke() * staerkeAenderungsFaktor);
+		spieler.getSpielerStaerke().setVerteidigen(spieler.getSpielerStaerke().getReinStaerke() * staerkeAenderungsFaktor);
+		spieler.getSpielerStaerke().setStaerke(spieler.getSpielerStaerke().getReinStaerke() * staerkeAenderungsFaktor);
 		
 		aktualisiereSpieler(spieler);
 	}
 	
-	public void kompletteReinStaerkeAendern(Spieler spieler, double zuwachs) {
-		spieler.getReinStaerke().setDribbeln(spieler.getReinStaerke().getDribbeln() + zuwachs);
-		spieler.getReinStaerke().setGeschwindigkeit(spieler.getReinStaerke().getGeschwindigkeit() + zuwachs);
-		spieler.getReinStaerke().setPassen(spieler.getReinStaerke().getPassen() + zuwachs);
-		spieler.getReinStaerke().setPhysis(spieler.getReinStaerke().getPhysis() + zuwachs);
-		spieler.getReinStaerke().setSchiessen(spieler.getReinStaerke().getSchiessen() + zuwachs);
-		spieler.getReinStaerke().setVerteidigen(spieler.getReinStaerke().getVerteidigen() + zuwachs);
-		spieler.getReinStaerke().setDurchschnittsStaerke(spieler.getReinStaerke().getDurchschnittsStaerke() + zuwachs);
-		
+	public void reinStaerkeAendern(Spieler spieler, double zuwachs) {
+		spieler.getSpielerStaerke().setReinStaerke(spieler.getSpielerStaerke().getReinStaerke() + zuwachs);
 		aktualisiereSpieler(spieler);
 	}
 	
-	public List<Spieler> sortiereSpielerEinesTeamsNachStaerke(List<Spieler> spieler) {
-		List<Spieler> alleSpielerDesTeams = spieler;
+	public List<Spieler> sortiereSpielerNachStaerke(List<Spieler> spieler) {
+		List<Spieler> spielerListe = spieler;
 		
-		Collections.sort(alleSpielerDesTeams, new Comparator<Spieler>() {
+		Collections.sort(spielerListe, new Comparator<Spieler>() {
 			@Override
 			public int compare(Spieler s1, Spieler s2) {
-				return Double.compare(s1.getStaerke().getDurchschnittsStaerke(), s2.getStaerke().getDurchschnittsStaerke());
+				return Double.compare(s1.getSpielerStaerke().getStaerke(), s2.getSpielerStaerke().getStaerke());
 			}
 		});
-		return alleSpielerDesTeams;
+		return spielerListe;
 		
 	}
 	
@@ -299,13 +290,11 @@ public class SpielerService {
 					int staerkeFaktor = alter - 13;
 					double anfangsStaerkeMitFaktor = anfangsStaerke * staerkeFaktor;
 					long preis = (long) (anfangsStaerkeMitFaktor * 1000);
-					
-					Staerke reinStaerke = new Staerke(anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor, 
-							anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor);
-					Staerke staerke = new Staerke(anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor, 
+					SpielerStaerke staerke = new SpielerStaerke(anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor, 
+							anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor, 
 							anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor);
 					Spieler spieler = new Spieler(null, positionenTyp, AufstellungsPositionsTypen.ERSATZ, 
-							alter, reinStaerke, staerke, erzeugeZufaelligenTalentwert(), null);
+							alter, staerke, erzeugeZufaelligenTalentwert(), null);
 					spieler.setTransfermarkt(true);
 					spieler.setPreis(preis);
 					
@@ -352,8 +341,8 @@ public class SpielerService {
 				minimalesAlter, maximalesAlter, minimalerPreis, maximalerPreis);
 		
 		for(Spieler spieler : zwischenResultat) {
-			if(spieler.getStaerke().getDurchschnittsStaerke() <= maximaleStaerke && 
-					spieler.getStaerke().getDurchschnittsStaerke() >= minimaleStaerke) {
+			if(spieler.getSpielerStaerke().getStaerke() <= maximaleStaerke && 
+					spieler.getSpielerStaerke().getStaerke() >= minimaleStaerke) {
 				if(position == null) {
 					if(land == null || spieler.getNationalitaet() == null) {
 						endResultat.add(spieler);
@@ -395,7 +384,7 @@ public class SpielerService {
 
 	public void spielerVonTransfermarktNehmen(Spieler spieler) {
 		spieler.setAufstellungsPositionsTyp(AufstellungsPositionsTypen.ERSATZ);
-		spieler.setPreis((long) (spieler.getStaerke().getDurchschnittsStaerke() * 1000));
+		spieler.setPreis((long) (spieler.getSpielerStaerke().getReinStaerke() * 1000));
 		spieler.setTransfermarkt(false);
 		aktualisiereSpieler(spieler);
 	}
@@ -500,7 +489,7 @@ public class SpielerService {
 	
 	public Spieler findeStaerkstenSpielerFuerVerletztenSpieler(Spieler spieler) {
 		List<Spieler> alleSpielerAufErsatzbank = findeAlleSpielerEinesTeamsAufErsatzbank(spieler.getTeam());
-		alleSpielerAufErsatzbank = sortiereSpielerEinesTeamsNachStaerke(alleSpielerAufErsatzbank);
+		alleSpielerAufErsatzbank = sortiereSpielerNachStaerke(alleSpielerAufErsatzbank);
 		
 		if(alleSpielerAufErsatzbank.isEmpty()) {
 			return null;
@@ -522,7 +511,7 @@ public class SpielerService {
 		
 		for(Spieler spieler: alleSpielerMitTeam) {
 			spieler.setSpielerZuwachs(berechneSpielerZuwachsFuerEinenSpieler(spieler));
-			kompletteReinStaerkeAendern(spieler, spieler.getSpielerZuwachs());
+			reinStaerkeAendern(spieler, spieler.getSpielerZuwachs());
 			reduziereVerletzungSperreTrainingslager(spieler);
 		}		
 	}

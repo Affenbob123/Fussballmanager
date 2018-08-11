@@ -142,7 +142,7 @@ public class TeamService {
 	public void staerksteFormationEinesTeams(Team team) {
 		FormationsTypen formationsTypDesTeams = team.getFormationsTyp();
 		AufstellungsPositionsTypen aufstellung[] = formationsTypDesTeams.getAufstellungsPositionsTypen();
-		List<Spieler> spielerDesTeams = spielerService.sortiereSpielerEinesTeamsNachStaerke(spielerService.findeAlleSpielerEinesTeams(team));
+		List<Spieler> spielerDesTeams = spielerService.sortiereSpielerNachStaerke(spielerService.findeAlleSpielerEinesTeams(team));
 		Collection<AufstellungsPositionsTypen> fehlendePositionen = new ArrayList<AufstellungsPositionsTypen>(Arrays.asList(aufstellung));
 		List<Spieler> spielfaehigeSpielerDesTeams = new ArrayList<>();
 		for(Spieler spieler : spielerDesTeams) {
@@ -472,7 +472,6 @@ public class TeamService {
 
 	public void aufgabenBeiSpieltagWechsel() {
 		List<Team> alleTeams = findeAlleTeams();
-		
 		for(Team team : alleTeams) {
 			aenderFormationEinesTeams(team);
 		}

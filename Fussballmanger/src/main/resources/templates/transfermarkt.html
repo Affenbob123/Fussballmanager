@@ -70,7 +70,7 @@
 							<a th:text="${spieler.name}" th:id="${spieler.id}" onClick="openWindowInNewWindow(this.id)"
 								href="#"></a>
 						</td>
-						<td th:text="${zahlenFormat.format(spieler.reinStaerke.durchschnittsStaerke)}" />
+						<td th:text="${zahlenFormat.format(spieler.spielerStaerke.reinStaerke)}" />
 						<td th:text="${spieler.preis}" />
 						<td>
 							<form method="POST" th:action="@{/transfermarkt/}+${spieler.id}">
