@@ -164,7 +164,7 @@ public class TeamService {
 				}
 			}
 		}
-		
+			
 		if(fehlendePositionen.size() > 0) {
 			for(AufstellungsPositionsTypen a : aufstellung) {
 				for(Spieler spieler: spielfaehigeSpielerDesTeams) {

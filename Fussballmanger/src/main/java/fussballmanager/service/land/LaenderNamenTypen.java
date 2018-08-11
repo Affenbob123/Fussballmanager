@@ -4,7 +4,7 @@ public enum LaenderNamenTypen {
 	
 	DEUTSCHLAND("Deutschland");
 //	ENGLAND("England"),
-//	SPANIEN("Spanien");
+//	SPANIEN("Spanien"),
 //	ITALIEN("Italien"),
 //	FRANKREICH("Frankreich");
     

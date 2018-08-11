@@ -1,6 +1,5 @@
 package fussballmanager.service.spieler;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -36,7 +35,7 @@ public class Spieler implements Comparable<Spieler> {
 	
 	private int alter;
 	
-	@OneToOne(cascade = {CascadeType.ALL})
+	@OneToOne
 	private SpielerStaerke spielerStaerke;
 	
 	private double spielerZuwachs = 0.0;

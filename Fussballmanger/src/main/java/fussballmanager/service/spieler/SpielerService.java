@@ -19,6 +19,7 @@ import fussballmanager.service.saison.spieltag.SpieltagService;
 import fussballmanager.service.spieler.spielerzuwachs.SpielerZuwachsService;
 import fussballmanager.service.spieler.spielerzuwachs.ZuwachsFaktorAlter;
 import fussballmanager.service.spieler.staerke.SpielerStaerke;
+import fussballmanager.service.spieler.staerke.SpielerStaerkeService;
 import fussballmanager.service.team.FormationsTypen;
 import fussballmanager.service.team.Team;
 import fussballmanager.service.team.TeamService;
@@ -47,6 +48,9 @@ public class SpielerService {
 	
 	@Autowired
 	SpieltagService spieltagService;
+	
+	@Autowired
+	SpielerStaerkeService spielerStaerkeService;
 
 	public Spieler findeSpieler(Long id) {
 		return spielerRepository.getOne(id);
@@ -130,6 +134,7 @@ public class SpielerService {
 			int talentwert = erzeugeZufaelligenTalentwert();
 			SpielerStaerke staerke = new SpielerStaerke(anfangsStaerke, anfangsStaerke, anfangsStaerke, 
 					anfangsStaerke, anfangsStaerke, anfangsStaerke, anfangsStaerke, anfangsStaerke);
+			spielerStaerkeService.legeSpielerStaerkeAn(staerke);
 			AufstellungsPositionsTypen aufstellungsPositionsTyp = AufstellungsPositionsTypen.ERSATZ;
 			FormationsTypen formationsTypTeam = team.getFormationsTyp();
 			
@@ -138,10 +143,8 @@ public class SpielerService {
 					aufstellungsPositionsTyp = a;
 				}
 			}
-
 			Spieler spieler = new Spieler(nationalitaet, positionenTyp, aufstellungsPositionsTyp, alter, staerke, talentwert, team);
 			legeSpielerAn(spieler);
-			LOG.info("Spielerstaerke: {}", spieler.getSpielerStaerke().getStaerke());
 		}
 	}
 	
@@ -293,6 +296,7 @@ public class SpielerService {
 					SpielerStaerke staerke = new SpielerStaerke(anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor, 
 							anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor, 
 							anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor);
+					spielerStaerkeService.legeSpielerStaerkeAn(staerke);
 					Spieler spieler = new Spieler(null, positionenTyp, AufstellungsPositionsTypen.ERSATZ, 
 							alter, staerke, erzeugeZufaelligenTalentwert(), null);
 					spieler.setTransfermarkt(true);
