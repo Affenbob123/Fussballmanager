@@ -110,7 +110,6 @@ public class SpieltagService {
 			Spieltag aktuellerSpieltagDerAltenSaison = findeAktuellenSpieltag();
 			aktuellerSpieltagDerAltenSaison.setAktuellerSpieltag(false);
 			aktualisiereSpieltag(aktuellerSpieltagDerAltenSaison);
-			
 			saisonService.legeSaisonAn(new Saison(saisonService.findeLetzteSasion().getSaisonNummer() + 1));
 		} else {
 			aufgabenSpieltagWechsel();
@@ -119,6 +118,7 @@ public class SpieltagService {
 	
 	public void aufgabenSpieltagWechsel() {
 		wechsleAktuellenSpieltag();
+		//TODO optimieren
 		teamService.aufgabenBeiSpieltagWechsel();
 		spielerService.aufgabenBeiSpieltagWechsel();
 	}

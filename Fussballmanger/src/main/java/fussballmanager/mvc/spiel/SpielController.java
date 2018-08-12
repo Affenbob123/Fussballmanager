@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import fussballmanager.ScheduldTasks;
 import fussballmanager.helper.SpielstatusHelper;
+import fussballmanager.service.saison.SaisonService;
 import fussballmanager.service.saison.spieltag.SpieltagService;
 import fussballmanager.service.spiel.Spiel;
 import fussballmanager.service.spiel.SpielService;
@@ -37,6 +38,9 @@ public class SpielController {
 	UserService userService;
 	
 	@Autowired
+	SaisonService saisonService;
+	
+	@Autowired
 	SpieltagService spieltagService;
 	
 	@GetMapping("/spiel/{id}")
@@ -45,6 +49,8 @@ public class SpielController {
 		
 		model.addAttribute("spielstatusHelper", new SpielstatusHelper());
 		model.addAttribute("aktuellesTeam", aktuellerUser.getAktuellesTeam());
+		model.addAttribute("aktuelleSaison", saisonService.findeAktuelleSaison());
+		model.addAttribute("aktuellerSpieltag", spieltagService.findeAktuellenSpieltag());
 		
 		Spiel spiel = spielService.findeSpiel(id);
 		

@@ -105,10 +105,11 @@ public class SaisonService {
 	public void aufgabenBeimErstellenEinerSaison(Saison saison) {
 		spieltagService.erstelleAlleSpieltageFuerEineSaison(findeLetzteSasion());
 		if(findeAlleSaisons().size() > 1) {
+			//TODO hello
 			teamService.aufgabenWennSaisonVorbei();
 			spielerService.alleSpielerAltern();
 		}
-		//erstelleSpieleFuerEineSaison(saison);
+		erstelleSpieleFuerEineSaison(saison);
 		tabellenEintragService.erstelleTabellenEintragFuerJedesTeam();
 	}
 

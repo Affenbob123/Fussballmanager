@@ -7,6 +7,7 @@ import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import fussballmanager.service.saison.SaisonService;
@@ -41,6 +42,10 @@ public class SpielerStaerkeService {
 	
 	public List<SpielerStaerke> findeAlleSpielerStaerken() {
 		return spielerStaerkeRepository.findAll();
+	}
+	
+	public List<SpielerStaerke> findeStaerksteSpielerNachSeite(PageRequest pageRequest) {
+		return spielerStaerkeRepository.findAllByOrderByReinStaerkeDesc(pageRequest);
 	}
 	
 	public void legeSpielerStaerkeAn(SpielerStaerke spielerStaerke) {

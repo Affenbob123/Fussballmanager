@@ -269,8 +269,8 @@ public class FussballmanagerTestData {
 		spielerService.erstelleSpielerFuerTransfermarkt();
 	}
 	
-	//@Scheduled(cron = "15 2/3 * * * ?", zone="Europe/Berlin")
 	@Scheduled(cron = "* * * * * ?", zone="Europe/Berlin")
+	//@Scheduled(cron = "15 2/3 * * * ?", zone="Europe/Berlin")
 	public void wechsleDenSpieltag() {
 		spieltagService.wechsleSpieltag();
 	}

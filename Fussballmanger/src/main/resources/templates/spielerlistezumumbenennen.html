@@ -6,7 +6,7 @@
 <body>
 	<div th:replace="fragments/header :: header"></div>
 	<div class="container">
-		<h2>Teams umbenennen</h2>
+		<h4>Teams umbenennen</h4>
 	</div>
 	<div class="container" id="containerBody">
 		<div class="alert alert-success" th:if="${successMessage}">
@@ -56,6 +56,6 @@
 			</form>
 		</div>
 	</div>
-	<th:block th:replace="fragments/header :: scripts" />
+	<th:block th:replace="fragments/header :: scripts"></th:block>
 </body>
 </html>

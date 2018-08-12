@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import fussballmanager.helper.SpielstatusHelper;
 import fussballmanager.service.land.LandService;
 import fussballmanager.service.liga.LigaService;
+import fussballmanager.service.saison.SaisonService;
+import fussballmanager.service.saison.spieltag.SpieltagService;
 import fussballmanager.service.spieler.SpielerService;
 import fussballmanager.service.team.Team;
 import fussballmanager.service.team.TeamService;
@@ -37,12 +39,20 @@ public class SekretariatController {
 	@Autowired
 	UserService userService;
 	
+	@Autowired
+	SaisonService saisonService;
+	
+	@Autowired
+	SpieltagService spieltagService;
+	
 	@GetMapping("/")
 	public String getTeamListe(Model model, Authentication auth) {
 		User aktuellerUser = userService.findeUser(auth.getName());
 		
 		model.addAttribute("spielstatusHelper", new SpielstatusHelper());
 		model.addAttribute("aktuellesTeam", aktuellerUser.getAktuellesTeam());
+		model.addAttribute("aktuelleSaison", saisonService.findeAktuelleSaison());
+		model.addAttribute("aktuellerSpieltag", spieltagService.findeAktuellenSpieltag());
 		
 		List<Team> alleTeamsEinesUsers = teamService.findeAlleTeamsEinesUsers(aktuellerUser);
 		
@@ -85,6 +95,8 @@ public class SekretariatController {
 		
 		model.addAttribute("spielstatusHelper", new SpielstatusHelper());
 		model.addAttribute("aktuellesTeam", aktuellerUser.getAktuellesTeam());
+		model.addAttribute("aktuelleSaison", saisonService.findeAktuelleSaison());
+		model.addAttribute("aktuellerSpieltag", spieltagService.findeAktuellenSpieltag());
 		
 		List<Team> alleTeamsEinesUsers = teamService.findeAlleTeamsEinesUsers(aktuellerUser);
 		teamListWrapper.setTeamList(alleTeamsEinesUsers);

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head th:replace="fragments/header :: head">
+	<link rel="stylesheet" href="/spielliste.css" />
+</head>
+<body>
+	<div th:replace="fragments/header :: header"></div>
+	<div class="container">
+		<h4 th:text="Teamname"></h4>
+	</div>
+	<div class="container" id="containerBody">
+		<div class="alert alert-success" th:if="${successMessage}">
+  			<strong><p th:utext="${successMessage}"></p></strong>
+		</div>
+		<div class="alert alert-danger" th:if="${errorMessage}">
+  			<strong><p th:utext="${errorMessage}"></p></strong>
+		</div>
+		<div class="col-md-12">
+			<div>
+				<div class="container container-dropdowns">
+					<form method="POST" th:action="@{/statistik/}+${statistikFormular.seitenNummer+1}" th:object="${statistikFormular}">
+						<div class="row justify-content-md-center">
+							<label>Position:</label>
+							<div class="col-md-auto">
+								<select class="custom-select" data-width="auto" data-style="btn-light" th:field="*{position}">
+									<option th:value="${null}"  th:text="Alle"></option>
+									<option
+										  th:each="positionenTyp : ${positionenTypen}" 
+										  th:text="${positionenTyp.positionsName}"
+										  th:value="${positionenTyp}">
+									</option>
+								</select>
+							</div>
+							<label>Land:</label>
+							<div class="col-md-auto">
+								<select class="custom-select" data-width="auto" data-style="btn-light" th:field="*{landNameTyp}">
+									<option th:value="${null}" th:text="Alle"></option>
+									<option
+										  th:each="laenderNameTyp : ${laenderNamenTypen}" 
+										  th:text="${laenderNameTyp.name}"
+										  th:value="${laenderNameTyp}">
+									</option>
+								</select>
+							</div>
+							<label>Alter:</label>
+							<div class="col-md-auto">
+								<select class="custom-select" data-width="auto" data-style="btn-light" th:field="*{alter}">
+									<option th:value="-1" th:text="Alle"></option>
+									<option
+										  th:each="alter : ${alterListe}" 
+										  th:text="${alter}"
+										  th:value="${alter}">
+									</option>
+								</select>
+							</div>
+							<div class="col-md-auto">
+								<select class="custom-select" data-width="auto" data-style="btn-light" th:field="*{sortierTyp}">
+									<option
+										  th:each="sortierTyp : ${sortierTypen}" 
+										  th:text="${sortierTyp.bezeichnung}"
+										  th:value="${sortierTyp}">
+									</option>
+								</select>
+							</div>
+							<div class="col-md-auto">
+								<button type="submit"
+									name="submit" value="value"
+									class="btn btn-sm btn-success button-toggle" th:text="Submit" >
+								</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<table class="table table-hover table-condensed" style="border-collapse:collapse;">
+				<thead>
+					<tr class="table-active">
+						<th scope="col">#</th>
+						<th scope="col">Position</th>
+						<th scope="col">Nationalit&auml;t</th>
+						<th scope="col">Alter</th>
+						<th scope="col">Name</th>
+						<th scope="col">Team</th>
+						<th scope="col">Reinst&auml;rke</th>
+						<th scope="col">Erfahrung</th>
+						<th scope="col">Tore</th>
+						<th scope="col">Gelbe Karten</th>
+						<th scope="col">Gelberote Karten</th>
+						<th scope="col">Rote Karten</th>
+					</tr>
+				</thead>
+				<tbody th:each="spieler, stat : ${alleSpielerNachSuche}">
+					<tr>
+						<td th:text="${stat.index} * (${statistikFormular.seitenNummer} + 1) + 1" />
+						<td th:text="${spieler.position}" />
+						<td th:if="${spieler.nationalitaet}" th:text="${spieler.nationalitaet.landNameTyp.name}" />
+						<td th:text="${spieler.alter}" />
+						<td> 
+							<a th:text="${spieler.name}" th:id="${spieler.id}" onClick="openWindowInNewWindow(this.id)"
+								href="#"></a>
+						</td>
+						<td th:if="${spieler.team}">
+							<a class="" th:text="${spieler.team.name}" th:href="@{/team/}+${spieler.team.id}"></a>
+						</td>
+						<td th:unless="${spieler.team}">
+							<a class="" th:text="Systemspieler"></a>
+						</td>
+						<td th:text="${zahlenFormat.format(spieler.spielerStaerke.reinStaerke)}" />
+						<td th:text="${spieler.erfahrung}" />
+						<td th:text="${spieler.tore}" />
+						<td th:text="${spieler.gelbeKarten}" />
+						<td th:text="${spieler.gelbRoteKarten}" />
+						<td th:text="${spieler.roteKarten}" />		
+					</tr>
+		       	</tbody>
+			</table>
+		</div>
+		<div class="container container-statistik-seiten-auswahl">
+			<div class="row justify-content-md-center">
+				<div class="col">
+					<form action="#" th:action="@{/statistik/} + ${statistikFormular.seitenNummer}" method="get">
+						<button type="submit" class="btn btn-sm btn-link wechsel-btn">
+							&lt;&lt; Vorherige
+						</button>
+					</form>
+				</div>
+				<div class="col col-lg-3"></div>
+				<div class="col-md-auto">
+					<span th:text="${seite}+ '. Seite'"></span>
+				</div>
+				<div class="col col-lg-3"></div>
+				<div class="col text-right">
+					<form action="#" th:action="@{/statistik/} + ${statistikFormular.seitenNummer+2}" method="get">
+						<button type="submit" class="btn btn-sm btn-link wechsel-btn">
+							N&auml;chste &gt;&gt;
+						</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<th:block>
+		<script
+			src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
+		<script>
+			function openWindowInNewWindow(id) {
+				var spielerId = id
+				window.open('../spieler/' + spielerId,'spieler','resizable,height=700,width=700'); 
+				return false;
+			}
+		</script>
+	</th:block>
+</body>
+</html>

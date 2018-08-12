@@ -1,6 +1,9 @@
 package fussballmanager.service.spieler;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -27,8 +30,10 @@ public class Spieler implements Comparable<Spieler> {
 	@ManyToOne
 	private Team team;
 	
+	@Enumerated(EnumType.STRING)
 	private PositionenTypen position;
 	
+	@Enumerated(EnumType.STRING)
 	private AufstellungsPositionsTypen aufstellungsPositionsTyp;
 	
 	private String name = "Unbenannter Spieler";

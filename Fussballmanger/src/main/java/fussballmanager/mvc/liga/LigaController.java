@@ -66,97 +66,52 @@ public class LigaController {
 	@Autowired
 	TabellenEintragService tabellenEintragService;
 
-	@GetMapping("/liga/{landName}/{ligaName}")
+	@GetMapping("/{landName}/{ligaName}/{saisonNummer}/{spieltagNummer}")
 	public String getLiga(Model model, Authentication auth, @PathVariable("landName") String landName, 
-			@PathVariable("ligaName") String ligaName, @ModelAttribute("land") Land land, 
-			@ModelAttribute("liga") Liga liga, @ModelAttribute("saison") Saison saison, 
-			@ModelAttribute("spieltag") Spieltag spieltag) {
+			@PathVariable("ligaName") String ligaName, @PathVariable("saisonNummer") int saisonNummer, 
+			@PathVariable("spieltagNummer") int spieltagNummer) {
 		User aktuellerUser = userService.findeUser(auth.getName());
 		
 		model.addAttribute("spielstatusHelper", new SpielstatusHelper());
 		model.addAttribute("aktuellesTeam", aktuellerUser.getAktuellesTeam());
+		model.addAttribute("aktuelleSaison", saisonService.findeAktuelleSaison());
+		model.addAttribute("aktuellerSpieltag", spieltagService.findeAktuellenSpieltag());
 		
-		Land ausgewaehltesLand = landService.findeLandDurchLandName(landName);;
-		Liga ausgewaehlteLiga = ligaService.findeLiga(landName, ligaName);
-		Saison ausgewaehlteSaison;
-		Spieltag ausgewaehlterSpieltag;
+		Land land = landService.findeLandDurchLandName(landName);
+		Liga liga = ligaService.findeLiga(landName, ligaName);
+		Saison saison = saisonService.findeSaisonDurchSaisonNummer(saisonNummer);
+		Spieltag spieltag = spieltagService.findeSpieltagDurchSaisonUndSpieltagNummer(saison, spieltagNummer);
+		LigaAuswahlHelper ligaAuswahlHelper = new LigaAuswahlHelper();
+		ligaAuswahlHelper.setLand(landName);
+		ligaAuswahlHelper.setLiga(ligaName);
+		ligaAuswahlHelper.setSaison(saisonNummer);
+		ligaAuswahlHelper.setSpieltag(spieltagNummer);
 		
-		if(saison.getSaisonNummer() == 0) {
-			ausgewaehlteSaison = saisonService.findeAktuelleSaison();
-		} else {
-			ausgewaehlteSaison = saisonService.findeSaisonDurchSaisonNummer(saison.getSaisonNummer());
-		}
-		
-		if(spieltag.getSpieltagNummer() == 0) {
-			ausgewaehlterSpieltag = spieltagService.findeAktuellenSpieltag();
-		} else {
-			ausgewaehlterSpieltag = spieltagService.findeSpieltagDurchSaisonUndSpieltagNummer(ausgewaehlteSaison, spieltag.getSpieltagNummer());
-		}
-		
-		List<TabellenEintrag> alleTabellenEintraegeEinerLiga = tabellenEintragService.findeAlleTabellenEintraegeEinerLigaInEinerSaison(ausgewaehlteLiga, ausgewaehlteSaison);
+		List<TabellenEintrag> alleTabellenEintraegeEinerLiga = 
+				tabellenEintragService.findeAlleTabellenEintraegeEinerLigaInEinerSaison(liga, saison);
 		Collections.sort(alleTabellenEintraegeEinerLiga);
 		
-		model.addAttribute("land", ausgewaehltesLand);
+		model.addAttribute("ligaAuswahlHelper", ligaAuswahlHelper);
 		model.addAttribute("alleLaender", landService.findeAlleLaender());
-		
-		model.addAttribute("liga", ausgewaehlteLiga);
 		model.addAttribute("alleLigenEinesLandes", ligaService.findeAlleLigenEinesLandes(landService.findeLandDurchLandName(landName)));
-				
-		model.addAttribute("saison", ausgewaehlteSaison);
-		model.addAttribute("alleSaisons", saisonService.findeAlleSaisons());
-		
-		model.addAttribute("spieltag", ausgewaehlterSpieltag);
-		model.addAttribute("alleSpieltage", spieltagService.findeAlleSpieltageEinerSaison(ausgewaehlteSaison));
-		
+		model.addAttribute("alleSaisons", saisonService.findeAlleSaisons());		
 		model.addAttribute("findeAlleSpieleEinerLigaEinerSaisonEinesSpieltages", 
-				erstelleSpielEintraegeEinerLiga(landName, ligaName, ausgewaehlteSaison, ausgewaehlterSpieltag));
+				erstelleSpielEintraegeEinerLiga(land, liga, saison, spieltag));
 		model.addAttribute("alleTabellenEintraegeEinerLiga", alleTabellenEintraegeEinerLiga);
 
 		return "tabelle";
 	}
 	
-	@PostMapping("/liga/{landName}/{ligaName}/land")
-	public String aenderLand(Model model, Authentication auth, RedirectAttributes redirectAttributes, 
-			@PathVariable("landName") String landName, @PathVariable("ligaName") String ligaName, 
-			@ModelAttribute("land") Land land) {
-		landName = land.getLandNameTyp().getName();
-		redirectAttributes.addFlashAttribute("land", land);
-		
-		return "redirect:/liga/" + landName + "/{ligaName}";
+	@PostMapping("/{landName}/{ligaName}/{saisonNummer}/{spieltagNummer}")
+	public String wechsleLandLigaSaisonOderSpieltag(@ModelAttribute("ligaAuswahlHelper") LigaAuswahlHelper ligaAuswahlHelper) {
+		return "redirect:/" + ligaAuswahlHelper.getLand() + "/" + ligaAuswahlHelper.getLiga()
+				+ "/" + ligaAuswahlHelper.getSaison() + "/" + ligaAuswahlHelper.getSpieltag();
 	}
 	
-	@PostMapping("/liga/{landName}/{ligaName}/liga")
-	public String aenderLiga(Model model, Authentication auth, RedirectAttributes redirectAttributes, 
-			@PathVariable("landName") String landName, @PathVariable("ligaName") String ligaName, 
-			@ModelAttribute("liga") Liga liga) {
-		ligaName = liga.getLigaNameTyp().getName();
-		redirectAttributes.addFlashAttribute("liga", liga);
-		
-		return "redirect:/liga/{landName}/" + ligaName;
-	}
-	
-	@PostMapping("/liga/{landName}/{ligaName}/saison")
-	public String aenderLigaSaison(Model model, Authentication auth, RedirectAttributes redirectAttributes, 
-			@PathVariable("landName") String landName, @PathVariable("ligaName") String ligaName, 
-			@ModelAttribute("saison") Saison saison) {
-		redirectAttributes.addFlashAttribute("saison", saison);
-		
-		return "redirect:/liga/{landName}/{ligaName}";
-	}
-	
-	@PostMapping("/liga/{landName}/{ligaName}/spieltag")
-	public String aenderLigaSpieltag(Model model, Authentication auth, RedirectAttributes redirectAttributes, 
-			@PathVariable("landName") String landName, @PathVariable("ligaName") String ligaName, 
-			@ModelAttribute("spieltag") Spieltag spieltag) {
-		redirectAttributes.addFlashAttribute("spieltag", spieltag);
-		
-		return "redirect:/liga/{landName}/{ligaName}";
-	}
-	
-	public List<SpielEintrag> erstelleSpielEintraegeEinerLiga(String land, String ligaName, Saison saison, Spieltag spieltag) {
+	public List<SpielEintrag> erstelleSpielEintraegeEinerLiga(Land land, Liga liga, Saison saison, Spieltag spieltag) {
 		List<SpielEintrag> spielEintraege = new ArrayList<>();
 		List<Spiel> alleSpieleEinerLigaEinesSpieltages = 
-				spielService.findeAlleSpieleEinerLigaUndSaisonUndSpieltag(ligaService.findeLiga(land, ligaName), saison, spieltag);
+				spielService.findeAlleSpieleEinerLigaUndSaisonUndSpieltag(liga, saison, spieltag);
 		for (Spiel spiel : alleSpieleEinerLigaEinesSpieltages) {
 			spielEintraege.add(erstelleSpielEintragEinerLiga(spiel));
 		}

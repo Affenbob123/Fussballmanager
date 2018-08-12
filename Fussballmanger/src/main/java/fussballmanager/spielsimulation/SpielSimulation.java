@@ -410,9 +410,6 @@ public class SpielSimulation {
 		if(torversuch.getTorwart() == null) {
 			torversuchService.erstelleSpielEreignisAusTorversuch(torversuch);
 		}
-		
-		//aktualisiert spiel, Tabelle und Spieler
-		spielerService.spielerErzieltTor(spieler);
 	}
 
 	private Spieler ermittleSpielerFuerTorversuch(List<Spieler> spielerDesAngreifers) {

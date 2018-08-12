@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html>
-<head th:replace="fragments/header :: head">
+<head th:include="fragments/header :: head">
+</head>
+<head>
 	<link rel="stylesheet" href="/spielliste.css" />
 </head>
 <body>
 	<div th:replace="fragments/header :: header"></div>
 	<div class="container">
-		<h2 th:text="Teamname"></h2>
+		<h4 th:text="Teamname"></h4>
 	</div>
 	<div class="container" id="containerBody">
 		<div class="alert alert-success" th:if="${successMessage}">
@@ -17,9 +19,9 @@
 		</div>
 		<div class="col-md-12">
 			<div>
-				<form method="POST" th:action="@{/transfermarkt/}" th:object="${spielerSucheFormular}">
+				<form method="POST" th:action="@{/transfermarkt/}+${seite}+'/suche'" th:object="${spielerSucheFormular}">
 					<label>Position:</label>
-					<select class="custom-select" th:field="*{position}">
+					<select class="custom-select" data-width="auto" data-style="btn-light" th:field="*{position}">
 						<option th:value="${null}"  th:text="Alle"></option>
 						<option
 							  th:each="positionenTyp : ${positionenTypen}" 
@@ -28,7 +30,7 @@
 						</option>
 					</select>
 					<label>Land:</label>
-					<select class="custom-select" th:field="*{land}">
+					<select class="custom-select" data-width="auto" data-style="btn-light" th:field="*{land}">
 						<option th:value="${null}" th:text="Alle"></option>
 						<option
 							  th:each="laenderNameTyp : ${laenderNamenTypen}" 
@@ -57,6 +59,7 @@
 						<th scope="col">Position</th>
 						<th scope="col">Alter</th>
 						<th scope="col">Name</th>
+						<th scope="col">Team</th>
 						<th scope="col">Reinst&auml;rke</th>
 						<th scope="col">Preis</th>
 						<th scope="col"></th>
@@ -70,28 +73,51 @@
 							<a th:text="${spieler.name}" th:id="${spieler.id}" onClick="openWindowInNewWindow(this.id)"
 								href="#"></a>
 						</td>
+						<td th:if="${spieler.team}">
+							<a class="" th:text="${spieler.team.name}" th:href="@{/team/}+${spieler.team.id}"></a>
+						</td>
+						<td th:unless="${spieler.team}" th:text="Systemspieler" />
 						<td th:text="${zahlenFormat.format(spieler.spielerStaerke.reinStaerke)}" />
 						<td th:text="${spieler.preis}" />
 						<td>
-							<form method="POST" th:action="@{/transfermarkt/}+${spieler.id}">
+							<form method="POST" th:action="@{/transfermarkt/}+${seite}+'/'+${spieler.id}">
 								<button type="submit"
 									name="submit" value="value"
 									class="btn btn-sm btn-success button-toggle" th:text="Kaufen" >
 								</button>
 							</form>
 						</td>
-						
 					</tr>
 		       	</tbody>
 			</table>
+		</div>
+		<div class="container container-dropdowns">
+			<div class="row justify-content-md-center">
+				<div class="col">
+					<form action="#" th:action="@{/transfermarkt/} + ${seite-1}" method="get">
+						<button type="submit" class="btn btn-sm btn-link wechsel-btn">
+							&lt;&lt; Vorherige
+						</button>
+					</form>
+				</div>
+				<div class="col col-lg-3"></div>
+				<div class="col-md-auto">
+					<span th:text="${seite}+ '. Seite'"></span>
+				</div>
+				<div class="col col-lg-3"></div>
+				<div class="col text-right">
+					<form action="#" th:action="@{/transfermarkt/} + ${seite+1}" method="get">
+						<button type="submit" class="btn btn-sm btn-link wechsel-btn">
+							N&auml;chste &gt;&gt;
+						</button>
+					</form>
+				</div>
+			</div>
 		</div>
 	</div>
 	<th:block>
 		<script
 			src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
-		<script src = "http://rvera.github.io/image-picker/image-picker/image-picker.min.js" type = "text/javascript"></script>
-		<script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css"></script>
 		<script src="https://raw.githubusercontent.com/SteveSanderson/knockout.mapping/master/build/output/knockout.mapping-latest.debug.js"></script>
 		<script>
 			function openWindowInNewWindow(id) {

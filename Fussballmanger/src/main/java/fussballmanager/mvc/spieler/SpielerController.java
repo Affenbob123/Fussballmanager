@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import fussballmanager.helper.SpielstatusHelper;
 import fussballmanager.mvc.sekretariat.TeamListeWrapper;
+import fussballmanager.service.saison.SaisonService;
+import fussballmanager.service.saison.spieltag.SpieltagService;
 import fussballmanager.service.spieler.AufstellungsPositionsTypen;
 import fussballmanager.service.spieler.Spieler;
 import fussballmanager.service.spieler.SpielerService;
@@ -30,6 +32,12 @@ public class SpielerController {
 	
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	SaisonService saisonService;
+	
+	@Autowired
+	SpieltagService spieltagService;
 	
 	@GetMapping("/spieler/{id}")
 	public String getSpieler(Model model, Authentication auth, @PathVariable("id") Long id) {
@@ -53,6 +61,8 @@ public class SpielerController {
 		
 		model.addAttribute("spielstatusHelper", new SpielstatusHelper());
 		model.addAttribute("aktuellesTeam", aktuellerUser.getAktuellesTeam());
+		model.addAttribute("aktuelleSaison", saisonService.findeAktuelleSaison());
+		model.addAttribute("aktuellerSpieltag", spieltagService.findeAktuellenSpieltag());
 		
 		List<Spieler> spielerDesAktuellenTeams = spielerService.findeAlleSpielerEinesTeams(aktuellerUser.getAktuellesTeam());
 		spielerListeWrapper.setSpielerListe(spielerDesAktuellenTeams);

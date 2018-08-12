@@ -6,7 +6,7 @@
 		<head th:insert="fragments/header :: head" />
 	</head>
 	<body>
-		<h2>Liveticker</h2>
+		<h4>Liveticker</h4>
 		<div class="container" id="containerBody">
 			<div class="col-md-12">
 				<div th:if="${torversuch}">
@@ -19,7 +19,7 @@
 					<p th:text="${torversuch.spiel.gastmannschaft.name}"></p>
 					<form method="POST" th:action="@{/liveticker}" th:object="${torversuch}">
 						<label>Richtung:</label>
-						<select class="custom-select" th:field="*{richtungVomUser}">
+						<select class="selectpicker" data-width="auto" data-style="btn-light" th:field="*{richtungVomUser}">
 							<option
 								  th:each="torversuchTyp : ${torversuchTypen}" 
 								  th:text="${torversuchTyp.bezeichnung}"

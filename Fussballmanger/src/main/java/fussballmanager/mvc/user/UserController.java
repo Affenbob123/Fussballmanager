@@ -23,7 +23,7 @@ public class UserController {
 		model.addAttribute("neuerUser", new User());
 		model.addAttribute("laenderNamenTypen", LaenderNamenTypen.values());
 		
-		return "usercreate";
+		return "usererstellen";
 	}
 	
 	@PostMapping("/accounterstellen")

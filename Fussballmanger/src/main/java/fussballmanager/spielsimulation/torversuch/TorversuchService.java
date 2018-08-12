@@ -16,6 +16,7 @@ import fussballmanager.service.spiel.Spiel;
 import fussballmanager.service.spiel.SpielService;
 import fussballmanager.service.spiel.spielereignisse.SpielEreignis;
 import fussballmanager.service.spiel.spielereignisse.SpielEreignisTypen;
+import fussballmanager.service.spieler.SpielerService;
 import fussballmanager.service.tabelle.TabellenEintragService;
 import fussballmanager.service.team.Team;
 
@@ -36,6 +37,9 @@ public class TorversuchService {
 	
 	@Autowired
 	SaisonService saisonService;
+	
+	@Autowired
+	SpielerService spielerService;
 	
 	public Torversuch findeTorversuch(Long id) {
 		return torversuchRepository.getOne(id);
@@ -73,11 +77,14 @@ public class TorversuchService {
 		
 		if(torversuch.getRichtungVomUser() == null) {
 			spielEreignis.setSpielereignisTyp(SpielEreignisTypen.TORVERSUCHGETROFFEN);
+			spielerService.spielerErzieltTor(spielEreignis.getTorschuetze());
 		} else {
 			if(torversuch.getRichtung().equals(torversuch.getRichtungVomUser())) {
 				spielEreignis.setSpielereignisTyp(SpielEreignisTypen.TORVERSUCHGEHALTEN);
+				spielerService.spielerErzieltTor(spielEreignis.getTorwart());
 			} else {
 				spielEreignis.setSpielereignisTyp(SpielEreignisTypen.TORVERSUCHGETROFFEN);
+				spielerService.spielerErzieltTor(spielEreignis.getTorschuetze());
 			}
 		}
 		loescheTorversuch(torversuch);
@@ -97,7 +104,6 @@ public class TorversuchService {
 					erstelleSpielEreignisAusTorversuch(torversuch);
 				}
 			}
-
 		}
 	}
 }

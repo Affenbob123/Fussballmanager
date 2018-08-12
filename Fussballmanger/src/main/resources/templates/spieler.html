@@ -21,7 +21,7 @@
 		<div class="alert alert-danger" th:if="${errorMessage}">
   			<strong><p th:utext="${errorMessage}"></p></strong>
 		</div>
-		<h2 th:text="${spieler.name}"></h2>
+		<h4 th:text="${spieler.name}"></h4>
 		<div class="col-md-12" id="containerBody">
 			<table class="table table-hover">
 					<tr th:if="${spieler.nationalitaet}">
@@ -75,6 +75,10 @@
 					<tr>
 						<td class="table-active">Gehalt</td>
 						<td th:text="${spieler.gehalt}" />
+					<tr>
+					<tr>
+						<td class="table-active">Traningslagertage</td>
+						<td th:text="${spieler.uebrigeTrainingslagerTage}" />
 					<tr>
 				</tr>
 			</table>

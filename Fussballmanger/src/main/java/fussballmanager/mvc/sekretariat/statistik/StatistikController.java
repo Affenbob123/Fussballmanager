@@ -1,4 +1,4 @@
-package fussballmanager.mvc.transfermarkt;
+package fussballmanager.mvc.sekretariat.statistik;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -15,25 +15,33 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import fussballmanager.helper.SpielstatusHelper;
+import fussballmanager.mvc.transfermarkt.SpielerSuche;
 import fussballmanager.service.land.LaenderNamenTypen;
+import fussballmanager.service.land.LandService;
+import fussballmanager.service.liga.LigaService;
 import fussballmanager.service.saison.SaisonService;
 import fussballmanager.service.saison.spieltag.SpieltagService;
 import fussballmanager.service.spieler.PositionenTypen;
 import fussballmanager.service.spieler.Spieler;
 import fussballmanager.service.spieler.SpielerService;
-import fussballmanager.service.team.Team;
 import fussballmanager.service.team.TeamService;
 import fussballmanager.service.user.User;
 import fussballmanager.service.user.UserService;
 
 @Controller
-public class TransfermarktController {
+public class StatistikController {
+
+	@Autowired
+	LandService landService;
 	
 	@Autowired
-	SpielerService spielerService;
+	LigaService ligaService;
 	
 	@Autowired
 	TeamService teamService;
+	
+	@Autowired
+	SpielerService spielerService;
 	
 	@Autowired
 	UserService userService;
@@ -44,9 +52,9 @@ public class TransfermarktController {
 	@Autowired
 	SpieltagService spieltagService;
 	
-	@GetMapping("/transfermarkt/{seite}")
-	public String getTransfermarkt(Model model, Authentication auth, @PathVariable("seite") int seite, 
-			@ModelAttribute("spielerSuche") SpielerSuche spielerSuche) {
+	@GetMapping("/statistik/{seite}")
+	public String getStatistik(Model model, Authentication auth, @PathVariable("seite") int seite,
+			@ModelAttribute("statistikFormular") StatistikFormular statistikFormular) {
 		User aktuellerUser = userService.findeUser(auth.getName());
 		
 		model.addAttribute("spielstatusHelper", new SpielstatusHelper());
@@ -54,43 +62,32 @@ public class TransfermarktController {
 		model.addAttribute("aktuelleSaison", saisonService.findeAktuelleSaison());
 		model.addAttribute("aktuellerSpieltag", spieltagService.findeAktuellenSpieltag());
 		
-		List<Spieler> gesuchteSpielerDesTransfermarktes = spielerService.findeAlleSpielerAnhandDerSuchEingaben(spielerSuche.getPosition(), 
-				spielerSuche.getLand(), spielerSuche.getMinimalesAlter(), spielerSuche.getMaximalesAlter(), spielerSuche.getMinimaleStaerke(), 
-				spielerSuche.getMaximaleStaerke(), spielerSuche.getMinimalerPreis(), spielerSuche.getMaximalerPreis());
-		SpielerSuche spielerSucheFormular = spielerSuche;
 		DecimalFormat zahlenFormat = new DecimalFormat("0.0");
+		List<Spieler> alleSpielerNachSuche = spielerService.findeZwanzigSpielerNachSortierTyp(statistikFormular);
+		statistikFormular.setSeitenNummer(seite - 1);
 		
-		List<Spieler> test = new ArrayList<>();
-		for(int i = 0; i < 30; i++) {
-			test.add(gesuchteSpielerDesTransfermarktes.get(i));
-		}
-		
-		model.addAttribute("seite", seite);
 		model.addAttribute("zahlenFormat", zahlenFormat);
-		model.addAttribute("alleTransfermarktSpieler", test);
-		model.addAttribute("spielerSucheFormular", spielerSucheFormular);
+		model.addAttribute("statistikFormular", statistikFormular);
 		model.addAttribute("positionenTypen", PositionenTypen.values());
 		model.addAttribute("laenderNamenTypen", LaenderNamenTypen.values());
-		
-		return "transfermarkt";
-	}
-
-	@PostMapping("/transfermarkt/{seite}/{id}")
-	public String spielerKaufen(Model model, Authentication auth, @PathVariable("id") Long id) {
-		User aktuellerUser = userService.findeUser(auth.getName());
-		Team aktuellesTeam = aktuellerUser.getAktuellesTeam();
-		Spieler spieler = spielerService.findeSpieler(id);
-		
-		spielerService.spielerVomTransfermarktKaufen(spieler, aktuellesTeam);
-		
-		return "redirect:/transfermarkt/{seite}";
+		model.addAttribute("alterListe", getAlterListe());
+		model.addAttribute("sortierTypen", SortierTypen.values());
+		model.addAttribute("alleSpielerNachSuche", alleSpielerNachSuche);
+		return "statistik";
 	}
 	
-	@PostMapping("/transfermarkt/{seite}/suche")
-	public String spielerSuche(Model model, Authentication auth, RedirectAttributes redirectAttributes, 
-			@ModelAttribute("spielerSucheFormular") SpielerSuche spielerSuche) {
-		redirectAttributes.addFlashAttribute("spielerSuche", spielerSuche);	
-		
-		return "redirect:/transfermarkt"; 
+	@PostMapping("/statistik/{seite}")
+	public String filtereStatistik(Model model, Authentication auth, RedirectAttributes redirectAttributes,
+			@ModelAttribute("statistikFormular") StatistikFormular statistikFormular) {
+		redirectAttributes.addFlashAttribute("statistikFormular", statistikFormular);	
+		return "redirect:/statistik/{seite}";
+	}
+	
+	private List<Integer> getAlterListe() {
+		List<Integer> alterListe = new ArrayList<>();
+		for(int i = 14; i < 35; i++) {
+			alterListe.add(i);
+		}
+		return alterListe;
 	}
 }
