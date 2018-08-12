@@ -11,7 +11,7 @@ public class StatistikFormular {
 	
 	private int alter = - 1;
 	
-	private SortierTypen sortierTyp = SortierTypen.ERFAHRUNG;
+	private SortierTypen sortierTyp = SortierTypen.STAERKE;
 	
 	private int seitenNummer = 0;
 

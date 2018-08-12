@@ -31,6 +31,16 @@ public interface SpielerRepository extends JpaRepository<Spieler, Long> {
 
 	List<Spieler> findByGelbeKarteTrue();
 	
+	//Stärke
+	List<Spieler> findByOrderBySpielerStaerkeReinStaerkeDesc(Pageable seite);
+	List<Spieler> findByNationalitaetOrderBySpielerStaerkeReinStaerkeDesc(Land nationalitaet, Pageable seite);
+	List<Spieler> findByAlterOrderBySpielerStaerkeReinStaerkeDesc(int alter, Pageable seite);
+	List<Spieler> findByPositionOrderBySpielerStaerkeReinStaerkeDesc(PositionenTypen position, Pageable seite);
+	List<Spieler> findByAlterAndPositionOrderBySpielerStaerkeReinStaerkeDesc(int alter, PositionenTypen position, Pageable seite);
+	List<Spieler> findByNationalitaetAndAlterOrderBySpielerStaerkeReinStaerkeDesc(Land nationalitaet, int alter, Pageable seite);
+	List<Spieler> findByNationalitaetAndPositionOrderBySpielerStaerkeReinStaerkeDesc(Land nationalitaet, PositionenTypen position, Pageable seite);
+	List<Spieler> findByNationalitaetAndAlterAndPositionOrderBySpielerStaerkeReinStaerkeDesc(Land nationalitaet, int alter, 
+			PositionenTypen position, Pageable seite);
 	//Erfahrung
 	List<Spieler> findByOrderByErfahrungDesc(Pageable seite);
 	List<Spieler> findByNationalitaetOrderByErfahrungDesc(Land nationalitaet, Pageable seite);
