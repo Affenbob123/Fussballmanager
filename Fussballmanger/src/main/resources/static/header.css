@@ -1,6 +1,7 @@
 html, body {
     height: 100%;
     font-size: 13px;
+    padding-top: 28px; 
 }
 
 /* Navbar */
@@ -19,13 +20,20 @@ html, body {
 }
 
 /* Sidebar */
-@media (min-width: 576px) {
-    .sidebar {
-        max-width: 280px;
-    }
+.sidebar-fixed {
+    width: 200px;
+    position: fixed;
 }
-
+    
 .container-fluid {
 	padding-top: 15px;
 	padding-bottom: 30px;
 }
+
+/* main */
+
+.main-content {
+	margin-left: 230px;
+}
+
+

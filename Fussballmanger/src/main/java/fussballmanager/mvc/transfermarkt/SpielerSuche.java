@@ -9,9 +9,9 @@ public class SpielerSuche {
 	
 	private LaenderNamenTypen land = null;
 
-	private int minimalesAlter = 13;
+	private int minimalesAlter = 14;
 	
-	private int maximalesAlter = 52;
+	private int maximalesAlter = 50;
 	
 	private double minimaleStaerke = 0.0;
 		
