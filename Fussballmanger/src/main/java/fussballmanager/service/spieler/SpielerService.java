@@ -21,6 +21,7 @@ import fussballmanager.service.land.LandService;
 import fussballmanager.service.saison.SaisonService;
 import fussballmanager.service.saison.spieltag.SpieltagService;
 import fussballmanager.service.spieler.spielerzuwachs.SpielerZuwachsService;
+import fussballmanager.service.spieler.spielerzuwachs.Trainingslager;
 import fussballmanager.service.spieler.spielerzuwachs.ZuwachsFaktorAlter;
 import fussballmanager.service.spieler.staerke.SpielerStaerke;
 import fussballmanager.service.spieler.staerke.SpielerStaerkeService;
@@ -120,7 +121,7 @@ public class SpielerService {
 	}
 	
 	public List<Spieler> findeZwanzigSpielerNachSortierTyp(StatistikFormular statistikFormular) {
-		PageRequest seite = PageRequest.of(statistikFormular.getSeitenNummer(), 20);
+		PageRequest seite = PageRequest.of(statistikFormular.getSeitenNummer(), 15);
 		List<Spieler> spielerListe = new ArrayList<>();
 		Land land;
 		if(statistikFormular.getLandNameTyp() == null) {
@@ -698,6 +699,9 @@ public class SpielerService {
 		double zuwachsOhneErfahrung = defaultZuwachs * zuwachsFaktorNachAlterDesSpielers * (100 + (talentwert * 2)) / 100;
 		double zuwachsMitErfahrung = zuwachsOhneErfahrung * erfahrungsFaktor;
 		
+		if(!spieler.getTrainingsLager().equals(Trainingslager.KEIN_TRAININGSLAGER)) {
+			zuwachsMitErfahrung = zuwachsMitErfahrung * spieler.getTrainingsLager().getInternatFaktor();
+		}
 		return zuwachsMitErfahrung;
 	}
 

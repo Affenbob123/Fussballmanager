@@ -81,7 +81,7 @@ public class TeamController {
 		model.addAttribute("einzuwechselnderSpieler", new Spieler());
 		model.addAttribute("anzahlDerEinwechslungen", teamService.findeTeam(id).getAnzahlAuswechselungen());
 		
-		return "spielerliste";
+		return "kader/spielerliste";
 	}
 	
 	@PostMapping("/team/{id}/formation")

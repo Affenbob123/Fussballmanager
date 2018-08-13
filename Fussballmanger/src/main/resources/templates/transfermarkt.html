@@ -1,131 +1,179 @@
 <!DOCTYPE html>
 <html>
-<head th:include="fragments/header :: head">
-</head>
+<head th:insert="fragments/header :: head"></head>
 <head>
-	<link rel="stylesheet" href="/spielliste.css" />
+	<link rel="stylesheet" href="/transfermarkt.css" />
 </head>
 <body>
-	<div th:replace="fragments/header :: header"></div>
-	<div class="container">
-		<h4 th:text="Teamname"></h4>
-	</div>
-	<div class="container" id="containerBody">
-		<div class="alert alert-success" th:if="${successMessage}">
-  			<strong><p th:utext="${successMessage}"></p></strong>
-		</div>
-		<div class="alert alert-danger" th:if="${errorMessage}">
-  			<strong><p th:utext="${errorMessage}"></p></strong>
-		</div>
-		<div class="col-md-12">
-			<div>
-				<form method="POST" th:action="@{/transfermarkt/}+${seite}+'/suche'" th:object="${spielerSucheFormular}">
-					<label>Position:</label>
-					<select class="custom-select" data-width="auto" data-style="btn-light" th:field="*{position}">
-						<option th:value="${null}"  th:text="Alle"></option>
-						<option
-							  th:each="positionenTyp : ${positionenTypen}" 
-							  th:text="${positionenTyp.positionsName}"
-							  th:value="${positionenTyp}">
-						</option>
-					</select>
-					<label>Land:</label>
-					<select class="custom-select" data-width="auto" data-style="btn-light" th:field="*{land}">
-						<option th:value="${null}" th:text="Alle"></option>
-						<option
-							  th:each="laenderNameTyp : ${laenderNamenTypen}" 
-							  th:text="${laenderNameTyp.name}"
-							  th:value="${laenderNameTyp}">
-						</option>
-					</select>
-					<label>Alter:</label>
-					<input class="form-control" type="text" th:field="*{minimalesAlter}"> - 
-					<input class="form-control" type="text" th:field="*{maximalesAlter}">
-					<label>St&auml;rke:</label>
-					<input class="form-control" type="text" th:field="*{minimaleStaerke}"> - 
-					<input class="form-control" type="text" th:field="*{maximaleStaerke}">
-					<label>Preis:</label>
-					<input class="form-control" type="text" th:field="*{minimalerPreis}"> - 
-					<input class="form-control" type="text" th:field="*{maximalerPreis}">
-					<button type="submit"
-						name="submit" value="value"
-						class="btn btn-sm btn-success button-toggle" th:text="Submit" >
-					</button>
-				</form>
+	<div th:insert="fragments/header :: header"></div>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-sm-2" th:insert="fragments/sidebar :: sidebar"></div>
+			<div class="col-lg-10">
+				<div class="row">
+					<div class="col-lg-11">
+						<div class="row" >
+							<div class="col-5"></div>
+							<div class="col-3" th:insert="fragments/aktuelleteamanzeige :: aktuelleteamanzeige"></div>
+						</div>
+					</div>
+					<div class="col-lg-11 main">
+						<hr>
+						<h4>Transfermarkt</h4>
+						<div class="alert alert-success" th:if="${successMessage}">
+			  				<strong><p th:utext="${successMessage}"></p></strong>
+						</div>
+						<div class="alert alert-danger" th:if="${errorMessage}">
+				  			<strong><p th:utext="${errorMessage}"></p></strong>
+						</div>
+						<div class="row">
+						<div class="col-3 col-suche">
+							<div class="row">
+								<div class="col-12 border rounded">
+									<form method="POST" th:action="@{/transfermarkt/}+${seite}+'/suche'" th:object="${spielerSucheFormular}">
+										<div class="form-group row">
+											<div class="col-6">
+												<label>Position:</label>
+												<select class="custom-select" data-width="auto" data-style="btn-light" th:field="*{position}">
+													<option th:value="${null}"  th:text="Alle"></option>
+													<option
+														  th:each="positionenTyp : ${positionenTypen}" 
+														  th:text="${positionenTyp.positionsName}"
+														  th:value="${positionenTyp}">
+													</option>
+												</select>
+											</div>
+											<div class="col-6">
+												<label>Land:</label>
+												<select class="custom-select" data-width="auto" data-style="btn-light" th:field="*{land}">
+													<option th:value="${null}" th:text="Alle"></option>
+													<option
+														  th:each="laenderNameTyp : ${laenderNamenTypen}" 
+														  th:text="${laenderNameTyp.name}"
+														  th:value="${laenderNameTyp}">
+													</option>
+												</select>
+											</div>
+										</div>
+										<div class="form-group row">
+											<div class="col-12">
+												<div class="row">
+													<div class="col-6">
+														<label>Alter: min</label>
+														<input class="form-control" type="text" th:field="*{minimalesAlter}"> 
+													</div>
+													<div class="col-6">
+														<label>Alter: max</label>
+														<input class="form-control" type="text" th:field="*{maximalesAlter}">
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="form-group row">
+											<div class="col-12">
+												<div class="row">
+													<div class="col-6">
+														<label>St&auml;rke: min</label>
+														<input class="form-control" type="text" th:field="*{minimaleStaerke}">
+													</div>
+													<div class="col-6">
+														<label>St&auml;rke: max</label>
+														<input class="form-control" type="text" th:field="*{maximaleStaerke}">
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="form-group row">
+											<div class="col-12">
+												<div class="row">
+													<div class="col-6">
+														<label>Preis: min</label>
+														<input class="form-control" type="text" th:field="*{minimalerPreis}">
+													</div>
+													<div class="col-6">
+														<label>Preis: max</label>
+														<input class="form-control" type="text" th:field="*{maximalerPreis}">
+													</div>
+												</div>
+											</div>
+										</div>
+										<button type="submit" name="submit" value="value"
+											class="btn btn-sm btn-success button-toggle" th:text="Suche" >
+										</button>
+									</form>
+								</div>
+							</div>
+						</div>
+						<div class="col-9">
+							<table class="table table-hover table-condensed" style="border-collapse:collapse;">
+								<thead>
+									<tr class="table-active">
+										<th scope="col">#</th>
+										<th scope="col">Position</th>
+										<th scope="col">Alter</th>
+										<th scope="col">Name</th>
+										<th scope="col">Team</th>
+										<th scope="col">Reinst&auml;rke</th>
+										<th scope="col">Preis</th>
+										<th scope="col"></th>
+									</tr>
+								</thead>
+								<tbody th:each="spieler, stat : ${alleTransfermarktSpieler}">
+									<tr>
+										<td th:text="${stat.index} + 1" />
+										<td th:text="${spieler.position}" />
+										<td th:text="${spieler.alter}" />
+										<td> 
+											<a th:text="${spieler.name}" th:id="${spieler.id}" onClick="openWindowInNewWindow(this.id)"
+												href="#"></a>
+										</td>
+										<td th:if="${spieler.team}">
+											<a class="" th:text="${spieler.team.name}" th:href="@{/team/}+${spieler.team.id}"></a>
+										</td>
+										<td th:unless="${spieler.team}" th:text="Systemspieler" />
+										<td th:text="${zahlenFormat.format(spieler.spielerStaerke.reinStaerke)}" />
+										<td th:text="${spieler.preis}" />
+										<td>
+											<form method="POST" th:action="@{/transfermarkt/}+${seite}+'/'+${spieler.id}">
+												<button type="submit"
+													name="submit" value="value"
+													class="btn btn-sm btn-success button-toggle" th:text="Kaufen" >
+												</button>
+											</form>
+										</td>
+									</tr>
+						       	</tbody>
+							</table>
+							<div class="container container-dropdowns">
+								<div class="row justify-content-md-center">
+									<div class="col">
+										<form action="#" th:action="@{/transfermarkt/} + ${seite-1}" method="get">
+											<button type="submit" class="btn btn-sm btn-link wechsel-btn">
+												&lt;&lt; Vorherige
+											</button>
+										</form>
+									</div>
+									<div class="col col-lg-3"></div>
+									<div class="col-md-auto">
+										<span th:text="${seite}+ '. Seite'"></span>
+									</div>
+									<div class="col col-lg-3"></div>
+									<div class="col text-right">
+										<form action="#" th:action="@{/transfermarkt/} + ${seite+1}" method="get">
+											<button type="submit" class="btn btn-sm btn-link wechsel-btn">
+												N&auml;chste &gt;&gt;
+											</button>
+										</form>
+									</div>
+								</div>
+							</div>
+						</div>
+						</div>
+					</div>
+				</div>
 			</div>
-			<table class="table table-hover table-condensed" style="border-collapse:collapse;">
-				<thead>
-					<tr class="table-active">
-						<th scope="col">Position</th>
-						<th scope="col">Alter</th>
-						<th scope="col">Name</th>
-						<th scope="col">Team</th>
-						<th scope="col">Reinst&auml;rke</th>
-						<th scope="col">Preis</th>
-						<th scope="col"></th>
-					</tr>
-				</thead>
-				<tbody th:each="spieler : ${alleTransfermarktSpieler}">
-					<tr>
-						<td th:text="${spieler.position}" />
-						<td th:text="${spieler.alter}" />
-						<td> 
-							<a th:text="${spieler.name}" th:id="${spieler.id}" onClick="openWindowInNewWindow(this.id)"
-								href="#"></a>
-						</td>
-						<td th:if="${spieler.team}">
-							<a class="" th:text="${spieler.team.name}" th:href="@{/team/}+${spieler.team.id}"></a>
-						</td>
-						<td th:unless="${spieler.team}" th:text="Systemspieler" />
-						<td th:text="${zahlenFormat.format(spieler.spielerStaerke.reinStaerke)}" />
-						<td th:text="${spieler.preis}" />
-						<td>
-							<form method="POST" th:action="@{/transfermarkt/}+${seite}+'/'+${spieler.id}">
-								<button type="submit"
-									name="submit" value="value"
-									class="btn btn-sm btn-success button-toggle" th:text="Kaufen" >
-								</button>
-							</form>
-						</td>
-					</tr>
-		       	</tbody>
-			</table>
-		</div>
-		<div class="container container-dropdowns">
-			<div class="row justify-content-md-center">
-				<div class="col">
-					<form action="#" th:action="@{/transfermarkt/} + ${seite-1}" method="get">
-						<button type="submit" class="btn btn-sm btn-link wechsel-btn">
-							&lt;&lt; Vorherige
-						</button>
-					</form>
-				</div>
-				<div class="col col-lg-3"></div>
-				<div class="col-md-auto">
-					<span th:text="${seite}+ '. Seite'"></span>
-				</div>
-				<div class="col col-lg-3"></div>
-				<div class="col text-right">
-					<form action="#" th:action="@{/transfermarkt/} + ${seite+1}" method="get">
-						<button type="submit" class="btn btn-sm btn-link wechsel-btn">
-							N&auml;chste &gt;&gt;
-						</button>
-					</form>
-				</div>
-			</div>
 		</div>
 	</div>
-	<th:block>
-		<script
-			src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-		<script src="https://raw.githubusercontent.com/SteveSanderson/knockout.mapping/master/build/output/knockout.mapping-latest.debug.js"></script>
-		<script>
-			function openWindowInNewWindow(id) {
-				var spielerId = id
-				window.open('../spieler/' + spielerId,'spieler','resizable,height=700,width=700'); 
-				return false;
-			}
-		</script>
-	</th:block>
+	<th:block th:replace="fragments/header :: scripts" />
 </body>
 </html>

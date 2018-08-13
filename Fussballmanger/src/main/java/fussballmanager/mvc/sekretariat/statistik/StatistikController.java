@@ -64,7 +64,6 @@ public class StatistikController {
 		
 		DecimalFormat zahlenFormat = new DecimalFormat("0.0");
 		List<Spieler> alleSpielerNachSuche = spielerService.findeZwanzigSpielerNachSortierTyp(statistikFormular);
-		statistikFormular.setSeitenNummer(seite - 1);
 		
 		model.addAttribute("zahlenFormat", zahlenFormat);
 		model.addAttribute("statistikFormular", statistikFormular);
@@ -73,7 +72,7 @@ public class StatistikController {
 		model.addAttribute("alterListe", getAlterListe());
 		model.addAttribute("sortierTypen", SortierTypen.values());
 		model.addAttribute("alleSpielerNachSuche", alleSpielerNachSuche);
-		return "statistik";
+		return "sekretariat/statistik";
 	}
 	
 	@PostMapping("/statistik/{seite}")

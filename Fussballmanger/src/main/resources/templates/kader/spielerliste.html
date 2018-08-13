@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head th:insert="fragments/header :: head"></head>
+<head>
+	<link rel="stylesheet" href="/spielerliste.css" />
+</head>
+<body>
+	<div th:insert="fragments/header :: header"></div>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-sm-2" th:insert="fragments/sidebar :: sidebar"></div>
+			<div class="col-lg-10">
+				<div class="row">
+					<div class="col-lg-11">
+						<div class="row" >
+							<div class="col-5"></div>
+							<div class="col-3" th:insert="fragments/aktuelleteamanzeige :: aktuelleteamanzeige"></div>
+						</div>
+					</div>
+					<div class="col-lg-11 main">
+						<hr>
+						<h4 th:text="${aktuellesTeam.name}"></h4>
+						<div class="alert alert-success" th:if="${successMessage}">
+			  				<strong><p th:utext="${successMessage}"></p></strong>
+						</div>
+						<div class="alert alert-danger" th:if="${errorMessage}">
+				  			<strong><p th:utext="${errorMessage}"></p></strong>
+						</div>
+						<div class="col-lg-12">
+							<div class="row">
+								<div class="col-3" th:if="${spielstatusHelper.getAktuellenSpielstatus() == ''}">
+									<p>Formation:</p>
+									<form action="#" th:action="@{/team/}+${aktuellesTeam.id}+'/formation'" th:object="${aktuellesTeam}"
+											method="post">
+										<select class="custom-select" th:field="*{formationsTyp}" onchange="this.form.submit();">
+											<option 
+												  th:each="formationsTyp : ${alleFormationsTypen}" 
+												  th:text="${formationsTyp.bezeichnung}"
+												  th:value="${formationsTyp}">
+											</option>
+										</select>
+									</form>				
+								</div>
+								<div class="col-3">
+									<p>Einsatz:</p>
+									<form action="#" th:action="@{/team/}+${aktuellesTeam.id}+'/einsatz'" th:object="${aktuellesTeam}"
+											method="post">
+										<select class="custom-select" th:field="*{einsatzTyp}" onchange="this.form.submit();">
+											<option 
+												  th:each="einsatzTypen : ${alleEinsatzTypen}" 
+												  th:text="${einsatzTypen.bezeichnung}"
+												  th:value="${einsatzTypen}">
+											</option>
+										</select>
+									</form>
+								</div>
+								<div class="col-3">
+									<p>Ausrichtung:</p>
+									<form action="#" th:action="@{/team/}+${aktuellesTeam.id}+'/ausrichtung'" th:object="${aktuellesTeam}"
+											method="post">
+										<select class="custom-select" th:field="*{ausrichtungsTyp}" onchange="this.form.submit();">
+											<option 
+												  th:each="ausrichtungsTyp : ${alleAusrichtungsTypen}" 
+												  th:text="${ausrichtungsTyp.bezeichnung}"
+												  th:value="${ausrichtungsTyp}">
+											</option>
+										</select>
+									</form>
+								</div>
+							</div>
+							<div th:if="${anzahlDerEinwechslungen} &gt; 0">
+								<div class="auswechslungs-form" th:if="${spielstatusHelper.getAktuellenSpielstatus() != ''}">
+									<p th:text="'Verf&uuml;gbare Auswechslungen: '+${anzahlDerEinwechslungen}"></p>
+									<form action="#" th:action="@{/team/}+${aktuellesTeam.id}+'/einwechseln'" th:object="${einzuwechselnderSpieler}"
+											method="post">
+										<div class="form-group row">
+											<div class="col-lg-4">
+												<select class="custom-select" th:field="*{id}">
+													<option
+														  th:each="spieler : ${alleSpielerAufErsatzbank}" 
+														  th:text="${spieler.position.positionsName}+' | '+${spieler.name}"
+														  th:value="${spieler.id}">
+													</option>
+												</select>
+											</div>
+											<div>
+												<span>als</span>
+											</div>
+											<div class="col-lg-3">
+												<select class="custom-select" th:field="*{aufstellungsPositionsTyp}">
+													<option 
+														  th:each="aufstellungsPositionsTyp : ${alleAufstellungsPositionsTypen}" 
+														  th:text="${aufstellungsPositionsTyp.positionsName}"
+														  th:value="${aufstellungsPositionsTyp}">
+													</option>
+												</select>
+											</div>
+											<div class="col-lg-2">
+												<button type="submit" value="submit" class="btn btn-sm btn-primary">Submit</button>
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+							<table class="table table-hover table-condensed" style="border-collapse:collapse;">
+								<thead>
+									<tr class="table-active">
+										<th scope="col">#</th>
+										<th scope="col">Nationalit&auml;t</th>
+										<th scope="col">Position</th>
+										<th scope="col">Aufstellungsposition</th>
+										<th scope="col">Name</th>
+										<th scope="col">Alter</th>
+										<th scope="col">St&auml;rke</th>
+										<th scope="col">Reinst&auml;rke</th>
+										<th scope="col">Zuwachs</th>
+										<th scope="col">Erfahrung</th>
+										<th scope="col">Motivation</th>
+									</tr>
+								</thead>
+								<tbody th:each="spieler, stat : ${alleSpielerDesAktuellenTeams}">
+									<tr>
+										<td th:text="${stat.index} + 1" />
+										<td th:text="${spieler.nationalitaet.getLandNameTyp().getName()}" />
+										<td th:text="${spieler.position}" />
+										<td th:text="${spieler.aufstellungsPositionsTyp}" />
+										<td> 
+											<a th:text="${spieler.name}" th:id="${spieler.id}" onClick="openWindowInNewWindow(this.id)"
+												href="#"></a>
+										</td>
+										<td th:text="${spieler.alter}" />
+										<td th:text="${zahlenFormat.format(spieler.spielerStaerke.staerke)}" />
+										<td th:text="${zahlenFormat.format(spieler.spielerStaerke.reinStaerke)}" />
+										<td th:text="${spieler.spielerZuwachs} >= 0 ?
+											'+'+${zahlenFormat.format(spieler.spielerZuwachs)} : 
+											${zahlenFormat.format(spieler.spielerZuwachs)}" />
+										<td th:text="${spieler.erfahrung}" />
+										<td th:text="${spieler.motivation}" />
+									</tr>
+						       	</tbody>
+							</table>
+						</div>
+						<div>
+							<a class="" th:href="@{/team/}+${aktuellesTeam.id}+'/spieler/umbenennen'">Spieler umbenennen</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<th:block th:include="fragments/header :: scripts" />
+	<th:block>
+		<script>
+			function openWindowInNewWindow(id) {
+				var spielerId = id
+				window.open('../spieler/' + spielerId,'spieler','resizable,height=700,width=700'); 
+				return false;
+			}
+		</script>
+	</th:block>
+</body>
+</html>

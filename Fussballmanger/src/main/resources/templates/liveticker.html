@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta http-equiv="refresh" content="10">
-		<link rel="stylesheet" href="/liveticker.css" />
-		<head th:insert="fragments/header :: head" />
-	</head>
+<head th:insert="fragments/header :: head"></head>
+<head>
+	<meta http-equiv="refresh" content="10">
+	<link rel="stylesheet" href="/liveticker.css" />
+</head>
 	<body>
-		<h4>Liveticker</h4>
-		<div class="container" id="containerBody">
+		<div class="container">
+			<h4>Liveticker</h4>
 			<div class="col-md-12">
 				<div th:if="${torversuch}">
 					<div type="hidden">

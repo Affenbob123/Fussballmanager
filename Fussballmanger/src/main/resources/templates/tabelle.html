@@ -1,186 +1,193 @@
 <!DOCTYPE html>
 <html>
-<head th:include="fragments/header :: head"></head>
+<head th:insert="fragments/header :: head"></head>
 <head>
 	<link rel="stylesheet" href="/tabelle.css" />
-</head>	
+</head>
 <body>
-	<div th:replace="fragments/header :: header"></div>
-	<div class="container">
-		<h4>Tabelle</h4>
-	</div>
-	<div class="container" id="containerBody">
-		<div class="alert alert-success" th:if="${successMessage}">
-  			<strong><p th:utext="${successMessage}"></p></strong>
-		</div>
-		<div class="alert alert-danger" th:if="${errorMessage}">
-  			<strong><p th:utext="${errorMessage}"></p></strong>
-		</div>
-		<div class="col-md-12">
-			<div class="container container-dropdowns">
-				<div class="row justify-content-md-center">
-					<div class="col-md-auto">
-						<span>Land:</span>
-						<form action="#" th:action="@{/}+${ligaAuswahlHelper.land}+'/'+${ligaAuswahlHelper.liga}+'/'+${ligaAuswahlHelper.saison}+
-							'/'+${ligaAuswahlHelper.spieltag}" th:object="${ligaAuswahlHelper}" method="post">
-							<select class="custom-select" th:field="*{land}" onchange="this.form.submit();">
-								<option 
-									  th:each="land : ${alleLaender}"
-									  th:text="${land.landNameTyp.name}"
-									  th:value="${land.landNameTyp.name}">
-								</option>
-							</select>
-							<input type="hidden" th:field="*{liga}" th:value="${ligaAuswahlHelper.liga}">
-							<input type="hidden" th:field="*{saison}" th:value="${ligaAuswahlHelper.saison}">
-							<input type="hidden" th:field="*{spieltag}" th:value="${ligaAuswahlHelper.spieltag}">
-						</form>
+	<div th:insert="fragments/header :: header"></div>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-sm-2" th:insert="fragments/sidebar :: sidebar"></div>
+			<div class="col-lg-10">
+				<div class="row">
+					<div class="col-lg-11">
+						<div class="row" >
+							<div class="col-5"></div>
+							<div class="col-3" th:insert="fragments/aktuelleteamanzeige :: aktuelleteamanzeige"></div>
+						</div>
 					</div>
-					<div class="col-md-auto">
-						<span>Liga:</span>
-						<form action="#" th:action="@{/}+${ligaAuswahlHelper.land}+'/'+${ligaAuswahlHelper.liga}+'/'+${ligaAuswahlHelper.saison}+
-							'/'+${ligaAuswahlHelper.spieltag}" th:object="${ligaAuswahlHelper}" method="post">
-							<select class="custom-select" th:field="*{liga}" onchange="this.form.submit();">
-								<option 
-									  th:each="liga : ${alleLigenEinesLandes}"
-									  th:text="${liga.ligaNameTyp.name}"
-									  th:value="${liga.ligaNameTyp.name}">
-								</option>
-							</select>
-							<input type="hidden" th:field="*{land}" th:value="${ligaAuswahlHelper.land}">
-							<input type="hidden" th:field="*{saison}" th:value="${ligaAuswahlHelper.saison}">
-							<input type="hidden" th:field="*{spieltag}" th:value="${ligaAuswahlHelper.spieltag}">
-						</form>
+					<div class="col-lg-11 main">
+						<hr>
+						<h4>Tabelle</h4>
+						<div class="container container-dropdowns">
+							<div class="row justify-content-md-center">
+								<div class="col-md-auto">
+									<span>Land:</span>
+									<form action="#" th:action="@{/}+${ligaAuswahlHelper.land}+'/'+${ligaAuswahlHelper.liga}+'/'+${ligaAuswahlHelper.saison}+
+										'/'+${ligaAuswahlHelper.spieltag}" th:object="${ligaAuswahlHelper}" method="post">
+										<select class="custom-select" th:field="*{land}" onchange="this.form.submit();">
+											<option 
+												  th:each="land : ${alleLaender}"
+												  th:text="${land.landNameTyp.name}"
+												  th:value="${land.landNameTyp.name}">
+											</option>
+										</select>
+										<input type="hidden" th:field="*{liga}" th:value="${ligaAuswahlHelper.liga}">
+										<input type="hidden" th:field="*{saison}" th:value="${ligaAuswahlHelper.saison}">
+										<input type="hidden" th:field="*{spieltag}" th:value="${ligaAuswahlHelper.spieltag}">
+									</form>
+								</div>
+								<div class="col-md-auto">
+									<span>Liga:</span>
+									<form action="#" th:action="@{/}+${ligaAuswahlHelper.land}+'/'+${ligaAuswahlHelper.liga}+'/'+${ligaAuswahlHelper.saison}+
+										'/'+${ligaAuswahlHelper.spieltag}" th:object="${ligaAuswahlHelper}" method="post">
+										<select class="custom-select" th:field="*{liga}" onchange="this.form.submit();">
+											<option 
+												  th:each="liga : ${alleLigenEinesLandes}"
+												  th:text="${liga.ligaNameTyp.name}"
+												  th:value="${liga.ligaNameTyp.name}">
+											</option>
+										</select>
+										<input type="hidden" th:field="*{land}" th:value="${ligaAuswahlHelper.land}">
+										<input type="hidden" th:field="*{saison}" th:value="${ligaAuswahlHelper.saison}">
+										<input type="hidden" th:field="*{spieltag}" th:value="${ligaAuswahlHelper.spieltag}">
+									</form>
+								</div>
+								<div class="col-md-7"></div>
+								<div class="col-md-auto text-right">
+									<span>Saison:</span>
+									<form action="#" th:action="@{/}+${ligaAuswahlHelper.land}+'/'+${ligaAuswahlHelper.liga}+'/'+${ligaAuswahlHelper.saison}+
+										'/'+${ligaAuswahlHelper.spieltag}" th:object="${ligaAuswahlHelper}" method="post">
+										<select class="custom-select" th:field="*{saison}" onchange="this.form.submit();">
+											<option 
+												  th:each="saison : ${alleSaisons}"
+												  th:text="${saison.saisonNummer}"
+												  th:value="${saison.saisonNummer}">
+											</option>
+										</select>
+										<input type="hidden" th:field="*{liga}" th:value="${ligaAuswahlHelper.liga}">
+										<input type="hidden" th:field="*{land}" th:value="${ligaAuswahlHelper.land}">
+										<input type="hidden" th:field="*{spieltag}" th:value="${ligaAuswahlHelper.spieltag}">
+									</form>
+								</div>
+							</div>
+						</div>
+						<table class="table table-hover">
+							<thead>
+								<tr class="table-active">
+									<th scope="col">Spieltag</th>
+									<th scope="col">Spielbeginn</th>
+									<th scope="col">Heimmannschaft</th>
+									<th scope="col">Ergebnis</th>
+									<th scope="col">Gastmannschaft</th>
+								</tr>
+							</thead>
+							<tr class="" th:each="spielEintrag : ${findeAlleSpieleEinerLigaEinerSaisonEinesSpieltages}">
+								<td th:text="${spielEintrag.spieltag}" />
+								<td th:text="${spielEintrag.spielbeginnToString()}" />
+								<td>
+									<a th:text="${spielEintrag.heimmannschaftUndStaerkeToString()}" th:href="@{/team/}+${spielEintrag.heimmannschaft.id}"></a>
+								</td>
+								<td class="ergebnisInTabelle">
+									<a class="" th:href="@{/spiel/}+${spielEintrag.id}">
+										<span th:text="${spielEintrag.spielErgebnisToString()}"></span><br>
+										<span th:text="${spielEintrag.spielErgebnisHalbzeitToString()}"></span>
+									</a>
+								</td>
+								<td>
+									<a th:text="${spielEintrag.gastmannschaftUndStaerkeToString()}" th:href="@{/team/}+${spielEintrag.gastmannschaft.id}"></a>
+								</td>
+							</tr>
+						</table>
 					</div>
-					<div class="col-md-7"></div>
-					<div class="col-md-auto text-right">
-						<span>Saison:</span>
-						<form action="#" th:action="@{/}+${ligaAuswahlHelper.land}+'/'+${ligaAuswahlHelper.liga}+'/'+${ligaAuswahlHelper.saison}+
-							'/'+${ligaAuswahlHelper.spieltag}" th:object="${ligaAuswahlHelper}" method="post">
-							<select class="custom-select" th:field="*{saison}" onchange="this.form.submit();">
-								<option 
-									  th:each="saison : ${alleSaisons}"
-									  th:text="${saison.saisonNummer}"
-									  th:value="${saison.saisonNummer}">
-								</option>
-							</select>
-							<input type="hidden" th:field="*{liga}" th:value="${ligaAuswahlHelper.liga}">
-							<input type="hidden" th:field="*{land}" th:value="${ligaAuswahlHelper.land}">
-							<input type="hidden" th:field="*{spieltag}" th:value="${ligaAuswahlHelper.spieltag}">
-						</form>
+					<div class="container container-spieltag-auswahl">
+						<div class="row justify-content-md-center">
+							<div class="col">
+								<form action="#" th:action="@{/}+${ligaAuswahlHelper.land}+'/'+${ligaAuswahlHelper.liga}+'/'+${ligaAuswahlHelper.saison}+
+									'/'+${ligaAuswahlHelper.spieltag}" th:object="${ligaAuswahlHelper}" method="post">
+									<button th:unless="${ligaAuswahlHelper.spieltag} < 2" name="spieltag" th:value="${ligaAuswahlHelper.spieltag}-1" 
+										type="submit" class="btn btn-sm btn-link wechsel-btn">
+										&lt;&lt; Vorheriger
+									</button>
+									<input type="hidden" th:field="*{liga}" th:value="${ligaAuswahlHelper.liga}">
+									<input type="hidden" th:field="*{saison}" th:value="${ligaAuswahlHelper.saison}">
+									<input type="hidden" th:field="*{land}" th:value="${ligaAuswahlHelper.spieltag}">
+								</form>
+							</div>
+							<div class="col col-lg-3"></div>
+							<div class="col-md-auto">
+								<span th:text="${ligaAuswahlHelper.spieltag}+ '. Spieltag'"></span>
+							</div>
+							<div class="col col-lg-3"></div>
+							<div class="col text-right">
+								<form action="#" th:action="@{/}+${ligaAuswahlHelper.land}+'/'+${ligaAuswahlHelper.liga}+'/'+${ligaAuswahlHelper.saison}+
+									'/'+${ligaAuswahlHelper.spieltag}" th:object="${ligaAuswahlHelper}" method="post">
+									<button th:unless="${ligaAuswahlHelper.spieltag} > 33" name="spieltag" th:value="${ligaAuswahlHelper.spieltag}+1" 
+										type="submit" class="btn btn-sm btn-link wechsel-btn">
+										N&auml;chster &gt;&gt;
+									</button>
+									<input type="hidden" th:field="*{liga}" th:value="${ligaAuswahlHelper.liga}">
+									<input type="hidden" th:field="*{saison}" th:value="${ligaAuswahlHelper.saison}">
+									<input type="hidden" th:field="*{land}" th:value="${ligaAuswahlHelper.spieltag}">
+								</form>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-12">
+						<table class="table table-hover">
+							<thead>
+								<tr class="table-active">
+									<th scope="col">#</th>
+									<th scope="col">Name</th>
+									<th scope="col">Spiele</th>
+									<th scope="col">Siege</th>
+									<th scope="col">Unentschieden</th>
+									<th scope="col">Niederlagen</th>
+									<th scope="col">Tore</th>
+									<th scope="col">Gegentore</th>
+									<th scope="col">+/-</th>
+									<th scope="col">Punkte</th>
+								</tr>
+							</thead>
+							<tr th:if="${ligaName} != '1'" class="" th:each="eintrag, stat : ${alleTabellenEintraegeEinerLiga}" 
+								th:classappend="${(stat.index == 0 or stat.index == 1 ? 'table-success' : '') + 
+								(stat.index == 14 or stat.index == 15 or stat.index == 16 or stat.index == 17 ? 'table-danger' : '')}" >
+								<td th:text="${eintrag.platzierung}" />
+								<td> 
+									<a class="" th:text="${eintrag.team.name}" th:href="@{/team/}+${eintrag.team.id}"></a>
+								</td>
+								<td th:text="${eintrag.spiele}" />
+								<td th:text="${eintrag.siege}" />
+								<td th:text="${eintrag.unentschieden}" />
+								<td th:text="${eintrag.niederlagen}" />
+								<td th:text="${eintrag.tore}" />
+								<td th:text="${eintrag.gegentore}" />
+								<td th:text="${eintrag.torDifferenz}" />
+								<td th:text="${eintrag.punkte}" />
+							</tr>
+							<tr th:if="${ligaName} == '1'" class="" th:each="eintrag, stat : ${alleTabellenEintraegeEinerLiga}" 
+								th:classappend="${(stat.index == 0 or stat.index == 1 ? 'table-success' : '') + 
+								(stat.index == 2 or stat.index == 3 ? 'table-primary' : '') +
+								(stat.index == 14 or stat.index == 15 or stat.index == 16 or stat.index == 17 ? 'table-danger' : '')}" >
+								<td th:text="${eintrag.platzierung}" />
+								<td> 
+									<a class="" th:text="${eintrag.team.name}" th:href="@{/team/}+${eintrag.team.id}"></a>
+								</td>
+								<td th:text="${eintrag.spiele}" />
+								<td th:text="${eintrag.siege}" />
+								<td th:text="${eintrag.unentschieden}" />
+								<td th:text="${eintrag.niederlagen}" />
+								<td th:text="${eintrag.tore}" />
+								<td th:text="${eintrag.gegentore}" />
+								<td th:text="${eintrag.torDifferenz}" />
+								<td th:text="${eintrag.punkte}" />
+							</tr>
+						</table>
+					</div>
 					</div>
 				</div>
 			</div>
-			<table class="table table-hover">
-				<thead>
-					<tr class="table-active">
-						<th scope="col">Spieltag</th>
-						<th scope="col">Spielbeginn</th>
-						<th scope="col">Heimmannschaft</th>
-						<th scope="col">Ergebnis</th>
-						<th scope="col">Gastmannschaft</th>
-					</tr>
-				</thead>
-				<tr class="" th:each="spielEintrag : ${findeAlleSpieleEinerLigaEinerSaisonEinesSpieltages}">
-					<td th:text="${spielEintrag.spieltag}" />
-					<td th:text="${spielEintrag.spielbeginnToString()}" />
-					<td>
-						<a th:text="${spielEintrag.heimmannschaftUndStaerkeToString()}" th:href="@{/team/}+${spielEintrag.heimmannschaft.id}"></a>
-					</td>
-					<td class="ergebnisInTabelle">
-						<a class="" th:href="@{/spiel/}+${spielEintrag.id}">
-							<span th:text="${spielEintrag.spielErgebnisToString()}"></span><br>
-							<span th:text="${spielEintrag.spielErgebnisHalbzeitToString()}"></span>
-						</a>
-					</td>
-					<td>
-						<a th:text="${spielEintrag.gastmannschaftUndStaerkeToString()}" th:href="@{/team/}+${spielEintrag.gastmannschaft.id}"></a>
-					</td>
-				</tr>
-			</table>
-		</div>
-		<div class="container container-spieltag-auswahl">
-			<div class="row justify-content-md-center">
-				<div class="col">
-					<form action="#" th:action="@{/}+${ligaAuswahlHelper.land}+'/'+${ligaAuswahlHelper.liga}+'/'+${ligaAuswahlHelper.saison}+
-						'/'+${ligaAuswahlHelper.spieltag}" th:object="${ligaAuswahlHelper}" method="post">
-						<button th:unless="${ligaAuswahlHelper.spieltag} < 2" name="spieltag" th:value="${ligaAuswahlHelper.spieltag}-1" 
-							type="submit" class="btn btn-sm btn-link wechsel-btn">
-							&lt;&lt; Vorheriger
-						</button>
-						<input type="hidden" th:field="*{liga}" th:value="${ligaAuswahlHelper.liga}">
-						<input type="hidden" th:field="*{saison}" th:value="${ligaAuswahlHelper.saison}">
-						<input type="hidden" th:field="*{land}" th:value="${ligaAuswahlHelper.spieltag}">
-					</form>
-				</div>
-				<div class="col col-lg-3"></div>
-				<div class="col-md-auto">
-					<span th:text="${ligaAuswahlHelper.spieltag}+ '. Spieltag'"></span>
-				</div>
-				<div class="col col-lg-3"></div>
-				<div class="col text-right">
-					<form action="#" th:action="@{/}+${ligaAuswahlHelper.land}+'/'+${ligaAuswahlHelper.liga}+'/'+${ligaAuswahlHelper.saison}+
-						'/'+${ligaAuswahlHelper.spieltag}" th:object="${ligaAuswahlHelper}" method="post">
-						<button th:unless="${ligaAuswahlHelper.spieltag} > 33" name="spieltag" th:value="${ligaAuswahlHelper.spieltag}+1" 
-							type="submit" class="btn btn-sm btn-link wechsel-btn">
-							N&auml;chster &gt;&gt;
-						</button>
-						<input type="hidden" th:field="*{liga}" th:value="${ligaAuswahlHelper.liga}">
-						<input type="hidden" th:field="*{saison}" th:value="${ligaAuswahlHelper.saison}">
-						<input type="hidden" th:field="*{land}" th:value="${ligaAuswahlHelper.spieltag}">
-					</form>
-				</div>
-			</div>
-		</div>
-		<div class="col-md-12">
-			<table class="table table-hover">
-				<thead>
-					<tr class="table-active">
-						<th scope="col">#</th>
-						<th scope="col">Name</th>
-						<th scope="col">Spiele</th>
-						<th scope="col">Siege</th>
-						<th scope="col">Unentschieden</th>
-						<th scope="col">Niederlagen</th>
-						<th scope="col">Tore</th>
-						<th scope="col">Gegentore</th>
-						<th scope="col">+/-</th>
-						<th scope="col">Punkte</th>
-					</tr>
-				</thead>
-				<tr th:if="${ligaName} != '1'" class="" th:each="eintrag, stat : ${alleTabellenEintraegeEinerLiga}" 
-					th:classappend="${(stat.index == 0 or stat.index == 1 ? 'table-success' : '') + 
-					(stat.index == 14 or stat.index == 15 or stat.index == 16 or stat.index == 17 ? 'table-danger' : '')}" >
-					<td th:text="${eintrag.platzierung}" />
-					<td> 
-						<a class="" th:text="${eintrag.team.name}" th:href="@{/team/}+${eintrag.team.id}"></a>
-					</td>
-					<td th:text="${eintrag.spiele}" />
-					<td th:text="${eintrag.siege}" />
-					<td th:text="${eintrag.unentschieden}" />
-					<td th:text="${eintrag.niederlagen}" />
-					<td th:text="${eintrag.tore}" />
-					<td th:text="${eintrag.gegentore}" />
-					<td th:text="${eintrag.torDifferenz}" />
-					<td th:text="${eintrag.punkte}" />
-				</tr>
-				<tr th:if="${ligaName} == '1'" class="" th:each="eintrag, stat : ${alleTabellenEintraegeEinerLiga}" 
-					th:classappend="${(stat.index == 0 or stat.index == 1 ? 'table-success' : '') + 
-					(stat.index == 2 or stat.index == 3 ? 'table-primary' : '') +
-					(stat.index == 14 or stat.index == 15 or stat.index == 16 or stat.index == 17 ? 'table-danger' : '')}" >
-					<td th:text="${eintrag.platzierung}" />
-					<td> 
-						<a class="" th:text="${eintrag.team.name}" th:href="@{/team/}+${eintrag.team.id}"></a>
-					</td>
-					<td th:text="${eintrag.spiele}" />
-					<td th:text="${eintrag.siege}" />
-					<td th:text="${eintrag.unentschieden}" />
-					<td th:text="${eintrag.niederlagen}" />
-					<td th:text="${eintrag.tore}" />
-					<td th:text="${eintrag.gegentore}" />
-					<td th:text="${eintrag.torDifferenz}" />
-					<td th:text="${eintrag.punkte}" />
-				</tr>
-			</table>
 		</div>
 	</div>
 	<th:block th:replace="fragments/header :: scripts" />

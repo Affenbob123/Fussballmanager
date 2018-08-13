@@ -58,8 +58,7 @@ public class SekretariatController {
 		
 		model.addAttribute("alleTeamsDesAktuellenUsers", alleTeamsEinesUsers);
 		
-		
-		return "teamliste";
+		return "sekretariat/teamliste";
 	}
 	
 	@PostMapping("/team/{id}/loeschen")
@@ -104,7 +103,7 @@ public class SekretariatController {
 		model.addAttribute("alleTeamsDesAktuellenUsers", alleTeamsEinesUsers);
 		model.addAttribute("teamWrapper", teamListWrapper);
 		
-		return "teamlistezumumbenennen";
+		return "sekretariat/teamlistezumumbenennen";
 	}
 	
 	@PostMapping("/teams/umbenennen")

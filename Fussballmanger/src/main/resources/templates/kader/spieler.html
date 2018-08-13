@@ -1,31 +1,22 @@
 <!DOCTYPE html>
 <html>
-	<head>
-	<title>WM-Tipp</title>
-	<meta charset="utf-8"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	
-	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" 
-		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<head th:insert="fragments/header :: head"></head>
+<head>
 	<link rel="stylesheet" href="/spieler.css" />
-	<link rel="stylesheet" href="/header.css" />
 </head>
 <body>
 	<div class="container">
+		<h4 th:text="${spieler.name}"></h4>
 		<div class="alert alert-success" th:if="${successMessage}">
   			<strong><p th:utext="${successMessage}"></p></strong>
 		</div>
 		<div class="alert alert-danger" th:if="${errorMessage}">
   			<strong><p th:utext="${errorMessage}"></p></strong>
 		</div>
-		<h4 th:text="${spieler.name}"></h4>
-		<div class="col-md-12" id="containerBody">
+		<div class="col-md-12">
 			<table class="table table-hover">
 					<tr th:if="${spieler.nationalitaet}">
-						<td class="table-active">Nationalität</td>
+						<td class="table-active">Nationalit�t</td>
 						<td th:text="${spieler.nationalitaet.getLandNameTyp().getName()}" />
 					<tr>
 					<tr>
@@ -53,7 +44,7 @@
 						<td th:text="${zahlenFormat.format(spieler.spielerStaerke.geschwindigkeit)}" />
 					<tr>
 					<tr>
-						<td class="table-active">Schießen</td>
+						<td class="table-active">Schie&szlig;en</td>
 						<td th:text="${zahlenFormat.format(spieler.spielerStaerke.schiessen)}" />
 					<tr>
 					<tr>
@@ -83,7 +74,7 @@
 				</tr>
 			</table>
 			<div>
-				<div th:if="${spieler.talentwertErmittelt} == false">
+				<div class="col"th:if="${spieler.talentwertErmittelt} == false">
 					<form method="POST" th:action="@{/spieler/} + ${spieler.id} + '/talentwert'">
 						<button type="submit" name="submit" value="value"
 							class="btn btn-primary btn-sm button-toggle">
@@ -91,24 +82,37 @@
 						</button>
 					</form>
 				</div>
-				<div th:if="${spieler.transfermarkt} == false">
+				<div class="col"th:if="${spieler.transfermarkt} == false">
 					<form method="POST" th:action="@{/spieler/} + ${spieler.id} + '/transfermarkt'" th:object="${spieler}">
-						<input class="form-control" type="text" th:field="*{preis}"/>
-						<button type="submit" name="submit" value="value"
-							class="btn btn-success btn-sm button-toggle">
-							<span aria-hidden="true">Auf Transfermarkt anbieten</span>
-						</button>
+						<div class="from-group row">
+							<div class="col">
+								<input class="form-control" type="text" th:field="*{preis}"/>
+							</div>
+							<div class="col">
+								<button type="submit" name="submit" value="value"
+									class="btn btn-success btn-sm button-toggle">
+									<span aria-hidden="true">Auf Transfermarkt anbieten</span>
+								</button>
+							</div>
+						</div>
 					</form>
 				</div>
-				<div th:if="${spieler.transfermarkt}">
+				<div class="col" th:if="${spieler.transfermarkt}">
 					<form method="POST" th:action="@{/spieler/} + ${spieler.id} + '/transfermarkt/entfernen'">
-						<button type="submit" name="submit" value="value"
-							class="btn btn-danger btn-sm button-toggle">
-							<span aria-hidden="true">Vom Transfermarkt nehmen</span>
-						</button>
+						<div class="from-group row">
+							<div class="col">
+								<span th:text="'F&uuml;r '+${spieler.preis}+' auf dem Transfermarkt'"></span>
+							</div>
+							<div class="col">
+								<button type="submit" name="submit" value="value"
+									class="btn btn-danger btn-sm button-toggle">
+									<span aria-hidden="true">Vom Transfermarkt nehmen</span>
+								</button>
+							</div>
+						</div>
 					</form>
 				</div>
-				<div>
+				<div class="col">
 					<form method="POST" th:action="@{/spieler/} + ${spieler.id} + '/entlassen'">
 						<button type="submit" name="submit" value="value"
 							class="btn btn-danger btn-sm button-toggle">

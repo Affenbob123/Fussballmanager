@@ -13,6 +13,7 @@ import javax.persistence.OneToOne;
 import org.hibernate.annotations.GenericGenerator;
 
 import fussballmanager.service.land.Land;
+import fussballmanager.service.spieler.spielerzuwachs.Trainingslager;
 import fussballmanager.service.spieler.staerke.SpielerStaerke;
 import fussballmanager.service.team.Team;
 
@@ -57,6 +58,8 @@ public class Spieler implements Comparable<Spieler> {
 	
 	private int trainingslagerTage = 0;
 	
+	private Trainingslager trainingsLager = Trainingslager.KEIN_TRAININGSLAGER;
+	
 	private int verletzungsTage = 0;
 	
 	private int gesperrteTage = 0;
@@ -67,9 +70,9 @@ public class Spieler implements Comparable<Spieler> {
 	
 	private boolean transfermarkt = false;
 	
-	private int tore = 0;
-	
 	private boolean gelbeKarte = false;
+	
+	private int tore = 0;
 	
 	private int gelbeKarten = 0;
 	
@@ -178,6 +181,14 @@ public class Spieler implements Comparable<Spieler> {
 
 	public void setTrainingslagerTage(int trainingslagerTage) {
 		this.trainingslagerTage = trainingslagerTage;
+	}
+
+	public Trainingslager getTrainingsLager() {
+		return trainingsLager;
+	}
+
+	public void setTrainingsLager(Trainingslager trainingsLager) {
+		this.trainingsLager = trainingsLager;
 	}
 
 	public int getVerletzungsTage() {

@@ -60,6 +60,7 @@ public class TransfermarktController {
 		SpielerSuche spielerSucheFormular = spielerSuche;
 		DecimalFormat zahlenFormat = new DecimalFormat("0.0");
 		
+		//TODO fixen mit pageable
 		List<Spieler> test = new ArrayList<>();
 		for(int i = 0; i < 30; i++) {
 			test.add(gesuchteSpielerDesTransfermarktes.get(i));
@@ -91,6 +92,6 @@ public class TransfermarktController {
 			@ModelAttribute("spielerSucheFormular") SpielerSuche spielerSuche) {
 		redirectAttributes.addFlashAttribute("spielerSuche", spielerSuche);	
 		
-		return "redirect:/transfermarkt"; 
+		return "redirect:/transfermarkt/{seite}"; 
 	}
 }

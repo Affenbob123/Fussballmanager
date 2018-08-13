@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head th:insert="fragments/header :: head"></head>
+<head>
+	<link rel="stylesheet" href="/teamliste.css" />
+</head>
+<body>
+	<div th:insert="fragments/header :: header"></div>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-sm-2" th:insert="fragments/sidebar :: sidebar"></div>
+			<div class="col-lg-10">
+				<div class="row">
+					<div class="col-lg-11">
+						<div class="row" >
+							<div class="col-5"></div>
+							<div class="col-3" th:insert="fragments/aktuelleteamanzeige :: aktuelleteamanzeige"></div>
+						</div>
+					</div>
+					<div class="col-lg-11 main">
+						<hr>
+						<h4>Spieler umbenennen</h4>
+						<div class="alert alert-success" th:if="${successMessage}">
+			  				<strong><p th:utext="${successMessage}"></p></strong>
+						</div>
+						<div class="alert alert-danger" th:if="${errorMessage}">
+				  			<strong><p th:utext="${errorMessage}"></p></strong>
+						</div>
+						<div class="col-lg-12">
+							<form th:action="@{/team/}+${aktuellesTeam.id}+'/spieler/umbenennen'" th:object="${spielerListeWrapper}"
+								method="post">
+								<table class="table table-hover">
+									<thead>
+										<tr class="table-active">
+											<th scope="col"></th>
+											<th scope="col">Position</th>
+											<th scope="col">Name</th>
+											<th scope="col">Team</th>
+											<th scope="col">Stärke</th>
+										</tr>
+									</thead>
+									<tr class=""  th:each="spieler, stat : ${alleSpielerDesAktuellenTeams}">
+										<td> 
+											<div class="form-group">
+							    				<input type="hidden" readonly="readonly"
+							    				th:name="|spielerListe[${stat.index}]|"
+				                				th:value="${spieler.id}"
+							    				th:field="*{spielerListe[__${stat.index}__].id}"
+							    				class="form-control" />
+											</div>
+										</td>
+										<td th:text="${spieler.position.positionsName}" />
+										<td> 
+											<div class="form-group">
+							    				<input type="text"
+							    				th:name="|spielerListe[${stat.index}]|"
+				                				th:value="${spieler.name}"
+							    				th:field="*{spielerListe[__${stat.index}__].name}"
+							    				class="form-control" />
+											</div>
+										</td>
+										<td th:text="${spieler.team.name}" />
+										<td th:text="${spieler.spielerStaerke.reinStaerke}" />
+									</tr>
+								</table>
+								<button type="submit" value="submit" class="btn btn-sm btn-primary">Submit</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<th:block th:replace="fragments/header :: scripts" />
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head th:insert="fragments/header :: head"></head>
+<head>
+	<link rel="stylesheet" href="/teamliste.css" />
+</head>
+<body>
+	<div th:insert="fragments/header :: header"></div>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-sm-2" th:insert="fragments/sidebar :: sidebar"></div>
+			<div class="col-lg-10">
+				<div class="row">
+					<div class="col-lg-11">
+						<div class="row" >
+							<div class="col-5"></div>
+							<div class="col-3" th:insert="fragments/aktuelleteamanzeige :: aktuelleteamanzeige"></div>
+						</div>
+					</div>
+					<div class="col-lg-11 main">
+						<hr>
+						<h4>Statistik</h4>
+						<div class="alert alert-success" th:if="${successMessage}">
+			  				<strong><p th:utext="${successMessage}"></p></strong>
+						</div>
+						<div class="alert alert-danger" th:if="${errorMessage}">
+				  			<strong><p th:utext="${errorMessage}"></p></strong>
+						</div>
+						<div>
+							<form method="POST" th:action="@{/team/neu}">
+								<button type="submit" name="submit" value="value"
+									class="btn btn-success btn-sm button-toggle">
+									<span aria-hidden="true">Neues Team</span>
+								</button>
+							</form>
+						</div>
+						<div>
+							<form method="GET" th:action="@{/teams/umbenennen}">
+								<button type="submit" name="submit" value="value"
+									class="btn btn-primary btn-sm button-toggle">
+									<span aria-hidden="true">Teams umbenennen</span>
+								</button>
+							</form>
+						</div>
+						<table class="table table-hover">
+							<thead>
+								<tr class="table-active">
+									<th scope="col">Id</th>
+									<th scope="col">Name</th>
+									<th scope="col">Liga</th>
+									<th scope="col">Geld</th>
+									<th scope="col"></th>
+								</tr>
+							</thead>
+			
+							<tr class="" th:each="team : ${alleTeamsDesAktuellenUsers}">
+								<td th:text="${team.id}" />
+								<td> 
+									<a class="" th:text="${team.name}" th:href="@{/team/}+${team.id}"></a>
+								</td>
+								<td th:text="${team.liga.ligaNameTyp.getName()}" />
+								<td th:text="${team.geld}" />
+								<td>
+									<form method="POST" th:action="@{/team/}+${team.id}+'/loeschen'">
+										<button type="submit" name="submit" value="value"
+											class="btn btn-danger btn-sm button-toggle">
+											<span aria-hidden="true">L&#246;schen</span>
+										</button>
+									</form>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<th:block th:replace="fragments/header :: scripts" />
+</body>
+</html>

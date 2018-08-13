@@ -51,7 +51,7 @@ public class SpielerController {
 		model.addAttribute("zahlenFormat", zahlenFormat);
 		model.addAttribute("spieler", spielerService.findeSpieler(id));
 		
-		return "spieler";
+		return "kader/spieler";
 	}
 	
 	@GetMapping("/team/{id}/spieler/umbenennen")
@@ -70,7 +70,7 @@ public class SpielerController {
 		model.addAttribute("alleSpielerDesAktuellenTeams", spielerDesAktuellenTeams);
 		model.addAttribute("spielerListeWrapper", spielerListeWrapper);
 		
-		return "spielerlistezumumbenennen";
+		return "kader/spielerlistezumumbenennen";
 	}
 	
 	@PostMapping("/team/{id}/spieler/umbenennen")

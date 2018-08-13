@@ -4,14 +4,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 
 import fussballmanager.service.saison.Saison;
 import fussballmanager.service.saison.spieltag.Spieltag;
-import fussballmanager.service.spieler.Spieler;
 
 @Entity
 public class SpielerZuwachs {
