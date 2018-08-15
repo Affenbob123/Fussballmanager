@@ -305,6 +305,7 @@ public class SpielerService {
 			Spieler spieler = new Spieler(nationalitaet, positionenTyp, aufstellungsPositionsTyp, alter, staerke, talentwert, team);
 			legeSpielerAn(spieler);
 		}
+		teamService.berechneTeamStaerke(team);
 	}
 	
 	public int erzeugeZufaelligenTalentwert() {
@@ -675,10 +676,20 @@ public class SpielerService {
 		for(Spieler spieler: alleSpielerMitTeam) {
 			spieler.setSpielerZuwachs(berechneSpielerZuwachsFuerEinenSpieler(spieler));
 			reinStaerkeAendern(spieler, spieler.getSpielerZuwachs());
+			ueberpruefeUndBucheTrainingslager(spieler);
 			reduziereVerletzungSperreTrainingslager(spieler);
 		}		
 	}
 	
+	public void ueberpruefeUndBucheTrainingslager(Spieler spieler) {
+		if(!(spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.TRAININGSLAGER) || 
+				spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.VERLETZT) ||
+				spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.GESPERRT)) && spieler.getTrainingslagerTage() > 0) {
+			spieler.setAufstellungsPositionsTyp(AufstellungsPositionsTypen.TRAININGSLAGER);
+			aktualisiereSpieler(spieler);
+		}
+	}
+
 	public double berechneSpielerZuwachsFuerEinenSpieler(Spieler spieler) {
 		double defaultZuwachs = 2.0;
 		double maximaleErfahrung = 75;

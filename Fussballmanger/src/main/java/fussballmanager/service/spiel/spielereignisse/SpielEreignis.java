@@ -1,6 +1,7 @@
 package fussballmanager.service.spiel.spielereignisse;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,22 +22,22 @@ public class SpielEreignis {
 	
 	private int spielminute;
 	
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	private Spieler torschuetze;
 	
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	private Spieler torwart;
 	
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	private Team angreifer;
 	
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	private Team verteidiger;
 	
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	Spieler spieler;
 	
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	Team team;
 	
 	SpielEreignisTypen spielereignisTyp;

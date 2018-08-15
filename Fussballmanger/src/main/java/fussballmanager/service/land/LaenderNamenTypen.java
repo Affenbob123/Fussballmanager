@@ -2,11 +2,11 @@ package fussballmanager.service.land;
 
 public enum LaenderNamenTypen {
 	
-	DEUTSCHLAND("Deutschland", "/laenderflaggen/deutschland.svg.png"),
-	ENGLAND("England", "/laenderflaggen/england.svg.png"),
-	SPANIEN("Spanien", "/laenderflaggen/spanien.svg.png"),
-	ITALIEN("Italien","/laenderflaggen/italien.svg.png"),
-	FRANKREICH("Frankreich", "/laenderflaggen/frankreich.svg.png");
+	DEUTSCHLAND("Deutschland", "/laenderflaggen/deutschland.svg.png");
+//	ENGLAND("England", "/laenderflaggen/england.svg.png"),
+//	SPANIEN("Spanien", "/laenderflaggen/spanien.svg.png"),
+//	ITALIEN("Italien","/laenderflaggen/italien.svg.png"),
+//	FRANKREICH("Frankreich", "/laenderflaggen/frankreich.svg.png");
     
     private final String name;
     private final String bild;

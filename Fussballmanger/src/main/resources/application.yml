@@ -5,10 +5,13 @@ spring:
     console:
       enabled: true
       settings: 
-        web-allow-others: true  	
+        web-allow-others: false  	
   jpa: 
     hibernate: 
-      ddl-auto: update 
+      generate_statistics: false
+      format_sql: false
+    show-sql: false
+
 fussballmanager:
   admin:
     login: admin

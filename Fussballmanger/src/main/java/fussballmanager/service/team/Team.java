@@ -1,6 +1,7 @@
 package fussballmanager.service.team;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,17 +22,17 @@ public class Team implements Comparable<Team> {
 	@GenericGenerator(name = "native", strategy = "native")
 	private long id;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Land land;
 	
 	private String name;
 		
 	private long geld;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	private User user;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Liga liga;
 	
 	private String spielort;

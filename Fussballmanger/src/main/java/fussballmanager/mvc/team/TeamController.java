@@ -79,6 +79,10 @@ public class TeamController {
 		model.addAttribute("alleFormationsTypen", FormationsTypen.values());
 		model.addAttribute("alleEinsatzTypen", EinsatzTypen.values());
 		model.addAttribute("alleAusrichtungsTypen", AusrichtungsTypen.values());
+		model.addAttribute("aufstellungsPositionsTypTrainingslager", AufstellungsPositionsTypen.TRAININGSLAGER);
+		model.addAttribute("aufstellungsPositionsTypErsatz", AufstellungsPositionsTypen.ERSATZ);
+		model.addAttribute("aufstellungsPositionsTypGesperrt", AufstellungsPositionsTypen.GESPERRT);
+		model.addAttribute("aufstellungsPositionsTypVerletzt", AufstellungsPositionsTypen.VERLETZT);
 		model.addAttribute("alleAufstellungsPositionsTypen", aktuellesTeam.getFormationsTyp().getAufstellungsPositionsTypen());
 		model.addAttribute("alleSpielerAufErsatzbank", spielerService.findeAlleSpielerEinesTeamsAufErsatzbank(aktuellesTeam));
 		model.addAttribute("einzuwechselnderSpieler", new Spieler());
@@ -91,7 +95,7 @@ public class TeamController {
 	public String aendereFormation(Model model, Authentication auth, @PathVariable("id") Long id, @ModelAttribute("aktuellesTeam") Team aktuellesTeam) {
 		Team team = teamService.findeTeam(id);
 		team.setFormationsTyp(aktuellesTeam.getFormationsTyp());
-		teamService.aenderFormationEinesTeams(team);
+		teamService.aenderFormationEinesTeams(team, spielerService.findeAlleSpielerEinesTeams(team));
 		
 		return "redirect:/team/{id}";
 	}
@@ -160,6 +164,10 @@ public class TeamController {
 			Spieler spieler = spielerService.findeSpieler(s.getId());
 			spieler.setTrainingslagerTage(s.getTrainingslagerTage());
 			spieler.setTrainingsLager(trainingslagerWrapper.getTrainingslager());
+			
+			if(spieler.getTrainingslagerTage() <= 0) {
+				spieler.setTrainingsLager(Trainingslager.KEIN_TRAININGSLAGER);
+			}
 			spielerService.aktualisiereSpieler(spieler);
 		}
 		return "redirect:/team/{id}/trainingslager";

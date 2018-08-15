@@ -25,10 +25,10 @@ public class Spieler implements Comparable<Spieler> {
 	@GenericGenerator(name = "native", strategy = "native")
 	private long id;
 	
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	private Land nationalitaet;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Team team;
 	
 	@Enumerated(EnumType.STRING)
@@ -41,7 +41,7 @@ public class Spieler implements Comparable<Spieler> {
 	
 	private int alter;
 	
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	private SpielerStaerke spielerStaerke;
 	
 	private double spielerZuwachs = 0.0;

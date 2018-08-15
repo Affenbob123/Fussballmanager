@@ -3,6 +3,7 @@ package fussballmanager.spielsimulation.torversuch;
 import java.time.LocalTime;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -24,19 +25,19 @@ public class Torversuch {
 	
 	int spielminute;
 	
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	Spieler torschuetze;
 	
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	Spieler torwart;
 	
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	Team angreifer;
 	
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	Team verteidiger;
 	
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	Spiel spiel;
 	
 	TorversuchTypen richtung;

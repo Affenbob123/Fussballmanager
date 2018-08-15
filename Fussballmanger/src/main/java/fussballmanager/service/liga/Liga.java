@@ -2,6 +2,7 @@ package fussballmanager.service.liga;
 
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -23,7 +24,7 @@ public class Liga {
 	
 	private final int groeße = 18;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Land land;
 	
 	public Liga(LigenNamenTypen ligaName, Land land) {

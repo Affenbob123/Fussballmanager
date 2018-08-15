@@ -102,7 +102,7 @@
 									</form>
 								</div>
 							</div>
-							<table class="table table-hover table-condensed" style="border-collapse:collapse;">
+							<table class="table table-hover">
 								<thead>
 									<tr class="table-active">
 										<th scope="col">#</th>
@@ -119,7 +119,9 @@
 									</tr>
 								</thead>
 								<tbody th:each="spieler, stat : ${alleSpielerDesAktuellenTeams}">
-									<tr>
+									<tr class="" th:classappend="(${spieler.aufstellungsPositionsTyp == aufstellungsPositionsTypTrainingslager
+										? 'table-danger' : ''}) + 
+										(${spieler.aufstellungsPositionsTyp} == ${aufstellungsPositionsTypErsatz} ? 'table-success' : '')">
 										<td th:text="${stat.index} + 1" />
 										<td><img th:src="@{${spieler.nationalitaet.landNameTyp.bild}}" /></td>
 										<td th:text="${spieler.position}" />

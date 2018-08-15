@@ -31,29 +31,29 @@ public class Spiel {
 	
 	private SpieleTypen spielTyp;
 	
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	private Team heimmannschaft;
 	
 	private int toreHeimmannschaft;
 	
 	private int toreHeimmannschaftZurHalbzeit;
 	
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	private Team gastmannschaft;
 	
 	private int toreGastmannschaft;
 	
 	private int toreGastmannschaftZurHalbzeit;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Spieltag spieltag;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Saison saison;
 	
 	private String spielort;
 	
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<SpielEreignis> spielEreignisse;
 	
 	private double heimVorteil = 1.2;

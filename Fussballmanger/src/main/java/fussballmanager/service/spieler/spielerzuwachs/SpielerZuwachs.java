@@ -1,6 +1,7 @@
 package fussballmanager.service.spieler.spielerzuwachs;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,10 +20,10 @@ public class SpielerZuwachs {
 	@GenericGenerator(name = "native", strategy = "native")
 	private long id;
 	
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	Saison saison;
 	
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	Spieltag spieltag;
 	
 	private double zuwachs;

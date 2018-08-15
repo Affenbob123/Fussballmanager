@@ -124,25 +124,41 @@ public class TeamService {
 	}
 	
 	public void aendereEinsatzEinesTeams(Team team) {
-		aktualisiereTeam(team);
 		List<Spieler> alleSpielerDesTeams = spielerService.findeAlleSpielerEinesTeams(team);
 		
 		for(Spieler spieler : alleSpielerDesTeams) {
 			double spielerStaerkeAenderung = team.getEinsatzTyp().getStaerkenFaktor();
 			spielerService.kompletteStaerkeAendern(spieler, spielerStaerkeAenderung);
 		}
+		berechneTeamStaerke(team);
 	}
 
 	//TODO Wenn kein SPieler mit der Position vorhanden ist dann spielen zu wenige
-	public void aenderFormationEinesTeams(Team team) {
-		staerksteFormationEinesTeams(team);
+	public void aenderFormationEinesTeams(Team team, List<Spieler> alleSpielerDesTeams) {
+		staerksteFormationEinesTeams(team, alleSpielerDesTeams);
 	}
 	
+	public void berechneTeamStaerke(Team team) {
+		double teamStaerke = 0.0;
+		List<Spieler> alleSpielerDesTeams = spielerService.findeAlleSpielerEinesTeams(team);
+		
+		for(Spieler spieler : alleSpielerDesTeams) {
+			if(!(spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.ERSATZ) || 
+					spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.VERLETZT) ||
+					spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.GESPERRT) ||
+					spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.TRAININGSLAGER))) {
+				teamStaerke = teamStaerke + spieler.getSpielerStaerke().getStaerke();
+			}
+		}
+		team.setStaerke(teamStaerke);
+		aktualisiereTeam(team);
+	}
+
 	//TODO fml
-	public void staerksteFormationEinesTeams(Team team) {
+	public void staerksteFormationEinesTeams(Team team, List<Spieler> alleSpieler) {
 		FormationsTypen formationsTypDesTeams = team.getFormationsTyp();
 		AufstellungsPositionsTypen aufstellung[] = formationsTypDesTeams.getAufstellungsPositionsTypen();
-		List<Spieler> spielerDesTeams = spielerService.sortiereSpielerNachStaerke(spielerService.findeAlleSpielerEinesTeams(team));
+		List<Spieler> spielerDesTeams = alleSpieler;
 		Collection<AufstellungsPositionsTypen> fehlendePositionen = new ArrayList<AufstellungsPositionsTypen>(Arrays.asList(aufstellung));
 		List<Spieler> spielfaehigeSpielerDesTeams = new ArrayList<>();
 		for(Spieler spieler : spielerDesTeams) {
@@ -324,6 +340,7 @@ public class TeamService {
 				}
 			}
 		}
+		berechneTeamStaerke(team);
 	}
 	
 	public int siegeEinesTeamsInEinerSaison(Team team, Saison saison) {
@@ -473,10 +490,20 @@ public class TeamService {
 	public void aufgabenBeiSpieltagWechsel() {
 		List<Team> alleTeams = findeAlleTeams();
 		for(Team team : alleTeams) {
-			aenderFormationEinesTeams(team);
+			List<Spieler> alleSpielerDesTeams = spielerService.sortiereSpielerNachStaerke(spielerService.findeAlleSpielerEinesTeams(team));
+			aenderFormationEinesTeams(team, alleSpielerDesTeams);
+			berechneKostenFuerDenSpieltag(team, alleSpielerDesTeams);
 		}
 	}
 	
+	public void berechneKostenFuerDenSpieltag(Team team, List<Spieler> alleSpielerDesTeams) {
+		long kostenSpielerGehaelter = 0;
+		
+		for(Spieler spieler : alleSpielerDesTeams) {
+			kostenSpielerGehaelter = kostenSpielerGehaelter + spieler.getGehalt();
+		}
+	}
+
 	public void aendereLigenAllerAufUndAbsteiger() {
 		List<Liga> alleLigen = ligaService.findeAlleLigen();
 		for(Liga liga : alleLigen) {
