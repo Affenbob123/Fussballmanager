@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import fussballmanager.service.finanzen.Bilanz;
+import fussballmanager.service.finanzen.BilanzService;
 import fussballmanager.service.land.Land;
 import fussballmanager.service.liga.Liga;
 import fussballmanager.service.liga.LigaService;
@@ -61,6 +63,9 @@ public class TeamService {
 	@Autowired
 	SaisonService saisonService;
 	
+	@Autowired
+	BilanzService bilanzService;
+	
 	public Team findeTeam(Long id) {
 		return teamRepository.getOne(id);
 	}
@@ -103,17 +108,20 @@ public class TeamService {
 		teamRepository.delete(team);
 	}
 	
-	public void dummyHauptteamsErstellen(Liga liga) {
+	public void erstelleDummyteams(Liga liga) {
 		for(int i = 0; i < liga.getGroeße(); i++) {
 			StringBuilder sb = new StringBuilder("Dummy Team");
 			sb.append (i);
 			String standardName = sb.toString();
-			
-			legeTeamAn(new Team(liga.getLand(), standardName, null, liga));
+			Bilanz bilanz = new Bilanz();
+			bilanzService.legeBilanzAn(bilanz);
+
+			Team team = new Team(liga.getLand(), standardName, null, liga, bilanz);
+			legeTeamAn(team);
 		}
 	}
 
-	public void standardHauptteamfuerUserErstellen(User user) {
+	public void erstelleStandardHauptteamFuerEinenUser(User user) {
 		Team team = findeErstesDummyTeam(user.getLand());
 		team.setUser(user);
 		aktualisiereTeam(team);
@@ -492,15 +500,7 @@ public class TeamService {
 		for(Team team : alleTeams) {
 			List<Spieler> alleSpielerDesTeams = spielerService.sortiereSpielerNachStaerke(spielerService.findeAlleSpielerEinesTeams(team));
 			aenderFormationEinesTeams(team, alleSpielerDesTeams);
-			berechneKostenFuerDenSpieltag(team, alleSpielerDesTeams);
-		}
-	}
-	
-	public void berechneKostenFuerDenSpieltag(Team team, List<Spieler> alleSpielerDesTeams) {
-		long kostenSpielerGehaelter = 0;
-		
-		for(Spieler spieler : alleSpielerDesTeams) {
-			kostenSpielerGehaelter = kostenSpielerGehaelter + spieler.getGehalt();
+			bilanzService.erfasseEinUndAusgabenEinesTeamsAmSpieltagEnde(team, alleSpielerDesTeams);
 		}
 	}
 
@@ -610,5 +610,14 @@ public class TeamService {
 	
 	public void aufgabenWennSaisonVorbei() {
 		aendereLigenAllerAufUndAbsteiger();
+	}
+	
+	public long berechneGehaelterEinesTeams(Team team, List<Spieler> alleSpielerEinesTeams) {
+		long gehaelter = 0;
+		
+		for(Spieler spieler :  alleSpielerEinesTeams) {
+			gehaelter = gehaelter + spieler.getGehalt();
+		}
+		return gehaelter;
 	}
 }

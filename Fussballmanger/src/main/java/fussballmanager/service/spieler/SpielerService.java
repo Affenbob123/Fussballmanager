@@ -676,11 +676,19 @@ public class SpielerService {
 		for(Spieler spieler: alleSpielerMitTeam) {
 			spieler.setSpielerZuwachs(berechneSpielerZuwachsFuerEinenSpieler(spieler));
 			reinStaerkeAendern(spieler, spieler.getSpielerZuwachs());
+			spieler.setGehalt(berechneGehalt(spieler));
 			ueberpruefeUndBucheTrainingslager(spieler);
 			reduziereVerletzungSperreTrainingslager(spieler);
 		}		
 	}
 	
+	private long berechneGehalt(Spieler spieler) {
+		long gehalt;
+		gehalt = (long) (spieler.getSpielerStaerke().getReinStaerke() * 100); 
+				
+		return gehalt;
+	}
+
 	public void ueberpruefeUndBucheTrainingslager(Spieler spieler) {
 		if(!(spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.TRAININGSLAGER) || 
 				spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.VERLETZT) ||

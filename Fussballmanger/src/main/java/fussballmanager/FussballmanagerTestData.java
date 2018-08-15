@@ -18,6 +18,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import fussballmanager.service.finanzen.Bilanz;
+import fussballmanager.service.finanzen.BilanzService;
 import fussballmanager.service.land.LaenderNamenTypen;
 import fussballmanager.service.land.Land;
 import fussballmanager.service.land.LandService;
@@ -85,6 +87,9 @@ public class FussballmanagerTestData {
 	@Autowired
 	SpielerZuwachsService spielerZuwachsService;
 	
+	@Autowired
+	BilanzService bilanzService;
+	
 	String LoginA = "a";
 	String LoginB = "b";
 		
@@ -104,7 +109,10 @@ public class FussballmanagerTestData {
 		saison.setAktuelleSaison(true);
 		saisonService.aktualisiereSaison(saison);
 		
-		Team teamA = new Team(land, "Team A", null, liga);
+		Bilanz bilanzA = new Bilanz();
+		bilanzService.legeBilanzAn(bilanzA);
+		
+		Team teamA = new Team(land, "Team A", null, liga, bilanzA);
 		teamA.setAusrichtungsTyp(AusrichtungsTypen.SEHROFFENSIV);
 		teamA.setEinsatzTyp(EinsatzTypen.BRUTAL);
 		teamService.legeTeamAn(teamA);
@@ -114,7 +122,10 @@ public class FussballmanagerTestData {
 		tabellenEintragTeamA.setTeam(teamA);
 		tabellenEintragService.legeTabellenEintragAn(tabellenEintragTeamA);
 		
-		Team teamB = new Team(land, "Team B", null, liga);
+		Bilanz bilanzB = new Bilanz();
+		bilanzService.legeBilanzAn(bilanzB);
+		
+		Team teamB = new Team(land, "Team B", null, liga, bilanzB);
 		teamB.setAusrichtungsTyp(AusrichtungsTypen.SEHROFFENSIV);
 		teamB.setEinsatzTyp(EinsatzTypen.BRUTAL);
 		teamService.legeTeamAn(teamB);

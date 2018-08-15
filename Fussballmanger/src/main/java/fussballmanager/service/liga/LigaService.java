@@ -74,7 +74,7 @@ public class LigaService {
 	public void legeLigaAn(Liga liga) {
 		ligaRepository.save(liga);
 		
-		teamService.dummyHauptteamsErstellen(liga);
+		teamService.erstelleDummyteams(liga);
 	}
 	
 	public void aktualisiereLiga(Liga liga) {

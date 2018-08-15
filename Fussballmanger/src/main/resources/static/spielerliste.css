@@ -2,3 +2,11 @@
 	padding-top: 20px;
 	padding-bottom: 15px;
 }
+
+.spieler-durchschnitt {
+	border-top: 2px solid black;
+}
+
+.spieler-summe {
+	border-top: 3px solid black;
+}

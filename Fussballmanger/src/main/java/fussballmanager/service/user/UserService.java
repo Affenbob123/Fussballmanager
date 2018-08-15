@@ -74,7 +74,7 @@ public class UserService implements UserDetailsService {
 		userRepository.save(user);
 		LOG.info("User: {} wurde angelegt.", user.getLogin());
 		
-		teamService.standardHauptteamfuerUserErstellen(findeUser(user.getLogin()));
+		teamService.erstelleStandardHauptteamFuerEinenUser(findeUser(user.getLogin()));
 	}
 	
 	public void aktualisiereUser(User user) {

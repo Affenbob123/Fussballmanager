@@ -112,14 +112,16 @@
 										<th scope="col">Name</th>
 										<th scope="col">Alter</th>
 										<th scope="col">St&auml;rke</th>
+										<th scope="col">Motivation</th>
 										<th scope="col">Reinst&auml;rke</th>
 										<th scope="col">Zuwachs</th>
 										<th scope="col">Erfahrung</th>
-										<th scope="col">Motivation</th>
+										<th scope="col">Gehalt</th>
 									</tr>
 								</thead>
-								<tbody th:each="spieler, stat : ${alleSpielerDesAktuellenTeams}">
-									<tr class="" th:classappend="(${spieler.aufstellungsPositionsTyp == aufstellungsPositionsTypTrainingslager
+								<tbody >
+									<tr th:each="spieler, stat : ${alleSpielerDesAktuellenTeams}" 
+										class="" th:classappend="(${spieler.aufstellungsPositionsTyp == aufstellungsPositionsTypTrainingslager
 										? 'table-danger' : ''}) + 
 										(${spieler.aufstellungsPositionsTyp} == ${aufstellungsPositionsTypErsatz} ? 'table-success' : '')">
 										<td th:text="${stat.index} + 1" />
@@ -132,13 +134,45 @@
 										</td>
 										<td th:text="${spieler.alter}" />
 										<td th:text="${zahlenFormat.format(spieler.spielerStaerke.staerke)}" />
+										<td th:text="${spieler.motivation}" />
 										<td th:text="${zahlenFormat.format(spieler.spielerStaerke.reinStaerke)}" />
 										<td th:text="${spieler.spielerZuwachs} >= 0 ?
 											'+'+${zahlenFormat.format(spieler.spielerZuwachs)} : 
 											${zahlenFormat.format(spieler.spielerZuwachs)}" />
 										<td th:text="${spieler.erfahrung}" />
-										<td th:text="${spieler.motivation}" />
+										<td th:text="${spieler.gehalt}" />
 									</tr>
+									<tr class="spieler-durchschnitt">
+							       		<td><strong><span>Durchschnitt:</span></strong></td>
+							       		<td />
+							       		<td />
+							       		<td />
+							       		<td />
+							       		<td th:text="${zahlenFormat.format(summeSpielerWerte.alter/alleSpielerDesAktuellenTeams.size())}"/>
+							       		<td th:text="${zahlenFormat.format(summeSpielerWerte.staerke/alleSpielerDesAktuellenTeams.size())}"/>
+							       		<td th:text="${zahlenFormat.format(summeSpielerWerte.motivation/alleSpielerDesAktuellenTeams.size())}"/>
+							       		<td th:text="${zahlenFormat.format(summeSpielerWerte.reinStaerke/alleSpielerDesAktuellenTeams.size())}"/>
+							       		<td th:text="${summeSpielerWerte.zuwachs/alleSpielerDesAktuellenTeams.size()} >=0 ? 
+							       		'+'+${zahlenFormat.format(summeSpielerWerte.zuwachs/alleSpielerDesAktuellenTeams.size())} :
+							       			${zahlenFormat.format(summeSpielerWerte.zuwachs/alleSpielerDesAktuellenTeams.size())}"/>
+							       		<td th:text="${zahlenFormat.format(summeSpielerWerte.erfahrung/alleSpielerDesAktuellenTeams.size())}"/>
+							       		<td th:text="${zahlenFormat.format(summeSpielerWerte.gehalt/alleSpielerDesAktuellenTeams.size())}"/>
+							       	</tr>
+							     	<tr class="spieler-summe">
+							       		<td><strong><span>Summe:</span></strong></td>
+							       		<td />
+							       		<td />
+							       		<td />
+							       		<td />
+							       		<td />
+							       		<td th:text="${zahlenFormat.format(summeSpielerWerte.staerke)}"/>
+							       		<td />
+							       		<td th:text="${zahlenFormat.format(summeSpielerWerte.reinStaerke)}"/>
+							       		<td th:text="${summeSpielerWerte.zuwachs} >=0 ? '+'+${zahlenFormat.format(summeSpielerWerte.zuwachs)} :
+											${zahlenFormat.format(summeSpielerWerte.zuwachs)}"/>
+							       		<td />
+							       		<td th:text="${summeSpielerWerte.gehalt}"/>
+							       	</tr>
 						       	</tbody>
 							</table>
 						</div>

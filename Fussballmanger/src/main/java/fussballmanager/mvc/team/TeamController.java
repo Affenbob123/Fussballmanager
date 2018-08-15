@@ -87,6 +87,7 @@ public class TeamController {
 		model.addAttribute("alleSpielerAufErsatzbank", spielerService.findeAlleSpielerEinesTeamsAufErsatzbank(aktuellesTeam));
 		model.addAttribute("einzuwechselnderSpieler", new Spieler());
 		model.addAttribute("anzahlDerEinwechslungen", teamService.findeTeam(id).getAnzahlAuswechselungen());
+		model.addAttribute("summeSpielerWerte", erstelleSummeDerSpielerWerteListe(alleSpielerEinesTeams));
 		
 		return "kader/spielerliste";
 	}
@@ -171,5 +172,20 @@ public class TeamController {
 			spielerService.aktualisiereSpieler(spieler);
 		}
 		return "redirect:/team/{id}/trainingslager";
+	}
+	
+	public SummeSpielerWerte erstelleSummeDerSpielerWerteListe(List<Spieler> spielerDesTeams) {
+		SummeSpielerWerte summeDerSpielerWerte = new SummeSpielerWerte();
+		
+		for(Spieler spieler : spielerDesTeams) {
+			summeDerSpielerWerte.setAlter(summeDerSpielerWerte.getAlter() + spieler.getAlter());
+			summeDerSpielerWerte.setErfahrung(summeDerSpielerWerte.getErfahrung() + spieler.getErfahrung());
+			summeDerSpielerWerte.setGehalt(summeDerSpielerWerte.getGehalt() + spieler.getGehalt());
+			summeDerSpielerWerte.setMotivation(summeDerSpielerWerte.getMotivation() + spieler.getMotivation());
+			summeDerSpielerWerte.setReinStaerke(summeDerSpielerWerte.getReinStaerke() + spieler.getSpielerStaerke().getReinStaerke());
+			summeDerSpielerWerte.setStaerke(summeDerSpielerWerte.getStaerke() + spieler.getSpielerStaerke().getStaerke());
+			summeDerSpielerWerte.setZuwachs(summeDerSpielerWerte.getZuwachs() + spieler.getSpielerZuwachs());
+		}
+		return summeDerSpielerWerte;
 	}
 }

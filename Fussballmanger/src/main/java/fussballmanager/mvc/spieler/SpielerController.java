@@ -66,7 +66,9 @@ public class SpielerController {
 		
 		List<Spieler> spielerDesAktuellenTeams = spielerService.findeAlleSpielerEinesTeams(aktuellerUser.getAktuellesTeam());
 		spielerListeWrapper.setSpielerListe(spielerDesAktuellenTeams);
+		DecimalFormat zahlenFormat = new DecimalFormat("0.0");
 		
+		model.addAttribute("zahlenFormat", zahlenFormat);
 		model.addAttribute("alleSpielerDesAktuellenTeams", spielerDesAktuellenTeams);
 		model.addAttribute("spielerListeWrapper", spielerListeWrapper);
 		

@@ -59,7 +59,7 @@
 									<a class="" th:text="${team.name}" th:href="@{/team/}+${team.id}"></a>
 								</td>
 								<td th:text="${team.liga.ligaNameTyp.getName()}" />
-								<td th:text="${team.geld}" />
+								<td th:text="${team.bilanz.saldo}" />
 								<td>
 									<form method="POST" th:action="@{/team/}+${team.id}+'/loeschen'">
 										<button type="submit" name="submit" value="value"

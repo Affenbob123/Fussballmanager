@@ -21,14 +21,16 @@
 	               	<li class="nav nav-pills flex-column">
 						<a class="nav-link ml-3 my-1" href="/nachrichten">Nachrichten</a>
 						<a class="nav-link ml-3 my-1" href="/statistik/1">Statistik</a>
-						<a class="nav-link ml-3 my-1" href="/bank">Bank</a>
+						<a class="nav-link ml-3 my-1" href="/finanzen">Finanzen</a>
+						<a class="nav-link ml-3 my-1" href="/auktionshaus">Auktionshaus</a>
 	                 </li>
 	                <li class="nav-item">
-	                    <a class="nav-link" href="#">Kader</a>
+	                    <a class="nav-link" th:href="@{/team/}+${aktuellesTeam.id}+'/aufstellung'">Kader</a>
 	                </li>
 	                <li class="nav nav-pills flex-column">
 						<a class="nav-link ml-3 my-1" th:href="@{/team/}+${aktuellesTeam.id}">Details</a>
 				    	<a class="nav-link ml-3 my-1" th:href="@{/team/}+${aktuellesTeam.id}+'/aufstellung'">Aufstellung</a>
+				    	<a class="nav-link ml-3 my-1" th:href="@{/team/}+${aktuellesTeam.id}+'/training'">Aufstellung</a>
 				    	<a class="nav-link ml-3 my-1" th:href="@{/team/}+${aktuellesTeam.id}+'/trainingslager'">Trainingslager</a>
 	                 </li>
 	                <li class="nav-item">

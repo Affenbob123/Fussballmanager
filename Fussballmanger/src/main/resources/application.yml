@@ -8,8 +8,8 @@ spring:
         web-allow-others: false  	
   jpa: 
     hibernate: 
-      generate_statistics: false
-      format_sql: false
+      generate_statistics: true
+      format_sql: true
     show-sql: false
 
 fussballmanager:

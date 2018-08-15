@@ -32,18 +32,18 @@
 								<table class="table table-hover">
 									<thead>
 										<tr class="table-active">
-											<th scope="col">#</th>
+											<th scope="col"></th>
 											<th scope="col">Nationalit&auml;t</th>
 											<th scope="col">Position</th>
 											<th scope="col">Name</th>
 											<th scope="col">Team</th>
-											<th scope="col">Stärke</th>
+											<th scope="col">St&auml;rke</th>
 										</tr>
 									</thead>
 									<tr class=""  th:each="spieler, stat : ${alleSpielerDesAktuellenTeams}">
 										<td> 
 											<div class="form-group">
-							    				<input type="hidden" readonly="readonly"
+							    				<input type="hidden"
 							    				th:name="|spielerListe[${stat.index}]|"
 				                				th:value="${spieler.id}"
 							    				th:field="*{spielerListe[__${stat.index}__].id}"
@@ -62,7 +62,7 @@
 											</div>
 										</td>
 										<td th:text="${spieler.team.name}" />
-										<td th:text="${spieler.spielerStaerke.reinStaerke}" />
+										<td th:text="${zahlenFormat.format(spieler.spielerStaerke.reinStaerke)}" />
 									</tr>
 								</table>
 								<button type="submit" value="submit" class="btn btn-sm btn-primary">Submit</button>

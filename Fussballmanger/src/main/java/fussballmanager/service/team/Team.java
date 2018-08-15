@@ -6,9 +6,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import fussballmanager.service.finanzen.Bilanz;
 import fussballmanager.service.land.Land;
 import fussballmanager.service.liga.Liga;
 import fussballmanager.service.user.User;
@@ -27,23 +29,24 @@ public class Team implements Comparable<Team> {
 	
 	private String name;
 		
-	private long geld;
-	
 	@ManyToOne(fetch = FetchType.LAZY)
 	private User user;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Liga liga;
 	
-	private String spielort;
+	@OneToOne(fetch = FetchType.LAZY)
+	private Bilanz bilanz;
+	
+	private String spielort = "Unbenanntes Stadion";
 			
 	private final int maximaleSpielerAnzahl = 43;
 	
-	private FormationsTypen formationsTyp;
+	private FormationsTypen formationsTyp = FormationsTypen.VIERVIERZWEI;
 	
-	private EinsatzTypen einsatzTyp;
+	private EinsatzTypen einsatzTyp = EinsatzTypen.NORMAL;
 	
-	private AusrichtungsTypen ausrichtungsTyp;
+	private AusrichtungsTypen ausrichtungsTyp = AusrichtungsTypen.NORMAL;
 	
 	private int anzahlAuswechselungen = 3;
 	
@@ -51,16 +54,12 @@ public class Team implements Comparable<Team> {
 	
 	private boolean imLiveticker = true;
 	
-	public Team(Land land, String name, User user, Liga liga) {
+	public Team(Land land, String name, User user, Liga liga, Bilanz bilanz) {
 		this.land = land;
 		this.name = name;
-		this.geld = 500000;
 		this.user = user;
 		this.liga = liga;
-		this.spielort = "Unbenanntes Stadion";
-		this.formationsTyp = FormationsTypen.VIERVIERZWEI;
-		this.einsatzTyp = EinsatzTypen.NORMAL;
-		this.ausrichtungsTyp = AusrichtungsTypen.NORMAL;
+		this.bilanz = bilanz;
 	}
 	
 	public Team() {
@@ -89,14 +88,6 @@ public class Team implements Comparable<Team> {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public long getGeld() {
-		return geld;
-	}
-
-	public void setGeld(long geld) {
-		this.geld = geld;
 	}
 
 	public User getUser() {
@@ -173,6 +164,14 @@ public class Team implements Comparable<Team> {
 
 	public void setImLiveticker(boolean imLiveticker) {
 		this.imLiveticker = imLiveticker;
+	}
+
+	public Bilanz getBilanz() {
+		return bilanz;
+	}
+
+	public void setBilanz(Bilanz bilanz) {
+		this.bilanz = bilanz;
 	}
 
 	@Override
