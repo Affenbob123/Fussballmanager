@@ -699,8 +699,8 @@ public class SpielerService {
 		double zuwachsOhneErfahrung = defaultZuwachs * zuwachsFaktorNachAlterDesSpielers * (100 + (talentwert * 2)) / 100;
 		double zuwachsMitErfahrung = zuwachsOhneErfahrung * erfahrungsFaktor;
 		
-		if(!spieler.getTrainingsLager().equals(Trainingslager.KEIN_TRAININGSLAGER)) {
-			zuwachsMitErfahrung = zuwachsMitErfahrung * spieler.getTrainingsLager().getInternatFaktor();
+		if(!spieler.getTrainingslager().equals(Trainingslager.KEIN_TRAININGSLAGER)) {
+			zuwachsMitErfahrung = zuwachsMitErfahrung * spieler.getTrainingslager().getInternatFaktor();
 		}
 		return zuwachsMitErfahrung;
 	}
@@ -720,8 +720,10 @@ public class SpielerService {
 		}
 		if(spieler.getTrainingslagerTage() > 0) {
 			spieler.setTrainingslagerTage(spieler.getTrainingslagerTage() - 1);
+			spieler.setUebrigeTrainingslagerTage(spieler.getUebrigeTrainingslagerTage() - 1);
 			if(spieler.getTrainingslagerTage() == 0) {
 				spieler.setAufstellungsPositionsTyp(AufstellungsPositionsTypen.ERSATZ);
+				spieler.setTrainingsLager(Trainingslager.KEIN_TRAININGSLAGER);
 			}
 		}
 	}
@@ -739,5 +741,9 @@ public class SpielerService {
 			}
 		}
 		setGelbeKartenZurueck();
+	}
+
+	public List<Spieler> findeAlleSpielerEinesTeamsMitTrainingslagerTagen(Team team) {
+		return spielerRepository.findByTeamAndUebrigeTrainingslagerTageGreaterThan(team, 0);
 	}
 }

@@ -32,7 +32,8 @@
 								<table class="table table-hover">
 									<thead>
 										<tr class="table-active">
-											<th scope="col"></th>
+											<th scope="col">#</th>
+											<th scope="col">Nationalit&auml;t</th>
 											<th scope="col">Position</th>
 											<th scope="col">Name</th>
 											<th scope="col">Team</th>
@@ -49,6 +50,7 @@
 							    				class="form-control" />
 											</div>
 										</td>
+										<td><img th:src="@{${spieler.nationalitaet.landNameTyp.bild}}" /></td>
 										<td th:text="${spieler.position.positionsName}" />
 										<td> 
 											<div class="form-group">

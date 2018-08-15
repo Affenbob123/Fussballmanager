@@ -20,10 +20,10 @@
 					<div class="col-lg-11 main">
 						<hr>
 						<h4>Tabelle</h4>
-						<div class="container container-dropdowns">
+						<div class="container">
 							<div class="row justify-content-md-center">
 								<div class="col-md-auto">
-									<span>Land:</span>
+									<label>Land:</label>
 									<form action="#" th:action="@{/}+${ligaAuswahlHelper.land}+'/'+${ligaAuswahlHelper.liga}+'/'+${ligaAuswahlHelper.saison}+
 										'/'+${ligaAuswahlHelper.spieltag}" th:object="${ligaAuswahlHelper}" method="post">
 										<select class="custom-select" th:field="*{land}" onchange="this.form.submit();">
@@ -39,7 +39,7 @@
 									</form>
 								</div>
 								<div class="col-md-auto">
-									<span>Liga:</span>
+									<label>Liga:</label>
 									<form action="#" th:action="@{/}+${ligaAuswahlHelper.land}+'/'+${ligaAuswahlHelper.liga}+'/'+${ligaAuswahlHelper.saison}+
 										'/'+${ligaAuswahlHelper.spieltag}" th:object="${ligaAuswahlHelper}" method="post">
 										<select class="custom-select" th:field="*{liga}" onchange="this.form.submit();">
@@ -56,7 +56,7 @@
 								</div>
 								<div class="col-md-7"></div>
 								<div class="col-md-auto text-right">
-									<span>Saison:</span>
+									<label>Saison:</label>
 									<form action="#" th:action="@{/}+${ligaAuswahlHelper.land}+'/'+${ligaAuswahlHelper.liga}+'/'+${ligaAuswahlHelper.saison}+
 										'/'+${ligaAuswahlHelper.spieltag}" th:object="${ligaAuswahlHelper}" method="post">
 										<select class="custom-select" th:field="*{saison}" onchange="this.form.submit();">

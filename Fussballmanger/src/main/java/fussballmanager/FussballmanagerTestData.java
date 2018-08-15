@@ -209,7 +209,6 @@ public class FussballmanagerTestData {
 	}
 	
 	//@Scheduled(cron = "0 0/3 * * * ?", zone="Europe/Berlin")
-	@Scheduled(cron = "0 * * * * ?", zone="Europe/Berlin")
 	public void spielAnfang() {
 		List<Spiel> alleSpieleDesSpieltages = spielService.findeAlleSpieleEinerSaisonUndSpieltages(
 				saisonService.findeAktuelleSaison(), spieltagService.findeAktuellenSpieltag());
@@ -232,7 +231,6 @@ public class FussballmanagerTestData {
 	}
 	
 	//@Scheduled(cron = "15-59 0/3 * * * ?", zone="Europe/Berlin")
-	@Scheduled(cron = "5/1 * * * * ?", zone="Europe/Berlin")
 	public void simuliereSpieleErsteHalbzeit() {
 		spielminute++;
 		simuliereLigaspielErsteHalbzeit(spielminute);

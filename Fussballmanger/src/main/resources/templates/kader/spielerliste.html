@@ -11,13 +11,13 @@
 			<div class="col-2" th:insert="fragments/sidebar :: sidebar"></div>
 			<div class="col-10 main-content">
 				<div class="row">
-					<div class="col-lg-11">
+					<div class="col-11">
 						<div class="row" >
 							<div class="col-5"></div>
 							<div class="col-3" th:insert="fragments/aktuelleteamanzeige :: aktuelleteamanzeige"></div>
 						</div>
 					</div>
-					<div class="col-lg-11 main">
+					<div class="col-11 main">
 						<hr>
 						<h4 th:text="${aktuellesTeam.name}"></h4>
 						<div class="alert alert-success" th:if="${successMessage}">
@@ -26,8 +26,8 @@
 						<div class="alert alert-danger" th:if="${errorMessage}">
 				  			<strong><p th:utext="${errorMessage}"></p></strong>
 						</div>
-						<div class="col-lg-12">
-							<div class="row">
+						<div class="col-12">
+							<div class="row auswahl-team">
 								<div class="col-3" th:if="${spielstatusHelper.getAktuellenSpielstatus() == ''}">
 									<p>Formation:</p>
 									<form action="#" th:action="@{/team/}+${aktuellesTeam.id}+'/formation'" th:object="${aktuellesTeam}"
@@ -68,8 +68,8 @@
 									</form>
 								</div>
 							</div>
-							<div th:if="${anzahlDerEinwechslungen} &gt; 0">
-								<div class="auswechslungs-form" th:if="${spielstatusHelper.getAktuellenSpielstatus() != ''}">
+							<div class="auswechslungs-auswahl"th:if="${anzahlDerEinwechslungen} &gt; 0">
+								<div class="" th:if="${spielstatusHelper.getAktuellenSpielstatus() != ''}">
 									<p th:text="'Verf&uuml;gbare Auswechslungen: '+${anzahlDerEinwechslungen}"></p>
 									<form action="#" th:action="@{/team/}+${aktuellesTeam.id}+'/einwechseln'" th:object="${einzuwechselnderSpieler}"
 											method="post">
@@ -121,7 +121,7 @@
 								<tbody th:each="spieler, stat : ${alleSpielerDesAktuellenTeams}">
 									<tr>
 										<td th:text="${stat.index} + 1" />
-										<td th:text="${spieler.nationalitaet.getLandNameTyp().getName()}" />
+										<td><img th:src="@{${spieler.nationalitaet.landNameTyp.bild}}" /></td>
 										<td th:text="${spieler.position}" />
 										<td th:text="${spieler.aufstellungsPositionsTyp}" />
 										<td> 

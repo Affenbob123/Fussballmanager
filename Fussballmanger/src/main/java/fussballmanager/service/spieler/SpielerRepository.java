@@ -104,4 +104,6 @@ public interface SpielerRepository extends JpaRepository<Spieler, Long> {
 	List<Spieler> findByNationalitaetAndAlterAndPositionOrderByRoteKartenDesc(Land nationalitaet, int alter,
 			PositionenTypen position, Pageable seite);
 
+	List<Spieler> findByTeamAndUebrigeTrainingslagerTageGreaterThan(Team team, int i);
+
 }

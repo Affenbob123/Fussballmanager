@@ -58,7 +58,7 @@ public class Spieler implements Comparable<Spieler> {
 	
 	private int trainingslagerTage = 0;
 	
-	private Trainingslager trainingsLager = Trainingslager.KEIN_TRAININGSLAGER;
+	private Trainingslager trainingslager = Trainingslager.KEIN_TRAININGSLAGER;
 	
 	private int verletzungsTage = 0;
 	
@@ -92,7 +92,6 @@ public class Spieler implements Comparable<Spieler> {
 		this.talentwertErmittelt =  false;
 		this.erfahrung = 0;
 		this.motivation = 0;
-		this.trainingslagerTage = 10;
 		this.verletzungsTage = 0;
 		this.gehalt = (long) (spielerStaerke.getReinStaerke() * 100);
 		this.preis = (long) (spielerStaerke.getReinStaerke() * 1000);
@@ -183,12 +182,12 @@ public class Spieler implements Comparable<Spieler> {
 		this.trainingslagerTage = trainingslagerTage;
 	}
 
-	public Trainingslager getTrainingsLager() {
-		return trainingsLager;
+	public Trainingslager getTrainingslager() {
+		return trainingslager;
 	}
 
-	public void setTrainingsLager(Trainingslager trainingsLager) {
-		this.trainingsLager = trainingsLager;
+	public void setTrainingsLager(Trainingslager trainingslager) {
+		this.trainingslager = trainingslager;
 	}
 
 	public int getVerletzungsTage() {

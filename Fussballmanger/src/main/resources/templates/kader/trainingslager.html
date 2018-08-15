@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head th:insert="fragments/header :: head"></head>
+<head>
+	<link rel="stylesheet" href="/trainingslager.css" />
+</head>
+<body>
+	<div th:insert="fragments/header :: header"></div>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-2" th:insert="fragments/sidebar :: sidebar"></div>
+			<div class="col-10 main-content">
+				<div class="row">
+					<div class="col-11">
+						<div class="row" >
+							<div class="col-5"></div>
+							<div class="col-3" th:insert="fragments/aktuelleteamanzeige :: aktuelleteamanzeige"></div>
+						</div>
+					</div>
+					<div class="col-11 main">
+						<hr>
+						<h4 th:text="${aktuellesTeam.name}"></h4>
+						<div class="alert alert-success" th:if="${successMessage}">
+			  				<strong><p th:utext="${successMessage}"></p></strong>
+						</div>
+						<div class="alert alert-danger" th:if="${errorMessage}">
+				  			<strong><p th:utext="${errorMessage}"></p></strong>
+						</div>
+						<div class="col-12">
+							<form action="#" th:action="@{/team/}+${aktuellesTeam.id}+'/trainingslager'" th:object="${trainingslagerWrapper}"
+											method="post">
+								<div class="row trainingslager-auswahl">
+									<div class="col-3 buchen-button">
+										<label>Trainingslager:</label>
+										<select class="custom-select" data-width="auto" th:field="*{trainingslager}">
+											<option
+												  th:each="trainingslagerTyp : ${alleTrainingslagerTypen}" 
+												  th:text="${trainingslagerTyp.bezeichnung}"
+												  th:value="${trainingslagerTyp}">
+											</option>
+										</select>
+									</div>
+									<div class="col-2">
+										<button type="submit" value="submit" class="btn btn-sm btn-primary">Buchen</button>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col">
+										<table class="table table-hover">
+											<thead>
+												<tr class="table-active">
+													<th scope="col">#</th>
+													<th scope="col">Nationalit&auml;t</th>
+													<th scope="col">Position</th>
+													<th scope="col">Name</th>
+													<th scope="col">Alter</th>
+													<th scope="col">Reinst&auml;rke</th>
+													<th scope="col">TL-Tage</th>
+													<th scope="col"></th>
+													<th scope="col">Akt. gebucht</th>									
+												</tr>
+											</thead>
+											<tbody th:each="s, stat : ${trainingslagerWrapper.spieler}">
+												<tr>
+													<td th:text="${stat.index} + 1" />
+													<td th:text="${s.nationalitaet.getLandNameTyp().getName()}" />
+													<td th:text="${s.position}" />
+													<td> 
+														<a th:text="${s.name}" th:id="${s.id}" onClick="openWindowInNewWindow(this.id)"
+															href="#"></a>
+													</td>
+													<td th:text="${s.alter}" />
+													<td th:text="${zahlenFormat.format(s.spielerStaerke.reinStaerke)}" />
+													<td th:text="${s.uebrigeTrainingslagerTage}" />
+													<td th:if="${s.uebrigeTrainingslagerTage} > 0">
+														<select class="custom-select" data-width="auto" th:field="*{spieler[__${stat.index}__].trainingslagerTage}"
+															id="ausgewaehlteTrainingslagerTage" onchange="getAusgewaehlteTrainingslagerTage(this)">
+															<option
+																  th:each="i : ${#numbers.sequence(0, s.uebrigeTrainingslagerTage)}"
+																  
+																  th:value="${i}"
+																  th:text="${i}">
+															</option>
+														</select>
+														<input type="hidden"
+														th:name="|spieler[${stat.index}]|"
+														th:value="${s.id}" 
+														th:field="*{spieler[__${stat.index}__].id}"
+														>
+													</td>
+													<td th:unless="${s.trainingslagerTage} > 0">-</td>
+													<td th:if="${s.trainingslagerTage} > 0" th:text="${s.trainingslagerTage}+' im '+${s.trainingslager.bezeichnung}"></td>
+												</tr>
+									       	</tbody>
+										</table>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<th:block th:include="fragments/header :: scripts" />
+	<th:block>
+		<script>
+			function openWindowInNewWindow(id) {
+				var spielerId = id
+				window.open('../spieler/' + spielerId,'spieler','resizable,height=700,width=700'); 
+				return false;
+			}
+			window.onload = function() {
+				var uebrigeTrainingslagerTage = document.getElementById('uebrigeTrainingslagerTage').value
+				console.log(uebrigeTrainingslagerTage);
+			}
+			
+			
+			function getAusgewaehlteTrainingslagerTage(selectObject) {
+			    var ausgewaehlteTrainingslagerTage = selectObject.value;
+				berechneUebrigeTLTage();
+			    
+			}
+			
+			function berechneUebrigeTLTage() {
+				var uebrigeTLTage = document.getElementById('uebrigeTLTage');
+			}
+		</script>
+	</th:block>
+</body>
+</html>

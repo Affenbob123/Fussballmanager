@@ -1,6 +1,8 @@
 package fussballmanager.mvc.team;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -22,6 +24,7 @@ import fussballmanager.service.saison.spieltag.SpieltagService;
 import fussballmanager.service.spieler.AufstellungsPositionsTypen;
 import fussballmanager.service.spieler.Spieler;
 import fussballmanager.service.spieler.SpielerService;
+import fussballmanager.service.spieler.spielerzuwachs.Trainingslager;
 import fussballmanager.service.team.AusrichtungsTypen;
 import fussballmanager.service.team.EinsatzTypen;
 import fussballmanager.service.team.FormationsTypen;
@@ -119,5 +122,46 @@ public class TeamController {
 		spielerService.wechsleSpielerEin(einzugewechselterSpieler, spieler.getAufstellungsPositionsTyp());
 		
 		return "redirect:/team/{teamId}";
+	}
+	
+	@GetMapping("/team/{id}/trainingslager")
+	public String getTrainingslager(Model model, Authentication auth, @PathVariable("id") Long id) {
+		User aktuellerUser = userService.findeUser(auth.getName());
+		Team aktuellesTeam = teamService.findeTeam(id);
+		
+		aktuellerUser.setAktuellesTeam(aktuellesTeam);
+		
+		model.addAttribute("spielstatusHelper", new SpielstatusHelper());
+		model.addAttribute("aktuellesTeam", aktuellerUser.getAktuellesTeam());
+		model.addAttribute("aktuelleSaison", saisonService.findeAktuelleSaison());
+		model.addAttribute("aktuellerSpieltag", spieltagService.findeAktuellenSpieltag());
+		
+		List<Spieler> alleSpielerEinesTeamsMitTrainingslagerTagen = spielerService.findeAlleSpielerEinesTeamsMitTrainingslagerTagen(aktuellesTeam);
+		DecimalFormat zahlenFormat = new DecimalFormat("0.0");
+		TrainingslagerWrapper trainingslagerWrapper = new TrainingslagerWrapper();
+		trainingslagerWrapper.setSpieler(alleSpielerEinesTeamsMitTrainingslagerTagen);
+		List<Trainingslager> alleTrainingslagerTypen = new ArrayList<Trainingslager>();
+		for(Trainingslager trainingslager : Trainingslager.values()) {
+			if(!(trainingslager.equals(Trainingslager.KEIN_TRAININGSLAGER))) {
+				alleTrainingslagerTypen.add(trainingslager);
+			}
+		}
+		
+		model.addAttribute("trainingslagerWrapper", trainingslagerWrapper);
+		model.addAttribute("alleTrainingslagerTypen", alleTrainingslagerTypen);
+		model.addAttribute("zahlenFormat", zahlenFormat);
+		
+		return "kader/trainingslager";
+	}
+	
+	@PostMapping("/team/{id}/trainingslager")
+	public String bucheTrainingslager(Model model, Authentication auth, @ModelAttribute("trainingslagerWrapper") TrainingslagerWrapper trainingslagerWrapper) {
+		for(Spieler s : trainingslagerWrapper.getSpieler()) {
+			Spieler spieler = spielerService.findeSpieler(s.getId());
+			spieler.setTrainingslagerTage(s.getTrainingslagerTage());
+			spieler.setTrainingsLager(trainingslagerWrapper.getTrainingslager());
+			spielerService.aktualisiereSpieler(spieler);
+		}
+		return "redirect:/team/{id}/trainingslager";
 	}
 }

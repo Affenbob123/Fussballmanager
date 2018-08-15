@@ -2,7 +2,7 @@ package fussballmanager.service.spieler.spielerzuwachs;
 
 public enum Trainingslager {
 
-	KEIN_TRAININGSLAGER(1.0, 1.0, ""),
+	KEIN_TRAININGSLAGER(1.0, 1.0, "Kein Trainingslager"),
 	FERIENCAMP(2.0, 2.0, "Feriencamp"),
 	HOEHENTRAINIGSLAGER(3.0, 3.0, "Höhen Trainingslager"),
 	JUGENDINTERNAT(4.0, 4.0, "Jugendinternat");

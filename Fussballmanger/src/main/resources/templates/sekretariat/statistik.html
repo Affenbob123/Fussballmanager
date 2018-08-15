@@ -28,7 +28,7 @@
 						</div>
 						<div class="col-12 col-statistik-suche">
 							<form method="POST" th:action="@{/statistik/}+${statistikFormular.seitenNummer+1}" th:object="${statistikFormular}">
-								<div class="row justify-content-md-center">
+								<div class="row align-items-center h-100 justify-content-md-center">
 									<label>Position:</label>
 									<div class="col-md-auto">
 										<select class="custom-select" data-width="auto" data-style="btn-light" th:field="*{position}">
@@ -85,11 +85,11 @@
 								<thead>
 									<tr class="table-active">
 										<th scope="col">#</th>
-										<th scope="col">Position</th>
 										<th scope="col">Nationalit&auml;t</th>
+										<th scope="col">Position</th>
+										<th scope="col">Team</th>
 										<th scope="col">Alter</th>
 										<th scope="col">Name</th>
-										<th scope="col">Team</th>
 										<th scope="col">Reinst&auml;rke</th>
 										<th scope="col">Erfahrung</th>
 										<th scope="col">Tore</th>
@@ -101,16 +101,16 @@
 								<tbody th:each="spieler, stat : ${alleSpielerNachSuche}">
 									<tr>
 										<td th:text="${stat.index} * (${statistikFormular.seitenNummer} + 1) + 1" />
-										<td th:text="${spieler.position}" />
-										<td th:if="${spieler.nationalitaet}" th:text="${spieler.nationalitaet.landNameTyp.name}" />
+										<td th:if="${spieler.nationalitaet}"><img th:src="@{${spieler.nationalitaet.landNameTyp.bild}}" /></td>
 										<td th:unless="${spieler.nationalitaet}"></td>
+										<td th:text="${spieler.position}" />
+										<td th:if="${spieler.team}">
+											<a class="" th:text="${spieler.team.name}" th:href="@{/team/}+${spieler.team.id}"></a>
+										</td>
 										<td th:text="${spieler.alter}" />
 										<td> 
 											<a th:text="${spieler.name}" th:id="${spieler.id}" onClick="openWindowInNewWindow(this.id)"
 												href="#"></a>
-										</td>
-										<td th:if="${spieler.team}">
-											<a class="" th:text="${spieler.team.name}" th:href="@{/team/}+${spieler.team.id}"></a>
 										</td>
 										<td th:unless="${spieler.team}">
 											<a class="" th:text="Systemspieler"></a>
