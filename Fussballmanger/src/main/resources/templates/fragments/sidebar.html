@@ -38,7 +38,7 @@
 						${aktuellesTeam.liga.ligaNameTyp.getName()}+'/'+${aktuelleSaison.saisonNummer}+'/'+${aktuellerSpieltag.spieltagNummer}">Tabelle</a>
 	                </li>
 					<li class="nav-item">
-						<a class="nav-link" th:href="@{/}+${aktuellesTeam.id}+'/saison'">Saison</a>
+						<a class="nav-link" th:href="@{/team/}+${aktuellesTeam.id}+'/saison'">Saison</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" onClick="window.open('/liveticker','liveticker','resizable,height=600,width=900'); return false;"

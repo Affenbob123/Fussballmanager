@@ -14,7 +14,7 @@ public class Bilanz {
 	@GenericGenerator(name = "native", strategy = "native")
 	private long id;
 	
-	private long saldo = 0;
+	private long saldo = 10000000;
 	
 	private long stadionEinnahmen = 0;
 	

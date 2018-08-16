@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head th:insert="fragments/header :: head"></head>
+<head>
+	<link rel="stylesheet" href="/tabelle.css" />
+</head>
+<body>
+	<div th:insert="fragments/header :: header"></div>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="" th:insert="fragments/sidebar :: sidebar"></div>
+			<div class="col-lg-10 main-content">
+				<div class="row">
+					<div class="col-lg-11">
+						<div class="row" >
+							<div class="col-5"></div>
+							<div class="col-3" th:insert="fragments/aktuelleteamanzeige :: aktuelleteamanzeige"></div>
+						</div>
+					</div>
+					<div class="col-lg-11 main">
+						<hr>
+						<h4>Saison</h4>
+						<table class="table table-hover">
+							<thead>
+								<tr class="table-active">
+									<th scope="col">Spieltag</th>
+									<th scope="col">Spielbeginn</th>
+									<th scope="col">Heimmannschaft</th>
+									<th scope="col">Ergebnis</th>
+									<th scope="col">Gastmannschaft</th>
+								</tr>
+							</thead>
+							<tr class="" th:each="spielEintrag : ${alleSpieleEinesTeamsInEinerSaison}">
+								<td th:text="${spielEintrag.spieltag}" />
+								<td th:text="${spielEintrag.spielbeginnToString()}" />
+								<td>
+									<a th:text="${spielEintrag.heimmannschaftUndStaerkeToString()}" th:href="@{/team/}+${spielEintrag.heimmannschaft.id}"></a>
+								</td>
+								<td class="ergebnisInTabelle">
+									<a class="" th:href="@{/spiel/}+${spielEintrag.id}">
+										<span th:text="${spielEintrag.spielErgebnisToString()}"></span><br>
+										<span th:text="${spielEintrag.spielErgebnisHalbzeitToString()}"></span>
+									</a>
+								</td>
+								<td>
+									<a th:text="${spielEintrag.gastmannschaftUndStaerkeToString()}" th:href="@{/team/}+${spielEintrag.gastmannschaft.id}"></a>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<th:block th:replace="fragments/header :: scripts" />
+</body>
+</html>

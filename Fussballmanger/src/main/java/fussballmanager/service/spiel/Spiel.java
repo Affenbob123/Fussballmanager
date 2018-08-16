@@ -18,11 +18,12 @@ import org.hibernate.annotations.GenericGenerator;
 import fussballmanager.service.saison.Saison;
 import fussballmanager.service.saison.spieltag.Spieltag;
 import fussballmanager.service.spiel.spielereignisse.SpielEreignis;
+import fussballmanager.service.spieler.Spieler;
 import fussballmanager.service.team.Team;
 
 @Entity
 @Cacheable(false)
-public class Spiel {
+public class Spiel implements Comparable<Spiel>{
 	
 	@Id
 	@GeneratedValue(strategy= GenerationType.AUTO, generator="native")
@@ -218,5 +219,12 @@ public class Spiel {
 
 	public void setAktuelleSpielminute(int aktuelleSpielminute) {
 		this.aktuelleSpielminute = aktuelleSpielminute;
+	}
+
+	@Override
+	public int compareTo(Spiel compareTo) {
+		int compareSpieltag=((Spiel)compareTo).getSpieltag().getSpieltagNummer();
+		
+		return this.spieltag.getSpieltagNummer() - compareSpieltag;
 	}
 }

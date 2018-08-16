@@ -62,22 +62,9 @@ public class SpielService {
 	public List<Spiel> findeAlleSpiele() {
 		return spielRepository.findAll();
 	}
-		
-	public List<Spiel> findeAlleSpieleEinesTeams(Team team) {
-		List<Spiel> alleSpieleEinesTeams = spielRepository.findByGastmannschaft(team);
-		alleSpieleEinesTeams.addAll(spielRepository.findByHeimmannschaft(team));
-		
-		return alleSpieleEinesTeams;
-	}
 	
 	public List<Spiel> findeAlleSpieleEinesTeamsInEinerSaison(Team team, Saison saison) {
-		List<Spiel> alleSpieleEinerSaison = spielRepository.findBySaison(saison);
-		List<Spiel> alleSpieleEinesTeamsInEinerSaison = new ArrayList<>();
-		for(Spiel spiel : alleSpieleEinerSaison) {
-			if(spiel.getHeimmannschaft().equals(team) || spiel.getGastmannschaft().equals(team))
-			alleSpieleEinesTeamsInEinerSaison.add(spiel);
-		}
-		return alleSpieleEinesTeamsInEinerSaison;
+		return spielRepository.findByHeimmannschaftOrGastmannschaftAndSaison(team, team, saison);
 	}
 	
 	public List<Spiel> findeAlleSpieleEinerLiga(Liga liga) {
@@ -85,17 +72,18 @@ public class SpielService {
 		List<Team> alleTeamsDerLiga = teamService.findeAlleTeamsEinerLiga(liga);
 		
 		for(Team team : alleTeamsDerLiga) {
-			alleSpieleEinerLiga.addAll(findeAlleSpieleEinesTeams(team));
+			alleSpieleEinerLiga.addAll(spielRepository.findBySpielTypAndHeimmannschaftOrGastmannschaft(SpieleTypen.LIGASPIEL, team, team));
 		}
 		return alleSpieleEinerLiga;
 	}
 	
 	public List<Spiel> findeAlleSpieleEinerLigaUndSaisonUndSpieltag(Liga liga, Saison saison, Spieltag spieltag) {
-		List<Spiel> alleSpieleEinerSaisonEinesSpieltages = spielRepository.findBySaisonAndSpieltag(saison, spieltag);
+		List<Team> alleTeamsEinerLiga = teamService.findeAlleTeamsEinerLiga(liga);
 		List<Spiel> alleSpieleEinerLigaEinerSaisonEinesSpieltages = new ArrayList<>();
 		
-		for(Spiel spiel : alleSpieleEinerSaisonEinesSpieltages) {
-			if(spiel.getGastmannschaft().getLiga().equals(liga) && spiel.getHeimmannschaft().getLiga().equals(liga)) {
+		for(Team team : alleTeamsEinerLiga) {
+			Spiel spiel = spielRepository.findBySpielTypAndHeimmannschaftAndSaisonAndSpieltag(SpieleTypen.LIGASPIEL, team, saison, spieltag);
+			if(spiel != null) {
 				alleSpieleEinerLigaEinerSaisonEinesSpieltages.add(spiel);
 			}
 		}
@@ -111,14 +99,7 @@ public class SpielService {
 	}
 	
 	public List<Spiel> findeAlleSpieleEinerSaisonUndSpieltagesEinesTeams(Saison saison, Spieltag spieltag, Team team) {
-		List<Spiel> alleSpieleEinesSpieltagesEinesTeams = new ArrayList<>();
-		
-		for(Spiel spiel : findeAlleSpieleEinesTeams(team)) {
-			if(spiel.getHeimmannschaft().equals(team) || spiel.getGastmannschaft().equals(team)) {
-				alleSpieleEinesSpieltagesEinesTeams.add(spiel);
-			}
-		}
-		return alleSpieleEinesSpieltagesEinesTeams;
+		return spielRepository.findByHeimmannschaftOrGastmannschaftAndSaisonAndSpieltag(team, team, saison, spieltag);
 	}
 	
 	public List<Spiel> findeAlleAbgeschlossenenUndAngefangenenSpieleEinesTeamsNachSpielTypUndSaison(Team team, SpieleTypen spielTyp, Saison saison) {

@@ -1,4 +1,4 @@
-package fussballmanager.mvc.liga;
+package fussballmanager.mvc.saison;
 
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -6,17 +6,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import fussballmanager.helper.SpielstatusHelper;
 import fussballmanager.mvc.spiel.SpielEintrag;
@@ -30,32 +25,29 @@ import fussballmanager.service.saison.spieltag.Spieltag;
 import fussballmanager.service.saison.spieltag.SpieltagService;
 import fussballmanager.service.spiel.Spiel;
 import fussballmanager.service.spiel.SpielService;
-import fussballmanager.service.tabelle.TabellenEintrag;
-import fussballmanager.service.tabelle.TabellenEintragService;
+import fussballmanager.service.spieler.SpielerService;
 import fussballmanager.service.team.Team;
 import fussballmanager.service.team.TeamService;
 import fussballmanager.service.user.User;
 import fussballmanager.service.user.UserService;
 
 @Controller
-public class LigaController {
-	
-	private static final Logger LOG = LoggerFactory.getLogger(LigaController.class);
+public class SaisonController {
 	
 	@Autowired
 	LandService landService;
 	
 	@Autowired
-	TeamService teamService;
-	
-	@Autowired
 	LigaService ligaService;
 	
 	@Autowired
-	UserService userService;
+	TeamService teamService;
 	
 	@Autowired
-	SpielService spielService;
+	SpielerService spielerService;
+	
+	@Autowired
+	UserService userService;
 	
 	@Autowired
 	SaisonService saisonService;
@@ -64,61 +56,34 @@ public class LigaController {
 	SpieltagService spieltagService;
 	
 	@Autowired
-	TabellenEintragService tabellenEintragService;
+	SpielService spielService;
 
-	@GetMapping("/{landName}/{ligaName}/{saisonNummer}/{spieltagNummer}")
-	public String getLiga(Model model, Authentication auth, @PathVariable("landName") String landName, 
-			@PathVariable("ligaName") String ligaName, @PathVariable("saisonNummer") int saisonNummer, 
-			@PathVariable("spieltagNummer") int spieltagNummer) {
+	@GetMapping("/team/{teamId}/saison")
+	public String getSaison(Model model, Authentication auth, @PathVariable("teamId") Long teamId) {
 		User aktuellerUser = userService.findeUser(auth.getName());
 		
 		model.addAttribute("spielstatusHelper", new SpielstatusHelper());
 		model.addAttribute("aktuellesTeam", aktuellerUser.getAktuellesTeam());
 		model.addAttribute("aktuelleSaison", saisonService.findeAktuelleSaison());
 		model.addAttribute("aktuellerSpieltag", spieltagService.findeAktuellenSpieltag());
+		model.addAttribute("alleSpieleEinesTeamsInEinerSaison", erstelleSpielEintraegeEinesTeams(aktuellerUser.getAktuellesTeam(), 
+				saisonService.findeAktuelleSaison()));
 		
-		Land land = landService.findeLandDurchLandName(landName);
-		Liga liga = ligaService.findeLiga(landName, ligaName);
-		Saison saison = saisonService.findeSaisonDurchSaisonNummer(saisonNummer);
-		Spieltag spieltag = spieltagService.findeSpieltagDurchSaisonUndSpieltagNummer(saison, spieltagNummer);
-		LigaAuswahlHelper ligaAuswahlHelper = new LigaAuswahlHelper();
-		ligaAuswahlHelper.setLand(landName);
-		ligaAuswahlHelper.setLiga(ligaName);
-		ligaAuswahlHelper.setSaison(saisonNummer);
-		ligaAuswahlHelper.setSpieltag(spieltagNummer);
-		
-		List<TabellenEintrag> alleTabellenEintraegeEinerLiga = 
-				tabellenEintragService.findeAlleTabellenEintraegeEinerLigaInEinerSaison(liga, saison);
-		Collections.sort(alleTabellenEintraegeEinerLiga);
-		
-		model.addAttribute("ligaAuswahlHelper", ligaAuswahlHelper);
-		model.addAttribute("alleLaender", landService.findeAlleLaender());
-		model.addAttribute("alleLigenEinesLandes", ligaService.findeAlleLigenEinesLandes(landService.findeLandDurchLandName(landName)));
-		model.addAttribute("alleSaisons", saisonService.findeAlleSaisons());		
-		model.addAttribute("findeAlleSpieleEinerLigaEinerSaisonEinesSpieltages", 
-				erstelleSpielEintraegeEinerLiga(land, liga, saison, spieltag));
-		model.addAttribute("alleTabellenEintraegeEinerLiga", alleTabellenEintraegeEinerLiga);
-
-		return "tabelle";
+		return "saison";
 	}
 	
-	@PostMapping("/{landName}/{ligaName}/{saisonNummer}/{spieltagNummer}")
-	public String wechsleLandLigaSaisonOderSpieltag(@ModelAttribute("ligaAuswahlHelper") LigaAuswahlHelper ligaAuswahlHelper) {
-		return "redirect:/" + ligaAuswahlHelper.getLand() + "/" + ligaAuswahlHelper.getLiga()
-				+ "/" + ligaAuswahlHelper.getSaison() + "/" + ligaAuswahlHelper.getSpieltag();
-	}
-	
-	public List<SpielEintrag> erstelleSpielEintraegeEinerLiga(Land land, Liga liga, Saison saison, Spieltag spieltag) {
+	public List<SpielEintrag> erstelleSpielEintraegeEinesTeams(Team team, Saison saison) {
 		List<SpielEintrag> spielEintraege = new ArrayList<>();
-		List<Spiel> alleSpieleEinerLigaEinesSpieltages = 
-				spielService.findeAlleSpieleEinerLigaUndSaisonUndSpieltag(liga, saison, spieltag);
-		for (Spiel spiel : alleSpieleEinerLigaEinesSpieltages) {
-			spielEintraege.add(erstelleSpielEintragEinerLiga(spiel));
+		List<Spiel> alleSpielEinesTeamsInEinerSaison = spielService.findeAlleSpieleEinesTeamsInEinerSaison(team, saison);
+		Collections.sort(alleSpielEinesTeamsInEinerSaison);
+		
+		for (Spiel spiel : alleSpielEinesTeamsInEinerSaison) {
+			spielEintraege.add(erstelleSpielEintragEinesTeams(spiel));
 		}
 		return spielEintraege;
 	}
 	
-	public SpielEintrag erstelleSpielEintragEinerLiga(Spiel spiel) {
+	public SpielEintrag erstelleSpielEintragEinesTeams(Spiel spiel) {
 		SpielEintrag spielEintrag = new SpielEintrag();
 		
 		LocalTime aktuelleUhrzeit = LocalTime.now(ZoneId.of("Europe/Berlin"));
