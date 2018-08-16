@@ -34,6 +34,8 @@ import fussballmanager.service.spieler.Spieler;
 import fussballmanager.service.spieler.SpielerService;
 import fussballmanager.service.tabelle.TabellenEintrag;
 import fussballmanager.service.tabelle.TabellenEintragService;
+import fussballmanager.service.team.stadion.Stadion;
+import fussballmanager.service.team.stadion.StadionService;
 import fussballmanager.service.user.User;
 
 @Service
@@ -65,6 +67,9 @@ public class TeamService {
 	
 	@Autowired
 	BilanzService bilanzService;
+	
+	@Autowired
+	StadionService stadionService;
 	
 	public Team findeTeam(Long id) {
 		return teamRepository.getOne(id);
@@ -115,8 +120,10 @@ public class TeamService {
 			String standardName = sb.toString();
 			Bilanz bilanz = new Bilanz();
 			bilanzService.legeBilanzAn(bilanz);
+			Stadion stadion = new Stadion();
+			stadionService.legeStadionAn(stadion);
 
-			Team team = new Team(liga.getLand(), standardName, null, liga, bilanz);
+			Team team = new Team(liga.getLand(), standardName, null, liga, bilanz, stadion);
 			legeTeamAn(team);
 		}
 	}

@@ -45,6 +45,8 @@ import fussballmanager.service.team.AusrichtungsTypen;
 import fussballmanager.service.team.EinsatzTypen;
 import fussballmanager.service.team.Team;
 import fussballmanager.service.team.TeamService;
+import fussballmanager.service.team.stadion.Stadion;
+import fussballmanager.service.team.stadion.StadionService;
 import fussballmanager.service.user.User;
 import fussballmanager.service.user.UserService;
 import fussballmanager.spielsimulation.SpielSimulation;
@@ -90,6 +92,9 @@ public class FussballmanagerTestData {
 	@Autowired
 	BilanzService bilanzService;
 	
+	@Autowired
+	StadionService stadionService;
+	
 	String LoginA = "a";
 	String LoginB = "b";
 		
@@ -112,7 +117,10 @@ public class FussballmanagerTestData {
 		Bilanz bilanzA = new Bilanz();
 		bilanzService.legeBilanzAn(bilanzA);
 		
-		Team teamA = new Team(land, "Team A", null, liga, bilanzA);
+		Stadion stadionA = new Stadion();
+		stadionService.legeStadionAn(stadionA);
+		
+		Team teamA = new Team(land, "Team A", null, liga, bilanzA, stadionA);
 		teamA.setAusrichtungsTyp(AusrichtungsTypen.SEHROFFENSIV);
 		teamA.setEinsatzTyp(EinsatzTypen.BRUTAL);
 		teamService.legeTeamAn(teamA);
@@ -125,7 +133,10 @@ public class FussballmanagerTestData {
 		Bilanz bilanzB = new Bilanz();
 		bilanzService.legeBilanzAn(bilanzB);
 		
-		Team teamB = new Team(land, "Team B", null, liga, bilanzB);
+		Stadion stadionB = new Stadion();
+		stadionService.legeStadionAn(stadionB);
+		
+		Team teamB = new Team(land, "Team B", null, liga, bilanzB, stadionB);
 		teamB.setAusrichtungsTyp(AusrichtungsTypen.SEHROFFENSIV);
 		teamB.setEinsatzTyp(EinsatzTypen.BRUTAL);
 		teamService.legeTeamAn(teamB);

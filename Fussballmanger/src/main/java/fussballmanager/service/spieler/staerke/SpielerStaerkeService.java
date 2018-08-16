@@ -59,5 +59,4 @@ public class SpielerStaerkeService {
 	public void loescheSpielerStaerke(SpielerStaerke spielerStaerke) {
 		spielerStaerkeRepository.delete(spielerStaerke);
 	}
-
 }

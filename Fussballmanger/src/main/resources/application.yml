@@ -5,11 +5,11 @@ spring:
     console:
       enabled: true
       settings: 
-        web-allow-others: false  	
+        web-allow-others: true  	
   jpa: 
     hibernate: 
-      generate_statistics: true
-      format_sql: true
+      generate_statistics: false
+      format_sql: false
     show-sql: false
 
 fussballmanager:

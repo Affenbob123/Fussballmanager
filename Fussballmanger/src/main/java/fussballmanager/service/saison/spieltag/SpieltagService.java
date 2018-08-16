@@ -1,22 +1,20 @@
 package fussballmanager.service.saison.spieltag;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import fussballmanager.service.saison.Saison;
 import fussballmanager.service.saison.SaisonService;
-import fussballmanager.service.spiel.Spiel;
 import fussballmanager.service.spiel.SpielService;
 import fussballmanager.service.spieler.SpielerService;
 import fussballmanager.service.spieler.spielerzuwachs.SpielerZuwachsService;
 import fussballmanager.service.team.TeamService;
+import fussballmanager.service.team.stadion.StadionService;
 
 @Service
 @Transactional
@@ -41,6 +39,9 @@ public class SpieltagService {
 	
 	@Autowired
 	TeamService teamService;
+	
+	@Autowired
+	StadionService stadionService;
 	
 	public Spieltag findeSpieltag(Long id) {
 		return spieltagRepository.getOne(id);
@@ -121,5 +122,6 @@ public class SpieltagService {
 		//TODO optimieren
 		teamService.aufgabenBeiSpieltagWechsel();
 		spielerService.aufgabenBeiSpieltagWechsel();
+		stadionService.aufgabenBeiSpieltagWechsel();
 	}
 }

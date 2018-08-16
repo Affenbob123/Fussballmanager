@@ -13,6 +13,7 @@ import org.hibernate.annotations.GenericGenerator;
 import fussballmanager.service.finanzen.Bilanz;
 import fussballmanager.service.land.Land;
 import fussballmanager.service.liga.Liga;
+import fussballmanager.service.team.stadion.Stadion;
 import fussballmanager.service.user.User;
 
 
@@ -38,7 +39,8 @@ public class Team implements Comparable<Team> {
 	@OneToOne(fetch = FetchType.LAZY)
 	private Bilanz bilanz;
 	
-	private String spielort = "Unbenanntes Stadion";
+	@OneToOne(fetch = FetchType.LAZY)
+	private Stadion stadion;
 			
 	private final int maximaleSpielerAnzahl = 43;
 	
@@ -54,12 +56,13 @@ public class Team implements Comparable<Team> {
 	
 	private boolean imLiveticker = true;
 	
-	public Team(Land land, String name, User user, Liga liga, Bilanz bilanz) {
+	public Team(Land land, String name, User user, Liga liga, Bilanz bilanz, Stadion stadion) {
 		this.land = land;
 		this.name = name;
 		this.user = user;
 		this.liga = liga;
 		this.bilanz = bilanz;
+		this.stadion = stadion;
 	}
 	
 	public Team() {
@@ -106,12 +109,12 @@ public class Team implements Comparable<Team> {
 		this.liga = liga;
 	}
 
-	public String getSpielort() {
-		return spielort;
+	public Stadion getStadion() {
+		return stadion;
 	}
 
-	public void setSpielort(String spielort) {
-		this.spielort = spielort;
+	public void setStadion(Stadion stadion) {
+		this.stadion = stadion;
 	}
 
 	public int getMaximaleSpielerAnzahl() {

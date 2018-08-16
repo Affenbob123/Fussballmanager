@@ -22,7 +22,7 @@
 						<a class="nav-link ml-3 my-1" href="/nachrichten">Nachrichten</a>
 						<a class="nav-link ml-3 my-1" href="/statistik/1">Statistik</a>
 						<a class="nav-link ml-3 my-1" th:href="@{/team/}+${aktuellesTeam.id}+'/finanzen'">Finanzen</a>
-						<a class="nav-link ml-3 my-1" href="/auktionshaus">Auktionshaus</a>
+						<a class="nav-link ml-3 my-1" th:href="@{/team/}+${aktuellesTeam.id}+'/stadion'">Stadion</a>
 	                 </li>
 	                <li class="nav-item">
 	                    <a class="nav-link" th:href="@{/team/}+${aktuellesTeam.id}+'/aufstellung'">Kader</a>
@@ -49,9 +49,14 @@
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="/pokal">Pokal</a>
+						<a class="nav-link ml-3 my-1" th:href="@{/team/}+${aktuellesTeam.id}">National</a>
+						<a class="nav-link ml-3 my-1" th:href="@{/team/}+${aktuellesTeam.id}">International</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="/turniere">Turniere</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/auktionshaus">Auktionshaus</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="/community">Community</a>

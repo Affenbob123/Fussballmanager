@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+<head th:insert="fragments/header :: head"></head>
+<head>
+	<link rel="stylesheet" href="/finanzen.css" />
+</head>
+<body>
+	<div th:insert="fragments/header :: header"></div>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="" th:insert="fragments/sidebar :: sidebar"></div>
+			<div class="col-10 main-content">
+				<div class="row">
+					<div class="col-11">
+						<div class="row" >
+							<div class="col-5"></div>
+							<div class="col-3" th:insert="fragments/aktuelleteamanzeige :: aktuelleteamanzeige"></div>
+						</div>
+					</div>
+					<div class="col-11 main">
+						<hr>
+						<h4>Stadion</h4>
+						<div class="alert alert-success" th:if="${successMessage}">
+			  				<strong><p th:utext="${successMessage}"></p></strong>
+						</div>
+						<div class="alert alert-danger" th:if="${errorMessage}">
+				  			<strong><p th:utext="${errorMessage}"></p></strong>
+						</div>
+						<div class="col-12">
+							<h6>Aktuelle Stadionausbauten:</h6>
+							<table class="table table-hover">
+								<thead>
+									<tr class="table-active">
+										<th scope="col">Name</th>
+										<th scope="col"></th>
+										<th scope="col">Ausbaudauer</th>
+										<th scope="col"></th>
+									</tr>
+								</thead>
+								<tbody th:if="${(aktuellesTeam.stadion.aktuellAusgebauterTyp != null)
+								or (aktuellesTeam.stadion.sitzplatzAusbauTage > 0)}">
+									<tr th:if="${aktuellesTeam.stadion.aktuellAusgebauterTyp != null}">
+										<td th:text="${aktuellesTeam.stadion.aktuellAusgebauterTyp.bezeichnung}"></td>
+										<td th:text="'Stufe: '+${aktuellesTeam.stadion.aktuellAusgebauterTyp.aktuelleStufe + 1}"></td>
+										<td th:text="${aktuellesTeam.stadion.uebrigeAusbauTage}+' Tage'"></td>
+										<td>
+											<form action="#" th:action="@{/team/}+${aktuellesTeam.id}+'/stadion/abbrechen'" method="post"
+												th:object="${stadion}">
+												<input type="hidden" th:value="${null}" th:field="*{aktuellAusgebauterTyp}">
+												<button type="submit" class="btn btn-sm btn-link">
+													abbrechen
+												</button>
+											</form>
+										</td>
+									</tr>
+									<tr th:if="${aktuellesTeam.stadion.sitzplatzAusbauTage > 0}">
+										<td>Sitzp&auml;tze</td>
+										<td th:text="${aktuellesTeam.stadion.sitzplatzAusbauTage}+'000'"></td>
+										<td th:text="${aktuellesTeam.stadion.sitzplatzAusbauTage}+' Tage'"></td>
+										<td>
+											<form action="#" th:action="@{/team/}+${aktuellesTeam.id}+'/stadion/sitzplaetze/abbrechen'" method="post" 
+												th:object="${stadion}">
+												<input type="hidden" value="0" th:field="*{sitzplatzAusbauTage}">
+												<button type="submit" class="btn btn-sm btn-link">
+													abbrechen
+												</button>
+											</form>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="col-12">
+							<h6>Sitzpl&auml;tze:</h6>
+							<form action="#" th:action="@{/team/}+${aktuellesTeam.id}+'/stadion/sitzplaetze'" method="post" th:object="${stadion}">
+								<table class="table table-hover">
+									<thead>
+										<tr class="table-active">
+											<th scope="col">Akuelle Sitzp&auml;tze</th>
+											<th scope="col">Anzahl</th>
+											<th scope="col">Kosten</th>
+											<th scope="col"></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td th:text="${aktuellesTeam.stadion.sitzplaetze}"></td>
+											<td>
+											<div class="col-md-auto">
+												<select class="custom-select" th:field="*{sitzplatzAusbauTage}" 
+														id="sitzplatzTageAuswahl" onChange="berechneKosten()">
+													<option th:value="${1}">1 Tag</option>
+													<option th:value="${5}">5 Tage</option>
+													<option th:value="${10}">10 Tage</option>
+													<option th:value="${25}">25 Tage</option>
+													<option th:value="${50}">50 Tage</option>
+													<option th:value="${100}">100 Tage</option>
+												</select>
+											</div>
+											</td>
+											<td><span id="kosten">1000000</span></td>
+											<td th:unless="${aktuellesTeam.stadion.sitzplaetze >= aktuellesTeam.stadion.maximaleSitzplaetze}">
+												<button type="submit" class="btn btn-sm btn-link">
+													ausbauen
+												</button>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</form>
+						</div>
+						<div class="col-12">
+							<h6>Stadionausbaustufen:</h6>
+							<table class="table table-hover">
+								<thead>
+									<tr class="table-active">
+										<th scope="col">Name</th>
+										<th scope="col">Ausbaustufe</th>
+										<th scope="col">maximale Ausbaustufe</th>
+										<th scope="col">Ausbaudauer n&auml;chste Stufe</th>
+										<th scope="col"></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Imbiss</td>
+										<td th:text="${aktuellesTeam.stadion.imbiss.aktuelleStufe}"></td>
+										<td th:text="${aktuellesTeam.stadion.imbiss.maximaleStufe}"></td>
+										<td th:text="${(aktuellesTeam.stadion.imbiss.aktuelleStufe + 1) * 
+										aktuellesTeam.stadion.imbiss.ausbauDauer}+' Tage'"></td>
+										<td>
+											<div th:unless="${(aktuellesTeam.stadion.imbiss.aktuelleStufe >= aktuellesTeam.stadion.imbiss.maximaleStufe)
+											or aktuellesTeam.stadion.aktuellAusgebauterTyp != null}">
+												<form action="#" th:action="@{/team/}+${aktuellesTeam.id}+'/stadion'" method="post" th:object="${stadion}" >
+													<input type="hidden" id="aktuellAusgebauterTyp" name="aktuellAusgebauterTyp" 
+													th:value="${aktuellesTeam.stadion.imbiss}" >
+													<button type="submit" class="btn btn-sm btn-link">
+														ausbauen
+													</button>
+												</form>
+											</div>
+										</td>
+									</tr>
+									<tr >
+										<td>Trainingsgel&auml;nde</td>
+										<td th:text="${aktuellesTeam.stadion.trainingsGelaende.aktuelleStufe}"></td>
+										<td th:text="${aktuellesTeam.stadion.trainingsGelaende.maximaleStufe}"></td>
+										<td th:text="${(aktuellesTeam.stadion.trainingsGelaende.aktuelleStufe + 1) * 
+										aktuellesTeam.stadion.trainingsGelaende.ausbauDauer}+' Tage'"></td>
+										<td>
+											<div  th:unless="${(aktuellesTeam.stadion.trainingsGelaende.aktuelleStufe >= aktuellesTeam.stadion.trainingsGelaende.maximaleStufe)
+											or aktuellesTeam.stadion.aktuellAusgebauterTyp != null}">
+												<form action="#" th:action="@{/team/}+${aktuellesTeam.id}+'/stadion'" method="post" th:object="${stadion}">
+													<input type="hidden" id="aktuellAusgebauterTyp" name="aktuellAusgebauterTyp" 
+													th:value="${aktuellesTeam.stadion.trainingsGelaende}" >
+													<button type="submit" class="btn btn-sm btn-link">
+														ausbauen
+													</button>
+												</form>
+											</div>
+										</td>
+									</tr>
+									<tr >
+										<td>VIP-Lounge</td>
+										<td th:text="${aktuellesTeam.stadion.vipLounge.aktuelleStufe}"></td>
+										<td th:text="${aktuellesTeam.stadion.vipLounge.maximaleStufe}"></td>
+										<td th:text="${(aktuellesTeam.stadion.vipLounge.aktuelleStufe + 1) * 
+										aktuellesTeam.stadion.vipLounge.ausbauDauer}+' Tage'"></td>
+										<td>
+											<div th:unless="${(aktuellesTeam.stadion.vipLounge.aktuelleStufe >= aktuellesTeam.stadion.vipLounge.maximaleStufe)
+											or aktuellesTeam.stadion.aktuellAusgebauterTyp != null}">
+												<form action="#" th:action="@{/team/}+${aktuellesTeam.id}+'/stadion'" method="post" th:object="${stadion}">
+													<input type="hidden" id="aktuellAusgebauterTyp" name="aktuellAusgebauterTyp" 
+													th:value="${aktuellesTeam.stadion.vipLounge}" >
+													<button type="submit" class="btn btn-sm btn-link">
+														ausbauen
+													</button>
+												</form>
+											</div>
+										</td>
+									</tr>
+									<tr >
+										<td>Ersatzbank</td>
+										<td th:text="${aktuellesTeam.stadion.ersatzbank.aktuelleStufe}"></td>
+										<td th:text="${aktuellesTeam.stadion.ersatzbank.maximaleStufe}"></td>
+										<td th:text="${(aktuellesTeam.stadion.werbebanden.aktuelleStufe + 1) * 
+										aktuellesTeam.stadion.werbebanden.ausbauDauer}+' Tage'"></td>
+										<td>
+											<div th:unless="${(aktuellesTeam.stadion.ersatzbank.aktuelleStufe >= aktuellesTeam.stadion.ersatzbank.maximaleStufe)
+											or aktuellesTeam.stadion.aktuellAusgebauterTyp != null}">
+												<form action="#" th:action="@{/team/}+${aktuellesTeam.id}+'/stadion'" method="post" th:object="${stadion}">
+													<input type="hidden" id="aktuellAusgebauterTyp" name="aktuellAusgebauterTyp" 
+													th:value="${aktuellesTeam.stadion.ersatzbank}" >
+													<button type="submit" class="btn btn-sm btn-link">
+														ausbauen
+													</button>
+												</form>
+											</div>
+										</td>
+									</tr>
+									<tr >
+										<td>Werbebanden</td>
+										<td th:text="${aktuellesTeam.stadion.werbebanden.aktuelleStufe}"></td>
+										<td th:text="${aktuellesTeam.stadion.werbebanden.maximaleStufe}"></td>
+										<td th:text="${(aktuellesTeam.stadion.werbebanden.aktuelleStufe + 1) * 
+										aktuellesTeam.stadion.werbebanden.ausbauDauer}+' Tage'"></td>
+										<td>
+											<div th:unless="${(aktuellesTeam.stadion.werbebanden.aktuelleStufe >= aktuellesTeam.stadion.werbebanden.maximaleStufe)
+											or aktuellesTeam.stadion.aktuellAusgebauterTyp != null}">
+												<form action="#" th:action="@{/team/}+${aktuellesTeam.id}+'/stadion'" method="post" th:object="${stadion}">
+													<input type="hidden" id="aktuellAusgebauterTyp" name="aktuellAusgebauterTyp" 
+													th:value="${aktuellesTeam.stadion.werbebanden}" >
+													<button type="submit" class="btn btn-sm btn-link">
+														ausbauen
+													</button>
+												</form>
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<td>Jugendinternat</td>
+										<td th:text="${aktuellesTeam.stadion.jugendInternat.aktuelleStufe}"></td>
+										<td th:text="${aktuellesTeam.stadion.jugendInternat.maximaleStufe}"></td>
+										<td th:text="${(aktuellesTeam.stadion.jugendInternat.aktuelleStufe + 1) * 
+										aktuellesTeam.stadion.jugendInternat.ausbauDauer}+' Tage'"></td>
+										<td>
+											<div th:unless="${(aktuellesTeam.stadion.jugendInternat.aktuelleStufe >= aktuellesTeam.stadion.jugendInternat.maximaleStufe)
+											or aktuellesTeam.stadion.aktuellAusgebauterTyp != null}">
+												<form action="#" th:action="@{/team/}+${aktuellesTeam.id}+'/stadion'" method="post" th:object="${stadion}">
+													<input type="hidden" id="aktuellAusgebauterTyp" name="aktuellAusgebauterTyp" 
+													th:value="${aktuellesTeam.stadion.jugendInternat}" >
+													<button type="submit" class="btn btn-sm btn-link">
+														ausbauen
+													</button>
+												</form>
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<th:block th:replace="fragments/header :: scripts">
+	</th:block>
+	<script type="text/javascript">
+		function berechneKosten() {
+		    var kosten = document.getElementById("sitzplatzTageAuswahl").value;
+		    document.getElementById("kosten").innerHTML = kosten * 1000000;
+		}
+	</script>
+</body>
+</html>
