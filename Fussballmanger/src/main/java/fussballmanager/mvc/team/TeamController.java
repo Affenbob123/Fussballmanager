@@ -3,7 +3,10 @@ package fussballmanager.mvc.team;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,8 +62,8 @@ public class TeamController {
 	@Autowired
 	SpieltagService spieltagService;
 	
-	@GetMapping("/team/{id}")
-	public String getTeamListe(Model model, Authentication auth, @PathVariable("id") Long id) {
+	@GetMapping("/team/{teamId}")
+	public String getTeamListe(Model model, Authentication auth, @PathVariable("teamId") Long id) {
 		User aktuellerUser = userService.findeUser(auth.getName());
 		Team aktuellesTeam = teamService.findeTeam(id);
 		
@@ -92,31 +95,31 @@ public class TeamController {
 		return "kader/spielerliste";
 	}
 	
-	@PostMapping("/team/{id}/formation")
-	public String aendereFormation(Model model, Authentication auth, @PathVariable("id") Long id, @ModelAttribute("aktuellesTeam") Team aktuellesTeam) {
+	@PostMapping("/team/{teamId}/formation")
+	public String aendereFormation(Model model, Authentication auth, @PathVariable("teamId") Long id, @ModelAttribute("aktuellesTeam") Team aktuellesTeam) {
 		Team team = teamService.findeTeam(id);
 		team.setFormationsTyp(aktuellesTeam.getFormationsTyp());
 		teamService.aenderFormationEinesTeams(team, spielerService.findeAlleSpielerEinesTeams(team));
 		
-		return "redirect:/team/{id}";
+		return "redirect:/team/{teamId}";
 	}
 	
-	@PostMapping("/team/{id}/einsatz")
-	public String aendereEinsatz(Model model, Authentication auth, @PathVariable("id") Long id, @ModelAttribute("aktuellesTeam") Team aktuellesTeam) {
+	@PostMapping("/team/{teamId}/einsatz")
+	public String aendereEinsatz(Model model, Authentication auth, @PathVariable("teamId") Long id, @ModelAttribute("aktuellesTeam") Team aktuellesTeam) {
 		Team team = teamService.findeTeam(id);
 		team.setEinsatzTyp(aktuellesTeam.getEinsatzTyp());
 		teamService.aendereEinsatzEinesTeams(team);
 		
-		return "redirect:/team/{id}";
+		return "redirect:/team/{teamId}";
 	}
 	
-	@PostMapping("/team/{id}/ausrichtung")
-	public String aendereAusrichtung(Model model, Authentication auth, @PathVariable("id") Long id, @ModelAttribute("aktuellesTeam") Team aktuellesTeam) {
+	@PostMapping("/team/{teamId}/ausrichtung")
+	public String aendereAusrichtung(Model model, Authentication auth, @PathVariable("teamId") Long id, @ModelAttribute("aktuellesTeam") Team aktuellesTeam) {
 		Team team = teamService.findeTeam(id);
 		team.setAusrichtungsTyp(aktuellesTeam.getAusrichtungsTyp());
 		teamService.aktualisiereTeam(team);
 		
-		return "redirect:/team/{id}";
+		return "redirect:/team/{teamId}";
 	}
 	
 	@PostMapping("/team/{teamId}/einwechseln")
@@ -129,8 +132,8 @@ public class TeamController {
 		return "redirect:/team/{teamId}";
 	}
 	
-	@GetMapping("/team/{id}/trainingslager")
-	public String getTrainingslager(Model model, Authentication auth, @PathVariable("id") Long id) {
+	@GetMapping("/team/{teamId}/trainingslager")
+	public String getTrainingslager(Model model, Authentication auth, @PathVariable("teamId") Long id) {
 		User aktuellerUser = userService.findeUser(auth.getName());
 		Team aktuellesTeam = teamService.findeTeam(id);
 		
@@ -141,26 +144,38 @@ public class TeamController {
 		model.addAttribute("aktuelleSaison", saisonService.findeAktuelleSaison());
 		model.addAttribute("aktuellerSpieltag", spieltagService.findeAktuellenSpieltag());
 		
-		List<Spieler> alleSpielerEinesTeamsMitTrainingslagerTagen = spielerService.findeAlleSpielerEinesTeamsMitTrainingslagerTagen(aktuellesTeam);
+		Collection<Spieler> alleSpielerImTrainingslager = spielerService.findeAlleSpielerEinesTeamsDieImTrainingslagerSind(aktuellesTeam);
+		List<Spieler> alleSpielerfuerDieDasTrainingslagerGebuchtWerdenSoll = spielerService.alleSpielerFuerDieDasTrainingsalgerGebuchtWerdenSoll(aktuellesTeam);
+		List<Spieler> alleSpielerGebuchtOderImTrainingslager = new ArrayList<>();
+		alleSpielerGebuchtOderImTrainingslager.addAll(alleSpielerImTrainingslager);
+		alleSpielerGebuchtOderImTrainingslager.addAll(alleSpielerfuerDieDasTrainingslagerGebuchtWerdenSoll);
+				List<Spieler> alleSpielerNichtImTrainingslager = 
+				spielerService.findeAlleSpielerEinesTeamsDieNichtImTrainingslagerSindUndNochTLTageFreiHaben(aktuellesTeam);
 		DecimalFormat zahlenFormat = new DecimalFormat("0.0");
-		TrainingslagerWrapper trainingslagerWrapper = new TrainingslagerWrapper();
-		trainingslagerWrapper.setSpieler(alleSpielerEinesTeamsMitTrainingslagerTagen);
+		TrainingslagerWrapper trainingslagerWrapperNichtImTrainingslager = new TrainingslagerWrapper();
+		TrainingslagerWrapper trainingslagerWrapperImTrainingslager = new TrainingslagerWrapper();
 		List<Trainingslager> alleTrainingslagerTypen = new ArrayList<Trainingslager>();
+		
+		trainingslagerWrapperNichtImTrainingslager.setSpieler(alleSpielerNichtImTrainingslager);
+		trainingslagerWrapperImTrainingslager.setSpieler(alleSpielerGebuchtOderImTrainingslager);
+		
 		for(Trainingslager trainingslager : Trainingslager.values()) {
 			if(!(trainingslager.equals(Trainingslager.KEIN_TRAININGSLAGER))) {
 				alleTrainingslagerTypen.add(trainingslager);
 			}
 		}
-		
-		model.addAttribute("trainingslagerWrapper", trainingslagerWrapper);
+		model.addAttribute("trainingslagerWrapperNichtImTrainingslager", trainingslagerWrapperNichtImTrainingslager);
+		model.addAttribute("trainingslagerWrapperImTrainingslager", trainingslagerWrapperImTrainingslager);
 		model.addAttribute("alleTrainingslagerTypen", alleTrainingslagerTypen);
 		model.addAttribute("zahlenFormat", zahlenFormat);
+		model.addAttribute("spielerAusTrainingslagerHolen", new Spieler());
+		model.addAttribute("aufstellungsPositionsTypTrainingslager", AufstellungsPositionsTypen.TRAININGSLAGER);
 		
 		return "kader/trainingslager";
 	}
 	
-	@PostMapping("/team/{id}/trainingslager")
-	public String bucheTrainingslager(Model model, Authentication auth, @ModelAttribute("trainingslagerWrapper") TrainingslagerWrapper trainingslagerWrapper) {
+	@PostMapping("/team/{teamId}/trainingslager")
+	public String bucheTrainingslager(Model model, Authentication auth, @ModelAttribute("trainingslagerWrapperNichtImTrainingslager") TrainingslagerWrapper trainingslagerWrapper) {
 		for(Spieler s : trainingslagerWrapper.getSpieler()) {
 			Spieler spieler = spielerService.findeSpieler(s.getId());
 			spieler.setTrainingslagerTage(s.getTrainingslagerTage());
@@ -171,7 +186,22 @@ public class TeamController {
 			}
 			spielerService.aktualisiereSpieler(spieler);
 		}
-		return "redirect:/team/{id}/trainingslager";
+		return "redirect:/team/{teamId}/trainingslager";
+	}
+	
+	@PostMapping("/team/{teamId}/trainingslager/abbrechen")
+	public String brecheTrainingslagerAb(Model model, Authentication auth, @ModelAttribute("spielerAusTrainingslagerHolen") Spieler spieler) {
+		Spieler s = spielerService.findeSpieler(spieler.getId());
+		
+		if(s.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.TRAININGSLAGER)) {
+			s.setTrainingslagerTage(1);
+		} else {
+			s.setTrainingslagerTage(0);
+			s.setTrainingsLager(Trainingslager.KEIN_TRAININGSLAGER);
+		}
+		
+		spielerService.aktualisiereSpieler(s);
+		return "redirect:/team/{teamId}/trainingslager";
 	}
 	
 	public SummeSpielerWerte erstelleSummeDerSpielerWerteListe(List<Spieler> spielerDesTeams) {

@@ -36,7 +36,7 @@ public class SpielerService {
 	private static final Logger LOG = LoggerFactory.getLogger(SpielerService.class);
 	
 	private final int  minTalentwert = 0;
-	private final int maxTalentwert = 100;
+	private final int maxTalentwert = 200;
 	private final int anzahlSpielerProPositionUndAlter = 5;
 		
 	@Autowired
@@ -674,15 +674,15 @@ public class SpielerService {
 		List<Spieler> alleSpielerMitTeam = findeAlleSpielerMitTeam();
 		
 		for(Spieler spieler: alleSpielerMitTeam) {
+			ueberpruefeUndBucheTrainingslager(spieler);
 			spieler.setSpielerZuwachs(berechneSpielerZuwachsFuerEinenSpieler(spieler));
 			reinStaerkeAendern(spieler, spieler.getSpielerZuwachs());
 			spieler.setGehalt(berechneGehalt(spieler));
-			ueberpruefeUndBucheTrainingslager(spieler);
 			reduziereVerletzungSperreTrainingslager(spieler);
 		}		
 	}
 	
-	private long berechneGehalt(Spieler spieler) {
+	public long berechneGehalt(Spieler spieler) {
 		long gehalt;
 		gehalt = (long) (spieler.getSpielerStaerke().getReinStaerke() * 100); 
 				
@@ -699,7 +699,7 @@ public class SpielerService {
 	}
 
 	public double berechneSpielerZuwachsFuerEinenSpieler(Spieler spieler) {
-		double defaultZuwachs = 2.0;
+		double defaultZuwachs = 1.0;
 		double maximaleErfahrung = 75;
 		
 		int alter = spieler.getAlter();
@@ -762,7 +762,16 @@ public class SpielerService {
 		setGelbeKartenZurueck();
 	}
 
-	public List<Spieler> findeAlleSpielerEinesTeamsMitTrainingslagerTagen(Team team) {
-		return spielerRepository.findByTeamAndUebrigeTrainingslagerTageGreaterThan(team, 0);
+	public List<Spieler> findeAlleSpielerEinesTeamsDieImTrainingslagerSind(Team team) {
+		return spielerRepository.findByTeamAndAufstellungsPositionsTyp(team, AufstellungsPositionsTypen.TRAININGSLAGER);
+	}
+
+	public List<Spieler> findeAlleSpielerEinesTeamsDieNichtImTrainingslagerSindUndNochTLTageFreiHaben(
+			Team team) {
+		return spielerRepository.findByTeamAndTrainingslagerLikeAndUebrigeTrainingslagerTageGreaterThan(team, Trainingslager.KEIN_TRAININGSLAGER, 0);
+	}
+
+	public List<Spieler> alleSpielerFuerDieDasTrainingsalgerGebuchtWerdenSoll(Team team) {
+		return spielerRepository.findByTeamAndAufstellungsPositionsTypNotLikeAndTrainingslagerTageGreaterThan(team, AufstellungsPositionsTypen.TRAININGSLAGER, 0);
 	}
 }

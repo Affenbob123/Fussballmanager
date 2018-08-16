@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import fussballmanager.service.land.LaenderNamenTypen;
 import fussballmanager.service.land.Land;
+import fussballmanager.service.spieler.spielerzuwachs.Trainingslager;
 import fussballmanager.service.spieler.staerke.SpielerStaerke;
 import fussballmanager.service.team.Team;
 
@@ -104,6 +105,14 @@ public interface SpielerRepository extends JpaRepository<Spieler, Long> {
 	List<Spieler> findByNationalitaetAndAlterAndPositionOrderByRoteKartenDesc(Land nationalitaet, int alter,
 			PositionenTypen position, Pageable seite);
 
-	List<Spieler> findByTeamAndUebrigeTrainingslagerTageGreaterThan(Team team, int i);
+	List<Spieler> findByTeamAndTrainingslagerNotLike(Team team, Trainingslager keinTrainingslager);
+
+	List<Spieler> findByTeamAndTrainingslagerLikeAndUebrigeTrainingslagerTageGreaterThan(Team team,
+			Trainingslager keinTrainingslager, int i);
+
+	List<Spieler> findByTeamAndAufstellungsPositionsTyp(Team team, AufstellungsPositionsTypen trainingslager);
+
+	List<Spieler> findByTeamAndAufstellungsPositionsTypNotLikeAndTrainingslagerTageGreaterThan(Team team,
+			AufstellungsPositionsTypen trainingslager, int i);
 
 }

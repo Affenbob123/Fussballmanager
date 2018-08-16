@@ -127,7 +127,7 @@
 						</div>
 						<div class="row">
 							<div class="col-lg-3">
-								<form action="#" th:action="@{/statistik/} + ${statistikFormular.seitenNummer}" method="get">
+								<form action="#" th:action="@{/statistik/} + ${seite-1}" method="get">
 									<button type="submit" class="btn btn-sm btn-link wechsel-btn">
 										&lt;&lt; Vorherige
 									</button>
@@ -139,7 +139,7 @@
 							</div>
 							<div class="col col-lg-3"></div>
 							<div class="col text-right">
-								<form action="#" th:action="@{/statistik/} + ${statistikFormular.seitenNummer+2}" method="get">
+								<form action="#" th:action="@{/statistik/} + ${seite+1}" method="get">
 									<button type="submit" class="btn btn-sm btn-link wechsel-btn">
 										N&auml;chste &gt;&gt;
 									</button>
