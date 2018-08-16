@@ -14,7 +14,7 @@ public class Bilanz {
 	@GenericGenerator(name = "native", strategy = "native")
 	private long id;
 	
-	private long saldo = 10000000;
+	private long saldo = 0;
 	
 	private long stadionEinnahmen = 0;
 	
@@ -24,11 +24,15 @@ public class Bilanz {
 	
 	private long spielerVerkaufEinnahmen = 0;
 	
+	private long sonstigeEinnahmen = 10000000;
+	
 	private long gehaelterAusgaben = 0;
 	
 	private long trainingsAusgaben = 0;
 	
 	private long spielerEinkaufAusgaben = 0;
+	
+	private long zinsAufwendungen = 0;
 	
 	private long sonstigeAusgaben = 0;
 	
@@ -84,6 +88,15 @@ public class Bilanz {
 		this.spielerVerkaufEinnahmen = spielerVerkaufEinnahmen;
 	}
 
+	public long getSonstigeEinnahmen() {
+		return sonstigeEinnahmen;
+	}
+
+
+	public void setSonstigeEinnahmen(long sonstigeEinnahmen) {
+		this.sonstigeEinnahmen = sonstigeEinnahmen;
+	}
+
 	public long getGehaelterAusgaben() {
 		return gehaelterAusgaben;
 	}
@@ -107,6 +120,16 @@ public class Bilanz {
 	public void setSpielerEinkaufAusgaben(long spielerEinkaufAusgaben) {
 		this.spielerEinkaufAusgaben = spielerEinkaufAusgaben;
 	}
+
+	public long getZinsAufwendungen() {
+		return zinsAufwendungen;
+	}
+
+
+	public void setZinsAufwendungen(long zinsAufwendungen) {
+		this.zinsAufwendungen = zinsAufwendungen;
+	}
+
 
 	public long getSonstigeAusgaben() {
 		return sonstigeAusgaben;

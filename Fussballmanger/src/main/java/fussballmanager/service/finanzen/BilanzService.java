@@ -62,16 +62,18 @@ public class BilanzService {
 		Bilanz bilanzDesTeams = team.getBilanz();
 		
 		//TODO einnahmen, trainingsausgaben
-		bilanzDesTeams.setStadionEinnahmen(1000000);
+		bilanzDesTeams.setStadionEinnahmen(bilanzDesTeams.getStadionEinnahmen() + 1000000);
 		bilanzDesTeams.setSponsorenEinnahmen(0);
 		bilanzDesTeams.setPraemienEinnahmen(0);
-		bilanzDesTeams.setGehaelterAusgaben(teamService.berechneGehaelterEinesTeams(team, alleSpielerEinesTeams));
+		bilanzDesTeams.setGehaelterAusgaben(bilanzDesTeams.getGehaelterAusgaben() + teamService.berechneGehaelterEinesTeams(team, alleSpielerEinesTeams));
 		bilanzDesTeams.setTrainingsAusgaben(0);
 		bilanzDesTeams.setSonstigeAusgaben(0);
 		
-		long summeEinnahmen = bilanzDesTeams.getStadionEinnahmen() + bilanzDesTeams.getSponsorenEinnahmen() + bilanzDesTeams.getPraemienEinnahmen();
-		long summeAusgaben = bilanzDesTeams.getGehaelterAusgaben() + bilanzDesTeams.getTrainingsAusgaben() + bilanzDesTeams.getSonstigeAusgaben();
-		long saldo = bilanzDesTeams.getSaldo() + summeEinnahmen - summeAusgaben;
+		long summeEinnahmen = bilanzDesTeams.getStadionEinnahmen() + bilanzDesTeams.getSponsorenEinnahmen() + bilanzDesTeams.getSonstigeEinnahmen() +
+				bilanzDesTeams.getPraemienEinnahmen() + bilanzDesTeams.getSpielerVerkaufEinnahmen();
+		long summeAusgaben = bilanzDesTeams.getGehaelterAusgaben() + bilanzDesTeams.getTrainingsAusgaben() + bilanzDesTeams.getZinsAufwendungen() +
+				bilanzDesTeams.getSonstigeAusgaben() + bilanzDesTeams.getSpielerEinkaufAusgaben();
+		long saldo = summeEinnahmen - summeAusgaben;
 		bilanzDesTeams.setSaldo(saldo);
 		aktualisiereBilanz(bilanzDesTeams);
 	}

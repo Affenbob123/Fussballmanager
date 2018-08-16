@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head th:insert="fragments/header :: head"></head>
+<head>
+	<link rel="stylesheet" href="/finanzen.css" />
+</head>
+<body>
+	<div th:insert="fragments/header :: header"></div>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="" th:insert="fragments/sidebar :: sidebar"></div>
+			<div class="col-10 main-content">
+				<div class="row">
+					<div class="col-11">
+						<div class="row" >
+							<div class="col-5"></div>
+							<div class="col-3" th:insert="fragments/aktuelleteamanzeige :: aktuelleteamanzeige"></div>
+						</div>
+					</div>
+					<div class="col-11 main">
+						<hr>
+						<h4>Finanzen</h4>
+						<div class="alert alert-success" th:if="${successMessage}">
+			  				<strong><p th:utext="${successMessage}"></p></strong>
+						</div>
+						<div class="alert alert-danger" th:if="${errorMessage}">
+				  			<strong><p th:utext="${errorMessage}"></p></strong>
+						</div>
+						<div class="row">
+							<div class="col">
+								<table class="table table-hover">
+									<thead>
+										<tr class="table-active">
+											<th scope="col">Aufwand</th>
+											<th scope="col"></th>
+											<th scope="col"></th>
+											<th class="text-right" scope="col">Ertrag</th>
+										</tr>
+									</thead>
+									<tr class="">
+										<td>Gehalt</td>
+										<td class="bilanz-strich-mitte text-right text-danger" th:text="${aktuellesTeam.bilanz.gehaelterAusgaben}" />
+										<td class="" th:text="${aktuellesTeam.bilanz.sponsorenEinnahmen}" />
+										<td class="text-right">Sponsoren</td>
+									</tr>
+									<tr class="">
+										<td>Training</td>
+										<td class="bilanz-strich-mitte text-right text-danger" th:text="${aktuellesTeam.bilanz.trainingsAusgaben}" />
+										<td class="" th:text="${aktuellesTeam.bilanz.praemienEinnahmen}" />
+										<td class="text-right">Pr&auml;mien</td>
+									</tr>
+									<tr class="">
+										<td>Spielereinkauf</td>
+										<td class="bilanz-strich-mitte text-right text-danger" th:text="${aktuellesTeam.bilanz.spielerEinkaufAusgaben}" />
+										<td class="" th:text="${aktuellesTeam.bilanz.spielerVerkaufEinnahmen}" />
+										<td class="text-right">Spielerverkauf</td>
+									</tr>
+									<tr class="">
+										<td>Zinsaufwendungen</td>
+										<td class="bilanz-strich-mitte text-right text-danger" th:text="${aktuellesTeam.bilanz.zinsAufwendungen}" />
+										<td class="" th:text="${aktuellesTeam.bilanz.stadionEinnahmen}" />
+										<td class="text-right">Stadion</td>
+									</tr>
+									<tr class="">
+										<td>Sonstige Ausgaben</td>
+										<td class="bilanz-strich-mitte text-right text-danger" th:text="${aktuellesTeam.bilanz.sonstigeAusgaben}" />
+										<td class="" th:text="${aktuellesTeam.bilanz.sonstigeEinnahmen}" />
+										<td class="text-right">Sonstige Einnahmen</td>
+									</tr>
+									<tr class="bilanz-strich-oben">
+										<td><strong><span>Summe:</span></strong></td>
+										<td class="text-right text-danger" 
+											th:text="${aktuellesTeam.bilanz.gehaelterAusgaben+aktuellesTeam.bilanz.trainingsAusgaben+
+											aktuellesTeam.bilanz.spielerEinkaufAusgaben+aktuellesTeam.bilanz.sonstigeAusgaben+
+											aktuellesTeam.bilanz.zinsAufwendungen}"></td>
+										<td class="" th:text="${aktuellesTeam.bilanz.sponsorenEinnahmen+aktuellesTeam.bilanz.praemienEinnahmen+
+											aktuellesTeam.bilanz.spielerVerkaufEinnahmen+aktuellesTeam.bilanz.stadionEinnahmen+
+											aktuellesTeam.bilanz.sonstigeEinnahmen}"></td>
+										<td></td>
+									</tr>
+									<tr>
+										<td class="border-0"></td>
+										<td class="border-0"></td>
+										<td class="border-0"></td>
+										<td th:if="${aktuellesTeam.bilanz.saldo} >= 0" class="text-center bilanz-strich-summe">
+											<strong><span th:text="'+'+${aktuellesTeam.bilanz.saldo}"></span></strong>
+										</td>
+										<td th:unless="${aktuellesTeam.bilanz.saldo} >= 0" class="text-center text-danger bilanz-strich-summe">
+											<strong><span th:text="'+'+${aktuellesTeam.bilanz.saldo}"></span></strong>
+										</td>
+									</tr>
+								</table>						
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<th:block th:replace="fragments/header :: scripts" />
+</body>
+</html>

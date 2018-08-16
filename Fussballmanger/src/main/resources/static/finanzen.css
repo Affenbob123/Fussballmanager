@@ -1,0 +1,11 @@
+.bilanz-strich-mitte {
+	border-right: 2px solid black;
+}
+
+.bilanz-strich-oben {
+	border-top: 2px solid black;
+}
+
+.bilanz-strich-summe {
+	border-top: 3px solid black !important;
+}
