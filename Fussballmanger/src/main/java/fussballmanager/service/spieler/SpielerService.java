@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -120,8 +121,8 @@ public class SpielerService {
 		return alleSpielerEinesTeamsAufErsatzbank;
 	}
 	
-	public List<Spieler> findeZwanzigSpielerNachSortierTyp(StatistikFormular statistikFormular) {
-		PageRequest seite = PageRequest.of(statistikFormular.getSeitenNummer(), 15);
+	public List<Spieler> findeFuenfzehnSpielerNachSortierTyp(StatistikFormular statistikFormular, int seite) {
+		PageRequest statistikSeite = PageRequest.of(seite-1, 15);
 		List<Spieler> spielerListe = new ArrayList<>();
 		Land land;
 		if(statistikFormular.getLandNameTyp() == null) {
@@ -132,140 +133,140 @@ public class SpielerService {
 		
 		if(statistikFormular.getSortierTyp().equals(SortierTypen.STAERKE)) {
 			if((statistikFormular.getLandNameTyp() == null) && (statistikFormular.getAlter() < 0) && (statistikFormular.getPosition() == null)) {
-				spielerListe = spielerRepository.findByOrderBySpielerStaerkeReinStaerkeDesc(seite);
+				spielerListe = spielerRepository.findByOrderBySpielerStaerkeReinStaerkeDesc(statistikSeite);
 			} else if((statistikFormular.getAlter() < 0) && (statistikFormular.getPosition() == null)) {
-				spielerListe = spielerRepository.findByNationalitaetOrderBySpielerStaerkeReinStaerkeDesc(land, seite);
+				spielerListe = spielerRepository.findByNationalitaetOrderBySpielerStaerkeReinStaerkeDesc(land, statistikSeite);
 			} else if((statistikFormular.getLandNameTyp() == null) && (statistikFormular.getPosition() == null)) {
-				spielerListe = spielerRepository.findByAlterOrderBySpielerStaerkeReinStaerkeDesc( statistikFormular.getAlter(), seite);
+				spielerListe = spielerRepository.findByAlterOrderBySpielerStaerkeReinStaerkeDesc( statistikFormular.getAlter(), statistikSeite);
 			} else if((statistikFormular.getLandNameTyp() == null) && (statistikFormular.getAlter() < 0)) {
-				spielerListe = spielerRepository.findByPositionOrderBySpielerStaerkeReinStaerkeDesc(statistikFormular.getPosition(), seite);
+				spielerListe = spielerRepository.findByPositionOrderBySpielerStaerkeReinStaerkeDesc(statistikFormular.getPosition(), statistikSeite);
 			} else if(statistikFormular.getLandNameTyp() == null) {
 				spielerListe = spielerRepository.findByAlterAndPositionOrderBySpielerStaerkeReinStaerkeDesc(statistikFormular.getAlter(), 
-						statistikFormular.getPosition(), seite);
+						statistikFormular.getPosition(), statistikSeite);
 			} else if(statistikFormular.getPosition() == null) {
 				spielerListe = spielerRepository.findByNationalitaetAndAlterOrderBySpielerStaerkeReinStaerkeDesc(land, 
-						statistikFormular.getAlter(), seite);
+						statistikFormular.getAlter(), statistikSeite);
 			} else if(statistikFormular.getAlter() < 0) {
 				spielerListe = spielerRepository.findByNationalitaetAndPositionOrderBySpielerStaerkeReinStaerkeDesc(land, 
-						statistikFormular.getPosition(), seite);
+						statistikFormular.getPosition(), statistikSeite);
 			} else {
 				spielerListe = spielerRepository.findByNationalitaetAndAlterAndPositionOrderBySpielerStaerkeReinStaerkeDesc(land, 
-						statistikFormular.getAlter(), statistikFormular.getPosition(), seite);
+						statistikFormular.getAlter(), statistikFormular.getPosition(), statistikSeite);
 			}
 		}
 		if(statistikFormular.getSortierTyp().equals(SortierTypen.ERFAHRUNG)) {
 			if((statistikFormular.getLandNameTyp() == null) && (statistikFormular.getAlter() < 0) && (statistikFormular.getPosition() == null)) {
-				spielerListe = spielerRepository.findByOrderByErfahrungDesc(seite);
+				spielerListe = spielerRepository.findByOrderByErfahrungDesc(statistikSeite);
 			} else if((statistikFormular.getAlter() < 0) && (statistikFormular.getPosition() == null)) {
-				spielerListe = spielerRepository.findByNationalitaetOrderByErfahrungDesc(land, seite);
+				spielerListe = spielerRepository.findByNationalitaetOrderByErfahrungDesc(land, statistikSeite);
 			} else if((statistikFormular.getLandNameTyp() == null) && (statistikFormular.getPosition() == null)) {
-				spielerListe = spielerRepository.findByAlterOrderByErfahrungDesc( statistikFormular.getAlter(), seite);
+				spielerListe = spielerRepository.findByAlterOrderByErfahrungDesc( statistikFormular.getAlter(), statistikSeite);
 			} else if((statistikFormular.getLandNameTyp() == null) && (statistikFormular.getAlter() < 0)) {
-				spielerListe = spielerRepository.findByPositionOrderByErfahrungDesc(statistikFormular.getPosition(), seite);
+				spielerListe = spielerRepository.findByPositionOrderByErfahrungDesc(statistikFormular.getPosition(), statistikSeite);
 			} else if(statistikFormular.getLandNameTyp() == null) {
 				spielerListe = spielerRepository.findByAlterAndPositionOrderByErfahrungDesc(statistikFormular.getAlter(), 
-						statistikFormular.getPosition(), seite);
+						statistikFormular.getPosition(), statistikSeite);
 			} else if(statistikFormular.getPosition() == null) {
 				spielerListe = spielerRepository.findByNationalitaetAndAlterOrderByErfahrungDesc(land, 
-						statistikFormular.getAlter(), seite);
+						statistikFormular.getAlter(), statistikSeite);
 			} else if(statistikFormular.getAlter() < 0) {
 				spielerListe = spielerRepository.findByNationalitaetAndPositionOrderByErfahrungDesc(land, 
-						statistikFormular.getPosition(), seite);
+						statistikFormular.getPosition(), statistikSeite);
 			} else {
 				spielerListe = spielerRepository.findByNationalitaetAndAlterAndPositionOrderByErfahrungDesc(land, 
-						statistikFormular.getAlter(), statistikFormular.getPosition(), seite);
+						statistikFormular.getAlter(), statistikFormular.getPosition(), statistikSeite);
 			}
 		}
 		if(statistikFormular.getSortierTyp().equals(SortierTypen.TORE)) {
 			if((statistikFormular.getLandNameTyp() == null) && (statistikFormular.getAlter() < 0) && (statistikFormular.getPosition() == null)) {
-				spielerListe = spielerRepository.findByOrderByToreDesc(seite);
+				spielerListe = spielerRepository.findByOrderByToreDesc(statistikSeite);
 			} else if((statistikFormular.getAlter() < 0) && (statistikFormular.getPosition() == null)) {
-				spielerListe = spielerRepository.findByNationalitaetOrderByToreDesc(land, seite);
+				spielerListe = spielerRepository.findByNationalitaetOrderByToreDesc(land, statistikSeite);
 			} else if((statistikFormular.getLandNameTyp() == null) && (statistikFormular.getPosition() == null)) {
-				spielerListe = spielerRepository.findByAlterOrderByToreDesc( statistikFormular.getAlter(), seite);
+				spielerListe = spielerRepository.findByAlterOrderByToreDesc( statistikFormular.getAlter(), statistikSeite);
 			} else if((statistikFormular.getLandNameTyp() == null) && (statistikFormular.getAlter() < 0)) {
-				spielerListe = spielerRepository.findByPositionOrderByToreDesc(statistikFormular.getPosition(), seite);
+				spielerListe = spielerRepository.findByPositionOrderByToreDesc(statistikFormular.getPosition(), statistikSeite);
 			} else if(statistikFormular.getLandNameTyp() == null) {
 				spielerListe = spielerRepository.findByAlterAndPositionOrderByToreDesc(statistikFormular.getAlter(), 
-						statistikFormular.getPosition(), seite);
+						statistikFormular.getPosition(), statistikSeite);
 			} else if(statistikFormular.getPosition() == null) {
 				spielerListe = spielerRepository.findByNationalitaetAndAlterOrderByToreDesc(land, 
-						statistikFormular.getAlter(), seite);
+						statistikFormular.getAlter(), statistikSeite);
 			} else if(statistikFormular.getAlter() < 0) {
 				spielerListe = spielerRepository.findByNationalitaetAndPositionOrderByToreDesc(land, 
-						statistikFormular.getPosition(), seite);
+						statistikFormular.getPosition(), statistikSeite);
 			} else {
 				spielerListe = spielerRepository.findAllByNationalitaetAndAlterAndPositionOrderByToreDesc(land, 
-						statistikFormular.getAlter(), statistikFormular.getPosition(), seite);
+						statistikFormular.getAlter(), statistikFormular.getPosition(), statistikSeite);
 			}
 		}
 		if(statistikFormular.getSortierTyp().equals(SortierTypen.GELBEKARTEN)) {
 			if((statistikFormular.getLandNameTyp() == null) && (statistikFormular.getAlter() < 0) && (statistikFormular.getPosition() == null)) {
-				spielerListe = spielerRepository.findByOrderByGelbeKartenDesc(seite);
+				spielerListe = spielerRepository.findByOrderByGelbeKartenDesc(statistikSeite);
 			} else if((statistikFormular.getAlter() < 0) && (statistikFormular.getPosition() == null)) {
-				spielerListe = spielerRepository.findByNationalitaetOrderByGelbeKartenDesc(land, seite);
+				spielerListe = spielerRepository.findByNationalitaetOrderByGelbeKartenDesc(land, statistikSeite);
 			} else if((statistikFormular.getLandNameTyp() == null) && (statistikFormular.getPosition() == null)) {
-				spielerListe = spielerRepository.findByAlterOrderByGelbeKartenDesc( statistikFormular.getAlter(), seite);
+				spielerListe = spielerRepository.findByAlterOrderByGelbeKartenDesc( statistikFormular.getAlter(), statistikSeite);
 			} else if((statistikFormular.getLandNameTyp() == null) && (statistikFormular.getAlter() < 0)) {
-				spielerListe = spielerRepository.findByPositionOrderByGelbeKartenDesc(statistikFormular.getPosition(), seite);
+				spielerListe = spielerRepository.findByPositionOrderByGelbeKartenDesc(statistikFormular.getPosition(), statistikSeite);
 			} else if(statistikFormular.getLandNameTyp() == null) {
 				spielerListe = spielerRepository.findByAlterAndPositionOrderByGelbeKartenDesc(statistikFormular.getAlter(), 
-						statistikFormular.getPosition(), seite);
+						statistikFormular.getPosition(), statistikSeite);
 			} else if(statistikFormular.getPosition() == null) {
 				spielerListe = spielerRepository.findByNationalitaetAndAlterOrderByGelbeKartenDesc(land, 
-						statistikFormular.getAlter(), seite);
+						statistikFormular.getAlter(), statistikSeite);
 			} else if(statistikFormular.getAlter() < 0) {
 				spielerListe = spielerRepository.findByNationalitaetAndPositionOrderByGelbeKartenDesc(land, 
-						statistikFormular.getPosition(), seite);
+						statistikFormular.getPosition(), statistikSeite);
 			} else {
 				spielerListe = spielerRepository.findAllByNationalitaetAndAlterAndPositionOrderByGelbeKartenDesc(land, 
-						statistikFormular.getAlter(), statistikFormular.getPosition(), seite);
+						statistikFormular.getAlter(), statistikFormular.getPosition(), statistikSeite);
 			}
 		}
 		if(statistikFormular.getSortierTyp().equals(SortierTypen.GELBROTEKARTEN)) {
 			if((statistikFormular.getLandNameTyp() == null) && (statistikFormular.getAlter() < 0) && (statistikFormular.getPosition() == null)) {
-				spielerListe = spielerRepository.findByOrderByGelbRoteKartenDesc(seite);
+				spielerListe = spielerRepository.findByOrderByGelbRoteKartenDesc(statistikSeite);
 			} else if((statistikFormular.getAlter() < 0) && (statistikFormular.getPosition() == null)) {
-				spielerListe = spielerRepository.findByNationalitaetOrderByGelbRoteKartenDesc(land, seite);
+				spielerListe = spielerRepository.findByNationalitaetOrderByGelbRoteKartenDesc(land, statistikSeite);
 			} else if((statistikFormular.getLandNameTyp() == null) && (statistikFormular.getPosition() == null)) {
-				spielerListe = spielerRepository.findByAlterOrderByGelbRoteKartenDesc( statistikFormular.getAlter(), seite);
+				spielerListe = spielerRepository.findByAlterOrderByGelbRoteKartenDesc( statistikFormular.getAlter(), statistikSeite);
 			} else if((statistikFormular.getLandNameTyp() == null) && (statistikFormular.getAlter() < 0)) {
-				spielerListe = spielerRepository.findByPositionOrderByGelbRoteKartenDesc(statistikFormular.getPosition(), seite);
+				spielerListe = spielerRepository.findByPositionOrderByGelbRoteKartenDesc(statistikFormular.getPosition(), statistikSeite);
 			} else if(statistikFormular.getLandNameTyp() == null) {
 				spielerListe = spielerRepository.findByAlterAndPositionOrderByGelbRoteKartenDesc(statistikFormular.getAlter(), 
-						statistikFormular.getPosition(), seite);
+						statistikFormular.getPosition(), statistikSeite);
 			} else if(statistikFormular.getPosition() == null) {
 				spielerListe = spielerRepository.findByNationalitaetAndAlterOrderByGelbRoteKartenDesc(land, 
-						statistikFormular.getAlter(), seite);
+						statistikFormular.getAlter(), statistikSeite);
 			} else if(statistikFormular.getAlter() < 0) {
 				spielerListe = spielerRepository.findByNationalitaetAndPositionOrderByGelbRoteKartenDesc(land, 
-						statistikFormular.getPosition(), seite);
+						statistikFormular.getPosition(), statistikSeite);
 			} else {
 				spielerListe = spielerRepository.findByNationalitaetAndAlterAndPositionOrderByGelbRoteKartenDesc(land, 
-						statistikFormular.getAlter(), statistikFormular.getPosition(), seite);
+						statistikFormular.getAlter(), statistikFormular.getPosition(), statistikSeite);
 			}
 		}
 		if(statistikFormular.getSortierTyp().equals(SortierTypen.ROTEKARTEN)) {
 			if((statistikFormular.getLandNameTyp() == null) && (statistikFormular.getAlter() < 0) && (statistikFormular.getPosition() == null)) {
-				spielerListe = spielerRepository.findByOrderByRoteKartenDesc(seite);
+				spielerListe = spielerRepository.findByOrderByRoteKartenDesc(statistikSeite);
 			} else if((statistikFormular.getAlter() < 0) && (statistikFormular.getPosition() == null)) {
-				spielerListe = spielerRepository.findByNationalitaetOrderByRoteKartenDesc(land, seite);
+				spielerListe = spielerRepository.findByNationalitaetOrderByRoteKartenDesc(land, statistikSeite);
 			} else if((statistikFormular.getLandNameTyp() == null) && (statistikFormular.getPosition() == null)) {
-				spielerListe = spielerRepository.findByAlterOrderByRoteKartenDesc( statistikFormular.getAlter(), seite);
+				spielerListe = spielerRepository.findByAlterOrderByRoteKartenDesc( statistikFormular.getAlter(), statistikSeite);
 			} else if((statistikFormular.getLandNameTyp() == null) && (statistikFormular.getAlter() < 0)) {
-				spielerListe = spielerRepository.findByPositionOrderByRoteKartenDesc(statistikFormular.getPosition(), seite);
+				spielerListe = spielerRepository.findByPositionOrderByRoteKartenDesc(statistikFormular.getPosition(), statistikSeite);
 			} else if(statistikFormular.getLandNameTyp() == null) {
 				spielerListe = spielerRepository.findByAlterAndPositionOrderByRoteKartenDesc(statistikFormular.getAlter(), 
-						statistikFormular.getPosition(), seite);
+						statistikFormular.getPosition(), statistikSeite);
 			} else if(statistikFormular.getPosition() == null) {
 				spielerListe = spielerRepository.findByNationalitaetAndAlterOrderByRoteKartenDesc(land, 
-						statistikFormular.getAlter(), seite);
+						statistikFormular.getAlter(), statistikSeite);
 			} else if(statistikFormular.getAlter() < 0) {
 				spielerListe = spielerRepository.findByNationalitaetAndPositionOrderByRoteKartenDesc(land, 
-						statistikFormular.getPosition(), seite);
+						statistikFormular.getPosition(), statistikSeite);
 			} else {
 				spielerListe = spielerRepository.findByNationalitaetAndAlterAndPositionOrderByRoteKartenDesc(land, 
-						statistikFormular.getAlter(), statistikFormular.getPosition(), seite);
+						statistikFormular.getAlter(), statistikFormular.getPosition(), statistikSeite);
 			}
 		}
 		return spielerListe;
@@ -497,42 +498,30 @@ public class SpielerService {
 		aktualisiereSpieler(spieler);
 	}
 	
-	public List<Spieler> findeAlleSpielerAnhandDerSuchEingaben(PositionenTypen position, LaenderNamenTypen land,
-			int minimalesAlter, int maximalesAlter, double minimaleStaerke, double maximaleStaerke,
-			long minimalerPreis, long maximalerPreis) {
-		List<Spieler> endResultat = new ArrayList<>();
-		List<Spieler> zwischenResultat = spielerRepository.findByTransfermarktAndAlterBetweenAndPreisBetween(true,
-				minimalesAlter, maximalesAlter, minimalerPreis, maximalerPreis);
-		
-		for(Spieler spieler : zwischenResultat) {
-			if(spieler.getSpielerStaerke().getStaerke() <= maximaleStaerke && 
-					spieler.getSpielerStaerke().getStaerke() >= minimaleStaerke) {
-				if(position == null) {
-					if(land == null || spieler.getNationalitaet() == null) {
-						endResultat.add(spieler);
-						continue;
-					}
-					
-					if(spieler.getNationalitaet().getLandNameTyp().equals(land)) {
-						endResultat.add(spieler);
-						continue;
-					}
-				}
-				
-				if(spieler.getPosition().equals(position)) {
-					if(land == null || spieler.getNationalitaet() == null) {
-						endResultat.add(spieler);
-						continue;
-					}
-					
-					if(spieler.getNationalitaet().getLandNameTyp().equals(land)) {
-						endResultat.add(spieler);
-						continue;
-					}
-				}
-			}
+	public List<Spieler> findeFuenfzehnSpielerAnhandDerSuchEingabenVomTransfermarkt(PositionenTypen position, LaenderNamenTypen landNameTyp,
+			int minimalesAlter, int maximalesAlter, double minimaleStaerke, double maximaleStaerke, long minimalerPreis,
+			long maximalerPreis, int seite) {
+		PageRequest tranfermarktSeite = PageRequest.of(seite-1, 15);
+		Land land = null;
+		if(landNameTyp != null) {
+			land = landService.findeLand(landNameTyp);
 		}
-		return endResultat;
+		
+		if(position == null) {
+			if(land == null) {
+				return spielerRepository.findByTransfermarktAndAlterBetweenAndPreisBetweenOrderBySpielerStaerkeReinStaerkeDesc(true,
+						minimalesAlter, maximalesAlter, minimalerPreis, maximalerPreis, tranfermarktSeite);
+			}
+			return spielerRepository.findByTransfermarktAndNationalitaetAndAlterBetweenAndPreisBetweenOrderBySpielerStaerkeReinStaerkeDesc(true, land,
+					minimalesAlter, maximalesAlter, minimalerPreis, maximalerPreis, tranfermarktSeite);
+		}
+		if(land == null) {
+			return spielerRepository.findByTransfermarktAndPositionAndAlterBetweenAndPreisBetweenOrderBySpielerStaerkeReinStaerkeDesc(true, position,
+					minimalesAlter, maximalesAlter, minimalerPreis, maximalerPreis, tranfermarktSeite);
+		}
+		return spielerRepository.
+			findByTransfermarktAndPositionAndNationalitaetAndAlterBetweenAndSpielerStaerkeReinStaerkeBetweenAndPreisBetweenOrderBySpielerStaerkeReinStaerkeDesc(
+				true, position, land, minimalesAlter, maximalesAlter, minimaleStaerke, maximaleStaerke, minimalerPreis, maximalerPreis, tranfermarktSeite);
 	}
 
 	public void ermittleTalentwert(Spieler spieler) {

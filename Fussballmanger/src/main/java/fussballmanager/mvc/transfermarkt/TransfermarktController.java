@@ -54,21 +54,15 @@ public class TransfermarktController {
 		model.addAttribute("aktuelleSaison", saisonService.findeAktuelleSaison());
 		model.addAttribute("aktuellerSpieltag", spieltagService.findeAktuellenSpieltag());
 		
-		List<Spieler> gesuchteSpielerDesTransfermarktes = spielerService.findeAlleSpielerAnhandDerSuchEingaben(spielerSuche.getPosition(), 
+		List<Spieler> gesuchteSpielerDesTransfermarktes = spielerService.findeFuenfzehnSpielerAnhandDerSuchEingabenVomTransfermarkt(spielerSuche.getPosition(), 
 				spielerSuche.getLand(), spielerSuche.getMinimalesAlter(), spielerSuche.getMaximalesAlter(), spielerSuche.getMinimaleStaerke(), 
-				spielerSuche.getMaximaleStaerke(), spielerSuche.getMinimalerPreis(), spielerSuche.getMaximalerPreis());
+				spielerSuche.getMaximaleStaerke(), spielerSuche.getMinimalerPreis(), spielerSuche.getMaximalerPreis(), seite);
 		SpielerSuche spielerSucheFormular = spielerSuche;
 		DecimalFormat zahlenFormat = new DecimalFormat("0.0");
 		
-		//TODO fixen mit pageable
-		List<Spieler> test = new ArrayList<>();
-		for(int i = 0; i < 30; i++) {
-			test.add(gesuchteSpielerDesTransfermarktes.get(i));
-		}
-		
 		model.addAttribute("seite", seite);
 		model.addAttribute("zahlenFormat", zahlenFormat);
-		model.addAttribute("alleTransfermarktSpieler", test);
+		model.addAttribute("alleTransfermarktSpieler", gesuchteSpielerDesTransfermarktes);
 		model.addAttribute("spielerSucheFormular", spielerSucheFormular);
 		model.addAttribute("positionenTypen", PositionenTypen.values());
 		model.addAttribute("laenderNamenTypen", LaenderNamenTypen.values());

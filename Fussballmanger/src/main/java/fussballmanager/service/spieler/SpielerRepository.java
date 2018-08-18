@@ -21,13 +21,20 @@ public interface SpielerRepository extends JpaRepository<Spieler, Long> {
 	List<Spieler> findByNationalitaetAndTeam(Land nationalitaet, Team team);
 
 	List<Spieler> findByAufstellungsPositionsTyp(AufstellungsPositionsTypen aufstellungsPositionsTyp);
-
-	List<Spieler> findByPositionAndNationalitaetAndAlterBetweenAndSpielerStaerkeBetweenAndPreisBetween(PositionenTypen position, LaenderNamenTypen land,
-			int minimalesAlter, int maximalesAlter, double minimaleStaerke, double maximaleStaerke, double minimalerPreis, double maximalerPreis);
 	
-	List<Spieler> findByTransfermarktAndAlterBetweenAndPreisBetween(boolean transfermarkt,
-			int minimalesAlter, int maximalesAlter, long minimalerPreis, long maximalerPreis);
-
+	//Transfermarkt
+	List<Spieler> findByTransfermarktAndAlterBetweenAndPreisBetweenOrderBySpielerStaerkeReinStaerkeDesc(boolean transfermarkt,
+			int minimalesAlter, int maximalesAlter, long minimalerPreis, long maximalerPreis, Pageable seite);
+	List<Spieler> findByTransfermarktAndNationalitaetAndAlterBetweenAndPreisBetweenOrderBySpielerStaerkeReinStaerkeDesc(
+			boolean b, Land nationalitaet, int minimalesAlter, int maximalesAlter, long minimalerPreis,
+			long maximalerPreis, Pageable seite);
+	List<Spieler> findByTransfermarktAndPositionAndAlterBetweenAndPreisBetweenOrderBySpielerStaerkeReinStaerkeDesc(
+			boolean b, PositionenTypen position, int minimalesAlter, int maximalesAlter, long minimalerPreis,
+			long maximalerPreis, Pageable seite);
+	List<Spieler> findByTransfermarktAndPositionAndNationalitaetAndAlterBetweenAndSpielerStaerkeReinStaerkeBetweenAndPreisBetweenOrderBySpielerStaerkeReinStaerkeDesc(
+			boolean b, PositionenTypen position, Land nationalitaet, int minimalesAlter, int maximalesAlter, double minimaleStaerke, double maximaleStaerke,
+			long minimalerPreis, long maximalerPreis, Pageable seite);
+	
 	List<Spieler> findByTeamIsNotNull();
 
 	List<Spieler> findByGelbeKarteTrue();
@@ -114,5 +121,4 @@ public interface SpielerRepository extends JpaRepository<Spieler, Long> {
 
 	List<Spieler> findByTeamAndAufstellungsPositionsTypNotLikeAndTrainingslagerTageGreaterThan(Team team,
 			AufstellungsPositionsTypen trainingslager, int i);
-
 }

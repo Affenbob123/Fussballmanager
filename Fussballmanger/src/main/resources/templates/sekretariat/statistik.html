@@ -27,7 +27,7 @@
 				  			<strong><p th:utext="${errorMessage}"></p></strong>
 						</div>
 						<div class="col-12 col-statistik-suche">
-							<form method="POST" th:action="@{/statistik/}+${statistikFormular.seitenNummer+1}" th:object="${statistikFormular}">
+							<form method="POST" th:action="@{/statistik/}+${seite}" th:object="${statistikFormular}">
 								<div class="row align-items-center h-100 justify-content-md-center">
 									<label>Position:</label>
 									<div class="col-md-auto">
@@ -100,7 +100,7 @@
 								</thead>
 								<tbody th:each="spieler, stat : ${alleSpielerNachSuche}">
 									<tr>
-										<td th:text="${stat.index} * (${statistikFormular.seitenNummer} + 1) + 1" />
+										<td th:text="(${stat.index} + 1) + (${seite-1} *15)" />
 										<td th:if="${spieler.nationalitaet}"><img th:src="@{${spieler.nationalitaet.landNameTyp.bild}}" /></td>
 										<td th:unless="${spieler.nationalitaet}"></td>
 										<td th:text="${spieler.position}" />
@@ -127,7 +127,7 @@
 							</table>
 						</div>
 						<div class="row">
-							<div class="col-lg-3">
+							<div class="col-lg-3" th:unless="${seite} < 2">
 								<form action="#" th:action="@{/statistik/} + ${seite-1}" method="get">
 									<button type="submit" class="btn btn-sm btn-link wechsel-btn">
 										&lt;&lt; Vorherige

@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import fussballmanager.helper.SpielstatusHelper;
-import fussballmanager.mvc.transfermarkt.SpielerSuche;
 import fussballmanager.service.land.LaenderNamenTypen;
 import fussballmanager.service.land.LandService;
 import fussballmanager.service.liga.LigaService;
@@ -63,7 +62,7 @@ public class StatistikController {
 		model.addAttribute("aktuellerSpieltag", spieltagService.findeAktuellenSpieltag());
 		
 		DecimalFormat zahlenFormat = new DecimalFormat("0.0");
-		List<Spieler> alleSpielerNachSuche = spielerService.findeZwanzigSpielerNachSortierTyp(statistikFormular);
+		List<Spieler> alleSpielerNachSuche = spielerService.findeFuenfzehnSpielerNachSortierTyp(statistikFormular, seite);
 		
 		model.addAttribute("zahlenFormat", zahlenFormat);
 		model.addAttribute("statistikFormular", statistikFormular);

@@ -12,8 +12,6 @@ public class StatistikFormular {
 	private int alter = - 1;
 	
 	private SortierTypen sortierTyp = SortierTypen.STAERKE;
-	
-	private int seitenNummer = 0;
 
 	public PositionenTypen getPosition() {
 		return position;
@@ -45,13 +43,5 @@ public class StatistikFormular {
 
 	public void setSortierTyp(SortierTypen sortierTyp) {
 		this.sortierTyp = sortierTyp;
-	}
-
-	public int getSeitenNummer() {
-		return seitenNummer;
-	}
-
-	public void setSeitenNummer(int seitenNummer) {
-		this.seitenNummer = seitenNummer;
 	}
 }

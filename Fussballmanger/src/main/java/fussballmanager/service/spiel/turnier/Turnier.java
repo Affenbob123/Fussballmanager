@@ -1,6 +1,5 @@
 package fussballmanager.service.spiel.turnier;
 
-import java.time.LocalTime;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -15,7 +14,6 @@ import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import fussballmanager.mvc.spiel.SpielEintrag;
 import fussballmanager.service.saison.spieltag.Spieltag;
 import fussballmanager.service.spiel.KOSpielTypen;
 import fussballmanager.service.spiel.Spiel;
@@ -157,6 +155,6 @@ public class Turnier implements Comparable<Turnier>{
 	public int compareTo(Turnier compareTo) {
 		int compareSpieltag=((Turnier)compareTo).getSpieltag().getSpieltagNummer();
 		
-		return this.spieltag.getSpieltagNummer() - compareSpieltag;
+		return compareSpieltag - this.spieltag.getSpieltagNummer();
 	}
 }

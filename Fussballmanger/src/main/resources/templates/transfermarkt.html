@@ -121,7 +121,7 @@
 								</thead>
 								<tbody th:each="spieler, stat : ${alleTransfermarktSpieler}">
 									<tr>
-										<td th:text="${stat.index} + 1" />
+										<td th:text="(${stat.index} + 1) + (${seite-1} *15)" />
 										<td th:if="${spieler.nationalitaet}"><img th:src="@{${spieler.nationalitaet.landNameTyp.bild}}" /></td>
 										<td th:unless="${spieler.nationalitaet}"></td>
 										<td th:text="${spieler.position}" />

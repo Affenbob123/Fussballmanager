@@ -61,8 +61,8 @@ public class TurnierController {
 	@Autowired
 	SpielService spielService;
 	
-	@GetMapping("/turniere")
-	public String getTurniere(Model model, Authentication auth) {
+	@GetMapping("/turniere/{seite}")
+	public String getTurniere(Model model, Authentication auth, @PathVariable("seite") int seite) {
 		User aktuellerUser = userService.findeUser(auth.getName());
 		
 		model.addAttribute("spielstatusHelper", new SpielstatusHelper());
@@ -71,7 +71,7 @@ public class TurnierController {
 		model.addAttribute("aktuellerSpieltag", spieltagService.findeAktuellenSpieltag());
 		model.addAttribute("auth", auth);
 		
-		List<Turnier> alleTurniere = turnierService.findeAlleTurniere();
+		List<Turnier> alleTurniere = turnierService.findeZwanzigTurniereNachSeite(seite);
 		Collections.sort(alleTurniere);
 		model.addAttribute("alleTurniere", alleTurniere);
 		

@@ -226,4 +226,10 @@ public class TurnierService {
 		turnier.setkOSpielTyp(turnier.getTurnierSpiele().get(turnier.getTurnierSpiele().size() -1).getkOSpielTyp());
 		aktualisiereTurnier(turnier);
 	}
+
+	public List<Turnier> findeZwanzigTurniereNachSeite(int seite) {
+		PageRequest turnierSeite = PageRequest.of(seite-1, 15);
+		
+		return turnierRepository.findByOrderBySpieltagSpieltagNummerDesc(turnierSeite);
+	}
 }
