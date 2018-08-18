@@ -57,6 +57,37 @@
 								</table>
 							</div>
 						</div>
+						<div class="row justify-content-md-center">
+							<div class="col">
+								<form action="#" th:action="@{/}+${ligaAuswahlHelper.land}+'/'+${ligaAuswahlHelper.liga}+'/'+${ligaAuswahlHelper.saison}+
+									'/'+${ligaAuswahlHelper.spieltag}" th:object="${ligaAuswahlHelper}" method="post">
+									<button th:unless="${ligaAuswahlHelper.spieltag} < 2" name="spieltag" th:value="${ligaAuswahlHelper.spieltag}-1" 
+										type="submit" class="btn btn-sm btn-link wechsel-btn">
+										&lt;&lt; Vorheriger
+									</button>
+									<input type="hidden" th:field="*{liga}" th:value="${ligaAuswahlHelper.liga}">
+									<input type="hidden" th:field="*{saison}" th:value="${ligaAuswahlHelper.saison}">
+									<input type="hidden" th:field="*{land}" th:value="${ligaAuswahlHelper.spieltag}">
+								</form>
+							</div>
+							<div class="col col-lg-3"></div>
+							<div class="col-md-auto">
+								<span th:text="${ligaAuswahlHelper.spieltag}+ '. Spieltag'"></span>
+							</div>
+							<div class="col col-lg-3"></div>
+							<div class="col text-right">
+								<form action="#" th:action="@{/}+${ligaAuswahlHelper.land}+'/'+${ligaAuswahlHelper.liga}+'/'+${ligaAuswahlHelper.saison}+
+									'/'+${ligaAuswahlHelper.spieltag}" th:object="${ligaAuswahlHelper}" method="post">
+									<button th:unless="${ligaAuswahlHelper.spieltag} > 33" name="spieltag" th:value="${ligaAuswahlHelper.spieltag}+1" 
+										type="submit" class="btn btn-sm btn-link wechsel-btn">
+										N&auml;chster &gt;&gt;
+									</button>
+									<input type="hidden" th:field="*{liga}" th:value="${ligaAuswahlHelper.liga}">
+									<input type="hidden" th:field="*{saison}" th:value="${ligaAuswahlHelper.saison}">
+									<input type="hidden" th:field="*{land}" th:value="${ligaAuswahlHelper.spieltag}">
+								</form>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>

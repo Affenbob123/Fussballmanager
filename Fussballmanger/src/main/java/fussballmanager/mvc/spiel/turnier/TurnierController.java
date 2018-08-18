@@ -3,6 +3,7 @@ package fussballmanager.mvc.spiel.turnier;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +71,9 @@ public class TurnierController {
 		model.addAttribute("aktuellerSpieltag", spieltagService.findeAktuellenSpieltag());
 		model.addAttribute("auth", auth);
 		
-		model.addAttribute("alleTurniere", turnierService.findeAlleTurniere());
+		List<Turnier> alleTurniere = turnierService.findeAlleTurniere();
+		Collections.sort(alleTurniere);
+		model.addAttribute("alleTurniere", alleTurniere);
 		
 		return "turnier/turnierliste";
 	}
@@ -191,6 +194,7 @@ public class TurnierController {
 			
 		}
 		spielEintrag.setId(turnierSpiel.getId());
+		spielEintrag.setSpielTyp(turnierSpiel.getSpielTyp());
 		spielEintrag.setSpieltag(turnierSpiel.getSpieltag().getSpieltagNummer());
 		spielEintrag.setSpielbeginn(turnierSpiel.getSpielTyp().getSpielBeginn());
 		spielEintrag.setHeimmannschaft(turnierSpiel.getHeimmannschaft());

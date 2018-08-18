@@ -23,6 +23,7 @@
 						<table class="table table-hover">
 							<thead>
 								<tr class="table-active">
+									<th scope="col">Spieltyp</th>
 									<th scope="col">Spieltag</th>
 									<th scope="col">Spielbeginn</th>
 									<th scope="col">Heimmannschaft</th>
@@ -30,7 +31,11 @@
 									<th scope="col">Gastmannschaft</th>
 								</tr>
 							</thead>
-							<tr class="" th:each="spielEintrag : ${alleSpieleEinesTeamsInEinerSaison}">
+							<tr class="" th:each="spielEintrag : ${alleSpieleEinesTeamsInEinerSaison}" 
+								th:classappend="${spielEintrag.spielTyp == spielTypTurnier ? 'table-primary' : 
+								spielEintrag.spielTyp == spielTypFreundschaft ? 'table-success' : 
+								spielEintrag.spielTyp == spielTypPokal ? 'table-warning' : ''}">
+								<td th:text="${spielEintrag.spielTyp.name}" />
 								<td th:text="${spielEintrag.spieltag}" />
 								<td th:text="${spielEintrag.spielbeginnToString()}" />
 								<td>
@@ -42,8 +47,11 @@
 										<span th:text="${spielEintrag.spielErgebnisHalbzeitToString()}"></span>
 									</a>
 								</td>
-								<td>
+								<td th:unless="${spielEintrag.gastmannschaft == null}">
 									<a th:text="${spielEintrag.gastmannschaftUndStaerkeToString()}" th:href="@{/team/}+${spielEintrag.gastmannschaft.id}"></a>
+								</td>
+								<td th:if="${spielEintrag.gastmannschaft == null}">
+									<strong><span th:text="${spielEintrag.gastmannschaftUndStaerkeToString()}"></span></strong>
 								</td>
 							</tr>
 						</table>

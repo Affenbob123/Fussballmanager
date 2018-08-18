@@ -228,6 +228,7 @@ public class FussballmanagerTestData {
 	public void erzeugeTestDaten() {
 		erzeugeTestUser();
 		spieltagService.wechsleAktuellenSpieltag();
+		erzeugeTestTurnier();
 	}
 	
 	public void erzeugeTestTurnier() {
@@ -252,7 +253,9 @@ public class FussballmanagerTestData {
 		userService.legeUserAn(userB);
 		
 		for(int i = 0; i < teamService.findeAlleTeams().size() - 5; i++) {
-			teamService.findeAlleTeams().get(i).setUser(userA);
+			Team team = teamService.findeAlleTeams().get(i);
+			team.setUser(userA);
+			teamService.aktualisiereTeam(team);
 		}
 	}
 	

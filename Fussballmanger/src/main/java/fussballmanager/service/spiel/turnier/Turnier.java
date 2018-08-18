@@ -1,5 +1,6 @@
 package fussballmanager.service.spiel.turnier;
 
+import java.time.LocalTime;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -14,6 +15,7 @@ import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import fussballmanager.mvc.spiel.SpielEintrag;
 import fussballmanager.service.saison.spieltag.Spieltag;
 import fussballmanager.service.spiel.KOSpielTypen;
 import fussballmanager.service.spiel.Spiel;
@@ -21,7 +23,7 @@ import fussballmanager.service.team.Team;
 import fussballmanager.service.user.User;
 
 @Entity
-public class Turnier {
+public class Turnier implements Comparable<Turnier>{
 
 	@Id
 	@GeneratedValue(strategy= GenerationType.AUTO, generator="native")
@@ -149,5 +151,12 @@ public class Turnier {
 
 	public void setkOSpielTyp(KOSpielTypen kOSpielTyp) {
 		this.kOSpielTyp = kOSpielTyp;
+	}
+
+	@Override
+	public int compareTo(Turnier compareTo) {
+		int compareSpieltag=((Turnier)compareTo).getSpieltag().getSpieltagNummer();
+		
+		return this.spieltag.getSpieltagNummer() - compareSpieltag;
 	}
 }

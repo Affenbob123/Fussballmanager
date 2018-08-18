@@ -25,6 +25,7 @@ import fussballmanager.service.saison.spieltag.Spieltag;
 import fussballmanager.service.saison.spieltag.SpieltagService;
 import fussballmanager.service.spiel.Spiel;
 import fussballmanager.service.spiel.SpielService;
+import fussballmanager.service.spiel.SpieleTypen;
 import fussballmanager.service.spieler.SpielerService;
 import fussballmanager.service.team.Team;
 import fussballmanager.service.team.TeamService;
@@ -66,9 +67,15 @@ public class SaisonController {
 		model.addAttribute("aktuellesTeam", aktuellerUser.getAktuellesTeam());
 		model.addAttribute("aktuelleSaison", saisonService.findeAktuelleSaison());
 		model.addAttribute("aktuellerSpieltag", spieltagService.findeAktuellenSpieltag());
-		model.addAttribute("alleSpieleEinesTeamsInEinerSaison", erstelleSpielEintraegeEinesTeams(aktuellerUser.getAktuellesTeam(), 
-				saisonService.findeAktuelleSaison()));
 		
+		List<SpielEintrag> spielEintraegeEinerSaison = erstelleSpielEintraegeEinesTeams(aktuellerUser.getAktuellesTeam(), 
+				saisonService.findeAktuelleSaison());
+		Collections.sort(spielEintraegeEinerSaison);
+		
+		model.addAttribute("alleSpieleEinesTeamsInEinerSaison", spielEintraegeEinerSaison);
+		model.addAttribute("spielTypTurnier", SpieleTypen.TURNIERSPIEL);
+		model.addAttribute("spielTypFreundschaft", SpieleTypen.FREUNDSCHAFTSSPIEL);
+		model.addAttribute("spielTypPokal", SpieleTypen.POKALSPIEL);
 		return "saison";
 	}
 	
@@ -106,14 +113,18 @@ public class SaisonController {
 			}
 			
 		}
-		
 		spielEintrag.setId(spiel.getId());
+		spielEintrag.setSpielTyp(spiel.getSpielTyp());
 		spielEintrag.setSpieltag(spiel.getSpieltag().getSpieltagNummer());
 		spielEintrag.setSpielbeginn(spiel.getSpielTyp().getSpielBeginn());
 		spielEintrag.setHeimmannschaft(spiel.getHeimmannschaft());
 		spielEintrag.setGastmannschaft(spiel.getGastmannschaft());
-		spielEintrag.setStaerkeHeimmannschaft(spiel.getHeimmannschaft().getStaerke());
-		spielEintrag.setStaerkeGastmannschaft(spiel.getGastmannschaft().getStaerke());
+		if(spiel.getHeimmannschaft() != null) {
+			spielEintrag.setStaerkeHeimmannschaft(spiel.getHeimmannschaft().getStaerke());
+		}
+		if(spiel.getGastmannschaft() != null) {
+			spielEintrag.setStaerkeGastmannschaft(spiel.getGastmannschaft().getStaerke());
+		}
 		
 		return spielEintrag;
 	}

@@ -163,11 +163,17 @@ public class TurnierService {
 
 	public void erstelleTurnierSpiele(Turnier turnier, int anzahlTeams) {
 		int counter2 = anzahlTeams;
-		Spieltag aktuellerSpieltag = spieltagService.findeAktuellenSpieltag();
+		Spieltag spieltag;
+		if(turnier.getTurnierSpiele().isEmpty()) {
+			spieltag = spieltagService.findeAktuellenSpieltag();
+		} else {
+			spieltag = spieltagService.findeNaechstenSpieltag();
+		}
+		
 		Saison aktuelleSaison = saisonService.findeAktuelleSaison();
 		for(int i = 1; i <= anzahlTeams/2; i = i + 1) {
 			Spiel turnierSpiel = new Spiel();
-			turnierSpiel.setSpieltag(aktuellerSpieltag);
+			turnierSpiel.setSpieltag(spieltag);
 			turnierSpiel.setSaison(aktuelleSaison);
 			turnierSpiel.setSpielTyp(SpieleTypen.TURNIERSPIEL);
 			turnierSpiel.setSpielort("Hallo");
@@ -215,9 +221,9 @@ public class TurnierService {
 				turnierSpiel.setkOSpielTyp(KOSpielTypen.ERSTERUNDE);
 			}
 			spielService.legeSpielAn(turnierSpiel);
-			turnier.setkOSpielTyp(turnierSpiel.getkOSpielTyp());
 			turnier.getTurnierSpiele().add(turnierSpiel);
 		}
+		turnier.setkOSpielTyp(turnier.getTurnierSpiele().get(turnier.getTurnierSpiele().size() -1).getkOSpielTyp());
 		aktualisiereTurnier(turnier);
 	}
 }

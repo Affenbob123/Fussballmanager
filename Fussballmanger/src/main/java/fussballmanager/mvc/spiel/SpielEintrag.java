@@ -3,13 +3,17 @@ package fussballmanager.mvc.spiel;
 import java.time.LocalTime;
 
 import fussballmanager.service.spiel.KOSpielTypen;
+import fussballmanager.service.spiel.SpieleTypen;
+import fussballmanager.service.spieler.Spieler;
 import fussballmanager.service.team.Team;
 
-public class SpielEintrag {
+public class SpielEintrag implements Comparable<SpielEintrag> {
 	
 	private long id;
 	
 	private int spieltag;
+	
+	private SpieleTypen spielTyp;
 	
 	private LocalTime spielbeginn;
 	
@@ -30,13 +34,21 @@ public class SpielEintrag {
 	private double staerkeGastmannschaft;
 	
 	private KOSpielTypen kOSpielTyp;
-
+	
 	public long getId() {
 		return id;
 	}
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	public SpieleTypen getSpielTyp() {
+		return spielTyp;
+	}
+
+	public void setSpielTyp(SpieleTypen spielTyp) {
+		this.spielTyp = spielTyp;
 	}
 
 	public int getSpieltag() {
@@ -173,5 +185,16 @@ public class SpielEintrag {
 		}
 		
 		return s;
+	}
+
+	@Override
+	public int compareTo(SpielEintrag compareTo) {
+		int compareSpieltag=((SpielEintrag)compareTo).getSpieltag();
+		LocalTime compareSpielbeginn=((SpielEintrag)compareTo).getSpielbeginn();
+		
+		if(this.spieltag - compareSpieltag == 0) {
+			return this.spielbeginn.compareTo(compareSpielbeginn);
+		}
+		return this.spieltag - compareSpieltag;
 	}
 }

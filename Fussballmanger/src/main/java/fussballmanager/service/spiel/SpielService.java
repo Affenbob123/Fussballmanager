@@ -309,11 +309,14 @@ public class SpielService {
 		anzahlToreEinesSpielSetzen(spiel);
 		spiel.setVorbei(true);
 		heimTeam.setAnzahlAuswechselungen(3);
-		gastTeam.setAnzahlAuswechselungen(3);
+		if(gastTeam != null) {
+			gastTeam.setAnzahlAuswechselungen(3);
+			teamService.aktualisiereTeam(gastTeam);
+		}
 		
 		aktualisiereSpiel(spiel);
 		teamService.aktualisiereTeam(heimTeam);
-		teamService.aktualisiereTeam(gastTeam);
+		
 	}
 
 	public void aufgabenNachSpiel() {

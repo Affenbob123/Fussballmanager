@@ -168,6 +168,7 @@ public class LiveTickerController {
 		}
 		
 		spielEintrag.setId(spiel.getId());
+		spielEintrag.setSpielTyp(spiel.getSpielTyp());
 		spielEintrag.setSpieltag(spiel.getSpieltag().getSpieltagNummer());
 		spielEintrag.setSpielbeginn(spiel.getSpielTyp().getSpielBeginn());
 		spielEintrag.setHeimmannschaft(spiel.getHeimmannschaft());
