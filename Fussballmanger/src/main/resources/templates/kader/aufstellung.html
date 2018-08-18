@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head th:insert="fragments/header :: head"></head>
+<head>
+	<link rel="stylesheet" href="/aufstellung.css" />
+</head>
+<body>
+	<div th:insert="fragments/header :: header"></div>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-2" th:insert="fragments/sidebar :: sidebar"></div>
+			<div class="col-10 main-content">
+				<div class="row">
+					<div class="col-11">
+						<div class="row" >
+							<div class="col-5"></div>
+							<div class="col-3" th:insert="fragments/aktuelleteamanzeige :: aktuelleteamanzeige"></div>
+						</div>
+					</div>
+					<div class="col-11 main">
+						<hr>
+						<h4 th:text="${aktuellesTeam.name}"></h4>
+						<div class="alert alert-success" th:if="${successMessage}">
+			  				<strong><p th:utext="${successMessage}"></p></strong>
+						</div>
+						<div class="alert alert-danger" th:if="${errorMessage}">
+				  			<strong><p th:utext="${errorMessage}"></p></strong>
+						</div>
+						<div class="col-12">
+							<div class="row">
+								<div class="col-7 border rounded">
+									<div class="row auswahl-team">
+										<div class="col-3" th:if="${spielstatusHelper.getAktuellenSpielstatus() == ''}">
+											<p>Formation:</p>
+											<form action="#" th:action="@{/team/}+${aktuellesTeam.id}+'/formation'" th:object="${aktuellesTeam}"
+													method="post">
+												<select class="custom-select" th:field="*{formationsTyp}" onchange="this.form.submit();">
+													<option 
+														  th:each="formationsTyp : ${alleFormationsTypen}" 
+														  th:text="${formationsTyp.bezeichnung}"
+														  th:value="${formationsTyp}">
+													</option>
+												</select>
+											</form>				
+										</div>
+										<div class="col-3">
+											<p>Einsatz:</p>
+											<form action="#" th:action="@{/team/}+${aktuellesTeam.id}+'/einsatz'" th:object="${aktuellesTeam}"
+													method="post">
+												<select class="custom-select" th:field="*{einsatzTyp}" onchange="this.form.submit();">
+													<option 
+														  th:each="einsatzTypen : ${alleEinsatzTypen}" 
+														  th:text="${einsatzTypen.bezeichnung}"
+														  th:value="${einsatzTypen}">
+													</option>
+												</select>
+											</form>
+										</div>
+										<div class="col-3">
+											<p>Ausrichtung:</p>
+											<form action="#" th:action="@{/team/}+${aktuellesTeam.id}+'/ausrichtung'" th:object="${aktuellesTeam}"
+													method="post">
+												<select class="custom-select" th:field="*{ausrichtungsTyp}" onchange="this.form.submit();">
+													<option 
+														  th:each="ausrichtungsTyp : ${alleAusrichtungsTypen}" 
+														  th:text="${ausrichtungsTyp.bezeichnung}"
+														  th:value="${ausrichtungsTyp}">
+													</option>
+												</select>
+											</form>
+										</div>
+									</div>
+								</div>
+								<div class="col-1"></div>
+								<div class="col-4 border rounded">
+									Trainer
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-7 border rounded">
+									<div class="row aufstellungs-reihe aufstellung-sturm">
+										<div class="col-4 aufstellung-position text-center">
+											<div class="droptarget" id="ls" ondrop="drop(event)" ondragover="allowDrop(event)">
+												<div id="lsdrag" draggable="true" ondragstart="drag(event)" th:if="${ls}">
+													<img src="/trikots/test.png" />
+													<div>
+														<img th:src="@{${ls.nationalitaet.landNameTyp.bild}}" />
+														<a th:text="'('+${ls.position}+')'+' | '+${ls.name}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
+														<span th:text="${ls.spielerStaerke.staerke}"></span>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-4"></div>
+										<div class="col-4 aufstellung-position text-center">
+											<div class="droptarget" id="rs" ondrop="drop(event)" ondragover="allowDrop(event)">
+												<div id="rsdrag" draggable="true" ondragstart="drag(event)" th:if="${rs}" th:value="${rs}">
+													<img src="/trikots/test.png" />
+													<p th:text="${rs.aufstellungsPositionsTyp.positionsName}"></p>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row aufstellungs-reihe">
+										<div class="col-4"></div>
+										<div class="col-4 aufstellung-position text-center">
+											<div class="droptarget" id="ms" ondrop="drop(event)" ondragover="allowDrop(event)">
+												<div id="msdrag" draggable="true" ondragstart="drag(event)" th:if="${ms}">
+													<img src="/trikots/test.png" />
+													<p th:text="${ms.aufstellungsPositionsTyp.positionsName}"></p>
+												</div>
+											</div>
+										</div>
+										<div class="col-4"></div>
+									</div>
+									<div class="row aufstellungs-reihe">
+										<div class="col-4"></div>
+										<div class="col-4 aufstellung-position text-center">
+											<div class="droptarget" id="om" ondrop="drop(event)" ondragover="allowDrop(event)">
+												<div id="omdrag" draggable="true" ondragstart="drag(event)" th:if="${om}">
+													<img src="/trikots/test.png" />
+													<p th:text="${om.aufstellungsPositionsTyp.positionsName}"></p>
+												</div>
+											</div>
+										</div>
+										<div class="col-4"></div>
+									</div>
+									<div class="row aufstellungs-reihe">
+										<div class="col-4 aufstellung-position text-center">
+											<div class="droptarget" id="lm" ondrop="drop(event)" ondragover="allowDrop(event)">
+												<div id="lmdrag" draggable="true" ondragstart="drag(event)" th:if="${lm}">
+													<img src="/trikots/test.png" />
+													<p th:text="${lm.aufstellungsPositionsTyp.positionsName}"></p>
+												</div>
+											</div>
+										</div>
+										<div class="col-4 aufstellung-position text-center">
+											<div class="droptarget" id="zm" ondrop="drop(event)" ondragover="allowDrop(event)">
+												<div id="zmdrag" draggable="true" ondragstart="drag(event)" th:if="${zm}">
+													<img src="/trikots/test.png" />
+													<p th:text="${zm.aufstellungsPositionsTyp.positionsName}"></p>
+												</div>
+											</div>
+										</div>
+										<div class="col-4 aufstellung-position text-center">
+											<div class="droptarget" id="rm" ondrop="drop(event)" ondragover="allowDrop(event)">
+												<div id="rmdrag" draggable="true" ondragstart="drag(event)" th:if="${rm}">
+													<img src="/trikots/test.png" />
+													<p th:text="${rm.aufstellungsPositionsTyp.positionsName}"></p>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row aufstellungs-reihe">
+										<div class="col-4"></div>
+										<div class="col-4 aufstellung-position text-center">
+										<div class="droptarget" id="dm" ondrop="drop(event)" ondragover="allowDrop(event)">
+											<div id="dmdrag" draggable="true" ondragstart="drag(event)" th:if="${dm}">
+													<img src="/trikots/test.png" />
+													<p th:text="${dm.aufstellungsPositionsTyp.positionsName}"></p>
+												</div>
+											</div>
+										</div>
+										<div class="col-4"></div>
+									</div>
+									<div class="row aufstellungs-reihe">
+										<div class="col-4 aufstellung-position text-center">
+											<div class="droptarget" id="lv" ondrop="drop(event)" ondragover="allowDrop(event)">
+												<div id="lvdrag" draggable="true" ondragstart="drag(event)" th:if="${lv}">
+													<img src="/trikots/test.png" />
+													<p th:text="${lv.aufstellungsPositionsTyp.positionsName}"></p>
+												</div>
+											</div>
+										</div>
+										<div class="col-4 aufstellung-position text-center">
+											<div class="droptarget" id="lib" ondrop="drop(event)" ondragover="allowDrop(event)">
+												<div id="libdrag" draggable="true" ondragstart="drag(event)" th:if="${lib}">
+													<img src="/trikots/test.png" />
+													<p th:text="${lib.aufstellungsPositionsTyp.positionsName}"></p>
+												</div>
+											</div>
+										</div>
+										<div class="col-4 aufstellung-position text-center">
+											<div class="droptarget" id="rv" ondrop="drop(event)" ondragover="allowDrop(event)">
+												<div id="rvdrag" draggable="true" ondragstart="drag(event)" th:if="${rv}">
+													<img src="/trikots/test.png" />
+													<p th:text="${rv.aufstellungsPositionsTyp.positionsName}"></p>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row aufstellungs-reihe">
+										<div class="col-2"></div>
+										<div class="col-4 aufstellung-position text-center">
+											<div class="droptarget" id="liv" ondrop="drop(event)" ondragover="allowDrop(event)">
+												<div id="livdrag" draggable="true" ondragstart="drag(event)" th:if="${tw}">
+													<img src="/trikots/test.png" />
+													<p th:text="${liv.aufstellungsPositionsTyp.positionsName}"></p>
+												</div>
+											</div>
+										</div>
+										<div class="col-4 aufstellung-position text-center">
+											<div class="droptarget" id="riv" ondrop="drop(event)" ondragover="allowDrop(event)">
+												<div id="rivdrag" draggable="true" ondragstart="drag(event)" th:if="${riv}">
+													<img src="/trikots/test.png" />
+													<p th:text="${riv.aufstellungsPositionsTyp.positionsName}"></p>
+												</div>
+											</div>
+										</div>
+										<div class="col-2"></div>
+									</div>
+									<div class="row aufstellungs-reihe">
+										<div class="col-4"></div>
+										<div class="col-4 aufstellung-position text-center">
+											<div class="droptarget" id="tw" ondrop="drop(event)" ondragover="allowDrop(event)">
+												<div id="twdrag" draggable="true" ondragstart="drag(event)" th:if="${tw}">
+													<img src="/trikots/test.png" />
+													<p th:text="${tw.aufstellungsPositionsTyp.positionsName}"></p>
+												</div>
+											</div>
+										</div>
+										<div class="col-4"></div>
+									</div>
+								</div>
+								<div class="col-1"></div>
+								<div class="col-4 border rounded">
+									<div class="row aufstellungs-reihe">
+										<div class="col-4 aufstellung-position text-center" 
+											th:each="spieler, stat : ${alleSpielerNichtAufSpielfeld}">
+											<div class="droptarget" th:id="${spieler.id}" ondrop="drop(event)" ondragover="allowDrop(event)">
+												<div th:id="${spieler.id}+'drag'" draggable="true" ondragstart="drag(event)">
+													<img src="/trikots/test.png" />
+													<div>
+														<img th:src="@{${spieler.nationalitaet.landNameTyp.bild}}" />
+														<a th:text="'('+${spieler.position}+')'+' | '+${ls.name}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
+														<span th:text="${spieler.spielerStaerke.staerke}"></span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div>
+										<a class="" th:href="@{/team/}+${aktuellesTeam.id}+'/spieler/umbenennen'">Spieler umbenennen</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<th:block th:include="fragments/header :: scripts" />
+	<th:block>
+		<script>
+			function openWindowInNewWindow(id) {
+				var spielerId = id
+				window.open('../spieler/' + spielerId,'spieler','resizable,height=700,width=700'); 
+				return false;
+			}
+		</script>
+		<script>
+			function allowDrop(ev) {		    
+			    ev.preventDefault();
+			}
+	
+			function drag(ev) {
+				var element = document.getElementById(event.currentTarget.id);
+			    ev.dataTransfer.setData("src", event.currentTarget.id);
+			}
+	
+			function drop(ev) {
+			    ev.preventDefault();
+			    var src = document.getElementById(ev.dataTransfer.getData("src"));
+			    var srcParent = src.parentNode;
+			    var tgt = ev.currentTarget.firstElementChild;
+				
+			    ev.currentTarget.replaceChild(src, tgt);
+			    srcParent.appendChild(tgt);
+			}
+		</script>
+	</th:block>
+</body>
+</html>

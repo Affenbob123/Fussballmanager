@@ -13,9 +13,9 @@ public enum PositionenTypen {
 	RM("Rechtes Mittelfeld", 9, RollenTypen.MITTELFELD),
 	ZM("Zentrales Mittelfeld", 10, RollenTypen.MITTELFELD),
 	OM("Offensives Mittelfeld", 11, RollenTypen.MITTELFELD),
-	LS("Linkes Stürmer", 12, RollenTypen.ANGREIFER),
+	LS("Linker Stürmer", 12, RollenTypen.ANGREIFER),
 	MS("Mittelstürmer", 13, RollenTypen.ANGREIFER),
-	RS("Rechtes Stürmer", 14, RollenTypen.ANGREIFER);    
+	RS("Rechter Stürmer", 14, RollenTypen.ANGREIFER);    
     private final String positionsName;
     private final int rangfolge;
     private final RollenTypen rollenTyp;
