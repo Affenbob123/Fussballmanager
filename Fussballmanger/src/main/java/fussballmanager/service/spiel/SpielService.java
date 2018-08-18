@@ -1,6 +1,7 @@
 package fussballmanager.service.spiel;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -49,16 +50,6 @@ public class SpielService {
 		return spielRepository.getOne(id);
 	}
 	
-	public Spiel findeSpielEinesTeamsInSaisonUndSpieltagUndSpielTyp(Team team, Saison saison, Spieltag spieltag, SpieleTypen spielTyp) {
-		List<Spiel> spiele = findeAlleSpieleEinerSaisonUndSpieltagesNachSpielTyp(saison, spieltag, spielTyp);
-		for(Spiel spiel : spiele) {
-			if(spiel.getHeimmannschaft().equals(team) || spiel.getGastmannschaft().equals(team)) {
-				return spiel;
-			}
-		}
-		return null;
-	}
-	
 	public List<Spiel> findeAlleSpiele() {
 		return spielRepository.findAll();
 	}
@@ -77,7 +68,7 @@ public class SpielService {
 		return alleSpieleEinerLiga;
 	}
 	
-	public List<Spiel> findeAlleSpieleEinerLigaUndSaisonUndSpieltag(Liga liga, Saison saison, Spieltag spieltag) {
+	public List<Spiel> findeAlleLigaspieleEinerLigaUndSaisonUndSpieltag(Liga liga, Saison saison, Spieltag spieltag) {
 		List<Team> alleTeamsEinerLiga = teamService.findeAlleTeamsEinerLiga(liga);
 		List<Spiel> alleSpieleEinerLigaEinerSaisonEinesSpieltages = new ArrayList<>();
 		
@@ -95,11 +86,31 @@ public class SpielService {
 	}
 	
 	public List<Spiel> findeAlleSpieleEinerSaisonUndSpieltagesNachSpielTyp(Saison saison, Spieltag spieltag, SpieleTypen spielTyp) {
-		return spielRepository.findBySaisonAndSpieltagAndSpielTyp(saison, spieltag, spielTyp);
+		List<Spiel> alleSpieleEinesSpieltags = new ArrayList<Spiel>();
+		alleSpieleEinesSpieltags = spielRepository.findBySaisonAndSpieltagAndSpielTyp(saison, spieltag, spielTyp);
+		return alleSpieleEinesSpieltags;
 	}
 	
 	public List<Spiel> findeAlleSpieleEinerSaisonUndSpieltagesEinesTeams(Saison saison, Spieltag spieltag, Team team) {
 		return spielRepository.findByHeimmannschaftOrGastmannschaftAndSaisonAndSpieltag(team, team, saison, spieltag);
+	}
+	
+	public List<Spiel> findeSpielEinesTeamsDasAngefangenHatAberNichtVorbeiIstUndAmAktuellenSpieltagStattfindet(Team team) {
+		List<Spiel> alleAngefangenSpieleDesSpieltages = spielRepository.findByAngefangenAndVorbeiAndSaisonAndSpieltag(
+				true, false, saisonService.findeAktuelleSaison(), spieltagService.findeAktuellenSpieltag());
+		List<Spiel> result = new ArrayList<>();
+		
+		for(Spiel spiel : alleAngefangenSpieleDesSpieltages) {
+			if((spiel.getHeimmannschaft().equals(team) || spiel.getGastmannschaft().equals(team))) {
+				result.add(spiel);
+			}
+		}
+		return result;
+	}
+	
+	public List<Spiel> findeAlleSpieleAngefangenHabenUndAmAktuellenSpieltagStattfindenUndNichtVorbeiSind(
+			Spieltag aktuellerSpieltag) {
+		return spielRepository.findByAngefangenAndVorbeiAndSpieltag(true, false, aktuellerSpieltag);
 	}
 	
 	public List<Spiel> findeAlleAbgeschlossenenUndAngefangenenSpieleEinesTeamsNachSpielTypUndSaison(Team team, SpieleTypen spielTyp, Saison saison) {
@@ -282,10 +293,12 @@ public class SpielService {
 			spiel.setToreHeimmannschaftZurHalbzeit(toreHeimmannschaftZurHalbzeit);
 			spiel.setToreGastmannschaftZurHalbzeit(toreGastmannschaftZurHalbzeit);
 			aktualisiereSpiel(spiel);
-			tabellenEintragService.einenTabellenEintragAktualisieren(
-					tabellenEintragService.findeTabellenEintragDurchTeamUndSaison(spiel.getHeimmannschaft(), saisonService.findeAktuelleSaison()));
-			tabellenEintragService.einenTabellenEintragAktualisieren(
-					tabellenEintragService.findeTabellenEintragDurchTeamUndSaison(spiel.getGastmannschaft(), saisonService.findeAktuelleSaison()));
+			if(spiel.getSpielTyp().equals(SpieleTypen.LIGASPIEL)) {
+				tabellenEintragService.einenTabellenEintragAktualisieren(
+						tabellenEintragService.findeTabellenEintragDurchTeamUndSaison(spiel.getHeimmannschaft(), saisonService.findeAktuelleSaison()));
+				tabellenEintragService.einenTabellenEintragAktualisieren(
+						tabellenEintragService.findeTabellenEintragDurchTeamUndSaison(spiel.getGastmannschaft(), saisonService.findeAktuelleSaison()));
+			}
 		}
 	}
 	
@@ -304,9 +317,10 @@ public class SpielService {
 	}
 
 	public void aufgabenNachSpiel() {
-		List<Spiel> alleSpieleEinesSpieltages = findeAlleSpieleEinerSaisonUndSpieltages(saisonService.findeAktuelleSaison(), spieltagService.findeAktuellenSpieltag());
+		List<Spiel> alleSpieleEinesSpieltagesDieAngefangenHabenUndNichtVorbeiSind = 
+				findeAlleSpieleAngefangenHabenUndAmAktuellenSpieltagStattfindenUndNichtVorbeiSind(spieltagService.findeAktuellenSpieltag());
 		
-		for(Spiel spiel : alleSpieleEinesSpieltages) {
+		for(Spiel spiel : alleSpieleEinesSpieltagesDieAngefangenHabenUndNichtVorbeiSind) {
 			spielIstVorbei(spiel);
 		}
 	}

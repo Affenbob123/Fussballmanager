@@ -122,7 +122,8 @@
 								<tbody >
 									<tr th:each="spieler, stat : ${alleSpielerDesAktuellenTeams}" 
 										class="" th:classappend="(${spieler.aufstellungsPositionsTyp == aufstellungsPositionsTypTrainingslager
-										? 'table-danger' : ''}) + 
+											or spieler.aufstellungsPositionsTyp == aufstellungsPositionsTypVerletzt or 
+											spieler.aufstellungsPositionsTyp == aufstellungsPositionsTypGesperrt ? 'table-danger' : ''}) + 
 										(${spieler.aufstellungsPositionsTyp} == ${aufstellungsPositionsTypErsatz} ? 'table-success' : '')">
 										<td th:text="${stat.index} + 1" />
 										<td><img th:src="@{${spieler.nationalitaet.landNameTyp.bild}}" /></td>

@@ -30,9 +30,13 @@ html, body {
 	padding-bottom: 30px;
 }
 
+.nav {
+	padding-left: 10px;
+}
+
 /* main */
 
 .main-content {
-	margin-left: 230px;
+	margin-left: 250px;
 }
 

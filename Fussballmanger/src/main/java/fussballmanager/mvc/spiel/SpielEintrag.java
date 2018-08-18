@@ -2,6 +2,7 @@ package fussballmanager.mvc.spiel;
 
 import java.time.LocalTime;
 
+import fussballmanager.service.spiel.KOSpielTypen;
 import fussballmanager.service.team.Team;
 
 public class SpielEintrag {
@@ -27,6 +28,8 @@ public class SpielEintrag {
 	private double staerkeHeimmannschaft;
 	
 	private double staerkeGastmannschaft;
+	
+	private KOSpielTypen kOSpielTyp;
 
 	public long getId() {
 		return id;
@@ -116,6 +119,14 @@ public class SpielEintrag {
 		this.staerkeGastmannschaft = staerkeGastmannschaft;
 	}
 	
+	public KOSpielTypen getkOSpielTyp() {
+		return kOSpielTyp;
+	}
+
+	public void setkOSpielTyp(KOSpielTypen kOSpielTyp) {
+		this.kOSpielTyp = kOSpielTyp;
+	}
+
 	public String spielbeginnToString() {
 		String s = "";
 		
@@ -155,8 +166,12 @@ public class SpielEintrag {
 	
 	public String gastmannschaftUndStaerkeToString() {
 		String s = "";
+		if(gastmannschaft == null) {
+			s = "Freilos";
+		} else {
+			s = gastmannschaft.getName() + " (" + staerkeGastmannschaft + ")";
+		}
 		
-		s = gastmannschaft.getName() + " (" + staerkeGastmannschaft + ")";
 		return s;
 	}
 }

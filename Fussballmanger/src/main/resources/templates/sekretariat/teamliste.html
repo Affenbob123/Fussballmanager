@@ -26,21 +26,15 @@
 						<div class="alert alert-danger" th:if="${errorMessage}">
 				  			<strong><p th:utext="${errorMessage}"></p></strong>
 						</div>
-						<div>
-							<form method="POST" th:action="@{/team/neu}">
-								<button type="submit" name="submit" value="value"
-									class="btn btn-success btn-sm button-toggle">
-									<span aria-hidden="true">Neues Team</span>
-								</button>
-							</form>
-						</div>
-						<div>
-							<form method="GET" th:action="@{/teams/umbenennen}">
-								<button type="submit" name="submit" value="value"
-									class="btn btn-primary btn-sm button-toggle">
-									<span aria-hidden="true">Teams umbenennen</span>
-								</button>
-							</form>
+						<div class="row">
+							<div class="col neues-team-button">
+								<form method="POST" th:action="@{/team/neu}">
+									<button type="submit" name="submit" value="value"
+										class="btn btn-success btn-sm button-toggle">
+										<span aria-hidden="true">Neues Team erstellen</span>
+									</button>
+								</form>
+							</div>
 						</div>
 						<table class="table table-hover">
 							<thead>
@@ -70,6 +64,9 @@
 								</td>
 							</tr>
 						</table>
+						<div class="text-center">
+							<a class="" th:href="@{/teams/umbenennen}">Teams umbenennen</a>
+						</div>
 					</div>
 				</div>
 			</div>

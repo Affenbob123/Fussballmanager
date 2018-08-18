@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head th:insert="fragments/header :: head"></head>
+<head>
+	<link rel="stylesheet" href="/turnier.css" />
+</head>
+<body>
+	<div th:insert="fragments/header :: header"></div>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="" th:insert="fragments/sidebar :: sidebar"></div>
+			<div class="col-lg-10 main-content">
+				<div class="row">
+					<div class="col-lg-11">
+						<div class="row" >
+							<div class="col-5"></div>
+							<div class="col-3" th:insert="fragments/aktuelleteamanzeige :: aktuelleteamanzeige"></div>
+						</div>
+					</div>
+					<div class="col-lg-11 main">
+						<hr>
+						<h4>Turnier erstellen</h4>
+						<div class="row">
+							<div class="col-5 border rounded">
+								<form method="POST" action="/turnier/erstellen" th:object="${turnier}">
+									<input type="hidden" th:field="*{id}">
+									<div class="col-4 form-group">
+										<label>Spieltag:</label>
+										<select class="custom-select from-control" th:field="*{spieltag}">
+											<option
+												  th:each="s : ${alleSpieltageNachDemAktuellen}" 
+												  th:text="${s.spieltagNummer}"
+												  th:value="${s.id}">
+											</option>
+										</select>
+									</div>
+									<div class="col-12 form-group">
+										<label>Name:</label>
+										<input class="form-control"type="text" th:field="*{name}">
+									</div>
+									<div class="col-12 form-group">
+										<label>Beschreibung:</label>
+										<input class="form-control"type="text" th:field="*{beschreibung}">
+									</div>
+									<div class="col-2">
+										<button type="submit" name="submit" value="value"
+											class="btn btn-sm btn-success button-toggle" th:text="Erstellen" >
+										</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<th:block th:replace="fragments/header :: scripts" />
+</body>
+</html>

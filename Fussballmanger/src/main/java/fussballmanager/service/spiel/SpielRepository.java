@@ -1,6 +1,5 @@
 package fussballmanager.service.spiel;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -40,4 +39,9 @@ public interface SpielRepository extends JpaRepository<Spiel, Long> {
 
 	Spiel findBySpielTypAndHeimmannschaftAndSaisonAndSpieltag(SpieleTypen ligaspiel, Team team,
 			Saison saison, Spieltag spieltag);
+
+	List<Spiel> findByAngefangenAndVorbeiAndSpieltag(boolean b, boolean c, Spieltag aktuellerSpieltag);
+
+	List<Spiel> findByAngefangenAndVorbeiAndSaisonAndSpieltag(
+			boolean b, boolean c, Saison findeAktuelleSaison, Spieltag findeAktuellenSpieltag);
 }

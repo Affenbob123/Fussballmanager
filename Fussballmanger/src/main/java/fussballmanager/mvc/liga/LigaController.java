@@ -111,7 +111,7 @@ public class LigaController {
 	public List<SpielEintrag> erstelleSpielEintraegeEinerLiga(Land land, Liga liga, Saison saison, Spieltag spieltag) {
 		List<SpielEintrag> spielEintraege = new ArrayList<>();
 		List<Spiel> alleSpieleEinerLigaEinesSpieltages = 
-				spielService.findeAlleSpieleEinerLigaUndSaisonUndSpieltag(liga, saison, spieltag);
+				spielService.findeAlleLigaspieleEinerLigaUndSaisonUndSpieltag(liga, saison, spieltag);
 		for (Spiel spiel : alleSpieleEinerLigaEinesSpieltages) {
 			spielEintraege.add(erstelleSpielEintragEinerLiga(spiel));
 		}

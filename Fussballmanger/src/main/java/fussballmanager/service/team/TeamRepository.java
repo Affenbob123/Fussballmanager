@@ -20,4 +20,6 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
 	List<Team> findByLiga(Liga liga);
 	
 	List<Team> findByUserAndImLiveticker(User user, boolean imLiveticker);
+
+	Team findByLandAndUser(Land land, User user);
 }

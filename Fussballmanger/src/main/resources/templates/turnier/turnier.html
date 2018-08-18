@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head th:insert="fragments/header :: head"></head>
+<head>
+	<link rel="stylesheet" href="/turnier.css" />
+</head>
+<body>
+	<div th:insert="fragments/header :: header"></div>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="" th:insert="fragments/sidebar :: sidebar"></div>
+			<div class="col-lg-10 main-content">
+				<div class="row">
+					<div class="col-lg-11">
+						<div class="row" >
+							<div class="col-5"></div>
+							<div class="col-3" th:insert="fragments/aktuelleteamanzeige :: aktuelleteamanzeige"></div>
+						</div>
+					</div>
+					<div class="col-lg-11 main">
+						<hr>
+						<h4 th:text="'Turnier: '+${ausgewaehltesTurnier.name}"></h4>
+						<div class="row">
+							<div class="col-8">
+								<div class="row">
+									<div class="col-10">
+										<table class="table table-hover">
+											<tbody>
+												<tr>
+													<td class="table-active">Name</td>
+													<td th:text="${ausgewaehltesTurnier.name}"></td>
+												</tr>
+												<tr>
+													<td class="table-active">Turnierstart</td>
+													<td th:text="${ausgewaehltesTurnier.spieltag.spieltagNummer}+'. Spieltag'"></td>
+												</tr>
+												<tr>
+													<td class="table-active">Ersteller</td>
+													<td th:text="${ausgewaehltesTurnier.user.username}"></td>
+												</tr>
+												<tr>
+													<td class="table-active">Beschreibung</td>
+													<td th:text="${ausgewaehltesTurnier.beschreibung}"></td>
+												</tr>
+												<tr>
+													<td class="table-active">Teilnehmer</td>
+													<td th:text="${ausgewaehltesTurnier.teams.size()}"></td>
+												</tr>
+												<tr>
+													<td class="table-active">Pr&auml;mie</td>
+													<td th:text="${ausgewaehltesTurnier.praemien}"></td>
+												</tr>
+												<tr th:if="${auth.name == ausgewaehltesTurnier.user.login  and ausgewaehltesTurnier.gestartet == false}">
+													<td class="table-active">Geschlossen</td>
+													<td>
+														<form method="POST" th:action="@{/turnier/}+${ausgewaehltesTurnier.id}+'/turnierstatus'" 
+															th:object="${ausgewaehltesTurnier}">
+															<input type="hidden" th:field="*{id}">
+															<div class="custom-control custom-checkbox align-middle text-left">
+																<input type="checkbox" th:field="*{geschlossen}" th:name="geschlossen" 
+																	th:value="${true}" onchange="this.form.submit();">
+															</div>
+														</form>
+													</td>
+												</tr>
+												<tr>
+													<td></td> 
+													<td>
+														<div th:if="${auth.name == ausgewaehltesTurnier.user.login and ausgewaehltesTurnier.gestartet == false}">
+															<form method="POST" th:action="@{/turnier/}+${ausgewaehltesTurnier.id}+'/loeschen'" 
+																		th:object="${ausgewaehltesTurnier}">
+																<input type="hidden" th:field="*{id}">
+																<button type="submit" name="submit" value="value" 
+																	class="btn btn-sm btn-danger button-toggle"> Turnier l&ouml;schen
+																</button>
+															</form>
+														</div>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<div class="row" th:unless="${ausgewaehltesTurnier.geschlossen}">
+									<div class="col-6">
+										<h6>Teams hinzuf&uuml;gen:</h6>
+										<form method="POST" th:action="@{/turnier/}+${ausgewaehltesTurnier.id}" th:object="${ausgewaehltesTurnier}">
+											<table class="table table-hover">
+												<thead>
+													<tr>
+														<th scope="col">Liga</th>
+														<th scope="col">Name</th>
+														<th scope="col"></th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr th:each="team, stat : ${alleTeamsDesAktuellenUser}">
+														<td th:text="${team.liga.ligaNameTyp.name}"></td>
+														<td th:text="${team.name}"></td>
+														<td>
+															<div class="custom-control custom-checkbox align-middle">
+																<input type="checkbox" th:field="*{teams}" th:name="teams" th:value="${team.id}">
+															</div>
+															<input type="hidden" th:field="*{id}">
+														</td>
+													</tr>
+												</tbody>
+											</table>
+											<div class="col-12 text-right">
+												<button type="submit" name="submit" value="value"
+													class="btn btn-sm btn-success button-toggle" th:text="Anmelden" >
+												</button>
+											</div>
+										</form>
+									</div>
+								</div>
+								<div class="row" th:if="${ausgewaehltesTurnier.gestartet}">
+									<div class="col">
+										<table class="table table-hover">
+											<thead>
+												<tr class="table-active">
+													<th scope="col">Turnierphase</th>
+													<th scope="col">Spieltag</th>
+													<th scope="col">Spielbeginn</th>
+													<th scope="col">Heimmannschaft</th>
+													<th scope="col">Ergebnis</th>
+													<th scope="col">Gastmannschaft</th>
+												</tr>
+											</thead>
+											<tr class="" th:each="spielEintrag : ${alleSpieleEinesTurniers}">
+												<td th:text="${spielEintrag.kOSpielTyp.bezeichnung}" />
+												<td th:text="${spielEintrag.spieltag}" />
+												<td th:text="${spielEintrag.spielbeginnToString()}" />
+												<td th:unless="${spielEintrag.heimmannschaft == null}">
+													<a th:text="${spielEintrag.heimmannschaftUndStaerkeToString()}" th:href="@{/team/}+${spielEintrag.heimmannschaft.id}"></a>
+												</td>
+												<td th:if="${spielEintrag.heimmannschaft == null}"><strong><span>Freilos</span></strong></td>
+												<td class="ergebnisInTabelle">
+													<a class="" th:href="@{/spiel/}+${spielEintrag.id}">
+														<span th:text="${spielEintrag.spielErgebnisToString()}"></span><br>
+														<span th:text="${spielEintrag.spielErgebnisHalbzeitToString()}"></span>
+													</a>
+												</td>
+												<td th:unless="${spielEintrag.gastmannschaft == null}">
+													<a th:text="${spielEintrag.gastmannschaftUndStaerkeToString()}" th:href="@{/team/}+${spielEintrag.gastmannschaft.id}"></a>
+												</td>
+												<td th:if="${spielEintrag.gastmannschaft == null}"><strong><span>Freilos</span></strong></td>
+											</tr>
+										</table>
+									</div>
+								</div>
+							</div>
+							<div class="col-4" th:unless="${ausgewaehltesTurnier.gestartet}">
+								<h6>Teilnehmer:</h6>
+								<table class="table table-hover">
+									<thead>
+										<tr>
+											<th scope="col">#</th>
+											<th scope="col">Name</th>
+											<th scope="col">Liga</th>
+											<th scope="col">Staerke</th>
+											<th scope="col"></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="team, stat : ${ausgewaehltesTurnier.teams}">
+											<td th:text="${stat.index+1}"></td>
+											<td th:text="${team.name}"></td>
+											<td th:text="${team.liga.ligaNameTyp.name}"></td>
+											<td th:text="${team.staerke}"></td>
+											<td th:if="${auth.name == team.user.username}">
+												<form method="POST" th:action="@{/turnier/}+${ausgewaehltesTurnier.id}+'/loeschen/'+${team.id}" 
+															th:object="${ausgewaehltesTurnier}">
+													<button type="submit" name="submit" value="value" 
+														class="btn btn-sm btn-danger button-toggle">Team entfernen
+													</button>
+												</form>
+											</td>
+											<td th:unless="${auth.name == team.user.username}"></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<th:block th:replace="fragments/header :: scripts" />
+</body>
+</html>

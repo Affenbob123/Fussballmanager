@@ -87,6 +87,10 @@ public class TeamService {
 		return teamRepository.findAll();
 	}
 	
+	public Team findeFreilosTeam() {
+		return teamRepository.findByLandAndUser(null, null);
+	}
+	
 	public List<Team> findeAlleTeamsEinesUsers(User user) {
 		return teamRepository.findByUser(user);
 	}

@@ -15,4 +15,6 @@ public interface SpieltagRepository extends JpaRepository<Spieltag, Long>{
 	Spieltag findByAktuellerSpieltagTrue();
 	
 	List<Spieltag> findBySaison(Saison saison);
+
+	List<Spieltag> findBySpieltagNummerGreaterThanAndSaison(int spieltagNummer, Saison findeAktuelleSaison);
 }

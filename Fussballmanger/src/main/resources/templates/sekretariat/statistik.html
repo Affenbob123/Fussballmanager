@@ -81,7 +81,7 @@
 							</form>
 						</div>
 						<div class="col-lg-12">
-							<table class="table table-hover table-condensed" style="border-collapse:collapse;">
+							<table class="table table-hover">
 								<thead>
 									<tr class="table-active">
 										<th scope="col">#</th>
@@ -107,14 +107,15 @@
 										<td th:if="${spieler.team}">
 											<a class="" th:text="${spieler.team.name}" th:href="@{/team/}+${spieler.team.id}"></a>
 										</td>
+										<td th:unless="${spieler.team}">
+											<a class="" th:text="Systemspieler"></a>
+										</td>
 										<td th:text="${spieler.alter}" />
 										<td> 
 											<a th:text="${spieler.name}" th:id="${spieler.id}" onClick="openWindowInNewWindow(this.id)"
 												href="#"></a>
 										</td>
-										<td th:unless="${spieler.team}">
-											<a class="" th:text="Systemspieler"></a>
-										</td>
+
 										<td th:text="${zahlenFormat.format(spieler.spielerStaerke.reinStaerke)}" />
 										<td th:text="${spieler.erfahrung}" />
 										<td th:text="${spieler.tore}" />

@@ -66,8 +66,7 @@ public class LiveTickerController {
 		List<Spiel> alleSpieleDerTeamsImLiveticker = new ArrayList<>();
 		
 		for(Team team : alleTeamsDesUsersImLiveticker) {
-			alleSpieleDerTeamsImLiveticker.add(spielService.findeSpielEinesTeamsInSaisonUndSpieltagUndSpielTyp(team, 
-					saisonService.findeAktuelleSaison(), spieltagService.findeAktuellenSpieltag(), SpieleTypen.LIGASPIEL));
+			alleSpieleDerTeamsImLiveticker.addAll(spielService.findeSpielEinesTeamsDasAngefangenHatAberNichtVorbeiIstUndAmAktuellenSpieltagStattfindet(team));
 		}
 		
 		List<Torversuch> alleTorversucheDerTeamsImLiveticker = erstelleListeAnTorversuchen(alleTeamsDesUsersImLiveticker);
@@ -173,9 +172,12 @@ public class LiveTickerController {
 		spielEintrag.setSpielbeginn(spiel.getSpielTyp().getSpielBeginn());
 		spielEintrag.setHeimmannschaft(spiel.getHeimmannschaft());
 		spielEintrag.setGastmannschaft(spiel.getGastmannschaft());
-		spielEintrag.setStaerkeHeimmannschaft(spiel.getHeimmannschaft().getStaerke());
-		spielEintrag.setStaerkeGastmannschaft(spiel.getGastmannschaft().getStaerke());
-		
+		if(spiel.getHeimmannschaft() != null) {
+			spielEintrag.setStaerkeHeimmannschaft(spiel.getHeimmannschaft().getStaerke());
+		}
+		if(spiel.getGastmannschaft() != null) {
+			spielEintrag.setStaerkeGastmannschaft(spiel.getGastmannschaft().getStaerke());
+		}
 		return spielEintrag;
 	}
 	

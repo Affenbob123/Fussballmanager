@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -35,6 +36,8 @@ import fussballmanager.service.spiel.SpielService;
 import fussballmanager.service.spiel.SpieleTypen;
 import fussballmanager.service.spiel.spielereignisse.SpielEreignis;
 import fussballmanager.service.spiel.spielereignisse.SpielEreignisTypen;
+import fussballmanager.service.spiel.turnier.Turnier;
+import fussballmanager.service.spiel.turnier.TurnierService;
 import fussballmanager.service.spieler.AufstellungsPositionsTypen;
 import fussballmanager.service.spieler.Spieler;
 import fussballmanager.service.spieler.SpielerService;
@@ -95,8 +98,11 @@ public class FussballmanagerTestData {
 	@Autowired
 	StadionService stadionService;
 	
-	String LoginA = "a";
-	String LoginB = "b";
+	@Autowired
+	TurnierService turnierService;
+	
+	String loginA = "a";
+	String loginB = "b";
 		
 	Random r = new Random();
 	
@@ -146,7 +152,7 @@ public class FussballmanagerTestData {
 		tabellenEintragTeamB.setTeam(teamB);
 		tabellenEintragService.legeTabellenEintragAn(tabellenEintragTeamB);
 		
-		User userA = new User(LoginA, LoginA, false, LoginA, LoginA);
+		User userA = new User(loginA, loginA, false, loginA, loginA);
 		userA.setLand(landService.findeLand(LaenderNamenTypen.DEUTSCHLAND));
 		userService.legeUserAn(userA);
 		teamB.setUser(userA);
@@ -224,17 +230,38 @@ public class FussballmanagerTestData {
 		spieltagService.wechsleAktuellenSpieltag();
 	}
 	
-	private void erzeugeTestUser() {
-		User userA = new User(LoginA, LoginA, false, LoginA, LoginA);
-		userA.setLand(landService.findeLand(LaenderNamenTypen.DEUTSCHLAND));
-		userService.legeUserAn(userA);
+	public void erzeugeTestTurnier() {
+		Turnier turnier = new Turnier();
+		turnier.setName("turn1");
+		turnier.setBeschreibung("turnier1");
+		turnier.setPraemien(1000L);
+		turnier.setTeams(teamService.findeAlleTeamsEinesUsers(userService.findeUser(loginA)));
+		turnier.setUser(userService.findeUser("a"));
+		turnier.setSpieltag(spieltagService.
+				findeSpieltagDurchSaisonUndSpieltagNummer(saisonService.findeAktuelleSaison(), 
+						spieltagService.findeAktuellenSpieltag().getSpieltagNummer() +1));
+		turnierService.legeTurnierAn(turnier);
 	}
 	
-	//@Scheduled(cron = "0 0/3 * * * ?", zone="Europe/Berlin")
+	private void erzeugeTestUser() {
+		User userA = new User(loginA, loginA, false, loginA, loginA);
+		userA.setLand(landService.findeLand(LaenderNamenTypen.DEUTSCHLAND));
+		userService.legeUserAn(userA);
+		User userB = new User(loginB, loginB, false, loginB, loginB);
+		userB.setLand(landService.findeLand(LaenderNamenTypen.DEUTSCHLAND));
+		userService.legeUserAn(userB);
+		
+		for(int i = 0; i < teamService.findeAlleTeams().size() - 5; i++) {
+			teamService.findeAlleTeams().get(i).setUser(userA);
+		}
+	}
+	
+	//@Scheduled(cron = "0 3/6 * * * ?", zone="Europe/Berlin")
 	public void spielAnfang() {
-		List<Spiel> alleSpieleDesSpieltages = spielService.findeAlleSpieleEinerSaisonUndSpieltages(
-				saisonService.findeAktuelleSaison(), spieltagService.findeAktuellenSpieltag());
-		for(Spiel spiel :alleSpieleDesSpieltages) {
+		List<Spiel> alleLigaspieleEinesSpieltages = spielService.
+			findeAlleSpieleEinerSaisonUndSpieltagesNachSpielTyp(saisonService.findeAktuelleSaison(), spieltagService.findeAktuellenSpieltag(), SpieleTypen.LIGASPIEL);
+		
+		for(Spiel spiel :alleLigaspieleEinesSpieltages) {
 			spiel.setAngefangen(true);
 			spielService.aktualisiereSpiel(spiel);
 			LOG.info("spiel angefangen");
@@ -242,34 +269,82 @@ public class FussballmanagerTestData {
 		tabellenEintragService.alleTabellenEintraegeAktualisieren();
 	}
 	
-	//@Scheduled(cron = "0 1/3 * * * ?", zone="Europe/Berlin")
-	public void spielHalbzeit() {
-		List<Spiel> alleSpieleDesSpieltages = spielService.findeAlleSpieleEinerSaisonUndSpieltages(
-				saisonService.findeAktuelleSaison(), spieltagService.findeAktuellenSpieltag());
-		for(Spiel spiel :alleSpieleDesSpieltages) {
-			spiel.setHalbzeitAngefangen(true);
-			spielService.aktualisiereSpiel(spiel);
-		}
-	}
-	
-	//@Scheduled(cron = "15-59 0/3 * * * ?", zone="Europe/Berlin")
+	//@Scheduled(cron = "15-59 3/6 * * * ?", zone="Europe/Berlin")
 	public void simuliereSpieleErsteHalbzeit() {
 		spielminute++;
 		simuliereLigaspielErsteHalbzeit(spielminute);
 		LOG.info("erste halbzeit: {}", spielminute);
 	}
 	
-	//@Scheduled(cron = "15-59 1/3 * * * ?", zone="Europe/Berlin")
+	//@Scheduled(cron = "0 4/6 * * * ?", zone="Europe/Berlin")
+	public void spielHalbzeit() {
+		List<Spiel> alleLigaspieleEinesSpieltages = spielService.
+				findeAlleSpieleEinerSaisonUndSpieltagesNachSpielTyp(saisonService.findeAktuelleSaison(), 
+						spieltagService.findeAktuellenSpieltag(), SpieleTypen.LIGASPIEL);
+			
+		for(Spiel spiel :alleLigaspieleEinesSpieltages) {
+			spiel.setHalbzeitAngefangen(true);
+			spielService.aktualisiereSpiel(spiel);
+		}
+	}
+	
+	//@Scheduled(cron = "15-59 4/6 * * * ?", zone="Europe/Berlin")
 	public void simuliereSpieleZweiteHalbzeit() {
 		spielminute++;
 		simuliereLigaspielZweiteHalbzeit(spielminute);
 		LOG.info("zweite halbzeit: {}", spielminute);
 	}
 	
-	//@Scheduled(cron = "05 2/3 * * * ?", zone="Europe/Berlin")
+	//@Scheduled(cron = "05 5/6 * * * ?", zone="Europe/Berlin")
 	public void simuliereSpielEnde() {
 		spielminute = 0;
 		aktualiserenNachSpielEnde();
+	}
+	
+	@Scheduled(cron = "0 0/3 * * * ?", zone="Europe/Berlin")
+	public void turnierSpielAnfang() {
+		List<Spiel> alleTurnierspieleEinesSpieltages = spielService.
+				findeAlleSpieleEinerSaisonUndSpieltagesNachSpielTyp(saisonService.findeAktuelleSaison(), 
+						spieltagService.findeAktuellenSpieltag(), SpieleTypen.TURNIERSPIEL);
+		LOG.info("Turnierspiele:{}", alleTurnierspieleEinesSpieltages.size());
+		for(Spiel spiel :alleTurnierspieleEinesSpieltages) {
+			spiel.setAngefangen(true);
+			spielService.aktualisiereSpiel(spiel);
+			LOG.info("Turnier angefangen");
+		}
+	}
+	
+	@Scheduled(cron = "15-59 0/3 * * * ?", zone="Europe/Berlin")
+	public void simuliereTurnierSpieleErsteHalbzeit() {
+		spielminute++;
+		simuliereTurnierspielErsteHalbzeit(spielminute);
+		LOG.info("erste halbzeit Turnier: {}", spielminute);
+	}
+	
+	@Scheduled(cron = "0 1/3 * * * ?", zone="Europe/Berlin")
+	public void turnierSpielHalbzeit() {
+		List<Spiel> alleTurnierspieleEinesSpieltages = new ArrayList<Spiel>();
+		alleTurnierspieleEinesSpieltages = spielService.
+				findeAlleSpieleEinerSaisonUndSpieltagesNachSpielTyp(saisonService.findeAktuelleSaison(), 
+						spieltagService.findeAktuellenSpieltag(), SpieleTypen.TURNIERSPIEL);
+		for(Spiel spiel :alleTurnierspieleEinesSpieltages) {
+			spiel.setHalbzeitAngefangen(true);
+			spielService.aktualisiereSpiel(spiel);
+		}
+	}
+	
+	@Scheduled(cron = "15-59 1/3 * * * ?", zone="Europe/Berlin")
+	public void simuliereTurnierSpieleZweiteHalbzeit() {
+		spielminute++;
+		simuliereTurnierspielZweiteHalbzeit(spielminute);
+		LOG.info("zweite halbzeit Turnier: {}", spielminute);
+	}
+	
+	@Scheduled(cron = "05 2/3 * * * ?", zone="Europe/Berlin")
+	public void simuliereTurnierSpielEnde() {
+		spielminute = 0;
+		aktualiserenNachSpielEnde();
+		turnierService.aufgabenNachTurnierSpielenFuerGestarteteTurniere();
 	}
 	
 	public void simuliereLigaspielErsteHalbzeit(int spielminute) {
@@ -280,20 +355,29 @@ public class FussballmanagerTestData {
 		spielSimulation.simuliereSpielMinuteAllerSpieleZweiteHalbzeit(SpieleTypen.LIGASPIEL, spielminute);
 	}
 	
+	public void simuliereTurnierspielErsteHalbzeit(int spielminute) {
+		spielSimulation.simuliereSpielMinuteAllerSpieleErsteHalbzeit(SpieleTypen.TURNIERSPIEL, spielminute);
+	}
+	
+	public void simuliereTurnierspielZweiteHalbzeit(int spielminute) {
+		spielSimulation.simuliereSpielMinuteAllerSpieleZweiteHalbzeit(SpieleTypen.TURNIERSPIEL, spielminute);
+	}
+	
 	public void aktualiserenNachSpielEnde() {
 		spielService.aufgabenNachSpiel();
 		spielerService.aufgabenNachSpiel();
 	}
 	
-	//@Scheduled(cron = "0/30 * * * * ?", zone="Europe/Berlin")
+	@Scheduled(cron = "0/30 * * * * ?", zone="Europe/Berlin")
 	public void erstelleNeueSpielerFuerTransfermarkt() {
 		spielerService.loescheSpielerVomTransfermarkt();
 		spielerService.erstelleSpielerFuerTransfermarkt();
 	}
 	
-	@Scheduled(cron = "*/20 * * * * ?", zone="Europe/Berlin")
-	//@Scheduled(cron = "15 2/3 * * * ?", zone="Europe/Berlin")
+	//@Scheduled(cron = "*/20 * * * * ?", zone="Europe/Berlin")
+	@Scheduled(cron = "15 2/3 * * * ?", zone="Europe/Berlin")
 	public void wechsleDenSpieltag() {
 		spieltagService.wechsleSpieltag();
+		turnierService.starteAlleTurniereDesSpieltages();
 	}
 }

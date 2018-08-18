@@ -5,6 +5,8 @@ import java.util.List;
 import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,13 +25,14 @@ import fussballmanager.service.team.Team;
 
 @Entity
 @Cacheable(false)
-public class Spiel implements Comparable<Spiel>{
+public class Spiel implements Comparable<Spiel> {
 	
 	@Id
 	@GeneratedValue(strategy= GenerationType.AUTO, generator="native")
 	@GenericGenerator(name = "native", strategy = "native")
 	private long id;
 	
+	@Enumerated(EnumType.STRING)
 	private SpieleTypen spielTyp;
 	
 	@OneToOne(fetch = FetchType.LAZY)
@@ -66,6 +69,9 @@ public class Spiel implements Comparable<Spiel>{
 	private boolean vorbei = false;
 	
 	private int aktuelleSpielminute = 0;
+	
+	@Enumerated(EnumType.STRING)
+	private KOSpielTypen kOSpielTyp;
 
 	public Spiel(SpieleTypen spielTyp, Team heimmannschaft, Team gastmannschaft, 
 			Spieltag spieltag, Saison saison,String spielort) {
@@ -219,6 +225,14 @@ public class Spiel implements Comparable<Spiel>{
 
 	public void setAktuelleSpielminute(int aktuelleSpielminute) {
 		this.aktuelleSpielminute = aktuelleSpielminute;
+	}
+
+	public KOSpielTypen getkOSpielTyp() {
+		return kOSpielTyp;
+	}
+
+	public void setkOSpielTyp(KOSpielTypen kOSpielTyp) {
+		this.kOSpielTyp = kOSpielTyp;
 	}
 
 	@Override

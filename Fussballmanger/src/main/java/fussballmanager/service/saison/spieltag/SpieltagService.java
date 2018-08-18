@@ -1,5 +1,7 @@
 package fussballmanager.service.saison.spieltag;
 
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -11,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import fussballmanager.service.saison.Saison;
 import fussballmanager.service.saison.SaisonService;
 import fussballmanager.service.spiel.SpielService;
+import fussballmanager.service.spiel.SpieleTypen;
 import fussballmanager.service.spieler.SpielerService;
 import fussballmanager.service.spieler.spielerzuwachs.SpielerZuwachsService;
 import fussballmanager.service.team.TeamService;
@@ -123,5 +126,17 @@ public class SpieltagService {
 		teamService.aufgabenBeiSpieltagWechsel();
 		spielerService.aufgabenBeiSpieltagWechsel();
 		stadionService.aufgabenBeiSpieltagWechsel();
+	}
+
+	public List<Spieltag> findeAlleAktuellenSpieltageFuerTurnier() {
+		LocalTime aktuelleZeit = LocalTime.now(ZoneId.of("Europe/Berlin"));
+		Spieltag aktuellerSpieltag = findeAktuellenSpieltag();
+		List<Spieltag> alleAktuellenSpieltage = 
+				spieltagRepository.findBySpieltagNummerGreaterThanAndSaison(aktuellerSpieltag.getSpieltagNummer(), saisonService.findeAktuelleSaison());
+		
+		if(SpieleTypen.TURNIERSPIEL.getSpielBeginn().isAfter(aktuelleZeit)) {
+			alleAktuellenSpieltage.add(aktuellerSpieltag);
+		}
+		return alleAktuellenSpieltage;
 	}
 }
