@@ -1,5 +1,7 @@
 package fussballmanager.service.spieler;
 
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -14,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import fussballmanager.helper.SpielstatusHelper;
 import fussballmanager.mvc.sekretariat.statistik.SortierTypen;
 import fussballmanager.mvc.sekretariat.statistik.StatistikFormular;
 import fussballmanager.service.land.LaenderNamenTypen;
@@ -549,32 +552,43 @@ public class SpielerService {
 	}
 
 	public void wechsleSpielerEin(Spieler einzuwechselnderSpieler, Spieler auszuwechselnderSpieler) {
+		Team team = teamService.findeTeam(einzuwechselnderSpieler.getTeam().getId());
+		SpielstatusHelper spielstatusHelper = new SpielstatusHelper();
+
 		if(auszuwechselnderSpieler != null) {
-			auszuwechselnderSpieler.setAufstellungsPositionsTyp(AufstellungsPositionsTypen.ERSATZ);
-			aktualisiereSpieler(auszuwechselnderSpieler);
+			auszuwechselnderSpieler.setAufstellungsPositionsTyp(einzuwechselnderSpieler.getAufstellungsPositionsTyp());
 		}
-		
-		einzuwechselnderSpieler.setAufstellungsPositionsTyp(einzuwechselnderSpieler.getAufstellungsPositionsTyp());
+		einzuwechselnderSpieler.setAufstellungsPositionsTyp(auszuwechselnderSpieler.getAufstellungsPositionsTyp());
 		aktualisiereSpieler(einzuwechselnderSpieler);
+		aktualisiereSpieler(auszuwechselnderSpieler);
+		
+		if(spielstatusHelper.getAktuellenSpielstatus() != "") {
+			team.setAnzahlAuswechselungen(team.getAnzahlAuswechselungen() - 1);
+		}
+		teamService.aktualisiereTeam(team);
+
 	}
 
-	public void wechsleSpielerEin(Spieler einzugewechselterSpieler, AufstellungsPositionsTypen aufstellungsPositionsTyp) {
-		Team team = teamService.findeTeam(einzugewechselterSpieler.getTeam().getId());
-		List<Spieler> spielerInAufstellung = findeAlleSpielerEinesTeamsInAufstellung(team);
+	public void wechsleSpielerEin(Spieler einzuwechselnderSpieler, AufstellungsPositionsTypen aufstellungsPositionsTyp) {
+		Team team = teamService.findeTeam(einzuwechselnderSpieler.getTeam().getId());
+		SpielstatusHelper spielstatusHelper = new SpielstatusHelper();
+		List<Spieler> alleSpielerEinesTeams = findeAlleSpielerEinesTeams(team);
 		
-		for(AufstellungsPositionsTypen position : team.getFormationsTyp().getAufstellungsPositionsTypen()) {
-			if(position.equals(aufstellungsPositionsTyp)) {
-				for(Spieler auszuwechselnderSpieler : spielerInAufstellung) {
-					if(auszuwechselnderSpieler.getAufstellungsPositionsTyp().equals(position)) {
-						aenderPositionenEinesSpielers(auszuwechselnderSpieler, AufstellungsPositionsTypen.ERSATZ);
+		for(AufstellungsPositionsTypen aufstellungsPosition : team.getFormationsTyp().getAufstellungsPositionsTypen()) {
+			if(aufstellungsPosition.equals(aufstellungsPositionsTyp)) {
+				for(Spieler auszuwechselnderSpieler : alleSpielerEinesTeams) {
+					if(auszuwechselnderSpieler.getAufstellungsPositionsTyp().equals(aufstellungsPosition)) {
+						aenderPositionenEinesSpielers(auszuwechselnderSpieler, einzuwechselnderSpieler.getAufstellungsPositionsTyp());
 						break;
 					}
 				}
-				aenderPositionenEinesSpielers(einzugewechselterSpieler, position);
+				aenderPositionenEinesSpielers(einzuwechselnderSpieler, aufstellungsPosition);
 				break;
 			}
 		}
-		team.setAnzahlAuswechselungen(team.getAnzahlAuswechselungen() - 1);
+		if(spielstatusHelper.getAktuellenSpielstatus() != "") {
+			team.setAnzahlAuswechselungen(team.getAnzahlAuswechselungen() - 1);
+		}
 		teamService.aktualisiereTeam(team);
 	}
 	

@@ -82,12 +82,15 @@
 							</div>
 							<div class="row">
 								<div class="col">
-									<form>
+									<form action="#" id="spielerwechseln" th:action="@{/team/}+${aktuellesTeam.id}+'/einwechseln'" th:object="${einzuwechselnderSpieler}"
+											method="post">
+										<input type="hidden" id="einzuwechselnderSpieler" name="einzuwechselnderSpieler" value=""/>
+										<input type="hidden" id="auszuwechselnderSpieler" name="auszuwechselnderSpieler" value=""/>
 										<div class="row">
 											<div class="col-6 border rounded">
 												<div class="row aufstellungs-reihe aufstellung-sturm">
 													<div class="col-4 aufstellung-position text-center">
-														<div class="droptarget" id="ls" ondrop="drop(event)"ondragover="allowDrop(event)">
+														<div class="droptarget" id="ls" ondrop="drop(event)" ondragover="allowDrop(event)">
 															<div class="" id="lsdrag" draggable="true" ondragstart="drag(event)" th:if="${ls}">
 																<img src="/trikots/test.png" />
 																<div>
@@ -95,6 +98,7 @@
 																	<a th:text="'('+${ls.position}+')'+' | '+${ls.name}" th:id="${ls.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
 																	<span th:text="${zahlenFormat.format(ls.spielerStaerke.staerke)}"></span>
 																</div>
+																<input type="hidden" id="lseinwechseln" th:value="${ls.id}" />
 															</div>
 														</div>
 													</div>
@@ -108,6 +112,7 @@
 																	<a th:text="'('+${rs.position}+')'+' | '+${rs.name}" th:id="${rs.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
 																	<span th:text="${zahlenFormat.format(rs.spielerStaerke.staerke)}"></span>
 																</div>
+																<input type="hidden" id="rseinwechseln" th:value="${rs.id}" />
 															</div>
 														</div>
 													</div>
@@ -123,6 +128,7 @@
 																	<a th:text="'('+${ms.position}+')'+' | '+${ms.name}" th:id="${ms.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
 																	<span th:text="${zahlenFormat.format(ms.spielerStaerke.staerke)}"></span>
 																</div>
+																<input type="hidden" id="mseinwechseln" th:value="${ms.id}" />
 															</div>
 														</div>
 													</div>
@@ -139,6 +145,7 @@
 																	<a th:text="'('+${om.position}+')'+' | '+${om.name}" th:id="${om.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
 																	<span th:text="${zahlenFormat.format(om.spielerStaerke.staerke)}"></span>
 																</div>
+																<input type="hidden" id="omeinwechseln" th:value="${om.id}" />
 															</div>
 														</div>
 													</div>
@@ -155,6 +162,7 @@
 																	<span th:text="${zahlenFormat.format(lm.spielerStaerke.staerke)}"></span>
 																</div>
 															</div>
+															<input type="hidden" id="lmeinwechseln" th:value="${lm.id}" />
 														</div>
 													</div>
 													<div class="col-4 aufstellung-position text-center">
@@ -166,6 +174,7 @@
 																	<a th:text="'('+${zm.position}+')'+' | '+${zm.name}" th:id="${zm.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
 																	<span th:text="${zahlenFormat.format(zm.spielerStaerke.staerke)}"></span>
 																</div>
+																<input type="hidden" id="zmeinwechseln" th:value="${zm.id}" />
 															</div>
 														</div>
 													</div>
@@ -178,6 +187,7 @@
 																	<a th:text="'('+${rm.position}+')'+' | '+${rm.name}" th:id="${rm.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
 																	<span th:text="${zahlenFormat.format(rm.spielerStaerke.staerke)}"></span>
 																</div>
+																<input type="hidden" id="rmeinwechseln" th:value="${rm.id}" />
 															</div>
 														</div>
 													</div>
@@ -193,6 +203,7 @@
 																	<a th:text="'('+${dm.position}+')'+' | '+${dm.name}" th:id="${dm.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
 																	<span th:text="${zahlenFormat.format(dm.spielerStaerke.staerke)}"></span>
 																</div>
+																<input type="hidden" id="dmeinwechseln" th:value="${dm.id}" />
 															</div>
 														</div>
 													</div>
@@ -208,6 +219,7 @@
 																	<a th:text="'('+${lv.position}+')'+' | '+${lv.name}" th:id="${lv.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
 																	<span th:text="${zahlenFormat.format(lv.spielerStaerke.staerke)}"></span>
 																</div>
+																<input type="hidden" id="lveinwechseln" th:value="${lv.id}" />
 															</div>
 														</div>
 													</div>
@@ -220,6 +232,7 @@
 																	<a th:text="'('+${lib.position}+')'+' | '+${lib.name}" th:id="${lib.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
 																	<span th:text="${zahlenFormat.format(lib.spielerStaerke.staerke)}"></span>
 																</div>
+																<input type="hidden" id="libeinwechseln" th:value="${lib.id}" />
 															</div>
 														</div>
 													</div>
@@ -232,6 +245,7 @@
 																	<a th:text="'('+${rv.position}+')'+' | '+${rv.name}" th:id="${rv.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
 																	<span th:text="${zahlenFormat.format(rv.spielerStaerke.staerke)}"></span>
 																</div>
+																<input type="hidden" id="rveinwechseln" th:value="${rv.id}" />
 															</div>
 														</div>
 													</div>
@@ -247,6 +261,7 @@
 																	<a th:text="'('+${liv.position}+')'+' | '+${liv.name}" th:id="${liv.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
 																	<span th:text="${zahlenFormat.format(liv.spielerStaerke.staerke)}"></span>
 																</div>
+																<input type="hidden" id="liveinwechseln" th:value="${liv.id}" />
 															</div>
 														</div>
 													</div>
@@ -259,6 +274,7 @@
 																	<a th:text="'('+${riv.position}+')'+' | '+${riv.name}" th:id="${riv.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
 																	<span th:text="${zahlenFormat.format(riv.spielerStaerke.staerke)}"></span>
 																</div>
+																<input type="hidden" id="riveinwechseln" th:value="${riv.id}" />
 															</div>
 														</div>
 													</div>
@@ -275,6 +291,7 @@
 																	<a th:text="'('+${tw.position}+')'+' | '+${tw.name}" th:id="${tw.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
 																	<span th:text="${zahlenFormat.format(tw.spielerStaerke.staerke)}"></span>
 																</div>
+																<input type="hidden" id="tweinwechseln" th:value="${tw.id}" />
 															</div>
 														</div>
 													</div>
@@ -294,6 +311,7 @@
 																	<a th:text="'('+${spieler.position}+')'+' | '+${spieler.name}" th:id="${spieler.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
 																	<span th:text="${zahlenFormat.format(spieler.spielerStaerke.staerke)}"></span>
 																</div>
+																<input type="hidden" th:id="${spieler.id}+'einwechseln'" th:value="${spieler.id}" />
 															</div>
 														</div>
 													</div>
@@ -326,7 +344,6 @@
 		<script>
 			function allowDrop(ev) {		    
 			    ev.preventDefault();
-				var element = document.getElementById(event.currentTarget.id);
 			}
 	
 			function drag(ev) {
@@ -337,11 +354,80 @@
 			function drop(ev) {
 			    ev.preventDefault();
 			    var src = document.getElementById(ev.dataTransfer.getData("src"));
-			    
 			    var srcParent = src.parentNode;
 			    var tgt = ev.currentTarget.firstElementChild;
 			    ev.currentTarget.replaceChild(src, tgt);
 			    srcParent.appendChild(tgt);
+			    
+			    var targetId = ev.currentTarget.id;
+			    if(src.id === "lsdrag") {
+			    	var einzuwechselnderSpieler = document.getElementById("lseinwechseln").value;
+			    } else if(src.id === "rsdrag") {
+			    	var einzuwechselnderSpieler = document.getElementById("rseinwechseln").value;
+			    } else if(src.id === "msdrag") {
+			    	var einzuwechselnderSpieler = document.getElementById("mseinwechseln").value;
+			    } else if(src.id === "omdrag") {
+			    	var einzuwechselnderSpieler = document.getElementById("omeinwechseln").value;
+			    } else if(src.id === "rmdrag") {
+			    	var einzuwechselnderSpieler = document.getElementById("rmeinwechseln").value;
+			    } else if(src.id === "zmdrag") {
+			    	var einzuwechselnderSpieler = document.getElementById("zmeinwechseln").value;
+			    } else if(src.id === "lmdrag") {
+			    	var einzuwechselnderSpieler = document.getElementById("lmeinwechseln").value;
+			    } else if(src.id === "dmdrag") {
+			    	var einzuwechselnderSpieler = document.getElementById("dmeinwechseln").value;
+			    } else if(src.id === "rvdrag") {
+			    	var einzuwechselnderSpieler = document.getElementById("rveinwechseln").value;
+			    } else if(src.id === "libdrag") {
+			    	var einzuwechselnderSpieler = document.getElementById("libeinwechseln").value;
+			    } else if(src.id === "lvdrag") {
+			    	var einzuwechselnderSpieler = document.getElementById("lveinwechseln").value;
+			    } else if(src.id === "rivdrag") {
+			    	var einzuwechselnderSpieler = document.getElementById("riveinwechseln").value;
+			    } else if(src.id === "livdrag") {
+			    	var einzuwechselnderSpieler = document.getElementById("liveinwechseln").value;
+			    } else if(src.id === "twdrag") {
+			    	var einzuwechselnderSpieler = document.getElementById("tweinwechseln").value;
+			    } else {
+			    	var srcId = src.id;
+			    	var einzuwechselnderSpieler = srcId.replace(/[^0-9\.]+/g, "");
+			    }
+			    document.getElementById("einzuwechselnderSpieler").value = einzuwechselnderSpieler;
+			    
+			    if(targetId === "ls") {
+			    	var auszuwechselnderSpieler = document.getElementById("lseinwechseln").value;
+			    } else if(targetId === "rs") {
+			    	var auszuwechselnderSpieler = document.getElementById("rseinwechseln").value;
+			    } else if(targetId === "ms") {
+			    	var auszuwechselnderSpieler = document.getElementById("mseinwechseln").value;
+			    } else if(targetId === "om") {
+			    	var auszuwechselnderSpieler = document.getElementById("omeinwechseln").value;
+			    } else if(targetId === "rm") {
+			    	var auszuwechselnderSpieler = document.getElementById("rmeinwechseln").value;
+			    } else if(targetId === "zm") {
+			    	var auszuwechselnderSpieler = document.getElementById("zmeinwechseln").value;
+			    } else if(targetId === "lm") {
+			    	var auszuwechselnderSpieler = document.getElementById("lmeinwechseln").value;
+			    } else if(targetId === "dm") {
+			    	var auszuwechselnderSpieler = document.getElementById("dmeinwechseln").value;
+			    } else if(targetId === "rv") {
+			    	var auszuwechselnderSpieler = document.getElementById("rveinwechseln").value;
+			    } else if(targetId === "lib") {
+			    	var auszuwechselnderSpieler = document.getElementById("libeinwechseln").value;
+			    } else if(targetId === "lv") {
+			    	var auszuwechselnderSpieler = document.getElementById("lveinwechseln").value;
+			    } else if(targetId === "riv") {
+			    	var auszuwechselnderSpieler = document.getElementById("riveinwechseln").value;
+			    } else if(targetId === "liv") {
+			    	var auszuwechselnderSpieler = document.getElementById("liveinwechseln").value;
+			    } else if(targetId === "tw") {
+			    	var auszuwechselnderSpieler = document.getElementById("tweinwechseln").value;
+			    } else {
+			    	var auszuwechselnderSpieler = targetId;
+			    }
+			    document.getElementById("auszuwechselnderSpieler").value = auszuwechselnderSpieler;
+			    document.getElementById("spielerwechseln").submit();
+			    
 			}
 		</script>
 	</th:block>

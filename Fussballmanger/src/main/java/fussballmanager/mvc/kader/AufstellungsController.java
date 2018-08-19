@@ -63,7 +63,9 @@ public class AufstellungsController {
 		Team team = teamService.findeTeam(teamId);
 		List<Spieler> alleSpielerAufSpielfeld = spielerService.findeAlleSpielerEinesTeamsInAufstellung(team);
 		List<Spieler> alleSpielerNichtAufSpielfeld = spielerService.findeAlleSpielerEinesTeamsAufErsatzbank(team);
+		EinUndAuswechselHelper einUndAuswechselHelper = new EinUndAuswechselHelper();
 		
+		model.addAttribute("einUndAuswechselHelper", einUndAuswechselHelper);
 		model.addAttribute("alleSpielerAufSpielfeld", alleSpielerAufSpielfeld);
 		model.addAttribute("alleSpielerNichtAufSpielfeld", alleSpielerNichtAufSpielfeld);
 		model.addAttribute("alleFormationsTypen", FormationsTypen.values());
@@ -164,33 +166,36 @@ public class AufstellungsController {
 	}
 	
 	@PostMapping("/team/{teamId}/einwechseln")
-	public String aendereFormation(Model model, Authentication auth, @PathVariable("teamId") Long id, @ModelAttribute("einzuwechselnderSpieler") Spieler spieler) {
-		Spieler einzugewechselterSpieler = spielerService.findeSpieler(spieler.getId());
-		LOG.info("{}, {}, {}, {}, {}", einzugewechselterSpieler.getId(), einzugewechselterSpieler.getName(), einzugewechselterSpieler.getAlter(), 
-				einzugewechselterSpieler.getPosition().getPositionsName(), einzugewechselterSpieler.getTeam());
-		spielerService.wechsleSpielerEin(einzugewechselterSpieler, spieler.getAufstellungsPositionsTyp());
+	public String aendereFormation(Model model, Authentication auth, @PathVariable("teamId") Long id, @ModelAttribute("einUndAuswechselHelper") EinUndAuswechselHelper einUndAuswechselHelper) {
+		Spieler eingewechselterSpieler = einUndAuswechselHelper.getEinzuwechselnderSpieler();
+		Spieler ausgewechselterSpieler = einUndAuswechselHelper.getAuszuwechselnderSpieler();
+		AufstellungsPositionsTypen aufstellungsPositionsTyp = ausgewechselterSpieler.getAufstellungsPositionsTyp();
+
+		spielerService.wechsleSpielerEin(eingewechselterSpieler, aufstellungsPositionsTyp);
+		LOG.info("Eingewechselt: {}, {}, {}, {}", eingewechselterSpieler.getId(), eingewechselterSpieler.getName(), eingewechselterSpieler.getAlter(), 
+				eingewechselterSpieler.getPosition().getPositionsName());
+		LOG.info("Ausgewechselt: {}, {}, {}, {}", ausgewechselterSpieler.getId(), ausgewechselterSpieler.getName(), ausgewechselterSpieler.getAlter(), 
+				ausgewechselterSpieler.getPosition().getPositionsName());
 		
 		return "redirect:/team/{teamId}";
 	}
 	
-	@GetMapping("/team/{id}/spieler/umbenennen")
-	public String getSpielerListeZumUmbenennen(Model model, Authentication auth, @PathVariable("id") Long teamId) {
+	@GetMapping("/team/{teamId}/spieler/umbenennen")
+	public String getSpielerListeZumUmbenennen(Model model, Authentication auth, @PathVariable("teamId") Long teamId) {
 		Team team = teamService.findeTeam(teamId);
 		SpielerListeWrapper spielerListeWrapper= new SpielerListeWrapper();
 		
 		List<Spieler> spielerDesAktuellenTeams = spielerService.findeAlleSpielerEinesTeams(team);
 		spielerListeWrapper.setSpielerListe(spielerDesAktuellenTeams);
-		DecimalFormat zahlenFormat = new DecimalFormat("0.0");
 		
-		model.addAttribute("zahlenFormat", zahlenFormat);
 		model.addAttribute("alleSpielerDesAktuellenTeams", spielerDesAktuellenTeams);
 		model.addAttribute("spielerListeWrapper", spielerListeWrapper);
 		
 		return "kader/spielerlistezumumbenennen";
 	}
 	
-	@PostMapping("/team/{id}/spieler/umbenennen")
-	public String spielerUmbennenen(Model model, Authentication auth, @PathVariable("id") Long id, 
+	@PostMapping("/team/{teamId}/spieler/umbenennen")
+	public String spielerUmbennenen(Model model, Authentication auth, @PathVariable("teamId") Long teamId, 
 			@ModelAttribute("spielerListeWrapper") SpielerListeWrapper spielerListeWrapper) {
 		List<Spieler> spielerDesAktuellenTeams = spielerListeWrapper.getSpielerListe();
 		
@@ -199,6 +204,6 @@ public class AufstellungsController {
 			spieler.setName(s.getName());
 			spielerService.aktualisiereSpieler(spieler);
 		}
-		return "redirect:/team/{id}";
+		return "redirect:/team/{teamId}";
 	}
 }

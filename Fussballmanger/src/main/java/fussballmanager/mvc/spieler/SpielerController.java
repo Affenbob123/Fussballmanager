@@ -43,7 +43,7 @@ public class SpielerController {
 	public String getSpieler(Model model, Authentication auth, @PathVariable("id") Long id) {
 		model.addAttribute("spieler", spielerService.findeSpieler(id));
 		
-		return "kader/spieler";
+		return "spieler";
 	}
 	
 	@PostMapping("/spieler/{id}/talentwert")
