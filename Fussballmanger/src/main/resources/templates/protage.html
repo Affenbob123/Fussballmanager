@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head th:insert="fragments/header :: head"></head>
+<head>
+	<link rel="stylesheet" href="/tabelle.css" />
+</head>
+<body>
+	<div th:insert="fragments/header :: header"></div>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="" th:insert="fragments/sidebar :: sidebar"></div>
+			<div class="col-lg-10 main-content">
+				<div class="row">
+					<div class="col-lg-11">
+						<div class="row" >
+							<div class="col-5"></div>
+							<div class="col-3" th:insert="fragments/aktuelleteamanzeige :: aktuelleteamanzeige"></div>
+						</div>
+					</div>
+					<div class="col-lg-11 main">
+						<hr>
+						<h4>Protage</h4>
+						<div class="row">
+							<div class="col-6">
+								<h5>1. Protage ausw&auml;hlen</h5>
+								<form action="#" th:action="@{/protage}" th:object="${protageWrapper}" method="post">
+									<table class="table table-hover">
+										<thead>
+											<tr class="table-active">
+												<th scope="col"></th>
+												<th scope="col">Protage</th>
+												<th scope="col"></th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td scope="col">5&euro;</td>
+												<td>250</td>
+												<td>
+													<div class="form-check">
+														<input class="form-check-input position-static" type="radio" name="protage" id="protage" value="250" aria-label="...">
+													</div>
+												</td>
+											</tr>
+											<tr>
+												<td scope="col">10&euro;</td>
+												<td>550</td>
+												<td>
+													<div class="form-check">
+														<input class="form-check-input position-static" type="radio" name="protage" id="protage" value="550" aria-label="...">
+													</div>
+												</td>
+											</tr>
+											<tr>
+												<td scope="col">20&euro;</td>
+												<td>1150</td>
+												<td>
+													<div class="form-check">
+														<input class="form-check-input position-static" type="radio" name="protage" id="protage" value="1150" aria-label="...">
+													</div>
+												</td>
+											</tr>
+											<tr>
+												<td scope="col">50&euro;</td>
+												<td>3000</td>
+												<td>
+													<div class="form-check">
+														<input class="form-check-input position-static" type="radio" name="protage" id="protage" value="3000" aria-label="...">
+													</div>
+												</td>
+											</tr>
+											<tr>
+												<td scope="col">100&euro;</td>
+												<td>7000</td>
+												<td>
+													<div class="form-check">
+														<input class="form-check-input position-static" type="radio" name="protage" id="protage" value="7000" aria-label="...">
+													</div>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+									<div class="row">
+										<div class="col">
+											<h5>2. Zahlungsm&ouml;glichkeit ausw&auml;hlen</h5>
+											<div class="row">
+												<div class="col-2 text-center" th:each="zahlungsmoeglichkeit : ${zahlungsMoeglichkeitenTypen}">
+													<div>
+														<img th:src="@{${zahlungsmoeglichkeit.bild}}"/>
+													</div>
+													<div>
+														<div class="form-check">
+															<input class="form-check-input position-static" type="radio" 
+																name="zahlungsmoeglichkeit" id="zahlungsmoeglichkeit" th:value="${zahlungsmoeglichkeit}" aria-label="...">
+														</div>
+													</div>
+												</div>
+												
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-6">
+											<h5>3.</h5>
+											<div class="col-2 text-center"> 
+												<button type="submit" name="submit" value="value" class="btn btn btn-success button-toggle" th:text="Weiter" ></button>
+											</div>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<th:block th:replace="fragments/header :: scripts" />
+</body>
+</html>
