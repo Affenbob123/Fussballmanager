@@ -1,26 +1,10 @@
-.aufstellungs-reihe {
-	height: 90px;
-}
-
-.aufstellung-position {
-	position: relativ;
-	height: 90px;
-}
-
-.dragtarget {
-	margin: auto;
-	position: absolut;
-	height: 90px;
-	width: 90px;
-	cursor: pointer;
-}
-
-.aufstellung-sturm {
-	padding-top: 3%;
-}
-
 .hovered {
+	border: 3px solid red;
 	border-style: dashed;
+}
+
+.dragged {
+	border: 3px solid red;
 }
 
 .invisible {
