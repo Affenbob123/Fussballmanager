@@ -1,5 +1,6 @@
 package fussballmanager.mvc.liga;
 
+import java.text.DecimalFormat;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -70,13 +71,6 @@ public class LigaController {
 	public String getLiga(Model model, Authentication auth, @PathVariable("landName") String landName, 
 			@PathVariable("ligaName") String ligaName, @PathVariable("saisonNummer") int saisonNummer, 
 			@PathVariable("spieltagNummer") int spieltagNummer) {
-		User aktuellerUser = userService.findeUser(auth.getName());
-		
-		model.addAttribute("spielstatusHelper", new SpielstatusHelper());
-		model.addAttribute("aktuellesTeam", aktuellerUser.getAktuellesTeam());
-		model.addAttribute("aktuelleSaison", saisonService.findeAktuelleSaison());
-		model.addAttribute("aktuellerSpieltag", spieltagService.findeAktuellenSpieltag());
-		
 		Land land = landService.findeLandDurchLandName(landName);
 		Liga liga = ligaService.findeLiga(landName, ligaName);
 		Saison saison = saisonService.findeSaisonDurchSaisonNummer(saisonNummer);

@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import fussballmanager.helper.SpielstatusHelper;
-import fussballmanager.mvc.team.SummeSpielerWerte;
 import fussballmanager.service.land.LandService;
 import fussballmanager.service.liga.LigaService;
 import fussballmanager.service.saison.SaisonService;
@@ -52,21 +51,10 @@ public class KaderDetailsController {
 	SpieltagService spieltagService;
 	
 	@GetMapping("/team/{teamId}/kaderdetails")
-	public String getKaderDetails(Model model, Authentication auth, @PathVariable("teamId") Long id) {
-		User aktuellerUser = userService.findeUser(auth.getName());
-		Team aktuellesTeam = teamService.findeTeam(id);
+	public String getKaderDetails(Model model, Authentication auth, @PathVariable("teamId") Long teamId) {
+		Team team = teamService.findeTeam(teamId);
+		List<Spieler> alleSpielerEinesTeams = spielerService.findeAlleSpielerEinesTeams(team);
 		
-		aktuellerUser.setAktuellesTeam(aktuellesTeam);
-		
-		model.addAttribute("spielstatusHelper", new SpielstatusHelper());
-		model.addAttribute("aktuellesTeam", aktuellerUser.getAktuellesTeam());
-		model.addAttribute("aktuelleSaison", saisonService.findeAktuelleSaison());
-		model.addAttribute("aktuellerSpieltag", spieltagService.findeAktuellenSpieltag());
-		
-		List<Spieler> alleSpielerEinesTeams = spielerService.findeAlleSpielerEinesTeams(aktuellesTeam);
-		DecimalFormat zahlenFormat = new DecimalFormat("0.0");
-		
-		model.addAttribute("zahlenFormat", zahlenFormat);
 		model.addAttribute("alleSpielerDesAktuellenTeams", alleSpielerEinesTeams);
 		model.addAttribute("alleFormationsTypen", FormationsTypen.values());
 		model.addAttribute("alleEinsatzTypen", EinsatzTypen.values());
@@ -75,10 +63,10 @@ public class KaderDetailsController {
 		model.addAttribute("aufstellungsPositionsTypErsatz", AufstellungsPositionsTypen.ERSATZ);
 		model.addAttribute("aufstellungsPositionsTypGesperrt", AufstellungsPositionsTypen.GESPERRT);
 		model.addAttribute("aufstellungsPositionsTypVerletzt", AufstellungsPositionsTypen.VERLETZT);
-		model.addAttribute("alleAufstellungsPositionsTypen", aktuellesTeam.getFormationsTyp().getAufstellungsPositionsTypen());
-		model.addAttribute("alleSpielerAufErsatzbank", spielerService.findeAlleSpielerEinesTeamsAufErsatzbank(aktuellesTeam));
+		model.addAttribute("alleAufstellungsPositionsTypen", team.getFormationsTyp().getAufstellungsPositionsTypen());
+		model.addAttribute("alleSpielerAufErsatzbank", spielerService.findeAlleSpielerEinesTeamsAufErsatzbank(team));
 		model.addAttribute("einzuwechselnderSpieler", new Spieler());
-		model.addAttribute("anzahlDerEinwechslungen", teamService.findeTeam(id).getAnzahlAuswechselungen());
+		model.addAttribute("anzahlDerEinwechslungen", team.getAnzahlAuswechselungen());
 		model.addAttribute("summeSpielerWerte", erstelleSummeDerSpielerWerteListe(alleSpielerEinesTeams));
 		
 		return "kader/kaderdetails";

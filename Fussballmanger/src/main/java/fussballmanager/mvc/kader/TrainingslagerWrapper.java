@@ -1,4 +1,4 @@
-package fussballmanager.mvc.team;
+package fussballmanager.mvc.kader;
 
 import java.util.List;
 

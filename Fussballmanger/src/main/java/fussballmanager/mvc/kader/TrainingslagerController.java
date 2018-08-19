@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import fussballmanager.helper.SpielstatusHelper;
-import fussballmanager.mvc.team.TrainingslagerWrapper;
 import fussballmanager.service.land.LandService;
 import fussballmanager.service.liga.LigaService;
 import fussballmanager.service.saison.SaisonService;
@@ -54,24 +53,16 @@ public class TrainingslagerController {
 	SpieltagService spieltagService;
 	
 	@GetMapping("/team/{teamId}/trainingslager")
-	public String getTrainingslager(Model model, Authentication auth, @PathVariable("teamId") Long id) {
-		User aktuellerUser = userService.findeUser(auth.getName());
-		Team aktuellesTeam = teamService.findeTeam(id);
+	public String getTrainingslager(Model model, Authentication auth, @PathVariable("teamId") Long teamId) {
+		Team team = teamService.findeTeam(teamId);
 		
-		aktuellerUser.setAktuellesTeam(aktuellesTeam);
-		
-		model.addAttribute("spielstatusHelper", new SpielstatusHelper());
-		model.addAttribute("aktuellesTeam", aktuellerUser.getAktuellesTeam());
-		model.addAttribute("aktuelleSaison", saisonService.findeAktuelleSaison());
-		model.addAttribute("aktuellerSpieltag", spieltagService.findeAktuellenSpieltag());
-		
-		Collection<Spieler> alleSpielerImTrainingslager = spielerService.findeAlleSpielerEinesTeamsDieImTrainingslagerSind(aktuellesTeam);
-		List<Spieler> alleSpielerfuerDieDasTrainingslagerGebuchtWerdenSoll = spielerService.alleSpielerFuerDieDasTrainingsalgerGebuchtWerdenSoll(aktuellesTeam);
+		List<Spieler> alleSpielerImTrainingslager = spielerService.findeAlleSpielerEinesTeamsDieImTrainingslagerSind(team);
+		List<Spieler> alleSpielerfuerDieDasTrainingslagerGebuchtWerdenSoll = spielerService.alleSpielerFuerDieDasTrainingsalgerGebuchtWerdenSoll(team);
 		List<Spieler> alleSpielerGebuchtOderImTrainingslager = new ArrayList<>();
 		alleSpielerGebuchtOderImTrainingslager.addAll(alleSpielerImTrainingslager);
 		alleSpielerGebuchtOderImTrainingslager.addAll(alleSpielerfuerDieDasTrainingslagerGebuchtWerdenSoll);
 				List<Spieler> alleSpielerNichtImTrainingslager = 
-				spielerService.findeAlleSpielerEinesTeamsDieNichtImTrainingslagerSindUndNochTLTageFreiHaben(aktuellesTeam);
+				spielerService.findeAlleSpielerEinesTeamsDieNichtImTrainingslagerSindUndNochTLTageFreiHaben(team);
 		DecimalFormat zahlenFormat = new DecimalFormat("0.0");
 		TrainingslagerWrapper trainingslagerWrapperNichtImTrainingslager = new TrainingslagerWrapper();
 		TrainingslagerWrapper trainingslagerWrapperImTrainingslager = new TrainingslagerWrapper();

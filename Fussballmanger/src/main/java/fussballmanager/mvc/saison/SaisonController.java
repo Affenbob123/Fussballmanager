@@ -61,15 +61,8 @@ public class SaisonController {
 
 	@GetMapping("/team/{teamId}/saison")
 	public String getSaison(Model model, Authentication auth, @PathVariable("teamId") Long teamId) {
-		User aktuellerUser = userService.findeUser(auth.getName());
-		
-		model.addAttribute("spielstatusHelper", new SpielstatusHelper());
-		model.addAttribute("aktuellesTeam", aktuellerUser.getAktuellesTeam());
-		model.addAttribute("aktuelleSaison", saisonService.findeAktuelleSaison());
-		model.addAttribute("aktuellerSpieltag", spieltagService.findeAktuellenSpieltag());
-		
-		List<SpielEintrag> spielEintraegeEinerSaison = erstelleSpielEintraegeEinesTeams(aktuellerUser.getAktuellesTeam(), 
-				saisonService.findeAktuelleSaison());
+		Team team = teamService.findeTeam(teamId);
+		List<SpielEintrag> spielEintraegeEinerSaison = erstelleSpielEintraegeEinesTeams(team, saisonService.findeAktuelleSaison());
 		Collections.sort(spielEintraegeEinerSaison);
 		
 		model.addAttribute("alleSpieleEinesTeamsInEinerSaison", spielEintraegeEinerSaison);

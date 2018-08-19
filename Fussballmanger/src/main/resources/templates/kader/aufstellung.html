@@ -30,44 +30,48 @@
 							<div class="row">
 								<div class="col-6 border rounded">
 									<div class="row auswahl-team">
-										<div class="col-3" th:if="${spielstatusHelper.getAktuellenSpielstatus() == ''}">
-											<p>Formation:</p>
-											<form action="#" th:action="@{/team/}+${aktuellesTeam.id}+'/formation'" th:object="${aktuellesTeam}"
-													method="post">
-												<select class="custom-select" th:field="*{formationsTyp}" onchange="this.form.submit();">
-													<option 
-														  th:each="formationsTyp : ${alleFormationsTypen}" 
-														  th:text="${formationsTyp.bezeichnung}"
-														  th:value="${formationsTyp}">
-													</option>
-												</select>
-											</form>				
-										</div>
-										<div class="col-3">
-											<p>Einsatz:</p>
-											<form action="#" th:action="@{/team/}+${aktuellesTeam.id}+'/einsatz'" th:object="${aktuellesTeam}"
-													method="post">
-												<select class="custom-select" th:field="*{einsatzTyp}" onchange="this.form.submit();">
-													<option 
-														  th:each="einsatzTypen : ${alleEinsatzTypen}" 
-														  th:text="${einsatzTypen.bezeichnung}"
-														  th:value="${einsatzTypen}">
-													</option>
-												</select>
-											</form>
-										</div>
-										<div class="col-3">
-											<p>Ausrichtung:</p>
-											<form action="#" th:action="@{/team/}+${aktuellesTeam.id}+'/ausrichtung'" th:object="${aktuellesTeam}"
-													method="post">
-												<select class="custom-select" th:field="*{ausrichtungsTyp}" onchange="this.form.submit();">
-													<option 
-														  th:each="ausrichtungsTyp : ${alleAusrichtungsTypen}" 
-														  th:text="${ausrichtungsTyp.bezeichnung}"
-														  th:value="${ausrichtungsTyp}">
-													</option>
-												</select>
-											</form>
+										<div class="col formation-einsatz-ausrichtung-col">
+											<div class="row">
+												<div class="col-3" th:if="${spielstatusHelper.getAktuellenSpielstatus() == ''}">
+													<p>Formation:</p>
+													<form action="#" th:action="@{/team/}+${aktuellesTeam.id}+'/formation'" th:object="${aktuellesTeam}"
+															method="post">
+														<select class="custom-select" th:field="*{formationsTyp}" onchange="this.form.submit();">
+															<option 
+																  th:each="formationsTyp : ${alleFormationsTypen}" 
+																  th:text="${formationsTyp.bezeichnung}"
+																  th:value="${formationsTyp}">
+															</option>
+														</select>
+													</form>				
+												</div>
+												<div class="col-3">
+													<p>Einsatz:</p>
+													<form action="#" th:action="@{/team/}+${aktuellesTeam.id}+'/einsatz'" th:object="${aktuellesTeam}"
+															method="post">
+														<select class="custom-select" th:field="*{einsatzTyp}" onchange="this.form.submit();">
+															<option 
+																  th:each="einsatzTypen : ${alleEinsatzTypen}" 
+																  th:text="${einsatzTypen.bezeichnung}"
+																  th:value="${einsatzTypen}">
+															</option>
+														</select>
+													</form>
+												</div>
+												<div class="col-3">
+													<p>Ausrichtung:</p>
+													<form action="#" th:action="@{/team/}+${aktuellesTeam.id}+'/ausrichtung'" th:object="${aktuellesTeam}"
+															method="post">
+														<select class="custom-select" th:field="*{ausrichtungsTyp}" onchange="this.form.submit();">
+															<option 
+																  th:each="ausrichtungsTyp : ${alleAusrichtungsTypen}" 
+																  th:text="${ausrichtungsTyp.bezeichnung}"
+																  th:value="${ausrichtungsTyp}">
+															</option>
+														</select>
+													</form>
+												</div>
+											</div>
 										</div>
 									</div>
 								</div>
@@ -89,7 +93,7 @@
 																<div>
 																	<img th:src="@{${ls.nationalitaet.landNameTyp.bild}}" />
 																	<a th:text="'('+${ls.position}+')'+' | '+${ls.name}" th:id="${ls.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
-																	<span th:text="${ls.spielerStaerke.staerke}"></span>
+																	<span th:text="${zahlenFormat.format(ls.spielerStaerke.staerke)}"></span>
 																</div>
 															</div>
 														</div>
@@ -102,7 +106,7 @@
 																<div>
 																	<img th:src="@{${rs.nationalitaet.landNameTyp.bild}}" />
 																	<a th:text="'('+${rs.position}+')'+' | '+${rs.name}" th:id="${rs.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
-																	<span th:text="${rs.spielerStaerke.staerke}"></span>
+																	<span th:text="${zahlenFormat.format(rs.spielerStaerke.staerke)}"></span>
 																</div>
 															</div>
 														</div>
@@ -117,7 +121,7 @@
 																<div>
 																	<img th:src="@{${ms.nationalitaet.landNameTyp.bild}}" />
 																	<a th:text="'('+${ms.position}+')'+' | '+${ms.name}" th:id="${ms.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
-																	<span th:text="${ms.spielerStaerke.staerke}"></span>
+																	<span th:text="${zahlenFormat.format(ms.spielerStaerke.staerke)}"></span>
 																</div>
 															</div>
 														</div>
@@ -133,7 +137,7 @@
 																<div>
 																	<img th:src="@{${om.nationalitaet.landNameTyp.bild}}" />
 																	<a th:text="'('+${om.position}+')'+' | '+${om.name}" th:id="${om.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
-																	<span th:text="${om.spielerStaerke.staerke}"></span>
+																	<span th:text="${zahlenFormat.format(om.spielerStaerke.staerke)}"></span>
 																</div>
 															</div>
 														</div>
@@ -148,7 +152,7 @@
 																<div>
 																	<img th:src="@{${lm.nationalitaet.landNameTyp.bild}}" />
 																	<a th:text="'('+${lm.position}+')'+' | '+${lm.name}" th:id="${lm.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
-																	<span th:text="${lm.spielerStaerke.staerke}"></span>
+																	<span th:text="${zahlenFormat.format(lm.spielerStaerke.staerke)}"></span>
 																</div>
 															</div>
 														</div>
@@ -160,7 +164,7 @@
 																<div>
 																	<img th:src="@{${zm.nationalitaet.landNameTyp.bild}}" />
 																	<a th:text="'('+${zm.position}+')'+' | '+${zm.name}" th:id="${zm.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
-																	<span th:text="${zm.spielerStaerke.staerke}"></span>
+																	<span th:text="${zahlenFormat.format(zm.spielerStaerke.staerke)}"></span>
 																</div>
 															</div>
 														</div>
@@ -172,7 +176,7 @@
 																<div>
 																	<img th:src="@{${rm.nationalitaet.landNameTyp.bild}}" />
 																	<a th:text="'('+${rm.position}+')'+' | '+${rm.name}" th:id="${rm.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
-																	<span th:text="${rm.spielerStaerke.staerke}"></span>
+																	<span th:text="${zahlenFormat.format(rm.spielerStaerke.staerke)}"></span>
 																</div>
 															</div>
 														</div>
@@ -187,7 +191,7 @@
 																<div>
 																	<img th:src="@{${dm.nationalitaet.landNameTyp.bild}}" />
 																	<a th:text="'('+${dm.position}+')'+' | '+${dm.name}" th:id="${dm.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
-																	<span th:text="${dm.spielerStaerke.staerke}"></span>
+																	<span th:text="${zahlenFormat.format(dm.spielerStaerke.staerke)}"></span>
 																</div>
 															</div>
 														</div>
@@ -202,7 +206,7 @@
 																<div>
 																	<img th:src="@{${lv.nationalitaet.landNameTyp.bild}}" />
 																	<a th:text="'('+${lv.position}+')'+' | '+${lv.name}" th:id="${lv.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
-																	<span th:text="${lv.spielerStaerke.staerke}"></span>
+																	<span th:text="${zahlenFormat.format(lv.spielerStaerke.staerke)}"></span>
 																</div>
 															</div>
 														</div>
@@ -214,7 +218,7 @@
 																<div>
 																	<img th:src="@{${lib.nationalitaet.landNameTyp.bild}}" />
 																	<a th:text="'('+${lib.position}+')'+' | '+${lib.name}" th:id="${lib.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
-																	<span th:text="${lib.spielerStaerke.staerke}"></span>
+																	<span th:text="${zahlenFormat.format(lib.spielerStaerke.staerke)}"></span>
 																</div>
 															</div>
 														</div>
@@ -226,7 +230,7 @@
 																<div>
 																	<img th:src="@{${rv.nationalitaet.landNameTyp.bild}}" />
 																	<a th:text="'('+${rv.position}+')'+' | '+${rv.name}" th:id="${rv.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
-																	<span th:text="${rv.spielerStaerke.staerke}"></span>
+																	<span th:text="${zahlenFormat.format(rv.spielerStaerke.staerke)}"></span>
 																</div>
 															</div>
 														</div>
@@ -241,7 +245,7 @@
 																<div>
 																	<img th:src="@{${liv.nationalitaet.landNameTyp.bild}}" />
 																	<a th:text="'('+${liv.position}+')'+' | '+${liv.name}" th:id="${liv.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
-																	<span th:text="${liv.spielerStaerke.staerke}"></span>
+																	<span th:text="${zahlenFormat.format(liv.spielerStaerke.staerke)}"></span>
 																</div>
 															</div>
 														</div>
@@ -253,7 +257,7 @@
 																<div>
 																	<img th:src="@{${riv.nationalitaet.landNameTyp.bild}}" />
 																	<a th:text="'('+${riv.position}+')'+' | '+${riv.name}" th:id="${riv.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
-																	<span th:text="${riv.spielerStaerke.staerke}"></span>
+																	<span th:text="${zahlenFormat.format(riv.spielerStaerke.staerke)}"></span>
 																</div>
 															</div>
 														</div>
@@ -269,7 +273,7 @@
 																<div>
 																	<img th:src="@{${tw.nationalitaet.landNameTyp.bild}}" />
 																	<a th:text="'('+${tw.position}+')'+' | '+${tw.name}" th:id="${tw.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
-																	<span th:text="${tw.spielerStaerke.staerke}"></span>
+																	<span th:text="${zahlenFormat.format(tw.spielerStaerke.staerke)}"></span>
 																</div>
 															</div>
 														</div>
@@ -288,7 +292,7 @@
 																<div>
 																	<img th:src="@{${spieler.nationalitaet.landNameTyp.bild}}" />
 																	<a th:text="'('+${spieler.position}+')'+' | '+${spieler.name}" th:id="${spieler.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
-																	<span th:text="${spieler.spielerStaerke.staerke}"></span>
+																	<span th:text="${zahlenFormat.format(spieler.spielerStaerke.staerke)}"></span>
 																</div>
 															</div>
 														</div>

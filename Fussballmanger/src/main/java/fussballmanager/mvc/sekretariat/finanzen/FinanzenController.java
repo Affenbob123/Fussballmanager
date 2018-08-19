@@ -42,13 +42,6 @@ public class FinanzenController {
 
 	@GetMapping("/team/{id}/finanzen")
 	public String getFinanzen(Model model, Authentication auth) {
-		User aktuellerUser = userService.findeUser(auth.getName());
-		
-		model.addAttribute("spielstatusHelper", new SpielstatusHelper());
-		model.addAttribute("aktuellesTeam", aktuellerUser.getAktuellesTeam());
-		model.addAttribute("aktuelleSaison", saisonService.findeAktuelleSaison());
-		model.addAttribute("aktuellerSpieltag", spieltagService.findeAktuellenSpieltag());
-		
 		return "sekretariat/finanzen";
 	}
 }

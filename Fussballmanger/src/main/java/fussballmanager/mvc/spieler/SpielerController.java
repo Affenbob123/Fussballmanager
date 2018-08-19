@@ -41,51 +41,9 @@ public class SpielerController {
 	
 	@GetMapping("/spieler/{id}")
 	public String getSpieler(Model model, Authentication auth, @PathVariable("id") Long id) {
-		User aktuellerUser = userService.findeUser(auth.getName());
-		
-		model.addAttribute("spielstatusHelper", new SpielstatusHelper());
-		model.addAttribute("aktuellesTeam", aktuellerUser.getAktuellesTeam());
-		
-		DecimalFormat zahlenFormat = new DecimalFormat("#.0");
-		
-		model.addAttribute("zahlenFormat", zahlenFormat);
 		model.addAttribute("spieler", spielerService.findeSpieler(id));
 		
 		return "kader/spieler";
-	}
-	
-	@GetMapping("/team/{id}/spieler/umbenennen")
-	public String getSpielerListeZumUmbenennen(Model model, Authentication auth, @PathVariable("id") Long id) {
-		User aktuellerUser = userService.findeUser(auth.getName());
-		SpielerListeWrapper spielerListeWrapper= new SpielerListeWrapper();
-		
-		model.addAttribute("spielstatusHelper", new SpielstatusHelper());
-		model.addAttribute("aktuellesTeam", aktuellerUser.getAktuellesTeam());
-		model.addAttribute("aktuelleSaison", saisonService.findeAktuelleSaison());
-		model.addAttribute("aktuellerSpieltag", spieltagService.findeAktuellenSpieltag());
-		
-		List<Spieler> spielerDesAktuellenTeams = spielerService.findeAlleSpielerEinesTeams(aktuellerUser.getAktuellesTeam());
-		spielerListeWrapper.setSpielerListe(spielerDesAktuellenTeams);
-		DecimalFormat zahlenFormat = new DecimalFormat("0.0");
-		
-		model.addAttribute("zahlenFormat", zahlenFormat);
-		model.addAttribute("alleSpielerDesAktuellenTeams", spielerDesAktuellenTeams);
-		model.addAttribute("spielerListeWrapper", spielerListeWrapper);
-		
-		return "kader/spielerlistezumumbenennen";
-	}
-	
-	@PostMapping("/team/{id}/spieler/umbenennen")
-	public String spielerUmbennenen(Model model, Authentication auth, @PathVariable("id") Long id, 
-			@ModelAttribute("spielerListeWrapper") SpielerListeWrapper spielerListeWrapper) {
-		List<Spieler> spielerDesAktuellenTeams = spielerListeWrapper.getSpielerListe();
-		
-		for(Spieler s : spielerDesAktuellenTeams) {
-			Spieler spieler = spielerService.findeSpieler(s.getId());
-			spieler.setName(s.getName());
-			spielerService.aktualisiereSpieler(spieler);
-		}
-		return "redirect:/team/{id}";
 	}
 	
 	@PostMapping("/spieler/{id}/talentwert")

@@ -46,22 +46,13 @@ public class TransfermarktController {
 	
 	@GetMapping("/transfermarkt/{seite}")
 	public String getTransfermarkt(Model model, Authentication auth, @PathVariable("seite") int seite, 
-			@ModelAttribute("spielerSuche") SpielerSuche spielerSuche) {
-		User aktuellerUser = userService.findeUser(auth.getName());
-		
-		model.addAttribute("spielstatusHelper", new SpielstatusHelper());
-		model.addAttribute("aktuellesTeam", aktuellerUser.getAktuellesTeam());
-		model.addAttribute("aktuelleSaison", saisonService.findeAktuelleSaison());
-		model.addAttribute("aktuellerSpieltag", spieltagService.findeAktuellenSpieltag());
-		
+			@ModelAttribute("spielerSuche") SpielerSuche spielerSuche) {		
 		List<Spieler> gesuchteSpielerDesTransfermarktes = spielerService.findeFuenfzehnSpielerAnhandDerSuchEingabenVomTransfermarkt(spielerSuche.getPosition(), 
 				spielerSuche.getLand(), spielerSuche.getMinimalesAlter(), spielerSuche.getMaximalesAlter(), spielerSuche.getMinimaleStaerke(), 
 				spielerSuche.getMaximaleStaerke(), spielerSuche.getMinimalerPreis(), spielerSuche.getMaximalerPreis(), seite);
 		SpielerSuche spielerSucheFormular = spielerSuche;
-		DecimalFormat zahlenFormat = new DecimalFormat("0.0");
 		
 		model.addAttribute("seite", seite);
-		model.addAttribute("zahlenFormat", zahlenFormat);
 		model.addAttribute("alleTransfermarktSpieler", gesuchteSpielerDesTransfermarktes);
 		model.addAttribute("spielerSucheFormular", spielerSucheFormular);
 		model.addAttribute("positionenTypen", PositionenTypen.values());

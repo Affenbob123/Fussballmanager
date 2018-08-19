@@ -63,14 +63,6 @@ public class TurnierController {
 	
 	@GetMapping("/turniere/{seite}")
 	public String getTurniere(Model model, Authentication auth, @PathVariable("seite") int seite) {
-		User aktuellerUser = userService.findeUser(auth.getName());
-		
-		model.addAttribute("spielstatusHelper", new SpielstatusHelper());
-		model.addAttribute("aktuellesTeam", aktuellerUser.getAktuellesTeam());
-		model.addAttribute("aktuelleSaison", saisonService.findeAktuelleSaison());
-		model.addAttribute("aktuellerSpieltag", spieltagService.findeAktuellenSpieltag());
-		model.addAttribute("auth", auth);
-		
 		List<Turnier> alleTurniere = turnierService.findeZwanzigTurniereNachSeite(seite);
 		Collections.sort(alleTurniere);
 		model.addAttribute("alleTurniere", alleTurniere);
@@ -82,13 +74,7 @@ public class TurnierController {
 	public String getTurniere(Model model, Authentication auth, @PathVariable("turnierId") Long turnierId) {
 		User aktuellerUser = userService.findeUser(auth.getName());
 		Turnier aktuellesTurnier = turnierService.findeTurnier(turnierId);
-		
-		model.addAttribute("spielstatusHelper", new SpielstatusHelper());
-		model.addAttribute("aktuellesTeam", aktuellerUser.getAktuellesTeam());
-		model.addAttribute("aktuelleSaison", saisonService.findeAktuelleSaison());
-		model.addAttribute("aktuellerSpieltag", spieltagService.findeAktuellenSpieltag());
-		model.addAttribute("auth", auth);
-		
+
 		model.addAttribute("ausgewaehltesTurnier", turnierService.findeTurnier(turnierId));
 		model.addAttribute("alleTeamsDesAktuellenUser", teamService.findeAlleTeamsEinesUsers(aktuellerUser));
 		model.addAttribute("alleSpieleEinesTurniers", erstelleSpielEintraegeEinesTurniers(aktuellesTurnier));
@@ -140,13 +126,6 @@ public class TurnierController {
 	
 	@GetMapping("/turnier/erstellen")
 	public String getTurnierErstellen(Model model, Authentication auth) {
-		User aktuellerUser = userService.findeUser(auth.getName());
-		
-		model.addAttribute("spielstatusHelper", new SpielstatusHelper());
-		model.addAttribute("aktuellesTeam", aktuellerUser.getAktuellesTeam());
-		model.addAttribute("aktuelleSaison", saisonService.findeAktuelleSaison());
-		model.addAttribute("aktuellerSpieltag", spieltagService.findeAktuellenSpieltag());
-		
 		model.addAttribute("turnier", new Turnier());
 		model.addAttribute("alleSpieltageNachDemAktuellen", spieltagService.findeAlleAktuellenSpieltageFuerTurnier());
 		

@@ -54,17 +54,8 @@ public class StatistikController {
 	@GetMapping("/statistik/{seite}")
 	public String getStatistik(Model model, Authentication auth, @PathVariable("seite") int seite,
 			@ModelAttribute("statistikFormular") StatistikFormular statistikFormular) {
-		User aktuellerUser = userService.findeUser(auth.getName());
-		
-		model.addAttribute("spielstatusHelper", new SpielstatusHelper());
-		model.addAttribute("aktuellesTeam", aktuellerUser.getAktuellesTeam());
-		model.addAttribute("aktuelleSaison", saisonService.findeAktuelleSaison());
-		model.addAttribute("aktuellerSpieltag", spieltagService.findeAktuellenSpieltag());
-		
-		DecimalFormat zahlenFormat = new DecimalFormat("0.0");
 		List<Spieler> alleSpielerNachSuche = spielerService.findeFuenfzehnSpielerNachSortierTyp(statistikFormular, seite);
 		
-		model.addAttribute("zahlenFormat", zahlenFormat);
 		model.addAttribute("statistikFormular", statistikFormular);
 		model.addAttribute("positionenTypen", PositionenTypen.values());
 		model.addAttribute("laenderNamenTypen", LaenderNamenTypen.values());

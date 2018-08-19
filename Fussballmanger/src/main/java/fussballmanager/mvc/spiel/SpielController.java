@@ -45,13 +45,6 @@ public class SpielController {
 	
 	@GetMapping("/spiel/{id}")
 	public String getSpielDetails(Model model, Authentication auth, @PathVariable("id") Long id) {
-		User aktuellerUser = userService.findeUser(auth.getName());
-		
-		model.addAttribute("spielstatusHelper", new SpielstatusHelper());
-		model.addAttribute("aktuellesTeam", aktuellerUser.getAktuellesTeam());
-		model.addAttribute("aktuelleSaison", saisonService.findeAktuelleSaison());
-		model.addAttribute("aktuellerSpieltag", spieltagService.findeAktuellenSpieltag());
-		
 		Spiel spiel = spielService.findeSpiel(id);
 		
 		model.addAttribute("spielEintrag", erstelleSpielEintrag(spiel));
@@ -121,7 +114,6 @@ public class SpielController {
 			}
 			
 		}
-		
 		spielEintrag.setId(spiel.getId());
 		spielEintrag.setSpielTyp(spiel.getSpielTyp());
 		spielEintrag.setSpieltag(spiel.getSpieltag().getSpieltagNummer());

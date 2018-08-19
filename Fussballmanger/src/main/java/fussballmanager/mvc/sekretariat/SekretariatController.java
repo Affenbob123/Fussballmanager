@@ -48,12 +48,6 @@ public class SekretariatController {
 	@GetMapping("/")
 	public String getTeamListe(Model model, Authentication auth) {
 		User aktuellerUser = userService.findeUser(auth.getName());
-		
-		model.addAttribute("spielstatusHelper", new SpielstatusHelper());
-		model.addAttribute("aktuellesTeam", aktuellerUser.getAktuellesTeam());
-		model.addAttribute("aktuelleSaison", saisonService.findeAktuelleSaison());
-		model.addAttribute("aktuellerSpieltag", spieltagService.findeAktuellenSpieltag());
-		
 		List<Team> alleTeamsEinesUsers = teamService.findeAlleTeamsEinesUsers(aktuellerUser);
 		
 		model.addAttribute("alleTeamsDesAktuellenUsers", alleTeamsEinesUsers);
@@ -91,11 +85,6 @@ public class SekretariatController {
 	public String getTeamListeZumUmbenennen(Model model, Authentication auth) {
 		User aktuellerUser = userService.findeUser(auth.getName());
 		TeamListeWrapper teamListWrapper = new TeamListeWrapper();
-		
-		model.addAttribute("spielstatusHelper", new SpielstatusHelper());
-		model.addAttribute("aktuellesTeam", aktuellerUser.getAktuellesTeam());
-		model.addAttribute("aktuelleSaison", saisonService.findeAktuelleSaison());
-		model.addAttribute("aktuellerSpieltag", spieltagService.findeAktuellenSpieltag());
 		
 		List<Team> alleTeamsEinesUsers = teamService.findeAlleTeamsEinesUsers(aktuellerUser);
 		teamListWrapper.setTeamList(alleTeamsEinesUsers);
