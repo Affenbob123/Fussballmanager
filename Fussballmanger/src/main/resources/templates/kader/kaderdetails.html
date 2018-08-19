@@ -27,47 +27,6 @@
 				  			<strong><p th:utext="${errorMessage}"></p></strong>
 						</div>
 						<div class="col-12">
-							<div class="row auswahl-team">
-								<div class="col-3" th:if="${spielstatusHelper.getAktuellenSpielstatus() == ''}">
-									<p>Formation:</p>
-									<form action="#" th:action="@{/team/}+${aktuellesTeam.id}+'/formation'" th:object="${aktuellesTeam}"
-											method="post">
-										<select class="custom-select" th:field="*{formationsTyp}" onchange="this.form.submit();">
-											<option 
-												  th:each="formationsTyp : ${alleFormationsTypen}" 
-												  th:text="${formationsTyp.bezeichnung}"
-												  th:value="${formationsTyp}">
-											</option>
-										</select>
-									</form>				
-								</div>
-								<div class="col-3">
-									<p>Einsatz:</p>
-									<form action="#" th:action="@{/team/}+${aktuellesTeam.id}+'/einsatz'" th:object="${aktuellesTeam}"
-											method="post">
-										<select class="custom-select" th:field="*{einsatzTyp}" onchange="this.form.submit();">
-											<option 
-												  th:each="einsatzTypen : ${alleEinsatzTypen}" 
-												  th:text="${einsatzTypen.bezeichnung}"
-												  th:value="${einsatzTypen}">
-											</option>
-										</select>
-									</form>
-								</div>
-								<div class="col-3">
-									<p>Ausrichtung:</p>
-									<form action="#" th:action="@{/team/}+${aktuellesTeam.id}+'/ausrichtung'" th:object="${aktuellesTeam}"
-											method="post">
-										<select class="custom-select" th:field="*{ausrichtungsTyp}" onchange="this.form.submit();">
-											<option 
-												  th:each="ausrichtungsTyp : ${alleAusrichtungsTypen}" 
-												  th:text="${ausrichtungsTyp.bezeichnung}"
-												  th:value="${ausrichtungsTyp}">
-											</option>
-										</select>
-									</form>
-								</div>
-							</div>
 							<div class="auswechslungs-auswahl"th:if="${anzahlDerEinwechslungen} &gt; 0">
 								<div class="" th:if="${spielstatusHelper.getAktuellenSpielstatus() != ''}">
 									<p th:text="'Verf&uuml;gbare Auswechslungen: '+${anzahlDerEinwechslungen}"></p>

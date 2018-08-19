@@ -3,12 +3,16 @@ package fussballmanager.mvc.kader;
 import java.text.DecimalFormat;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import fussballmanager.helper.SpielstatusHelper;
 import fussballmanager.service.land.LandService;
@@ -25,6 +29,8 @@ import fussballmanager.service.user.UserService;
 
 @Controller
 public class AufstellungsController {
+	
+	private static final Logger LOG = LoggerFactory.getLogger(AufstellungsController.class);
 	
 	@Autowired
 	LandService landService;
@@ -47,7 +53,7 @@ public class AufstellungsController {
 	@Autowired
 	SpieltagService spieltagService;
 
-	@GetMapping("/team/{teamId}/aufstellung")
+	@GetMapping("/team/{teamId}")
 	public String getAufstellung(Model model, Authentication auth, @PathVariable("teamId") Long teamId) {
 		User aktuellerUser = userService.findeUser(auth.getName());
 		
@@ -125,5 +131,42 @@ public class AufstellungsController {
 		model.addAttribute("aufstellungsPositionsTypRS", AufstellungsPositionsTypen.RS);
 		
 		return "kader/aufstellung";
+	}
+	
+	@PostMapping("/team/{teamId}/formation")
+	public String aendereFormation(Model model, Authentication auth, @PathVariable("teamId") Long id, @ModelAttribute("aktuellesTeam") Team aktuellesTeam) {
+		Team team = teamService.findeTeam(id);
+		team.setFormationsTyp(aktuellesTeam.getFormationsTyp());
+		teamService.aenderFormationEinesTeams(team, spielerService.findeAlleSpielerEinesTeams(team));
+		
+		return "redirect:/team/{teamId}";
+	}
+	
+	@PostMapping("/team/{teamId}/einsatz")
+	public String aendereEinsatz(Model model, Authentication auth, @PathVariable("teamId") Long id, @ModelAttribute("aktuellesTeam") Team aktuellesTeam) {
+		Team team = teamService.findeTeam(id);
+		team.setEinsatzTyp(aktuellesTeam.getEinsatzTyp());
+		teamService.aendereEinsatzEinesTeams(team);
+		
+		return "redirect:/team/{teamId}";
+	}
+	
+	@PostMapping("/team/{teamId}/ausrichtung")
+	public String aendereAusrichtung(Model model, Authentication auth, @PathVariable("teamId") Long id, @ModelAttribute("aktuellesTeam") Team aktuellesTeam) {
+		Team team = teamService.findeTeam(id);
+		team.setAusrichtungsTyp(aktuellesTeam.getAusrichtungsTyp());
+		teamService.aktualisiereTeam(team);
+		
+		return "redirect:/team/{teamId}";
+	}
+	
+	@PostMapping("/team/{teamId}/einwechseln")
+	public String aendereFormation(Model model, Authentication auth, @PathVariable("teamId") Long id, @ModelAttribute("einzuwechselnderSpieler") Spieler spieler) {
+		Spieler einzugewechselterSpieler = spielerService.findeSpieler(spieler.getId());
+		LOG.info("{}, {}, {}, {}, {}", einzugewechselterSpieler.getId(), einzugewechselterSpieler.getName(), einzugewechselterSpieler.getAlter(), 
+				einzugewechselterSpieler.getPosition().getPositionsName(), einzugewechselterSpieler.getTeam());
+		spielerService.wechsleSpielerEin(einzugewechselterSpieler, spieler.getAufstellungsPositionsTyp());
+		
+		return "redirect:/team/{teamId}";
 	}
 }

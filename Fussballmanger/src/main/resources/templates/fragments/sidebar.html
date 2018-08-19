@@ -25,11 +25,11 @@
 						<a class="nav-link ml-3 my-1" th:href="@{/team/}+${aktuellesTeam.id}+'/stadion'">Stadion</a>
 	                 </li>
 	                <li class="nav-item">
-	                    <a class="nav-link" th:href="@{/team/}+${aktuellesTeam.id}+'/aufstellung'">Kader</a>
+	                    <a class="nav-link" th:href="@{/team/}+${aktuellesTeam.id}">Kader</a>
 	                </li>
 	                <li class="nav nav-pills flex-column">
-						<a class="nav-link ml-3 my-1" th:href="@{/team/}+${aktuellesTeam.id}">Details</a>
-				    	<a class="nav-link ml-3 my-1" th:href="@{/team/}+${aktuellesTeam.id}+'/aufstellung'">Aufstellung</a>
+						<a class="nav-link ml-3 my-1" th:href="@{/team/}+${aktuellesTeam.id}+'/kaderdetails'">Details</a>
+				    	<a class="nav-link ml-3 my-1" th:href="@{/team/}+${aktuellesTeam.id}">Aufstellung</a>
 				    	<a class="nav-link ml-3 my-1" th:href="@{/team/}+${aktuellesTeam.id}+'/training'">Training</a>
 				    	<a class="nav-link ml-3 my-1" th:href="@{/team/}+${aktuellesTeam.id}+'/trainingslager'">Trainingslager</a>
 	                 </li>
