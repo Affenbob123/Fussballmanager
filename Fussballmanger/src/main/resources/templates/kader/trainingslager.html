@@ -32,7 +32,7 @@
 								<div class="row">
 									<div class="col">
 										<h6>Trainingslager buchen:</h6>
-										<table class="table table-hover">
+										<table class="table table-hover table-bordered">
 											<thead>
 												<tr class="table-active">
 													<th scope="col">#</th>
@@ -102,7 +102,7 @@
 						</div>
 						<h6>Im Trainingslager:</h6>
 						<div class="col-12">
-							<table class="table table-hover">
+							<table class="table table-hover table-bordered">
 								<thead>
 									<tr class="table-active">
 										<th scope="col">#</th>
@@ -112,7 +112,7 @@
 										<th scope="col">Alter</th>
 										<th scope="col">Reinst&auml;rke</th>
 										<th scope="col">TL-Tage</th>
-										<th scope="col">Akt. gebucht</th>
+										<th scope="col">Gebucht</th>
 										<th scope="col"></th>									
 									</tr>
 								</thead>
@@ -129,7 +129,7 @@
 										<td th:text="${zahlenFormat.format(s.spielerStaerke.reinStaerke)}" />
 										<td th:text="${s.uebrigeTrainingslagerTage}" />
 										<td th:unless="${s.trainingslagerTage} > 0">-</td>
-										<td th:if="${s.trainingslagerTage} > 0" th:text="${s.trainingslagerTage}+' im '+${s.trainingslager.bezeichnung}"></td>
+										<td th:if="${s.trainingslagerTage} > 0" th:text="${s.trainingslagerTage}+' Tage im '+${s.trainingslager.bezeichnung}"></td>
 										<td>
 											<form action="#" th:action="@{/team/}+${aktuellesTeam.id}+'/trainingslager/abbrechen'" 
 											th:object="${spielerAusTrainingslagerHolen}"

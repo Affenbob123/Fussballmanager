@@ -27,7 +27,7 @@
 				  			<strong><p th:utext="${errorMessage}"></p></strong>
 						</div>
 						<div>
-							<table class="table table-hover">
+							<table class="table table-hover table-bordered">
 								<thead>
 									<tr class="table-active">
 										<th scope="col">Spieltag</th>
@@ -40,14 +40,18 @@
 								<tr class="">
 									<td th:text="${spielEintrag.spieltag}" />
 									<td th:text="${spielEintrag.spielbeginnToString()}" />
-									<td th:text="${spielEintrag.heimmannschaftUndStaerkeToString()}" />
+									<td>
+										<a th:href="@{/team/}+${spielEintrag.heimmannschaft.id}" th:text="${spielEintrag.heimmannschaftUndStaerkeToString()}"></a>
+									</td>
 									<td class="ergebnisInTabelle">
 										<a class="" th:href="@{/spiel/}+${spielEintrag.id}">
 											<span th:text="${spielEintrag.spielErgebnisToString()}"></span><br>
 											<span th:text="${spielEintrag.spielErgebnisHalbzeitToString()}"></span>
 										</a>
 									</td>
-									<td th:text="${spielEintrag.gastmannschaftUndStaerkeToString()}" />
+									<td>
+										<a th:href="@{/team/}+${spielEintrag.gastmannschaft.id}" th:text="${spielEintrag.gastmannschaftUndStaerkeToString()}"></a>
+									</td>
 								</tr>
 							</table>
 						</div>

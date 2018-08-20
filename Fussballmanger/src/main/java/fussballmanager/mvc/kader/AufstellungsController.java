@@ -191,7 +191,7 @@ public class AufstellungsController {
 		model.addAttribute("alleSpielerDesAktuellenTeams", spielerDesAktuellenTeams);
 		model.addAttribute("spielerListeWrapper", spielerListeWrapper);
 		
-		return "kader/spielerlistezumumbenennen";
+		return "kader/spielerumbenennen";
 	}
 	
 	@PostMapping("/team/{teamId}/spieler/umbenennen")

@@ -28,7 +28,7 @@
 						</div>
 						<div class="col-12">
 							<h6>Aktuelle Stadionausbauten:</h6>
-							<table class="table table-hover">
+							<table class="table table-hover table-bordered">
 								<thead>
 									<tr class="table-active">
 										<th scope="col">Name</th>
@@ -73,7 +73,7 @@
 						<div class="col-12">
 							<h6>Sitzpl&auml;tze:</h6>
 							<form action="#" th:action="@{/team/}+${aktuellesTeam.id}+'/stadion/sitzplaetze'" method="post" th:object="${stadion}">
-								<table class="table table-hover">
+								<table class="table table-hover table-bordered">
 									<thead>
 										<tr class="table-active">
 											<th scope="col">Akuelle Sitzp&auml;tze</th>
@@ -111,7 +111,7 @@
 						</div>
 						<div class="col-12">
 							<h6>Stadionausbaustufen:</h6>
-							<table class="table table-hover">
+							<table class="table table-hover table-bordered">
 								<thead>
 									<tr class="table-active">
 										<th scope="col">Name</th>

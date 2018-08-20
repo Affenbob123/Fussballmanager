@@ -14,7 +14,7 @@
   			<strong><p th:utext="${errorMessage}"></p></strong>
 		</div>
 		<div class="col-12">
-			<table class="table table-hover">
+			<table class="table table-hover table-bordered">
 					<tr th:if="${spieler.nationalitaet}">
 						<td class="table-active">Nationalit&auml;t</td>
 						<td><img th:src="@{${spieler.nationalitaet.landNameTyp.bild}}" /></td>
