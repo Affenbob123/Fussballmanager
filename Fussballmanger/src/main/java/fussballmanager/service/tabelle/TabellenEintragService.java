@@ -47,6 +47,10 @@ public class TabellenEintragService {
 		return tabellenEintragRepository.findAll();
 	}
 	
+	public List<TabellenEintrag> findeAlleTabellenEintraegeEinerLiga(Liga liga) {
+		return tabellenEintragRepository.findByLiga(liga);
+	}
+	
 	public void legeTabellenEintragAn(TabellenEintrag tabellenEintrag) {
 		tabellenEintragRepository.save(tabellenEintrag);
 	}

@@ -19,7 +19,7 @@
 	                    <a class="nav-link" href="/">Sekretariat</a>
 	                </li>
 	               	<li class="nav nav-pills flex-column">
-						<a class="nav-link ml-3 my-1" href="/nachrichten">Benachrichtigungen</a>
+						<a class="nav-link ml-3 my-1" href="/benachrichtigungen">Benachrichtigungen</a>
 						<a class="nav-link ml-3 my-1" href="/statistik/1">Statistik</a>
 						<a class="nav-link ml-3 my-1" th:href="@{/team/}+${aktuellesTeam.id}+'/finanzen'">Finanzen</a>
 						<a class="nav-link ml-3 my-1" th:href="@{/team/}+${aktuellesTeam.id}+'/stadion'">Stadion</a>
@@ -56,7 +56,8 @@
 						<a class="nav-link" href="/turniere/1">Turniere</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="/freundschaftsspiele">Freundschaftsspiele</a>
+						<a class="nav-link" th:href="@{/freundschaftsspiele/}+${aktuellesTeam.land.getLandNameTyp().getName()}+'/'+
+							${aktuellesTeam.liga.ligaNameTyp.getName()}">Freundschaftsspiele</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="/auktionshaus">Auktionshaus</a>

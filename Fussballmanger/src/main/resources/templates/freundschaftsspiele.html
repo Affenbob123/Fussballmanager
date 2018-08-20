@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head th:insert="fragments/header :: head"></head>
+<head>
+	<link rel="stylesheet" href="/tabelle.css" />
+</head>
+<body>
+	<div th:insert="fragments/header :: header"></div>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="" th:insert="fragments/sidebar :: sidebar"></div>
+			<div class="col-lg-10 main-content">
+				<div class="row">
+					<div class="col-lg-11">
+						<div class="row" >
+							<div class="col-5"></div>
+							<div class="col-3" th:insert="fragments/aktuelleteamanzeige :: aktuelleteamanzeige"></div>
+						</div>
+					</div>
+					<div class="col-lg-11 main">
+						<hr>
+						<h4>Freundschaftsspiele</h4>
+						<div class="container">
+							<div class="row justify-content-md-center">
+								<div class="col-md-auto">
+									<label>Land:</label>
+									<form action="#" th:action="@{/freundschaftsspiele/}+${ligaAuswahlHelper.land}+'/'+${ligaAuswahlHelper.liga}" th:object="${ligaAuswahlHelper}" method="post">
+										<select class="custom-select" th:field="*{land}" onchange="this.form.submit();">
+											<option 
+												  th:each="land : ${alleLaender}"
+												  th:text="${land.landNameTyp.name}"
+												  th:value="${land.landNameTyp.name}">
+											</option>
+										</select>
+										<input type="hidden" th:field="*{liga}" th:value="${ligaAuswahlHelper.liga}">
+										<input type="hidden" th:field="*{saison}" th:value="${ligaAuswahlHelper.saison}">
+										<input type="hidden" th:field="*{spieltag}" th:value="${ligaAuswahlHelper.spieltag}">
+									</form>
+								</div>
+								<div class="col-md-auto">
+									<label>Liga:</label>
+									<form action="#" th:action="@{/freundschaftsspiele/}+${ligaAuswahlHelper.land}+'/'+${ligaAuswahlHelper.liga}" th:object="${ligaAuswahlHelper}" method="post">
+										<select class="custom-select" th:field="*{liga}" onchange="this.form.submit();">
+											<option 
+												  th:each="liga : ${alleLigenEinesLandes}"
+												  th:text="${liga.ligaNameTyp.name}"
+												  th:value="${liga.ligaNameTyp.name}">
+											</option>
+										</select>
+										<input type="hidden" th:field="*{land}" th:value="${ligaAuswahlHelper.land}">
+										<input type="hidden" th:field="*{saison}" th:value="${ligaAuswahlHelper.saison}">
+										<input type="hidden" th:field="*{spieltag}" th:value="${ligaAuswahlHelper.spieltag}">
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-11">
+						<form method="POST" th:action="@{/freundschaftsspiele/}+${ligaAuswahlHelper.land}+'/'+${ligaAuswahlHelper.liga}+'/anfrage'" th:object="${freundschaftsspieleWrapper}">
+							<table class="table table-hover">
+								<thead>
+									<tr class="table-active">
+										<th scope="col">#</th>
+										<th scope="col">Name</th>
+										<th scope="col"></th>
+									</tr>
+								</thead>
+								<tr class="" th:each="eintrag, stat : ${alleTabellenEintraegeEinerLiga}" >
+									<td th:text="${eintrag.platzierung}" />
+									<td> 
+										<a class="" th:text="${eintrag.team.name}" th:href="@{/team/}+${eintrag.team.id}"></a>
+									</td>
+									<td>
+										
+											<input type="hidden" name="absender" id="absender" th:value="${aktuellesTeam.id}">
+											<div class="custom-control custom-checkbox align-middle">
+												<input type="checkbox" th:field="*{empfaenger}" th:name="empfaenger" th:value="${eintrag.team.id}">
+											</div>
+									</td>
+								</tr>
+							</table>
+							<div class="col-12 text-right">
+								<select class="custom-select" th:field="*{freundschaftsspielAnfrageTyp}">
+									<option 
+										  th:each="anfrageTyp : ${freunschaftsspieleAnfrageTypen}"
+										  th:text="${anfrageTyp.bezeichnung}"
+										  th:value="${anfrageTyp}">
+									</option>
+								</select>
+							</div>
+							<div class="col-12 text-right">
+								<button type="submit" name="submit" value="value"
+									class="btn btn-sm btn-success button-toggle" th:text="Anfragen" >
+								</button>
+							</div>
+						</form>
+						
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<th:block th:replace="fragments/header :: scripts" />
+</body>
+</html>

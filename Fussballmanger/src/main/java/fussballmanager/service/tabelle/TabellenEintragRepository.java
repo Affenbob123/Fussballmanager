@@ -15,4 +15,6 @@ public interface TabellenEintragRepository extends JpaRepository<TabellenEintrag
 	List<TabellenEintrag> findByLigaAndSaison(Liga liga, Saison saison);
 
 	TabellenEintrag findByTeamAndSaison(Team team, Saison saison);
+
+	List<TabellenEintrag> findByLiga(Liga liga);
 }
