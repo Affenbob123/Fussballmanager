@@ -52,7 +52,7 @@ public class SekretariatController {
 		
 		model.addAttribute("alleTeamsDesAktuellenUsers", alleTeamsEinesUsers);
 		
-		return "sekretariat/teamliste";
+		return "sekretariat/sekretariat";
 	}
 	
 	@PostMapping("/team/{id}/loeschen")

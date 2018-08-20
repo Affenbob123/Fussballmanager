@@ -2,7 +2,7 @@
 <html>
 <head th:insert="fragments/header :: head"></head>
 <head>
-	<link rel="stylesheet" href="/teamliste.css" />
+	<link rel="stylesheet" href="/sekretariat.css" />
 </head>
 <body>
 	<div th:insert="fragments/header :: header"></div>
@@ -25,6 +25,34 @@
 						</div>
 						<div class="alert alert-danger" th:if="${errorMessage}">
 				  			<strong><p th:utext="${errorMessage}"></p></strong>
+						</div>
+						<div class="row" id="nachrichtId">
+							<div class="col-2"></div>
+							<div class="col-6 border shadow-lg">
+								<div class="gesamte-nachricht" >
+									<div class="col">
+										<div class="row align-middle">
+											<div class="col-6 absender-nachricht-nachrichttyp">
+												<strong><span class="align-middle">Absender Uhrzeit NachrichtenTyp</span></strong>
+											</div>
+											<div class="col-6 text-right">
+												<span class="align-top antworten-btn"><button type="button" class="nachrichten-button btn btn-link">Antworten</button></span>
+												<span class="align-middle antworten-btn">1/5</span>
+												<span class="align-top">
+													<button type="button" class="nachrichten-button btn btn-link" onclick="naechsteNachricht()">N&auml;chste</button>
+												</span>
+											</div>
+										</div>
+									</div>
+									<div class="col">
+										<div class="row">
+											<div class="col nachricht">
+												<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 						<div class="row">
 							<div class="col neues-team-button">
@@ -72,6 +100,11 @@
 			</div>
 		</div>
 	</div>
-	<th:block th:replace="fragments/header :: scripts" />
+	<th:block th:replace="fragments/header :: scripts"></th:block>
+	<script>
+		function naechsteNachricht() {
+			document.getElementById("nachrichtId").style.display = "none";
+		}
+	</script>
 </body>
 </html>
