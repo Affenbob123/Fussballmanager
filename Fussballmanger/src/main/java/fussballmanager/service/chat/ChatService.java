@@ -90,6 +90,11 @@ public class ChatService {
 		Nachricht n = new Nachricht(user, spieltagService.findeAktuellenSpieltag(), nachricht, LocalTime.now(ZoneId.of("Europe/Berlin")));
 		Chat c = findeChat(chat.getId());
 		nachrichtService.legeNachrichtAn(n);
+		if(c.getNachrichten().size() > 30) {
+			Nachricht zuloeschendeNachricht = c.getNachrichten().get(0);
+			c.getNachrichten().remove(0);
+			nachrichtService.loescheNachricht(zuloeschendeNachricht);
+		}
 		c.getNachrichten().add(n);
 		aktualisiereChat(chat);
 	}
