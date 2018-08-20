@@ -18,6 +18,8 @@ import fussballmanager.service.spieler.spielerzuwachs.SpielerZuwachs;
 import fussballmanager.service.spieler.spielerzuwachs.SpielerZuwachsRepository;
 import fussballmanager.service.spieler.spielerzuwachs.SpielerZuwachsService;
 import fussballmanager.service.team.Team;
+import fussballmanager.service.team.TeamService;
+import fussballmanager.service.user.User;
 
 @Service
 @Transactional
@@ -37,12 +39,20 @@ public class BenachrichtigungService {
 	@Autowired
 	SpieltagService spieltagService;
 	
+	@Autowired
+	TeamService teamService;
+	
 	public Benachrichtigung findeBenachrichtigung(Long id) {
 		return benachrichtigungRepository.getOne(id);
 	}
 	
 	public List<Benachrichtigung> findeBenachrichtigungen() {
 		return benachrichtigungRepository.findAll();
+	}
+	
+	public List<Benachrichtigung> findeAlleBenachrichtigungenEinesUsers(User user) {
+		List<Team> teamsDesEmpfaengers = teamService.findeAlleTeamsEinesUsers(user);
+		return benachrichtigungRepository.findByGelesenAndEmpfaengerIn(false, teamsDesEmpfaengers);
 	}
 	
 	public void legeBenachrichtigungAn(Benachrichtigung benachrichtigung) {
@@ -69,15 +79,17 @@ public class BenachrichtigungService {
 			benachrichtigung.setSpieltag(spieltagService.findeAktuellenSpieltag());
 			benachrichtigung.setUhrzeit(aktuelleUhrzeit);
 			benachrichtigung.setBenachrichtigungsText(freundschaftspielAnfrageText(absender, team, freundschaftsspielAnfrageTyp));
+			legeBenachrichtigungAn(benachrichtigung);
 		}
-
 	}
 
 	private String freundschaftspielAnfrageText(Team absender, Team team,
 			FreunschaftsspieleAnfrageTypen freundschaftsspielAnfrageTyp) {
 		String s; 
 		s = "Das Team " + absender.getName() + " hat dir eine Freundschaftsspielanfrage gesendet. Er möchte " 
-		+ freundschaftsspielAnfrageTyp.getBenachrichtungsText() + " vereinbaren";
+		+ freundschaftsspielAnfrageTyp.getBenachrichtungsText() + " vereinbaren.";
 		return s;
 	}
+	
+	
 }

@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import fussballmanager.helper.SpielstatusHelper;
+import fussballmanager.service.benachrichtigung.Benachrichtigung;
+import fussballmanager.service.benachrichtigung.BenachrichtigungService;
 import fussballmanager.service.land.LandService;
 import fussballmanager.service.liga.LigaService;
 import fussballmanager.service.saison.SaisonService;
@@ -44,6 +46,9 @@ public class SekretariatController {
 	
 	@Autowired
 	SpieltagService spieltagService;
+	
+	@Autowired
+	BenachrichtigungService benachrichtigungService;
 	
 	@GetMapping("/")
 	public String getTeamListe(Model model, Authentication auth) {
@@ -104,6 +109,14 @@ public class SekretariatController {
 			team.setName(t.getName());
 			teamService.aktualisiereTeam(team);
 		}
+		return "redirect:/";
+	}
+	
+	@PostMapping("/benachrichtigung/{benachrichtigungId}/naechste")
+	public String interagiereMitBenachrichtigung(Model model, Authentication auth, @PathVariable("benachrichtigungId") Long benachrichtigungId) {
+		Benachrichtigung benachrichtigung = benachrichtigungService.findeBenachrichtigung(benachrichtigungId);
+		benachrichtigung.setGelesen(true);
+		benachrichtigungService.aktualisiereBenachrichtigung(benachrichtigung);
 		return "redirect:/";
 	}
 }

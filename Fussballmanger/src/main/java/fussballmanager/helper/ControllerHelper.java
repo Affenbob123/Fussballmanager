@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+import fussballmanager.service.benachrichtigung.BenachrichtigungService;
 import fussballmanager.service.land.LandService;
 import fussballmanager.service.liga.LigaService;
 import fussballmanager.service.saison.Saison;
@@ -51,6 +52,9 @@ public class ControllerHelper {
 	@Autowired
 	TabellenEintragService tabellenEintragService;
 	
+	@Autowired
+	BenachrichtigungService benachrichtigungService;
+	
 	@ModelAttribute
 	public void globaleModelAttributes(Model model, Authentication auth) {
 		if(auth != null) {
@@ -59,6 +63,7 @@ public class ControllerHelper {
 			model.addAttribute("aktuellesTeam", aktuellesTeam);
 			model.addAttribute("aktuellerUser", aktuellerUser);
 			model.addAttribute("auth", auth);
+			model.addAttribute("alleUngelesenenBenachrichtigungenDesAktuellenUsers", benachrichtigungService.findeAlleBenachrichtigungenEinesUsers(aktuellerUser));
 		}
 		DecimalFormat zahlenFormat = new DecimalFormat("0.0");
 		
