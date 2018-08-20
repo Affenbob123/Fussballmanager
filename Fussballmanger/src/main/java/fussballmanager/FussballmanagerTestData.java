@@ -19,6 +19,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import fussballmanager.service.chat.Chat;
+import fussballmanager.service.chat.ChatService;
+import fussballmanager.service.chat.nachricht.Nachricht;
+import fussballmanager.service.chat.nachricht.NachrichtService;
 import fussballmanager.service.finanzen.Bilanz;
 import fussballmanager.service.finanzen.BilanzService;
 import fussballmanager.service.land.LaenderNamenTypen;
@@ -100,6 +104,12 @@ public class FussballmanagerTestData {
 	
 	@Autowired
 	TurnierService turnierService;
+	
+	@Autowired
+	ChatService chatService;
+	
+	@Autowired
+	NachrichtService nachrichtService;
 	
 	String loginA = "a";
 	String loginB = "b";
@@ -229,6 +239,45 @@ public class FussballmanagerTestData {
 		erzeugeTestUser();
 		spieltagService.wechsleAktuellenSpieltag();
 		erzeugeTestTurnier();
+		erzeugeChatsUndNachrichten();
+	}
+	
+	public void erzeugeChatsUndNachrichten() {
+//		LocalTime aktuelleUhrzeit = LocalTime.now(ZoneId.of("Europe/Berlin"));
+//		List<User> userliste = new ArrayList<>();
+//		userliste.add(userService.findeUser(loginA));
+//		userliste.add(userService.findeUser(loginB));
+//		for(int i = 0; i < 10; i++) {
+//			Chat chat = new Chat();
+//			chat.setChatName("Chat " + i);
+//			chat.setUser(userliste);
+//			chat.setNachrichten(new ArrayList<Nachricht>());
+//			chatService.legeChatAn(chat);
+//		}
+//		
+//		for(Chat chat : chatService.findeAlleChats()) {
+//			for(int j = 0; j < 5; j++) {
+//				Nachricht nachricht = new Nachricht();
+//				nachricht.setAbsender(userService.findeUser(loginA));
+//				nachricht.setNachricht("Nachricht " + j);
+//				nachricht.setSpieltag(spieltagService.findeAktuellenSpieltag());
+//				nachricht.setUhrzeit(aktuelleUhrzeit);
+//				nachrichtService.legeNachrichtAn(nachricht);
+//				chat.getNachrichten().add(nachricht);
+//			}
+//			
+//			for(int j = 0; j < 5; j++) {
+//				Nachricht nachricht = new Nachricht();
+//				nachricht.setAbsender(userService.findeUser(loginB));
+//				nachricht.setNachricht("Nachricht " + j);
+//				nachricht.setSpieltag(spieltagService.findeAktuellenSpieltag());
+//				nachricht.setUhrzeit(aktuelleUhrzeit);
+//				nachrichtService.legeNachrichtAn(nachricht);
+//				chat.getNachrichten().add(nachricht);
+//			}
+//			chatService.aktualisiereChat(chat);
+//		}
+		
 	}
 	
 	public void erzeugeTestTurnier() {
@@ -382,5 +431,6 @@ public class FussballmanagerTestData {
 	public void wechsleDenSpieltag() {
 		spieltagService.wechsleSpieltag();
 		turnierService.starteAlleTurniereDesSpieltages();
+		
 	}
 }

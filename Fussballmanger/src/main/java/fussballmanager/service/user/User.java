@@ -31,7 +31,9 @@ public class User implements Comparable<User> {
 	
 	private boolean isAdmin;
 	
-	String profilBild;
+	private String profilBild;
+	
+	private int protage;
 	
 	public User(@NotNull String login, @NotNull String password, boolean isAdmin, @NotNull String username, String email) {
 		this.login = login;
@@ -106,6 +108,14 @@ public class User implements Comparable<User> {
 
 	public void setAktuellesTeam(Team aktuellesTeam) {
 		this.aktuellesTeam = aktuellesTeam;
+	}
+
+	public int getProtage() {
+		return protage;
+	}
+
+	public void setProtage(int protage) {
+		this.protage = protage;
 	}
 
 	@Override

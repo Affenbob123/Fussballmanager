@@ -19,7 +19,7 @@
 	                    <a class="nav-link" href="/">Sekretariat</a>
 	                </li>
 	               	<li class="nav nav-pills flex-column">
-						<a class="nav-link ml-3 my-1" href="/nachrichten">Nachrichten</a>
+						<a class="nav-link ml-3 my-1" href="/nachrichten">Benachrichtigungen</a>
 						<a class="nav-link ml-3 my-1" href="/statistik/1">Statistik</a>
 						<a class="nav-link ml-3 my-1" th:href="@{/team/}+${aktuellesTeam.id}+'/finanzen'">Finanzen</a>
 						<a class="nav-link ml-3 my-1" th:href="@{/team/}+${aktuellesTeam.id}+'/stadion'">Stadion</a>
@@ -65,6 +65,13 @@
 						<a class="nav-link" href="/community">Community</a>
 					</li>
 	            </ul>
+	        </div>
+	        <div class="card card-body p-2">
+	        	 <ul class="nav nav-pills flex-column">
+	        	 	<li class="nav-item">
+	        	 		<strong><span th:text="'Protage: '+${aktuellerUser.protage}"></span></strong>
+	        	 	</li>
+	        	</ul>
 	        </div>
 	    </div>
 	</div>

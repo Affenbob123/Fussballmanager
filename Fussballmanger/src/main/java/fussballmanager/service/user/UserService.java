@@ -18,6 +18,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import fussballmanager.service.chat.ChatService;
+import fussballmanager.service.team.Team;
 import fussballmanager.service.team.TeamService;
 
 @Service
@@ -31,6 +33,9 @@ public class UserService implements UserDetailsService {
 	
 	@Autowired
 	TeamService teamService;
+	
+	@Autowired
+	ChatService chatService;
 	
 	private static final Collection<GrantedAuthority> ADMIN_ROLES = AuthorityUtils.createAuthorityList("ROLE_ADMIN");
 	private static final Collection<GrantedAuthority> USER_ROLES = AuthorityUtils.createAuthorityList("ROLE_USER");
@@ -75,6 +80,7 @@ public class UserService implements UserDetailsService {
 		LOG.info("User: {} wurde angelegt.", user.getLogin());
 		
 		teamService.erstelleStandardHauptteamFuerEinenUser(findeUser(user.getLogin()));
+		chatService.fuegeUserAlleChatHinzu(user);
 	}
 	
 	public void aktualisiereUser(User user) {
@@ -93,5 +99,29 @@ public class UserService implements UserDetailsService {
 			}
 		}
 		return null;
+	}
+	
+	public void kauftProtage(User user, int protage) {
+		user.setProtage(user.getProtage() + protage);
+		aktualisiereUser(user);
+	}
+	
+	public void aufgabenBeiSpieltagWechsel() {
+		List<User> alleUser = findeAlleNormalenUser();
+		
+		for(User user : alleUser) {
+			List<Team> alleTeamsDesUsers = teamService.findeAlleTeamsEinesUsers(user);
+			int anzahlTeams = alleTeamsDesUsers.size();
+			int zahlungsPflichtigeTeams = anzahlTeams - 6;
+			
+			if(zahlungsPflichtigeTeams > 0) {
+				int protageKosten = zahlungsPflichtigeTeams / 3;
+				user.setProtage(user.getProtage() - protageKosten);
+				if(user.getProtage() < 0) {
+					teamService.sperreTeamsAufgrundZuWenigerProtage(user);
+				}
+				aktualisiereUser(user);
+			}
+		}
 	}
 }

@@ -18,6 +18,7 @@ import fussballmanager.service.spieler.SpielerService;
 import fussballmanager.service.spieler.spielerzuwachs.SpielerZuwachsService;
 import fussballmanager.service.team.TeamService;
 import fussballmanager.service.team.stadion.StadionService;
+import fussballmanager.service.user.UserService;
 
 @Service
 @Transactional
@@ -45,6 +46,9 @@ public class SpieltagService {
 	
 	@Autowired
 	StadionService stadionService;
+	
+	@Autowired
+	UserService userService;
 	
 	public Spieltag findeSpieltag(Long id) {
 		return spieltagRepository.getOne(id);
@@ -123,6 +127,7 @@ public class SpieltagService {
 	public void aufgabenSpieltagWechsel() {
 		wechsleAktuellenSpieltag();
 		//TODO optimieren
+		userService.aufgabenBeiSpieltagWechsel();
 		teamService.aufgabenBeiSpieltagWechsel();
 		spielerService.aufgabenBeiSpieltagWechsel();
 		stadionService.aufgabenBeiSpieltagWechsel();

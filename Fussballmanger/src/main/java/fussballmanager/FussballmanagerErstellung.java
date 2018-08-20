@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import fussballmanager.service.chat.ChatService;
 import fussballmanager.service.land.LaenderNamenTypen;
 import fussballmanager.service.land.Land;
 import fussballmanager.service.land.LandService;
@@ -58,6 +59,9 @@ public class FussballmanagerErstellung {
 	SpielSimulation spielSimulation;
 	
 	@Autowired
+	ChatService chatService;
+	
+	@Autowired
 	FussballmanagerTestData fussballmanagerTestData;
 	
 	public FussballmanagerErstellung() {
@@ -84,6 +88,7 @@ public class FussballmanagerErstellung {
 			}
 			saisonService.ersteSaisonErstellen();
 			spielerService.erstelleSpielerFuerTransfermarkt();
+			chatService.erstelleAlleChat();
 		}
 	}
 }

@@ -631,4 +631,9 @@ public class TeamService {
 		}
 		return gehaelter;
 	}
+
+	public void sperreTeamsAufgrundZuWenigerProtage(User user) {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head th:insert="fragments/header :: head"></head>
+<head>
+	<link rel="stylesheet" href="/chat.css" />
+</head>
+<body>
+	<div th:insert="fragments/header :: header"></div>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="" th:insert="fragments/sidebar :: sidebar"></div>
+			<div class="col-lg-10 main-content">
+				<div class="row">
+					<div class="col-lg-11">
+						<div class="row" >
+							<div class="col-5"></div>
+							<div class="col-3" th:insert="fragments/aktuelleteamanzeige :: aktuelleteamanzeige"></div>
+						</div>
+					</div>
+					<div class="col-lg-11 main">
+						<hr>
+						<h4>Nachrichten</h4>
+						<div class="messaging">
+      						<div class="inbox_msg">
+        						<div class="inbox_people">
+          							<div class="headind_srch">
+            							<div class="recent_heading">
+              								<h4>Letze Chats</h4>
+            							</div>
+	            						<div class="srch_bar">
+	              							<div class="stylish-input-group">
+                								<form action="/chat/neu" method="get">
+                									<button type="submit" name="submit" value="value" class="btn btn-lg btn-primary">Neuer Chat</button>
+                								</form>
+											</div>
+	           							</div>
+          							</div>
+	      							<div class="inbox_chat">
+	            						<div class="chatfeld row" th:each="chat, stat: ${alleChatsEinesUsers}">
+	            							<div th:if="${aktiverChat.id == chat.id}" class="col-9 chat_list active_chat" th:id="${chat.id}">
+		             							<div class="chat_people">
+		                							<div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
+		                							</div>
+		               								<div class="chat_ib">
+		              									<h5 th:text="${chat.chatName}"></h5>
+		           										<p th:if="${chat.nachrichten.size() > 0}" th:text="${chat.nachrichten[chat.nachrichten.size()-1].nachricht}"></p>
+													</div>
+		       					 				</div>
+	       					 				</div>
+	       					 				<div th:unless="${aktiverChat.id == chat.id}" class="col-9 chat_list" th:id="${chat.id}" onclick="changeActive(this.id)">
+	       					 					<form action="#" th:action="@{/chat/auswahl}" th:id="${chat.id}+form" th:object="${neuerAktiverChat}" method="post" >
+	            									<input type="hidden" name="chat" id="chat" th:value="${chat.id}">
+			             							<div class="chat_people">
+			                							<div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
+			                							</div>
+			               								<div class="chat_ib">
+			              									<h5 th:text="${chat.chatName}"></h5>
+			           										<p th:if="${chat.nachrichten.size() > 0}" th:text="${chat.nachrichten[chat.nachrichten.size()-1].nachricht}"></p>
+														</div>
+			       					 				</div>
+	       					 					</form>
+       					 					</div>
+	       					 				<div class="col-3 text-center chat_list_edit">
+	               								<form th:action="@{/chat/}+${chat.id}+'/bearbeiten'" method="get">
+	               									<button th:if="${chat.user[chat.user.size()-1].username == aktuellerUser.username}" th:unless="${chat.id == 1}" type="submit" name="submit" value="value" class="btn btn-lg btn-primary"><i class="fas fa-edit"></i></button>
+	               								</form>
+	               							</div>
+               							</div>
+            						</div>
+								</div>
+	       						<div class="mesgs">
+	       							<div class="msg_history " id="msg_history">
+	       								<div class="" th:each="nachricht : ${alleNachrichtenDesAktivenChat}">
+		            						<div class="incoming_msg" th:if="${nachricht.absender == aktuellerUser}">
+		              							<div class="incoming_msg_img"> 
+		              								<img src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
+		              							</div>
+		           				 				<div class="received_msg">
+		               								<div class="received_withd_msg">
+														<p th:text="${nachricht.nachricht}"></p>
+														<span class="time_date" th:text="${nachricht.uhrzeit}"></span>
+													</div>
+												</div>
+											</div>
+		           							<div class="outgoing_msg" th:unless="${nachricht.absender == aktuellerUser}">
+		           								<div class="sent_msg">
+													<p th:text="${nachricht.nachricht}"></p>
+													<span class="time_date" th:text="${nachricht.uhrzeit}"></span> 
+												</div>
+		           							</div>
+	           							</div>
+	       							</div>
+	       							<div class="type_msg">
+	           							<div class="input_msg_write">
+			       							<form action="#" th:action="@{/chat}" th:object="${chatNachrichtWrapper}" method="post">
+												<input type="text" class="write_msg" th:field="*{nachricht}" placeholder="Type a message"/>
+												<input type="hidden" id="chat" name="chat" th:value="${aktiverChat.id}"/>
+												<button class="msg_send_btn" type="submit" name="submit" value="value">
+													<i class="far fa-paper-plane" aria-hidden="true"></i>
+												</button>
+											</form>											
+	           							</div>
+									</div>
+	       						</div>
+	       					</div>
+						</div>      
+   					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<th:block th:replace="fragments/header :: scripts"></th:block>
+	<script>
+ 		function changeActive(id) {
+/* 			var aktiverChat = document.getElementsByClassName("active_chat");
+			aktiverChat[0].className = "chat_list";
+			document.getElementById(id).className = "chat_list active_chat";
+			document.getElementById("chat").value = id; */
+			console.log(id);
+			document.getElementById(id+"form").submit();
+		}
+		window.onload = function gotoBottom() {
+		   var element = document.getElementById("msg_history");
+		   element.scrollTop = element.scrollHeight - element.clientHeight;
+		}
+		
+	</script>
+</body>
+</html>

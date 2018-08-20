@@ -57,6 +57,7 @@ public class ControllerHelper {
 			User aktuellerUser = userService.findeUser(auth.getName());
 			Team aktuellesTeam = aktuellerUser.getAktuellesTeam();
 			model.addAttribute("aktuellesTeam", aktuellesTeam);
+			model.addAttribute("aktuellerUser", aktuellerUser);
 			model.addAttribute("auth", auth);
 		}
 		DecimalFormat zahlenFormat = new DecimalFormat("0.0");
