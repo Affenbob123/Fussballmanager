@@ -44,4 +44,6 @@ public interface SpielRepository extends JpaRepository<Spiel, Long> {
 
 	List<Spiel> findByAngefangenAndVorbeiAndSaisonAndSpieltag(
 			boolean b, boolean c, Saison findeAktuelleSaison, Spieltag findeAktuellenSpieltag);
+
+	List<Spiel> findBySpielTyp(SpieleTypen freundschaftsspiel);
 }

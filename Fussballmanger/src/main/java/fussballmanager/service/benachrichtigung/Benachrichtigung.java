@@ -12,6 +12,7 @@ import javax.persistence.OneToOne;
 import org.hibernate.annotations.GenericGenerator;
 
 import fussballmanager.service.saison.spieltag.Spieltag;
+import fussballmanager.service.spieler.Spieler;
 import fussballmanager.service.team.Team;
 
 @Entity
@@ -21,6 +22,8 @@ public class Benachrichtigung {
 	@GeneratedValue(strategy= GenerationType.AUTO, generator="native")
 	@GenericGenerator(name = "native", strategy = "native")
 	Long id;
+	
+	BenachrichtigungsTypen benachrichtungsTyp;
 	
 	@OneToOne
 	Team absender;
@@ -33,9 +36,14 @@ public class Benachrichtigung {
 	@ManyToOne
 	Spieltag spieltag;
 	
+	@OneToOne
+	Spieler spieler;
+	
 	LocalTime uhrzeit;
 	
 	boolean gelesen = false;
+	
+	AntwortTypen antwortTyp = AntwortTypen.KEINE;
 	
 	public Benachrichtigung() {
 		
@@ -95,5 +103,29 @@ public class Benachrichtigung {
 
 	public void setGelesen(boolean gelesen) {
 		this.gelesen = gelesen;
+	}
+
+	public BenachrichtigungsTypen getBenachrichtungsTyp() {
+		return benachrichtungsTyp;
+	}
+
+	public void setBenachrichtungsTyp(BenachrichtigungsTypen benachrichtungsTyp) {
+		this.benachrichtungsTyp = benachrichtungsTyp;
+	}
+
+	public Spieler getSpieler() {
+		return spieler;
+	}
+
+	public void setSpieler(Spieler spieler) {
+		this.spieler = spieler;
+	}
+
+	public AntwortTypen getAntwortTyp() {
+		return antwortTyp;
+	}
+
+	public void setAntwortTyp(AntwortTypen antwortTyp) {
+		this.antwortTyp = antwortTyp;
 	}
 }

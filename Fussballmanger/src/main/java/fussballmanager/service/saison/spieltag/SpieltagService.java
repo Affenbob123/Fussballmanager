@@ -2,6 +2,7 @@ package fussballmanager.service.saison.spieltag;
 
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fussballmanager.service.saison.Saison;
 import fussballmanager.service.saison.SaisonService;
+import fussballmanager.service.spiel.Spiel;
 import fussballmanager.service.spiel.SpielService;
 import fussballmanager.service.spiel.SpieleTypen;
 import fussballmanager.service.spieler.SpielerService;
@@ -143,5 +145,42 @@ public class SpieltagService {
 			alleAktuellenSpieltage.add(aktuellerSpieltag);
 		}
 		return alleAktuellenSpieltage;
+	}
+	
+	public List<Spieltag> findeAlleAktuellenSpieltageFuerFreundschaftsspiel() {
+		LocalTime aktuelleZeit = LocalTime.now(ZoneId.of("Europe/Berlin"));
+		Spieltag aktuellerSpieltag = findeAktuellenSpieltag();
+		List<Spieltag> alleAktuellenSpieltage = 
+				spieltagRepository.findBySpieltagNummerGreaterThanAndSaison(aktuellerSpieltag.getSpieltagNummer(), saisonService.findeAktuelleSaison());
+		
+		if(SpieleTypen.FREUNDSCHAFTSSPIEL.getSpielBeginn().isAfter(aktuelleZeit)) {
+			alleAktuellenSpieltage.add(aktuellerSpieltag);
+		}
+		return alleAktuellenSpieltage;
+	}
+	
+	public List<Spieltag> ermittleFreieSpieltageFuerZweiTeams(List<Spiel> alleFreundschaftsspieleTeam1, List<Spiel> alleFreundschaftsspieleTeam2) {
+		List<Spieltag> alleSpieltageNachAktuellem = findeAlleAktuellenSpieltageFuerFreundschaftsspiel();
+		List<Spieltag> freieSpieltage = alleSpieltageNachAktuellem;
+		
+		LOG.info("Freundschaftsspielsize: {}, {}", alleFreundschaftsspieleTeam1.size(),alleFreundschaftsspieleTeam1.size());
+		//TODO optimieren
+		//TODO vergangeSpieltage rausnehmen
+		for(Spieltag spieltag : alleSpieltageNachAktuellem) {
+			for(Spiel spiel1 : alleFreundschaftsspieleTeam1) {
+				if(spiel1.getSpieltag().equals(spieltag)) {
+					freieSpieltage.remove(spieltag);
+					continue;
+				}
+			}
+			
+			for(Spiel spiel2 : alleFreundschaftsspieleTeam2) {
+				if(spiel2.getSpieltag().equals(spieltag)) {
+					freieSpieltage.remove(spieltag);
+					continue;
+				}
+			}
+		}
+		return freieSpieltage;
 	}
 }

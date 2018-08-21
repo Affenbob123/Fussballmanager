@@ -71,11 +71,10 @@
 										<a class="" th:text="${eintrag.team.name}" th:href="@{/team/}+${eintrag.team.id}"></a>
 									</td>
 									<td>
-										
-											<input type="hidden" name="absender" id="absender" th:value="${aktuellesTeam.id}">
-											<div class="custom-control custom-checkbox align-middle">
-												<input type="checkbox" th:field="*{empfaenger}" th:name="empfaenger" th:value="${eintrag.team.id}">
-											</div>
+										<input type="hidden" name="absender" id="absender" th:value="${aktuellesTeam.id}">
+										<div class="custom-control custom-checkbox align-middle">
+											<input type="checkbox" th:field="*{empfaenger}" th:name="empfaenger" th:value="${eintrag.team.id}">
+										</div>
 									</td>
 								</tr>
 							</table>

@@ -32,22 +32,19 @@
 								<div class="gesamte-nachricht" >
 									<div class="col">
 										<div class="row align-middle">
-											<div class="col-4 absender-nachricht-nachrichttyp">
-												<strong>
-													<span class="align-middle" th:text="${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].absender.name}"></span>
-													<span class="align-middle" th:text="${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].uhrzeit}"></span>
-													</strong>
+											<div class="col-9 absender-nachricht-nachrichttyp">
+												<a class="align-middle" th:href="@{/team/}+${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].absender.id}" th:text="${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].absender.name}"></a>
+												<span class="align-middle" th:text="'Liga: '+${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].absender.liga.ligaNameTyp.name}"></span>
+												<span class="align-middle" th:text="'um: '+${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].uhrzeit}"></span>
+												<span class="align-middle" th:text="'am: '+${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].spieltag.spieltagNummer}+' Spieltag'"></span>
 											</div>
-											<div class="col-8 text-center">
+											<div class="col-3 text-center">
 												<div class="row">
-													<div class="col-7">
-														<span class="align-middle antworten-btn" 
-															th:text="'Noch '+${alleUngelesenenBenachrichtigungenDesAktuellenUsers.size()}+' neue Nachrichten'"></span>
-													</div>
-													<div class="col-3">
+												
+													<div class="col">
 														<form method="POST" th:action="@{/benachrichtigung/}+${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].id}+'/naechste'">
 															<span class="align-top">
-																<button type="submit" name="submit" value="value"class="nachrichten-button btn btn-link">N&auml;chste Nachricht &gt;&gt;</button>
+																<button type="submit" name="submit" value="value"class="nachrichten-button btn btn-link">N&auml;chste &gt;&gt;</button>
 															</span>
 														</form>
 													</div>
@@ -57,9 +54,37 @@
 									</div>
 									<div class="col">
 										<div class="row">
+											<div class="col">
+												<strong><span th:text="${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].benachrichtungsTyp.bezeichnung}"></span></strong>
+											</div>
+										</div>
+									</div>
+									<div class="col">
+										<div class="row">
 											<div class="col nachricht">
 												<p th:text="${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].benachrichtigungsText}"></p>
 											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-5 text-right" th:if="${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].antwortTyp == antwortTypAnnehmen}">
+											<form method="POST" th:action="@{/benachrichtigung/}+${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].id}+'/annehmen'">
+												<button type="submit" name="submit" value="value"class="nachrichten-button btn btn-link">Annehmen</button>
+											</form>
+										</div>
+										<div class="col-3 text-center" th:if="${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].antwortTyp == antwortTypAnnehmen}">
+											<form method="POST" th:action="@{/benachrichtigung/}+${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].id}+'/ablehnen'">
+												<div class="col">
+													<button type="submit" name="submit" value="value"class="nachrichten-button btn btn-link">Ablehnen</button>
+												</div>
+											</form>
+										</div>
+										<div class="col-3 text-center" th:if="${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].antwortTyp == antwortTypZuWenig}">
+											<form method="POST" th:action="@{/benachrichtigung/}+${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].id}+'/ablehnen'">
+												<div class="col">
+													<button type="submit" name="submit" value="value"class="nachrichten-button btn btn-link">Ablehnen</button>
+												</div>
+											</form>
 										</div>
 									</div>
 								</div>

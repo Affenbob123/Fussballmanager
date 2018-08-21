@@ -300,12 +300,6 @@ public class FussballmanagerTestData {
 		User userB = new User(loginB, loginB, false, loginB, loginB);
 		userB.setLand(landService.findeLand(LaenderNamenTypen.DEUTSCHLAND));
 		userService.legeUserAn(userB);
-		
-		for(int i = 0; i < teamService.findeAlleTeams().size() - 5; i++) {
-			Team team = teamService.findeAlleTeams().get(i);
-			team.setUser(userA);
-			teamService.aktualisiereTeam(team);
-		}
 	}
 	
 	//@Scheduled(cron = "0 3/6 * * * ?", zone="Europe/Berlin")

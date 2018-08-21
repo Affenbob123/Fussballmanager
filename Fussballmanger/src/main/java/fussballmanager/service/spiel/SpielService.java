@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import fussballmanager.service.benachrichtigung.BenachrichtigungsTypen;
 import fussballmanager.service.liga.Liga;
 import fussballmanager.service.saison.Saison;
 import fussballmanager.service.saison.SaisonService;
@@ -20,6 +21,7 @@ import fussballmanager.service.spiel.spielereignisse.SpielEreignisTypen;
 import fussballmanager.service.tabelle.TabellenEintragService;
 import fussballmanager.service.team.Team;
 import fussballmanager.service.team.TeamService;
+import fussballmanager.service.user.User;
 import fussballmanager.spielsimulation.SpielSimulation;
 
 @Service
@@ -66,6 +68,10 @@ public class SpielService {
 			alleSpieleEinerLiga.addAll(spielRepository.findBySpielTypAndHeimmannschaftOrGastmannschaft(SpieleTypen.LIGASPIEL, team, team));
 		}
 		return alleSpieleEinerLiga;
+	}
+	
+	public List<Spiel> findeAlleFreundschaftsspieleEinesTeams(Team team) {
+		return spielRepository.findBySpielTyp(SpieleTypen.FREUNDSCHAFTSSPIEL);
 	}
 	
 	public List<Spiel> findeAlleLigaspieleEinerLigaUndSaisonUndSpieltag(Liga liga, Saison saison, Spieltag spieltag) {
@@ -325,6 +331,44 @@ public class SpielService {
 		
 		for(Spiel spiel : alleSpieleEinesSpieltagesDieAngefangenHabenUndNichtVorbeiSind) {
 			spielIstVorbei(spiel);
+		}
+	}
+
+	public void erstelleFreundschaftsspiele(BenachrichtigungsTypen benachrichtungsTyp, Team anfragendesTeam, Team empfangendesTeam) {
+		User anfragenderUser = anfragendesTeam.getUser();
+		User empfangenderUser = empfangendesTeam.getUser();
+		LOG.info("{}", benachrichtungsTyp.getBezeichnung());
+		if(BenachrichtigungsTypen.FREUNDSCHAFTSSPIELALLEGEGENALLE.equals(benachrichtungsTyp)) {
+			List<Team> alleTeamsDesAnfragendens = teamService.findeAlleTeamsEinesUsers(anfragenderUser);
+			List<Team> alleTeamsDesEmpfaengers = teamService.findeAlleTeamsEinesUsers(empfangenderUser);
+		} else if(BenachrichtigungsTypen.FREUNDSCHAFTSSPIELEINGEGENALLE.equals(benachrichtungsTyp)) {
+			Team teamDesAnfragendens = anfragendesTeam;
+			List<Team> alleTeamsDesEmpfaengers = teamService.findeAlleTeamsEinesUsers(empfangenderUser);
+		} else if(BenachrichtigungsTypen.FREUNDSCHAFTSSPIELALLEGEGENEIN.equals(benachrichtungsTyp)) {
+			List<Team> alleTeamsDesAnfragendens = teamService.findeAlleTeamsEinesUsers(anfragenderUser);
+			Team teamDesEmpfaengers = empfangendesTeam;
+		} else {
+			Team teamDesAnfragendens = anfragendesTeam;
+			Team teamDesEmpfaengers = empfangendesTeam;
+			erstelleFreundschaftsspieleFuerZweiTeams(teamDesAnfragendens, teamDesEmpfaengers);
+			
+		}
+		
+		
+	}
+
+	public void erstelleFreundschaftsspieleFuerZweiTeams(Team team1, Team team2) {
+		List<Spiel> alleFreundschaftsspieleTeam1 = findeAlleFreundschaftsspieleEinesTeams(team1);
+		List<Spiel> alleFreundschaftsspieleTeam2 = findeAlleFreundschaftsspieleEinesTeams(team1);
+		List<Spieltag> freieSpieltageBeiderTeams = spieltagService.ermittleFreieSpieltageFuerZweiTeams(alleFreundschaftsspieleTeam1, alleFreundschaftsspieleTeam2);
+		Saison aktuelleSaison = saisonService.findeAktuelleSaison();
+		LOG.info("in methode");
+
+		for(Spieltag spieltag : freieSpieltageBeiderTeams) {
+			Spiel freundschaftsSpiel = new Spiel(SpieleTypen.FREUNDSCHAFTSSPIEL, team1, team2, 
+					spieltag, aktuelleSaison,"");
+			LOG.info("Freundschaftsspielangelegt");
+			legeSpielAn(freundschaftsSpiel);
 		}
 	}
 }

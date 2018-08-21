@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import fussballmanager.helper.SpielstatusHelper;
+import fussballmanager.service.benachrichtigung.AntwortTypen;
 import fussballmanager.service.benachrichtigung.Benachrichtigung;
 import fussballmanager.service.benachrichtigung.BenachrichtigungService;
+import fussballmanager.service.benachrichtigung.BenachrichtigungsTypen;
 import fussballmanager.service.land.LandService;
 import fussballmanager.service.liga.LigaService;
 import fussballmanager.service.saison.SaisonService;
@@ -56,6 +58,9 @@ public class SekretariatController {
 		List<Team> alleTeamsEinesUsers = teamService.findeAlleTeamsEinesUsers(aktuellerUser);
 		
 		model.addAttribute("alleTeamsDesAktuellenUsers", alleTeamsEinesUsers);
+		model.addAttribute("antwortTypAnnehmen", AntwortTypen.ANNEHMEN);
+		model.addAttribute("antwortTypZuWenig", AntwortTypen.ZUWENIG);
+		model.addAttribute("antwortTypKeine", AntwortTypen.KEINE);
 		
 		return "sekretariat/sekretariat";
 	}
@@ -117,6 +122,24 @@ public class SekretariatController {
 		Benachrichtigung benachrichtigung = benachrichtigungService.findeBenachrichtigung(benachrichtigungId);
 		benachrichtigung.setGelesen(true);
 		benachrichtigungService.aktualisiereBenachrichtigung(benachrichtigung);
+		return "redirect:/";
+	}
+	
+	@PostMapping("/benachrichtigung/{benachrichtigungId}/annehmen")
+	public String nehmeBenachrichtigungAn(Model model, Authentication auth, @PathVariable("benachrichtigungId") Long benachrichtigungId) {
+		Benachrichtigung benachrichtigung = benachrichtigungService.findeBenachrichtigung(benachrichtigungId);
+		benachrichtigung.setGelesen(true);
+		benachrichtigungService.aktualisiereBenachrichtigung(benachrichtigung);
+		benachrichtigungService.benachrichtigungAngenommen(benachrichtigung);
+		return "redirect:/";
+	}
+	
+	@PostMapping("/benachrichtigung/{benachrichtigungId}/ablehnen")
+	public String lehneBenachrichtigungAb(Model model, Authentication auth, @PathVariable("benachrichtigungId") Long benachrichtigungId) {
+		Benachrichtigung benachrichtigung = benachrichtigungService.findeBenachrichtigung(benachrichtigungId);
+		benachrichtigung.setGelesen(true);
+		benachrichtigungService.aktualisiereBenachrichtigung(benachrichtigung);
+		benachrichtigungService.benachrichtigungAbgelehnt(benachrichtigung);
 		return "redirect:/";
 	}
 }

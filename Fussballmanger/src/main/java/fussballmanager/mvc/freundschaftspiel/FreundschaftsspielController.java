@@ -94,7 +94,8 @@ private static final Logger LOG = LoggerFactory.getLogger(FreundschaftsspielCont
 	public String frageFreundschaftsspieleAn(Model model, Authentication auth, @ModelAttribute("freundschaftsspieleWrapper") FreundschaftsspieleWrapper freundschaftsspieleWrapper) {
 		LOG.info("{}, {}", freundschaftsspieleWrapper.getAbsender().getName(), freundschaftsspieleWrapper.getEmpfaenger());
 		benachrichtigungService.erstelleFreundschaftsspielAnfrage(freundschaftsspieleWrapper.getAbsender(), 
-				freundschaftsspieleWrapper.getEmpfaenger(), freundschaftsspieleWrapper.getFreundschaftsspielAnfrageTyp());
+				freundschaftsspieleWrapper.getEmpfaenger(), benachrichtigungService.
+				ermittleBenachrichtigungsTypAusFreundschaftsspielTyp(freundschaftsspieleWrapper.getFreundschaftsspielAnfrageTyp()));
 		
 		return "redirect:/freundschaftsspiele/" + freundschaftsspieleWrapper.getAbsender().getLand().getLandNameTyp().getName() 
 				+ "/" + freundschaftsspieleWrapper.getAbsender().getLiga().getLigaNameTyp().getName();
