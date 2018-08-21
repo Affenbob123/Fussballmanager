@@ -41,4 +41,16 @@ public enum FormationsTypen {
 	public AufstellungsPositionsTypen[] getAufstellungsPositionsTypen() {
 		return aufstellungsPositionsTypen;
 	}
+	
+	public boolean ueberpruefeObAufstellungEinePositionBeinhaltet(FormationsTypen formationsTyp, AufstellungsPositionsTypen aufstellungsPositionsTyp) {
+		boolean b = false;
+		for(AufstellungsPositionsTypen a : formationsTyp.getAufstellungsPositionsTypen()) {
+			if(a.equals(aufstellungsPositionsTyp)) {
+				b = true;
+				break;
+			}
+		}
+		
+		return b;
+	}
 }

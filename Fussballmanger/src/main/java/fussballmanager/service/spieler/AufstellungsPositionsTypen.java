@@ -61,4 +61,13 @@ public enum AufstellungsPositionsTypen {
 	public int getRoteKarteWahrscheinlichkeit() {
 		return roteKarteWahrscheinlichkeit;
 	}
+	
+	public AufstellungsPositionsTypen getAufstellungsPositionsTypVonString(String aufstellungsPosition) {
+		for(AufstellungsPositionsTypen aufstellungsPositionsTyp : AufstellungsPositionsTypen.values()) {
+			if(aufstellungsPositionsTyp.getPositionsName().equals(aufstellungsPosition)) {
+				return aufstellungsPositionsTyp;
+			}
+		}
+		return null;
+	}
 }

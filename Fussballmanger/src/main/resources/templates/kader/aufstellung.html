@@ -71,6 +71,8 @@
 														</select>
 													</form>
 												</div>
+												<div th:text="${aktuellesTeam.anzahlAuswechselungen}">
+												</div>
 											</div>
 										</div>
 									</div>
@@ -85,215 +87,255 @@
 									<form action="#" id="spielerwechseln" th:action="@{/team/}+${aktuellesTeam.id}+'/einwechseln'" th:object="${einzuwechselnderSpieler}"
 											method="post">
 										<input type="hidden" id="einzuwechselnderSpieler" name="einzuwechselnderSpieler" value=""/>
-										<input type="hidden" id="auszuwechselnderSpieler" name="auszuwechselnderSpieler" value=""/>
+										<input type="hidden" id="aufstellungsPositionsTyp" name="aufstellungsPositionsTyp" value=""/>
 										<div class="row">
 											<div class="col-6 border rounded">
 												<div class="row aufstellungs-reihe aufstellung-sturm">
-													<div class="col-4 aufstellung-position text-center">
-														<div class="droptarget" id="ls" ondrop="drop(event)" ondragover="allowDrop(event)">
-															<div class="" id="lsdrag" draggable="true" ondragstart="drag(event)" th:if="${ls}">
-																<img src="/trikots/test.png" />
-																<div>
-																	<img th:src="@{${ls.nationalitaet.landNameTyp.bild}}" />
-																	<a th:text="'('+${ls.position}+')'+' | '+${ls.name}" th:id="${ls.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
-																	<span th:text="${zahlenFormat.format(ls.spielerStaerke.staerke)}"></span>
-																</div>
-																<input type="hidden" id="lseinwechseln" th:value="${ls.id}" />
+													<div class="col-4 aufstellung-position text-center" 
+														th:unless="${aktuellesTeam.formationsTyp.ueberpruefeObAufstellungEinePositionBeinhaltet(aktuellesTeam.formationsTyp, aufstellungsPositionsTypLS)}"></div>
+													<div class="col-4 aufstellung-position text-center droptarget" 
+														th:if="${aktuellesTeam.formationsTyp.ueberpruefeObAufstellungEinePositionBeinhaltet(aktuellesTeam.formationsTyp, aufstellungsPositionsTypLS)}" 
+														id="ls" ondrop="drop(event)" ondragover="allowDrop(event)">															
+														<div th:if="${ls}"id="lsdrag" draggable="true" ondragstart="drag(event)">
+															<img src="/trikots/test.png" />
+															<div>
+																<img th:src="@{${ls.nationalitaet.landNameTyp.bild}}" />
+																<a th:text="'('+${ls.position}+')'+' | '+${ls.name}" th:id="${ls.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
+																<span th:text="${zahlenFormat.format(ls.spielerStaerke.staerke)}"></span>
 															</div>
+															<input type="hidden" id="lseinwechseln" th:value="${ls.id}" />
 														</div>
+														<input type="hidden" id="lsauswechseln" th:value="${aufstellungsPositionsTypLS.positionsName}" />
 													</div>
 													<div class="col-4"></div>
-													<div class="col-4 aufstellung-position text-center">
-														<div class="droptarget" id="rs" ondrop="drop(event)"ondragover="allowDrop(event)">
-															<div class="" id="rsdrag" draggable="true" ondragstart="drag(event)" th:if="${rs}" th:value="${rs}">
-																<img src="/trikots/test.png" />
-																<div>
-																	<img th:src="@{${rs.nationalitaet.landNameTyp.bild}}" />
-																	<a th:text="'('+${rs.position}+')'+' | '+${rs.name}" th:id="${rs.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
-																	<span th:text="${zahlenFormat.format(rs.spielerStaerke.staerke)}"></span>
-																</div>
-																<input type="hidden" id="rseinwechseln" th:value="${rs.id}" />
+													<div class="col-4 aufstellung-position text-center droptarget" 
+														th:if="${aktuellesTeam.formationsTyp.ueberpruefeObAufstellungEinePositionBeinhaltet(aktuellesTeam.formationsTyp, aufstellungsPositionsTypRS)}"
+														id="rs" ondrop="drop(event)"ondragover="allowDrop(event)">
+														<div th:if="${rs}" id="rsdrag" draggable="true" ondragstart="drag(event)">
+															<img src="/trikots/test.png" />
+															<div>
+																<img th:src="@{${rs.nationalitaet.landNameTyp.bild}}" />
+																<a th:text="'('+${rs.position}+')'+' | '+${rs.name}" th:id="${rs.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
+																<span th:text="${zahlenFormat.format(rs.spielerStaerke.staerke)}"></span>
 															</div>
+															<input type="hidden" id="rseinwechseln" th:value="${rs.id}" />
 														</div>
+														<input type="hidden" id="rsauswechseln" th:value="${aufstellungsPositionsTypRS.positionsName}" />
 													</div>
 												</div>
 												<div class="row aufstellungs-reihe">
 													<div class="col-4"></div>
-													<div class="col-4 aufstellung-position text-center">
-														<div class="droptarget" id="ms" ondrop="drop(event)" ondragover="allowDrop(event)">
-															<div id="msdrag" draggable="true" ondragstart="drag(event)" th:if="${ms}">
-																<img src="/trikots/test.png" />
-																<div>
-																	<img th:src="@{${ms.nationalitaet.landNameTyp.bild}}" />
-																	<a th:text="'('+${ms.position}+')'+' | '+${ms.name}" th:id="${ms.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
-																	<span th:text="${zahlenFormat.format(ms.spielerStaerke.staerke)}"></span>
-																</div>
-																<input type="hidden" id="mseinwechseln" th:value="${ms.id}" />
+													<div class="col-4 aufstellung-position text-center" 
+														th:unless="${aktuellesTeam.formationsTyp.ueberpruefeObAufstellungEinePositionBeinhaltet(aktuellesTeam.formationsTyp, aufstellungsPositionsTypMS)}"></div>
+													<div class="col-4 aufstellung-position text-center droptarget" 
+														th:if="${aktuellesTeam.formationsTyp.ueberpruefeObAufstellungEinePositionBeinhaltet(aktuellesTeam.formationsTyp, aufstellungsPositionsTypMS)}"
+														id="ms" ondrop="drop(event)" ondragover="allowDrop(event)">
+														<div th:if="${ms}" id="msdrag" draggable="true" ondragstart="drag(event)">
+															<img src="/trikots/test.png" />
+															<div>
+																<img th:src="@{${ms.nationalitaet.landNameTyp.bild}}" />
+																<a th:text="'('+${ms.position}+')'+' | '+${ms.name}" th:id="${ms.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
+																<span th:text="${zahlenFormat.format(ms.spielerStaerke.staerke)}"></span>
 															</div>
+															<input type="hidden" id="mseinwechseln" th:value="${ms.id}" />
 														</div>
+														<input type="hidden" id="msauswechseln" th:value="${aufstellungsPositionsTypMS.positionsName}" />
 													</div>
 													<div class="col-4"></div>
 												</div>
 												<div class="row aufstellungs-reihe">
 													<div class="col-4"></div>
-													<div class="col-4 aufstellung-position text-center">
-														<div class="droptarget" id="om" ondrop="drop(event)" ondragover="allowDrop(event)">
-															<div id="omdrag" draggable="true" ondragstart="drag(event)" th:if="${om}">
-																<img src="/trikots/test.png" />
-																<div>
-																	<img th:src="@{${om.nationalitaet.landNameTyp.bild}}" />
-																	<a th:text="'('+${om.position}+')'+' | '+${om.name}" th:id="${om.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
-																	<span th:text="${zahlenFormat.format(om.spielerStaerke.staerke)}"></span>
-																</div>
-																<input type="hidden" id="omeinwechseln" th:value="${om.id}" />
+													<div class="col-4 aufstellung-position text-center"
+														th:unless="${aktuellesTeam.formationsTyp.ueberpruefeObAufstellungEinePositionBeinhaltet(aktuellesTeam.formationsTyp, aufstellungsPositionsTypOM)}"></div>
+													<div class="col-4 aufstellung-position text-center droptarget" 
+														th:if="${aktuellesTeam.formationsTyp.ueberpruefeObAufstellungEinePositionBeinhaltet(aktuellesTeam.formationsTyp, aufstellungsPositionsTypOM)}" 
+														id="om" ondrop="drop(event)" ondragover="allowDrop(event)">															
+														<div th:if="${om}"id="omdrag" draggable="true" ondragstart="drag(event)">
+															<img src="/trikots/test.png" />
+															<div>
+																<img th:src="@{${om.nationalitaet.landNameTyp.bild}}" />
+																<a th:text="'('+${om.position}+')'+' | '+${om.name}" th:id="${om.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
+																<span th:text="${zahlenFormat.format(om.spielerStaerke.staerke)}"></span>
 															</div>
+															<input type="hidden" id="omeinwechseln" th:value="${om.id}" />
 														</div>
+														<input type="hidden" id="omauswechseln" th:value="${aufstellungsPositionsTypOM.positionsName}" />
 													</div>
 													<div class="col-4"></div>
 												</div>
 												<div class="row aufstellungs-reihe">
-													<div class="col-4 aufstellung-position text-center">
-														<div class="droptarget" id="lm" ondrop="drop(event)" ondragover="allowDrop(event)">
-															<div id="lmdrag" draggable="true" ondragstart="drag(event)" th:if="${lm}">
-																<img src="/trikots/test.png" />
-																<div>
-																	<img th:src="@{${lm.nationalitaet.landNameTyp.bild}}" />
-																	<a th:text="'('+${lm.position}+')'+' | '+${lm.name}" th:id="${lm.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
-																	<span th:text="${zahlenFormat.format(lm.spielerStaerke.staerke)}"></span>
-																</div>
+													<div class="col-4 aufstellung-position text-cente"
+														th:unless="${aktuellesTeam.formationsTyp.ueberpruefeObAufstellungEinePositionBeinhaltet(aktuellesTeam.formationsTyp, aufstellungsPositionsTypLM)}" ></div>
+													<div class="col-4 aufstellung-position text-center droptarget" 
+														th:if="${aktuellesTeam.formationsTyp.ueberpruefeObAufstellungEinePositionBeinhaltet(aktuellesTeam.formationsTyp, aufstellungsPositionsTypLM)}" 
+														id="lm" ondrop="drop(event)" ondragover="allowDrop(event)">															
+														<div th:if="${lm}"id="lmdrag" draggable="true" ondragstart="drag(event)">
+															<img src="/trikots/test.png" />
+															<div>
+																<img th:src="@{${lm.nationalitaet.landNameTyp.bild}}" />
+																<a th:text="'('+${lm.position}+')'+' | '+${lm.name}" th:id="${lm.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
+																<span th:text="${zahlenFormat.format(lm.spielerStaerke.staerke)}"></span>
 															</div>
 															<input type="hidden" id="lmeinwechseln" th:value="${lm.id}" />
 														</div>
+														<input type="hidden" id="lmauswechseln" th:value="${aufstellungsPositionsTypLM.positionsName}" />
 													</div>
-													<div class="col-4 aufstellung-position text-center">
-														<div class="droptarget" id="zm" ondrop="drop(event)" ondragover="allowDrop(event)">
-															<div id="zmdrag" draggable="true" ondragstart="drag(event)" th:if="${zm}">
-																<img src="/trikots/test.png" />
-																<div>
-																	<img th:src="@{${zm.nationalitaet.landNameTyp.bild}}" />
-																	<a th:text="'('+${zm.position}+')'+' | '+${zm.name}" th:id="${zm.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
-																	<span th:text="${zahlenFormat.format(zm.spielerStaerke.staerke)}"></span>
-																</div>
-																<input type="hidden" id="zmeinwechseln" th:value="${zm.id}" />
+													<div class="col-4 aufstellung-position text-center"
+														th:unless="${aktuellesTeam.formationsTyp.ueberpruefeObAufstellungEinePositionBeinhaltet(aktuellesTeam.formationsTyp, aufstellungsPositionsTypZM)}"></div>
+													<div class="col-4 aufstellung-position text-center droptarget" 
+														th:if="${aktuellesTeam.formationsTyp.ueberpruefeObAufstellungEinePositionBeinhaltet(aktuellesTeam.formationsTyp, aufstellungsPositionsTypZM)}" 
+														id="zm" ondrop="drop(event)" ondragover="allowDrop(event)">															
+														<div th:if="${zm}"id="zmdrag" draggable="true" ondragstart="drag(event)">
+															<img src="/trikots/test.png" />
+															<div>
+																<img th:src="@{${zm.nationalitaet.landNameTyp.bild}}" />
+																<a th:text="'('+${zm.position}+')'+' | '+${zm.name}" th:id="${zm.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
+																<span th:text="${zahlenFormat.format(rm.spielerStaerke.staerke)}"></span>
 															</div>
+															<input type="hidden" id="zmeinwechseln" th:value="${zm.id}" />
 														</div>
+														<input type="hidden" id="zmauswechseln" th:value="${aufstellungsPositionsTypZM.positionsName}" />
 													</div>
-													<div class="col-4 aufstellung-position text-center">
-														<div class="droptarget" id="rm" ondrop="drop(event)" ondragover="allowDrop(event)">
-															<div id="rmdrag" draggable="true" ondragstart="drag(event)" th:if="${rm}">
-																<img src="/trikots/test.png" />
-																<div>
-																	<img th:src="@{${rm.nationalitaet.landNameTyp.bild}}" />
-																	<a th:text="'('+${rm.position}+')'+' | '+${rm.name}" th:id="${rm.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
-																	<span th:text="${zahlenFormat.format(rm.spielerStaerke.staerke)}"></span>
-																</div>
-																<input type="hidden" id="rmeinwechseln" th:value="${rm.id}" />
+													<div class="col-4 aufstellung-position text-center"
+														th:unless="${aktuellesTeam.formationsTyp.ueberpruefeObAufstellungEinePositionBeinhaltet(aktuellesTeam.formationsTyp, aufstellungsPositionsTypRM)}"></div>
+													<div class="col-4 aufstellung-position text-center droptarget" 
+														th:if="${aktuellesTeam.formationsTyp.ueberpruefeObAufstellungEinePositionBeinhaltet(aktuellesTeam.formationsTyp, aufstellungsPositionsTypRM)}" 
+														id="rm" ondrop="drop(event)" ondragover="allowDrop(event)">															
+														<div th:if="${rm}"id="rmdrag" draggable="true" ondragstart="drag(event)">
+															<img src="/trikots/test.png" />
+															<div>
+																<img th:src="@{${rm.nationalitaet.landNameTyp.bild}}" />
+																<a th:text="'('+${rm.position}+')'+' | '+${rm.name}" th:id="${rm.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
+																<span th:text="${zahlenFormat.format(rm.spielerStaerke.staerke)}"></span>
 															</div>
+															<input type="hidden" id="rmeinwechseln" th:value="${rm.id}" />
 														</div>
+														<input type="hidden" id="rmauswechseln" th:value="${aufstellungsPositionsTypRM.positionsName}" />
 													</div>
 												</div>
 												<div class="row aufstellungs-reihe">
 													<div class="col-4"></div>
-													<div class="col-4 aufstellung-position text-center">
-													<div class="droptarget" id="dm" ondrop="drop(event)" ondragover="allowDrop(event)">
-														<div id="dmdrag" draggable="true" ondragstart="drag(event)" th:if="${dm}">
-																<img src="/trikots/test.png" />
-																<div>
-																	<img th:src="@{${dm.nationalitaet.landNameTyp.bild}}" />
-																	<a th:text="'('+${dm.position}+')'+' | '+${dm.name}" th:id="${dm.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
-																	<span th:text="${zahlenFormat.format(dm.spielerStaerke.staerke)}"></span>
-																</div>
-																<input type="hidden" id="dmeinwechseln" th:value="${dm.id}" />
+													<div class="col-4 aufstellung-position text-center"
+														th:unless="${aktuellesTeam.formationsTyp.ueberpruefeObAufstellungEinePositionBeinhaltet(aktuellesTeam.formationsTyp, aufstellungsPositionsTypDM)}"></div>
+													<div class="col-4 aufstellung-position text-center droptarget" 
+														th:if="${aktuellesTeam.formationsTyp.ueberpruefeObAufstellungEinePositionBeinhaltet(aktuellesTeam.formationsTyp, aufstellungsPositionsTypDM)}" 
+														id="dm" ondrop="drop(event)" ondragover="allowDrop(event)">															
+														<div th:if="${dm}"id="dmdrag" draggable="true" ondragstart="drag(event)">
+															<img src="/trikots/test.png" />
+															<div>
+																<img th:src="@{${dm.nationalitaet.landNameTyp.bild}}" />
+																<a th:text="'('+${dm.position}+')'+' | '+${dm.name}" th:id="${dm.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
+																<span th:text="${zahlenFormat.format(dm.spielerStaerke.staerke)}"></span>
 															</div>
+															<input type="hidden" id="dmeinwechseln" th:value="${dm.id}" />
 														</div>
+														<input type="hidden" id="dmauswechseln" th:value="${aufstellungsPositionsTypDM.positionsName}" />
 													</div>
 													<div class="col-4"></div>
 												</div>
 												<div class="row aufstellungs-reihe">
-													<div class="col-4 aufstellung-position text-center">
-														<div class="droptarget" id="lv" ondrop="drop(event)" ondragover="allowDrop(event)">
-															<div id="lvdrag" draggable="true" ondragstart="drag(event)" th:if="${lv}">
-																<img src="/trikots/test.png" />
-																<div>
-																	<img th:src="@{${lv.nationalitaet.landNameTyp.bild}}" />
-																	<a th:text="'('+${lv.position}+')'+' | '+${lv.name}" th:id="${lv.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
-																	<span th:text="${zahlenFormat.format(lv.spielerStaerke.staerke)}"></span>
-																</div>
-																<input type="hidden" id="lveinwechseln" th:value="${lv.id}" />
+													<div class="col-4 aufstellung-position text-center"
+														th:unless="${aktuellesTeam.formationsTyp.ueberpruefeObAufstellungEinePositionBeinhaltet(aktuellesTeam.formationsTyp, aufstellungsPositionsTypLV)}"></div>
+													<div class="col-4 aufstellung-position text-center droptarget" 
+														th:if="${aktuellesTeam.formationsTyp.ueberpruefeObAufstellungEinePositionBeinhaltet(aktuellesTeam.formationsTyp, aufstellungsPositionsTypLV)}" 
+														id="lv" ondrop="drop(event)" ondragover="allowDrop(event)">															
+														<div th:if="${lv}"id="lvdrag" draggable="true" ondragstart="drag(event)">
+															<img src="/trikots/test.png" />
+															<div>
+																<img th:src="@{${lv.nationalitaet.landNameTyp.bild}}" />
+																<a th:text="'('+${lv.position}+')'+' | '+${lv.name}" th:id="${lv.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
+																<span th:text="${zahlenFormat.format(lv.spielerStaerke.staerke)}"></span>
 															</div>
+															<input type="hidden" id="lveinwechseln" th:value="${lv.id}" />
 														</div>
-													</div>
-													<div class="col-4 aufstellung-position text-center">
-														<div class="droptarget" id="lib" ondrop="drop(event)" ondragover="allowDrop(event)">
-															<div id="libdrag" draggable="true" ondragstart="drag(event)" th:if="${lib}">
-																<img src="/trikots/test.png" />
-																<div>
-																	<img th:src="@{${lib.nationalitaet.landNameTyp.bild}}" />
-																	<a th:text="'('+${lib.position}+')'+' | '+${lib.name}" th:id="${lib.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
-																	<span th:text="${zahlenFormat.format(lib.spielerStaerke.staerke)}"></span>
-																</div>
-																<input type="hidden" id="libeinwechseln" th:value="${lib.id}" />
+														<input type="hidden" id="lvauswechseln" th:value="${aufstellungsPositionsTypLV.positionsName}" />
+														</div>
+													<div class="col-4 aufstellung-position text-center"
+														th:unless="${aktuellesTeam.formationsTyp.ueberpruefeObAufstellungEinePositionBeinhaltet(aktuellesTeam.formationsTyp, aufstellungsPositionsTypLIB)}"></div>
+													<div class="col-4 aufstellung-position text-center droptarget" 
+														th:if="${aktuellesTeam.formationsTyp.ueberpruefeObAufstellungEinePositionBeinhaltet(aktuellesTeam.formationsTyp, aufstellungsPositionsTypLIB)}" 
+														id="lib" ondrop="drop(event)" ondragover="allowDrop(event)">															
+														<div th:if="${lib}"id="libdrag" draggable="true" ondragstart="drag(event)">
+															<img src="/trikots/test.png" />
+															<div>
+																<img th:src="@{${lib.nationalitaet.landNameTyp.bild}}" />
+																<a th:text="'('+${lib.position}+')'+' | '+${lib.name}" th:id="${lib.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
+																<span th:text="${zahlenFormat.format(lib.spielerStaerke.staerke)}"></span>
 															</div>
+															<input type="hidden" id="libeinwechseln" th:value="${lib.id}" />
 														</div>
-													</div>
-													<div class="col-4 aufstellung-position text-center">
-														<div class="droptarget" id="rv" ondrop="drop(event)" ondragover="allowDrop(event)">
-															<div id="rvdrag" draggable="true" ondragstart="drag(event)" th:if="${rv}">
-																<img src="/trikots/test.png" />
-																<div>
-																	<img th:src="@{${rv.nationalitaet.landNameTyp.bild}}" />
-																	<a th:text="'('+${rv.position}+')'+' | '+${rv.name}" th:id="${rv.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
-																	<span th:text="${zahlenFormat.format(rv.spielerStaerke.staerke)}"></span>
-																</div>
-																<input type="hidden" id="rveinwechseln" th:value="${rv.id}" />
+														<input type="hidden" id="libauswechseln" th:value="${aufstellungsPositionsTypLIB.positionsName}" />
+														</div>
+													<div class="col-4 aufstellung-position text-center"
+														th:unless="${aktuellesTeam.formationsTyp.ueberpruefeObAufstellungEinePositionBeinhaltet(aktuellesTeam.formationsTyp, aufstellungsPositionsTypRV)}"></div>
+													<div class="col-4 aufstellung-position text-center droptarget" 
+														th:if="${aktuellesTeam.formationsTyp.ueberpruefeObAufstellungEinePositionBeinhaltet(aktuellesTeam.formationsTyp, aufstellungsPositionsTypRV)}" 
+														id="rv" ondrop="drop(event)" ondragover="allowDrop(event)">															
+														<div th:if="${rv}"id="rvdrag" draggable="true" ondragstart="drag(event)">
+															<img src="/trikots/test.png" />
+															<div>
+																<img th:src="@{${rv.nationalitaet.landNameTyp.bild}}" />
+																<a th:text="'('+${rv.position}+')'+' | '+${rv.name}" th:id="${rv.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
+																<span th:text="${zahlenFormat.format(rv.spielerStaerke.staerke)}"></span>
 															</div>
+															<input type="hidden" id="rveinwechseln" th:value="${rv.id}" />
 														</div>
+														<input type="hidden" id="rvauswechseln" th:value="${aufstellungsPositionsTypRV.positionsName}" />
 													</div>
 												</div>
 												<div class="row aufstellungs-reihe">
 													<div class="col-2"></div>
-													<div class="col-4 aufstellung-position text-center">
-														<div class="droptarget" id="liv" ondrop="drop(event)" ondragover="allowDrop(event)">
-															<div id="livdrag" draggable="true" ondragstart="drag(event)" th:if="${liv}">
-																<img src="/trikots/test.png" />
-																<div>
-																	<img th:src="@{${liv.nationalitaet.landNameTyp.bild}}" />
-																	<a th:text="'('+${liv.position}+')'+' | '+${liv.name}" th:id="${liv.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
-																	<span th:text="${zahlenFormat.format(liv.spielerStaerke.staerke)}"></span>
-																</div>
-																<input type="hidden" id="liveinwechseln" th:value="${liv.id}" />
+													<div class="col-4 aufstellung-position text-center"
+														th:unless="${aktuellesTeam.formationsTyp.ueberpruefeObAufstellungEinePositionBeinhaltet(aktuellesTeam.formationsTyp, aufstellungsPositionsTypLIV)}"></div>
+													<div class="col-4 aufstellung-position text-center droptarget" 
+														th:if="${aktuellesTeam.formationsTyp.ueberpruefeObAufstellungEinePositionBeinhaltet(aktuellesTeam.formationsTyp, aufstellungsPositionsTypLIV)}" 
+														id="liv" ondrop="drop(event)" ondragover="allowDrop(event)">															
+														<div th:if="${liv}"id="livdrag" draggable="true" ondragstart="drag(event)">
+															<img src="/trikots/test.png" />
+															<div>
+																<img th:src="@{${liv.nationalitaet.landNameTyp.bild}}" />
+																<a th:text="'('+${liv.position}+')'+' | '+${liv.name}" th:id="${liv.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
+																<span th:text="${zahlenFormat.format(liv.spielerStaerke.staerke)}"></span>
 															</div>
+															<input type="hidden" id="liveinwechseln" th:value="${liv.id}" />
 														</div>
+														<input type="hidden" id="livauswechseln" th:value="${aufstellungsPositionsTypLIV.positionsName}" />
 													</div>
-													<div class="col-4 aufstellung-position text-center">
-														<div class="droptarget" id="riv" ondrop="drop(event)" ondragover="allowDrop(event)">
-															<div id="rivdrag" draggable="true" ondragstart="drag(event)" th:if="${riv}">
-																<img src="/trikots/test.png" />
-																<div>
-																	<img th:src="@{${riv.nationalitaet.landNameTyp.bild}}" />
-																	<a th:text="'('+${riv.position}+')'+' | '+${riv.name}" th:id="${riv.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
-																	<span th:text="${zahlenFormat.format(riv.spielerStaerke.staerke)}"></span>
-																</div>
-																<input type="hidden" id="riveinwechseln" th:value="${riv.id}" />
+													<div class="col-4 aufstellung-position text-center"
+														th:unless="${aktuellesTeam.formationsTyp.ueberpruefeObAufstellungEinePositionBeinhaltet(aktuellesTeam.formationsTyp, aufstellungsPositionsTypRIV)}"></div>
+													<div class="col-4 aufstellung-position text-center droptarget" 
+														th:if="${aktuellesTeam.formationsTyp.ueberpruefeObAufstellungEinePositionBeinhaltet(aktuellesTeam.formationsTyp, aufstellungsPositionsTypRIV)}" 
+														id="riv" ondrop="drop(event)" ondragover="allowDrop(event)">															
+														<div th:if="${riv}"id="rivdrag" draggable="true" ondragstart="drag(event)">
+															<img src="/trikots/test.png" />
+															<div>
+																<img th:src="@{${riv.nationalitaet.landNameTyp.bild}}" />
+																<a th:text="'('+${riv.position}+')'+' | '+${riv.name}" th:id="${riv.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
+																<span th:text="${zahlenFormat.format(riv.spielerStaerke.staerke)}"></span>
 															</div>
+															<input type="hidden" id="riveinwechseln" th:value="${riv.id}" />
 														</div>
+														<input type="hidden" id="rivauswechseln" th:value="${aufstellungsPositionsTypRIV.positionsName}" />
 													</div>
 													<div class="col-2"></div>
 												</div>
 												<div class="row aufstellungs-reihe">
 													<div class="col-4"></div>
-													<div class="col-4 aufstellung-position text-center">
-														<div class="droptarget" id="tw" ondrop="drop(event)" ondragover="allowDrop(event)">
-															<div id="twdrag" draggable="true" ondragstart="drag(event)" th:if="${tw}">
-																<img src="/trikots/test.png" />
-																<div>
-																	<img th:src="@{${tw.nationalitaet.landNameTyp.bild}}" />
-																	<a th:text="'('+${tw.position}+')'+' | '+${tw.name}" th:id="${tw.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
-																	<span th:text="${zahlenFormat.format(tw.spielerStaerke.staerke)}"></span>
-																</div>
-																<input type="hidden" id="tweinwechseln" th:value="${tw.id}" />
+													<div class="col-4 aufstellung-position text-center"
+														th:unless="${aktuellesTeam.formationsTyp.ueberpruefeObAufstellungEinePositionBeinhaltet(aktuellesTeam.formationsTyp, aufstellungsPositionsTypTW)}"></div>
+													<div class="col-4 aufstellung-position text-center droptarget" 
+														th:if="${aktuellesTeam.formationsTyp.ueberpruefeObAufstellungEinePositionBeinhaltet(aktuellesTeam.formationsTyp, aufstellungsPositionsTypTW)}" 
+														id="tw" ondrop="drop(event)" ondragover="allowDrop(event)">															
+														<div th:if="${tw}"id="rvdrag" draggable="true" ondragstart="drag(event)">
+															<img src="/trikots/test.png" />
+															<div>
+																<img th:src="@{${tw.nationalitaet.landNameTyp.bild}}" />
+																<a th:text="'('+${tw.position}+')'+' | '+${tw.name}" th:id="${tw.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
+																<span th:text="${zahlenFormat.format(tw.spielerStaerke.staerke)}"></span>
 															</div>
+															<input type="hidden" id="tweinwechseln" th:value="${tw.id}" />
 														</div>
+														<input type="hidden" id="twauswechseln" th:value="${aufstellungsPositionsTypTW.positionsName}" />
 													</div>
 													<div class="col-4"></div>
 												</div>
@@ -393,39 +435,41 @@
 			    	var einzuwechselnderSpieler = srcId.replace(/[^0-9\.]+/g, "");
 			    }
 			    document.getElementById("einzuwechselnderSpieler").value = einzuwechselnderSpieler;
+			    console.log(einzuwechselnderSpieler);
 			    
 			    if(targetId === "ls") {
-			    	var auszuwechselnderSpieler = document.getElementById("lseinwechseln").value;
+			    	var auszuwechselnderSpieler = document.getElementById("lsauswechseln").value;
 			    } else if(targetId === "rs") {
-			    	var auszuwechselnderSpieler = document.getElementById("rseinwechseln").value;
+			    	var auszuwechselnderSpieler = document.getElementById("rsauswechseln").value;
 			    } else if(targetId === "ms") {
-			    	var auszuwechselnderSpieler = document.getElementById("mseinwechseln").value;
+			    	var auszuwechselnderSpieler = document.getElementById("msauswechseln").value;
 			    } else if(targetId === "om") {
-			    	var auszuwechselnderSpieler = document.getElementById("omeinwechseln").value;
+			    	var auszuwechselnderSpieler = document.getElementById("omauswechseln").value;
 			    } else if(targetId === "rm") {
-			    	var auszuwechselnderSpieler = document.getElementById("rmeinwechseln").value;
+			    	var auszuwechselnderSpieler = document.getElementById("rmauswechseln").value;
 			    } else if(targetId === "zm") {
-			    	var auszuwechselnderSpieler = document.getElementById("zmeinwechseln").value;
+			    	var auszuwechselnderSpieler = document.getElementById("zmauswechseln").value;
 			    } else if(targetId === "lm") {
-			    	var auszuwechselnderSpieler = document.getElementById("lmeinwechseln").value;
+			    	var auszuwechselnderSpieler = document.getElementById("lmauswechseln").value;
 			    } else if(targetId === "dm") {
-			    	var auszuwechselnderSpieler = document.getElementById("dmeinwechseln").value;
+			    	var auszuwechselnderSpieler = document.getElementById("dmauswechseln").value;
 			    } else if(targetId === "rv") {
-			    	var auszuwechselnderSpieler = document.getElementById("rveinwechseln").value;
+			    	var auszuwechselnderSpieler = document.getElementById("rvauswechseln").value;
 			    } else if(targetId === "lib") {
-			    	var auszuwechselnderSpieler = document.getElementById("libeinwechseln").value;
+			    	var auszuwechselnderSpieler = document.getElementById("libauswechseln").value;
 			    } else if(targetId === "lv") {
-			    	var auszuwechselnderSpieler = document.getElementById("lveinwechseln").value;
+			    	var auszuwechselnderSpieler = document.getElementById("lvauswechseln").value;
 			    } else if(targetId === "riv") {
-			    	var auszuwechselnderSpieler = document.getElementById("riveinwechseln").value;
+			    	var auszuwechselnderSpieler = document.getElementById("rivauswechseln").value;
 			    } else if(targetId === "liv") {
-			    	var auszuwechselnderSpieler = document.getElementById("liveinwechseln").value;
+			    	var auszuwechselnderSpieler = document.getElementById("livauswechseln").value;
 			    } else if(targetId === "tw") {
-			    	var auszuwechselnderSpieler = document.getElementById("tweinwechseln").value;
+			    	var auszuwechselnderSpieler = document.getElementById("twauswechseln").value;
 			    } else {
 			    	var auszuwechselnderSpieler = targetId;
 			    }
-			    document.getElementById("auszuwechselnderSpieler").value = auszuwechselnderSpieler;
+			    document.getElementById("aufstellungsPositionsTyp").value = auszuwechselnderSpieler;
+			    console.log(auszuwechselnderSpieler);
 			    document.getElementById("spielerwechseln").submit();
 			    
 			}

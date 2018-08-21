@@ -6,7 +6,7 @@ public class EinUndAuswechselHelper {
 
 	Spieler einzuwechselnderSpieler;
 	
-	Spieler auszuwechselnderSpieler;
+	String aufstellungsPositionsTyp;
 
 	public Spieler getEinzuwechselnderSpieler() {
 		return einzuwechselnderSpieler;
@@ -16,11 +16,13 @@ public class EinUndAuswechselHelper {
 		this.einzuwechselnderSpieler = einzuwechselnderSpieler;
 	}
 
-	public Spieler getAuszuwechselnderSpieler() {
-		return auszuwechselnderSpieler;
+	public String getAufstellungsPositionsTyp() {
+		return aufstellungsPositionsTyp;
 	}
 
-	public void setAuszuwechselnderSpieler(Spieler auszuwechselnderSpieler) {
-		this.auszuwechselnderSpieler = auszuwechselnderSpieler;
+	public void setAufstellungsPositionsTyp(String aufstellungsPositionsTyp) {
+		this.aufstellungsPositionsTyp = aufstellungsPositionsTyp;
 	}
+	
+	
 }

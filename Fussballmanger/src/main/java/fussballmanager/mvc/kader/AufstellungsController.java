@@ -64,7 +64,7 @@ public class AufstellungsController {
 		List<Spieler> alleSpielerAufSpielfeld = spielerService.findeAlleSpielerEinesTeamsInAufstellung(team);
 		List<Spieler> alleSpielerNichtAufSpielfeld = spielerService.findeAlleSpielerEinesTeamsAufErsatzbank(team);
 		EinUndAuswechselHelper einUndAuswechselHelper = new EinUndAuswechselHelper();
-		
+
 		model.addAttribute("einUndAuswechselHelper", einUndAuswechselHelper);
 		model.addAttribute("alleSpielerAufSpielfeld", alleSpielerAufSpielfeld);
 		model.addAttribute("alleSpielerNichtAufSpielfeld", alleSpielerNichtAufSpielfeld);
@@ -168,14 +168,12 @@ public class AufstellungsController {
 	@PostMapping("/team/{teamId}/einwechseln")
 	public String aendereFormation(Model model, Authentication auth, @PathVariable("teamId") Long id, @ModelAttribute("einUndAuswechselHelper") EinUndAuswechselHelper einUndAuswechselHelper) {
 		Spieler eingewechselterSpieler = einUndAuswechselHelper.getEinzuwechselnderSpieler();
-		Spieler ausgewechselterSpieler = einUndAuswechselHelper.getAuszuwechselnderSpieler();
-		AufstellungsPositionsTypen aufstellungsPositionsTyp = ausgewechselterSpieler.getAufstellungsPositionsTyp();
+		AufstellungsPositionsTypen aufstellungsPositionsTyp = AufstellungsPositionsTypen.DM.getAufstellungsPositionsTypVonString(einUndAuswechselHelper.getAufstellungsPositionsTyp());
 
 		spielerService.wechsleSpielerEin(eingewechselterSpieler, aufstellungsPositionsTyp);
 		LOG.info("Eingewechselt: {}, {}, {}, {}", eingewechselterSpieler.getId(), eingewechselterSpieler.getName(), eingewechselterSpieler.getAlter(), 
 				eingewechselterSpieler.getPosition().getPositionsName());
-		LOG.info("Ausgewechselt: {}, {}, {}, {}", ausgewechselterSpieler.getId(), ausgewechselterSpieler.getName(), ausgewechselterSpieler.getAlter(), 
-				ausgewechselterSpieler.getPosition().getPositionsName());
+		LOG.info("Ausgewechselt: {}", einUndAuswechselHelper.getAufstellungsPositionsTyp());
 		
 		return "redirect:/team/{teamId}";
 	}
