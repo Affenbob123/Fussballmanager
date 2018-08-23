@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head th:insert="fragments/header :: head"></head>
+<head>
+	<link rel="stylesheet" href="/auktionshaus.css" />
+</head>
+<body>
+	<div th:insert="fragments/header :: header"></div>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="" th:insert="fragments/sidebar :: sidebar"></div>
+			<div class="col-lg-10 main-content">
+				<div class="row">
+					<div class="col-lg-11">
+						<div class="row" >
+							<div class="col-5"></div>
+							<div class="col-3" th:insert="fragments/aktuelleteamanzeige :: aktuelleteamanzeige"></div>
+						</div>
+					</div>
+					<div class="col-lg-11 main">
+						<hr>
+						<h4>Team ins Auktionshaus einstellen</h4>
+						<div class="alert alert-danger" th:if="${errorMessage}">
+					  		<strong><p th:utext="${errorMessage}"></p></strong>
+						</div>
+						<div class="row">
+							<div class="col-6">
+								<form action="#" th:action="@{/auktionshaus/teameinstellen}" th:object="${newAktionshausEintragHelper}" method="post" >
+									<div id="protage" class="form-group">
+										<select class="custom-select" th:field="*{fuerProtage}">
+											<option th:value="${true}">Protage</option>
+											<option th:value="${false}">Geld</option>
+										</select>
+									</div>
+									<label for="team">Team:</label>
+									<div id="team" class="form-group">
+										<select class="custom-select" th:field="*{team}">
+											<option
+												th:each="team : ${teamsDesUsers}"
+												th:text="${team.name}"
+												th:value="${team.id}">
+											</option>
+										</select>
+									</div>
+									<div class="row">
+										<label for="beschreibung">Beschreibung:</label>
+										<div class="col form-group">
+											<input id="beschreibung" type="text" class="form-control" th:field="*{beschreibung}">
+										</div>
+									</div>
+									
+									<div class="row">
+										<label for="beschreibung">Startgebot:</label>
+										<div class="col form-group">
+											<input id="beschreibung" type="text" class="form-control" th:field="*{startGebotPreis}">
+										</div>
+									</div>
+									<div class="row">
+										<label for="sofortkauf">Sofortkauf:</label>
+										<div class="col form-group">
+											<input id="sofortkauf" type="text" class="form-control" th:field="*{sofortKaufPreis}">
+										</div>
+									</div>
+									<div class="row form-group">
+										<label for="sofortkauf">Datum:*</label>
+								        <input type="datetime-local" class="form-control" th:field="*{ablaufDatum}">
+								        <span class="stern">*Wenn du Firefox benutzt, dann muss du das Datum in diesem Format eingeben: yyyy-mm-ddThh:mm also z.B. 2018-08-24T05:55 . 
+								        	Leider wird der Datepicker von Firefox noch nicht unterst&uuml;tzt</span>
+								  	</div>
+									<button type="submit" name="submit" value="value" class="btn btn-primary">Team einstellen</button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+   	<th:block th:replace="fragments/header :: scripts"></th:block>
+</body>
+</html>

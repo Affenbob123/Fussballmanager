@@ -28,7 +28,7 @@
 										<input class="form-control" type="text" th:field="*{chatName}">
 									</div>
 									<div class="form-group">
-										<label for="userauswahl">Shift halten um mehrere User zu markieren</label>
+										<label for="userauswahl">Shift/Strg halten um mehrere User zu markieren</label>
 										<select multiple class="form-control" th:field="*{user}" >
 											<option th:each="user, stat : ${alleUser}"
 													th:name="|user[${stat.index}]|"

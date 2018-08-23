@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import fussballmanager.service.auktionshaus.AuktionshausEintragService;
 import fussballmanager.service.saison.SaisonService;
 import fussballmanager.service.saison.spieltag.SpieltagService;
 import fussballmanager.service.spiel.Spiel;
@@ -51,6 +52,14 @@ public class ScheduldTasks {
 	
 	@Autowired
 	SpielerZuwachsService spielerZuwachsService;
+	
+	@Autowired
+	AuktionshausEintragService auktionshausEintragService;
+
+	@Scheduled(fixedRate = 1000)
+	public void ueberpruefeAktionshausEintraege() {
+		auktionshausEintragService.ueberpruefeAlleAuktionshausEintraege();
+	}
 	
 //	@Scheduled(cron = "0 15-59 12 * * ?", zone="Europe/Berlin")
 //	public void simuliereTurnierspielErsteHalbzeit() {

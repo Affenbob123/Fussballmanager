@@ -60,6 +60,15 @@ public class SpieltagService {
 		return spieltagRepository.findBySaisonAndSpieltagNummer(saison, spieltagNummer);
 	}
 	
+	public List<Spieltag> findeNaechstenSiebenSpieltage() {
+		Spieltag aktuellerSpieltag = findeAktuellenSpieltag();
+		List<Spieltag> naechstenSiebenSpieltage = new ArrayList<>();
+		for(int i = aktuellerSpieltag.getSpieltagNummer()+1; i < aktuellerSpieltag.getSpieltagNummer()+8; i++) {
+			naechstenSiebenSpieltage.add(findeSpieltagDurchSaisonUndSpieltagNummer(saisonService.findeAktuelleSaison(), i));
+		}
+		return naechstenSiebenSpieltage;
+	}
+	
 	public List<Spieltag> findeAlleSpieltage() {
 		return spieltagRepository.findAll();
 	}
