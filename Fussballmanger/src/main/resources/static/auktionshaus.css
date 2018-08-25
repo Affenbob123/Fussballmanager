@@ -1,3 +1,7 @@
 .stern {
 	font-size: 11px;
 }
+
+.td-beschreibung {
+	word-wrap: break-word;
+}

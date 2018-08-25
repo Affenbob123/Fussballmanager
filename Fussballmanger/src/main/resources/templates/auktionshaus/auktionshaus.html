@@ -2,7 +2,7 @@
 <html>
 <head th:insert="fragments/header :: head"></head>
 <head>
-	<link rel="stylesheet" href="/tabelle.css" />
+	<link rel="stylesheet" href="/auktionshaus.css" />
 </head>
 <body>
 	<div th:insert="fragments/header :: header"></div>
@@ -24,21 +24,20 @@
 					  		<strong><p th:utext="${errorMessage}"></p></strong>
 						</div>
 						<div class="row">
-							<div class="col">
+							<div class="col-5">
 								<form action="#" th:action="@{/auktionshaus/teameinstellen}" method="get">
 									<button type="submit"
 										name="submit" value="value"
-										class="btn btn-sm btn-success button-toggle">Team einstellen
+										class="btn btn-sm btn-success button-toggle">Team ins Auktionshaus einstellen
 									</button>
 								</form>	
 							</div>
-						</div>
-						<div class="row">
-							<div class="col form-group">
+							<div class="col-md-auto form-group">
 								<form action="#" th:action="@{/auktionshaus}" method="post" th:object="${auktionshausAuswahl}">
-									<select class="custom-select" th:field="*{fuerProtage}" onchange="this.form.submit();">
-										<option th:value="${true}">Protage</option>
-										<option th:value="${false}">Geld</option>
+									<select class="custom-select" th:field="*{auktionshausWaehlen}" onchange="this.form.submit();">
+										<option th:value="${0}">Alle</option>
+										<option th:value="${1}">Protage</option>
+										<option th:value="${-1}">Geld</option>
 									</select>
 								</form>
 							</div>
@@ -49,11 +48,10 @@
 									<thead>
 										<tr class="table-active">
 											<th scope="col">#</th>
+											<th scope="col"></th>
 											<th scope="col">Teamname</th>
-											<th scope="col">Land</th>
 											<th scope="col">Liga</th>
 											<th scope="col">St&auml;rke</th>
-											<th scope="col">Stadion</th>
 											<th scope="col">Geld</th>
 											<th scope="col">Beschreibung</th>
 											<th scope="col">Restzeit</th>
@@ -67,34 +65,44 @@
 									<tbody>
 										<tr th:each="auktionshausEintrag, stat : ${alleAuktionshausEintraegeFuerProtageOderGeld}">
 											<td th:text="${stat.index+1}"></td>
+											<td th:if="${auktionshausEintrag.fuerProtage}"><strong>Protage</strong></td>
+											<td th:unless="${auktionshausEintrag.fuerProtage}"><strong>Pin</strong></td>
 											<td>
 												<a th:text="${auktionshausEintrag.team.name}" th:href="@{/team/}+${auktionshausEintrag.team.id}"></a>
 											</td>
-											<td th:text="${auktionshausEintrag.team.land.landNameTyp.name}"></td>
 											<td th:text="${auktionshausEintrag.team.liga.ligaNameTyp.name}"></td>
 											<td th:text="${auktionshausEintrag.team.staerke}"></td>
-											<td th:text="${auktionshausEintrag.team.stadion}"></td>
 											<td th:text="${auktionshausEintrag.team.bilanz.saldo}"></td>
-											<td th:text="${auktionshausEintrag.beschreibung}"></td>
+											<td><span th:text="${auktionshausEintrag.beschreibung}"></span></td>
 											<td>
 												<input type="hidden" th:value="${dateHelper.dateToStringJavascript(auktionshausEintrag.ablaufDatum)}">
 												<span></span>
 											</td>
-											<td th:text="${auktionshausEintrag.startGebotPreis}"></td>
-											<td th:text="${auktionshausEintrag.aktuellesGebot}"></td>
-											<td th:text="${auktionshausEintrag.sofortKaufPreis}"></td>
-											<td th:unless="${auktionshausEintrag.team.user == aktuellerUser}">
-												<form action="#" th:id="${auktionshausEintrag.id}" th:action="@{/auktionshaus/}+${auktionshausEintrag.id}" th:object="${auktionshausEintrag}" method="post">
-													<div class="form-group">
-														<input class="form-control" type="text" name="aktuellesGebot" th:value="${auktionshausEintrag.aktuellesGebot}">
-													</div>	
-												</form>	
+											<td>
+												<div th:if="${auktionshausEintrag.fuerProtage}" th:text="${auktionshausEintrag.startGebotPreis}+' Pros'"></div>
+												<div th:unless="${auktionshausEintrag.fuerProtage}" th:text="${auktionshausEintrag.startGebotPreis}+' Pins'"></div>
+											</td>
+											<td>
+												<div th:if="${auktionshausEintrag.fuerProtage}" th:text="${auktionshausEintrag.aktuellesGebot}+' Pros'"></div>
+												<div th:unless="${auktionshausEintrag.fuerProtage}" th:text="${auktionshausEintrag.aktuellesGebot}+' Pins'"></div>
+											</td>
+											<td>
+												<div th:if="${auktionshausEintrag.fuerProtage}" th:text="${auktionshausEintrag.sofortKaufPreis}+' Pros'"></div>
+												<div th:unless="${auktionshausEintrag.fuerProtage}" th:text="${auktionshausEintrag.sofortKaufPreis}+' Pins'"></div>
+											</td>
+											<td>
+												<div th:unless="${auktionshausEintrag.team.user == aktuellerUser}">
+													<form action="#" th:id="${auktionshausEintrag.id}" th:action="@{/auktionshaus/}+${auktionshausEintrag.id}" th:object="${auktionshausEintrag}" method="post">
+														<div class="form-group">
+															<input class="form-control" type="text" name="aktuellesGebot" th:value="${auktionshausEintrag.aktuellesGebot}">
+														</div>	
+													</form>
+												</div>
 											</td>
 											<td th:unless="${auktionshausEintrag.team.user == aktuellerUser}">
 												<button class="btn btn-sm btn-success button-toggle" th:id="${auktionshausEintrag.id}" 
 													type="submit" name="submit" value="value" onclick="submitForm(this.id)">Bieten</button>
 											</td>
-											<td th:if="${auktionshausEintrag.team.user == aktuellerUser}"></td>
 											<td th:if="${auktionshausEintrag.team.user == aktuellerUser}">
 												<div th:if="${auktionshausEintrag.aktuellesGebot == 0}">
 													<form action="#" th:id="${auktionshausEintrag.id}" th:action="@{/auktionshaus/}+${auktionshausEintrag.id}+'/abbrechen'" 
@@ -153,7 +161,6 @@
 		 }
 	}, 100);
 	</script>
-		<th:block th:replace="fragments/header :: scripts"></th:block>
-	
+	<th:block th:replace="fragments/header :: scripts"></th:block>
 </body>
 </html>

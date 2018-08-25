@@ -15,6 +15,8 @@ public class AuktionshausEintragHelper {
 	private String ablaufDatum;
 	
 	private boolean fuerProtage = true;
+	
+	private int auktionshausWaehlen = 0;
 
 	public Team getTeam() {
 		return team;
@@ -62,5 +64,13 @@ public class AuktionshausEintragHelper {
 
 	public void setFuerProtage(boolean fuerProtage) {
 		this.fuerProtage = fuerProtage;
+	}
+
+	public int getAuktionshausWaehlen() {
+		return auktionshausWaehlen;
+	}
+
+	public void setAuktionshausWaehlen(int auktionshausWaehlen) {
+		this.auktionshausWaehlen = auktionshausWaehlen;
 	}
 }

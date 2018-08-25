@@ -5,6 +5,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import fussballmanager.helper.SpielstatusHelper;
 import fussballmanager.service.land.LandService;
@@ -40,8 +41,9 @@ public class FinanzenController {
 	@Autowired
 	SpieltagService spieltagService;
 
-	@GetMapping("/team/{id}/finanzen")
-	public String getFinanzen(Model model, Authentication auth) {
+	@GetMapping("/team/{teamId}/finanzen")
+	public String getFinanzen(Model model, Authentication auth, @PathVariable("teamId") Long teamId) {
+		model.addAttribute("ausgewaehltesTeam", teamService.findeTeam(teamId));
 		return "sekretariat/finanzen";
 	}
 }

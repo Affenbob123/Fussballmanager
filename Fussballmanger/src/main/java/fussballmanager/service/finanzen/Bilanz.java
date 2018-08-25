@@ -4,6 +4,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
+import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
@@ -13,8 +15,6 @@ public class Bilanz {
 	@GeneratedValue(strategy= GenerationType.AUTO, generator="native")
 	@GenericGenerator(name = "native", strategy = "native")
 	private long id;
-	
-	private long saldo = 10000000;
 	
 	private long stadionEinnahmen = 0;
 	
@@ -36,9 +36,13 @@ public class Bilanz {
 	
 	private long sonstigeAusgaben = 0;
 	
-	public Bilanz() {
-	}
+	@Formula("stadion_Einnahmen + sponsoren_Einnahmen + praemien_Einnahmen + spieler_Verkauf_Einnahmen + sonstige_Einnahmen - "
+			+ "gehaelter_Ausgaben - trainings_Ausgaben - spieler_Einkauf_Ausgaben - zins_Aufwendungen - sonstige_Ausgaben")
+	private long saldo;
 	
+	public Bilanz() {
+		
+	}
 
 	public long getId() {
 		return id;
@@ -46,14 +50,6 @@ public class Bilanz {
 
 	public void setId(long id) {
 		this.id = id;
-	}
-
-	public long getSaldo() {
-		return saldo;
-	}
-
-	public void setSaldo(long saldo) {
-		this.saldo = saldo;
 	}
 
 	public long getStadionEinnahmen() {
@@ -92,7 +88,6 @@ public class Bilanz {
 		return sonstigeEinnahmen;
 	}
 
-
 	public void setSonstigeEinnahmen(long sonstigeEinnahmen) {
 		this.sonstigeEinnahmen = sonstigeEinnahmen;
 	}
@@ -125,11 +120,9 @@ public class Bilanz {
 		return zinsAufwendungen;
 	}
 
-
 	public void setZinsAufwendungen(long zinsAufwendungen) {
 		this.zinsAufwendungen = zinsAufwendungen;
 	}
-
 
 	public long getSonstigeAusgaben() {
 		return sonstigeAusgaben;
@@ -137,5 +130,13 @@ public class Bilanz {
 
 	public void setSonstigeAusgaben(long sonstigeAusgaben) {
 		this.sonstigeAusgaben = sonstigeAusgaben;
+	}
+
+	public long getSaldo() {
+		return saldo;
+	}
+
+	public void setSaldo(long saldo) {
+		this.saldo = saldo;
 	}
 }

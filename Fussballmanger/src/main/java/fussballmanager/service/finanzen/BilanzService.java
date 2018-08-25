@@ -68,13 +68,7 @@ public class BilanzService {
 		bilanzDesTeams.setGehaelterAusgaben(bilanzDesTeams.getGehaelterAusgaben() + teamService.berechneGehaelterEinesTeams(team, alleSpielerEinesTeams));
 		bilanzDesTeams.setTrainingsAusgaben(0);
 		bilanzDesTeams.setSonstigeAusgaben(0);
-		
-		long summeEinnahmen = bilanzDesTeams.getStadionEinnahmen() + bilanzDesTeams.getSponsorenEinnahmen() + bilanzDesTeams.getSonstigeEinnahmen() +
-				bilanzDesTeams.getPraemienEinnahmen() + bilanzDesTeams.getSpielerVerkaufEinnahmen();
-		long summeAusgaben = bilanzDesTeams.getGehaelterAusgaben() + bilanzDesTeams.getTrainingsAusgaben() + bilanzDesTeams.getZinsAufwendungen() +
-				bilanzDesTeams.getSonstigeAusgaben() + bilanzDesTeams.getSpielerEinkaufAusgaben();
-		long saldo = summeEinnahmen - summeAusgaben;
-		bilanzDesTeams.setSaldo(saldo);
+
 		aktualisiereBilanz(bilanzDesTeams);
 	}
 	
@@ -82,7 +76,6 @@ public class BilanzService {
 		Bilanz bilanzDesTeams = team.getBilanz();
 		
 		bilanzDesTeams.setSpielerEinkaufAusgaben(spieler.getPreis());
-		bilanzDesTeams.setSaldo(bilanzDesTeams.getSaldo() - spieler.getPreis());
 		aktualisiereBilanz(bilanzDesTeams);
 	}
 	
@@ -90,7 +83,6 @@ public class BilanzService {
 		Bilanz bilanzDesTeams = team.getBilanz();
 		
 		bilanzDesTeams.setSpielerVerkaufEinnahmen(spieler.getPreis());
-		bilanzDesTeams.setSaldo(bilanzDesTeams.getSaldo() + spieler.getPreis());
 		aktualisiereBilanz(bilanzDesTeams);
 	}
 }

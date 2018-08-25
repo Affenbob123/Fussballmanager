@@ -64,8 +64,14 @@ public class AuktionshausEintragService {
 		auktionshausEintragRepository.delete(auktionshausEintrag);
 	}
 
-	public List<AuktionshausEintrag> findeAlleAktionshausEintraegeFuerProtage(boolean fuerProtage) {
-		return auktionshausEintragRepository.findByFuerProtage(fuerProtage);
+	public List<AuktionshausEintrag> findeAlleAktionshausEintraegeFuerProtage(int fuerProtage) {
+		if(fuerProtage == 1) {
+			return auktionshausEintragRepository.findByFuerProtage(true);
+		}
+		if(fuerProtage == -1) {
+			return auktionshausEintragRepository.findByFuerProtage(false);
+		}
+		return findeAlleAuktionshausEintraege();
 	}
 
 	public void ueberpruefeAlleAuktionshausEintraege() {
@@ -80,20 +86,34 @@ public class AuktionshausEintragService {
 
 	public void auktionshausEintragBeenden(AuktionshausEintrag auktionshausEintrag) {
 		User verkaeufer = auktionshausEintrag.getTeam().getUser();
+		Team verkauftesTeam = auktionshausEintrag.getTeam();
 		User kaeufer = auktionshausEintrag.getHoechstBieter();
-		Team verkaufsObjekt = auktionshausEintrag.getTeam();
 		
 		if(auktionshausEintrag.isFuerProtage()) {
-			verkaeufer.setProtage((int) berechneVerkaufspreisNachGebuehren(auktionshausEintrag.getAktuellesGebot()));
+			if(auktionshausEintrag.getTeam().equals(verkaeufer.getAktuellesTeam())) {
+				List<Team> teamsDesVerkaeufers = teamService.findeAlleTeamsEinesUsers(verkaeufer);
+				teamsDesVerkaeufers.remove(verkaeufer.getAktuellesTeam());
+				Team neuesAktuellesTeamDesVerkaeufers = teamsDesVerkaeufers.get(0);
+				verkaeufer.setAktuellesTeam(neuesAktuellesTeamDesVerkaeufers);
+				userService.aktualisiereUser(verkaeufer);
+			}
+			verkaeufer.setProtage(verkaeufer.getProtage() + (int) berechneVerkaufspreisNachGebuehren(auktionshausEintrag.getAktuellesGebot()));
 			userService.aktualisiereUser(verkaeufer);
-			verkaufsObjekt.setUser(kaeufer);
-			teamService.aktualisiereTeam(verkaufsObjekt);
+			verkauftesTeam.setUser(kaeufer);
+			teamService.aktualisiereTeam(verkauftesTeam);
 		} else {
-			Team teamDesVerkaeufers = teamService.findeAlleTeamsEinesUsers(verkaeufer).get(0);
-			teamDesVerkaeufers.getBilanz().setSonstigeEinnahmen(berechneVerkaufspreisNachGebuehren(auktionshausEintrag.getAktuellesGebot()));
-			teamService.aktualisiereTeam(teamDesVerkaeufers);
-			verkaufsObjekt.setUser(kaeufer);
-			teamService.aktualisiereTeam(verkaufsObjekt);
+			if(auktionshausEintrag.getTeam().equals(verkaeufer.getAktuellesTeam())) {
+				List<Team> teamsDesVerkaeufers = teamService.findeAlleTeamsEinesUsers(verkaeufer);
+				teamsDesVerkaeufers.remove(verkaeufer.getAktuellesTeam());
+				Team neuesAktuellesTeamDesVerkaeufers = teamsDesVerkaeufers.get(0);
+				verkaeufer.setAktuellesTeam(neuesAktuellesTeamDesVerkaeufers);
+				userService.aktualisiereUser(verkaeufer);
+			}
+			verkaeufer.getAktuellesTeam().getBilanz().setSonstigeEinnahmen(verkaeufer.getAktuellesTeam().getBilanz().getSonstigeEinnahmen() 
+					+ berechneVerkaufspreisNachGebuehren(auktionshausEintrag.getAktuellesGebot()));
+			teamService.aktualisiereTeam(verkaeufer.getAktuellesTeam());
+			verkauftesTeam.setUser(kaeufer);
+			teamService.aktualisiereTeam(verkauftesTeam);
 		}
 		loescheAuktionshausEintrag(auktionshausEintrag);
 	}

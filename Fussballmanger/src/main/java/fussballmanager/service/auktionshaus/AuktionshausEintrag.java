@@ -31,6 +31,9 @@ public class AuktionshausEintrag{
 	
 	@OneToOne
 	private User hoechstBieter;
+	
+	@OneToOne
+	private Team hoechstBieterTeam;
 
 	@Lob
 	private String beschreibung;
@@ -124,5 +127,13 @@ public class AuktionshausEintrag{
 
 	public void setAktuellesGebot(long aktuellesGebot) {
 		this.aktuellesGebot = aktuellesGebot;
+	}
+
+	public Team getHoechstBieterTeam() {
+		return hoechstBieterTeam;
+	}
+
+	public void setHoechstBieterTeam(Team hoechstBieterTeam) {
+		this.hoechstBieterTeam = hoechstBieterTeam;
 	}
 }
