@@ -9,7 +9,7 @@ public class FussballmanagerConfiguration extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
-        .antMatchers("/login**", "/logout**", "/accounterstellen").permitAll()
+        .antMatchers("/login**", "/logout**", "/accounterstellen", "/css/**").permitAll()
         .antMatchers("/admin", "/h2_console/**").hasRole("ADMIN")
 		.anyRequest().fullyAuthenticated()
 		.and().formLogin().loginPage("/login").loginProcessingUrl("/login").and()
