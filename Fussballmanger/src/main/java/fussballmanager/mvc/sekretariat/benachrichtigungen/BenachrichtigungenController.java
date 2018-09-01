@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import fussballmanager.service.benachrichtigung.BenachrichtigungService;
 import fussballmanager.service.land.LandService;
 import fussballmanager.service.liga.LigaService;
 import fussballmanager.service.saison.SaisonService;
@@ -39,8 +40,13 @@ public class BenachrichtigungenController {
 	@Autowired
 	SpieltagService spieltagService;
 	
+	@Autowired
+	BenachrichtigungService benachrichtigungService;
+	
 	@GetMapping("/benachrichtigungen")
 	public String getBenachrichtungen(Model model, Authentication auth) {
+		model.addAttribute("alleBenachrichtigungenDesAktuellenUsers", benachrichtigungService.findeAlleBenachrichtigungenEinesUsers(userService.findeUser(auth.getName())));
+		
 		return "sekretariat/benachrichtigungen";
 	}
 	

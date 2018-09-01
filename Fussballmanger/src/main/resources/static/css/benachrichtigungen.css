@@ -1,0 +1,8 @@
+.card-header {
+	font-size: 1.10rem;
+}
+
+.card-header:hover {
+	background-color: white;
+	cursor: pointer;
+}

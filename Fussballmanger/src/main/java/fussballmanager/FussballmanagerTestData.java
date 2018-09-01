@@ -19,6 +19,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import fussballmanager.service.benachrichtigung.AntwortTypen;
+import fussballmanager.service.benachrichtigung.Benachrichtigung;
+import fussballmanager.service.benachrichtigung.BenachrichtigungService;
+import fussballmanager.service.benachrichtigung.BenachrichtigungsTypen;
 import fussballmanager.service.chat.Chat;
 import fussballmanager.service.chat.ChatService;
 import fussballmanager.service.chat.nachricht.Nachricht;
@@ -110,6 +114,9 @@ public class FussballmanagerTestData {
 	
 	@Autowired
 	NachrichtService nachrichtService;
+	
+	@Autowired
+	BenachrichtigungService benachrichtigungService;
 	
 	String loginA = "a";
 	String loginB = "b";
@@ -239,10 +246,26 @@ public class FussballmanagerTestData {
 		erzeugeTestUser();
 		spieltagService.wechsleAktuellenSpieltag();
 		erzeugeTestTurnier();
-		erzeugeChatsUndNachrichten();
+		erzeugeTestChatsUndNachrichten();
+		erzeugeTestNachrichten();
 	}
 	
-	public void erzeugeChatsUndNachrichten() {
+	private void erzeugeTestNachrichten() {
+		for(int i = 0; i < 30; i++) {
+			Benachrichtigung benachrichtigung = new Benachrichtigung();
+			benachrichtigung.setAbsender(teamService.findeTeam(2L));
+			benachrichtigung.setEmpfaenger(teamService.findeTeam(1L));
+			benachrichtigung.setAntwortTyp(AntwortTypen.KEINE);
+			benachrichtigung.setBenachrichtungsTyp(BenachrichtigungsTypen.AUKTIONSHAUS);
+			benachrichtigung.setBenachrichtigungsText("Nachricht " + i);
+			benachrichtigung.setSpieltag(spieltagService.findeAktuellenSpieltag());
+			benachrichtigung.setUhrzeit(LocalTime.now());
+			
+			benachrichtigungService.legeBenachrichtigungAn(benachrichtigung);
+		}
+	}
+
+	public void erzeugeTestChatsUndNachrichten() {
 //		LocalTime aktuelleUhrzeit = LocalTime.now(ZoneId.of("Europe/Berlin"));
 //		List<User> userliste = new ArrayList<>();
 //		userliste.add(userService.findeUser(loginA));

@@ -2,107 +2,87 @@
 <html>
 <head th:insert="fragments/header :: head"></head>
 <head>
-	<link rel="stylesheet" href="/css/nachrichten.css" />
+	<link rel="stylesheet" href="/css/benachrichtigungen.css" />
 </head>
 <body>
 	<div th:insert="fragments/header :: header"></div>
 	<div class="container-fluid">
 		<div class="row">
 			<div class="" th:insert="fragments/sidebar :: sidebar"></div>
-			<div class="col-lg-10 main-content">
-				<div class="row">
-					<div class="col-lg-11">
-						<div class="row" >
-							<div class="col-5"></div>
-							<div class="col-3" th:insert="fragments/aktuelleteamanzeige :: aktuelleteamanzeige"></div>
-						</div>
-					</div>
-					<div class="col-lg-11 main">
-						<hr>
-						<h4>Nachrichten</h4>
-						<div class="messaging">
-      						<div class="inbox_msg">
-        						<div class="inbox_people">
-          							<div class="headind_srch">
-            							<div class="recent_heading">
-              								<h4>Letze Chats</h4>
-            							</div>
-	            						<div class="srch_bar">
-	              							<div class="stylish-input-group">
-	                							<span class="">
-	               									<button type="button" class="btn btn-lg btn-primary">Neuer Chat</button>
-												</span> 
-											</div>
-	           							</div>
-          							</div>
-	      							<div class="inbox_chat">
-	            						<div th:each="chat, stat: ${alleChatsEinesUsers}">
-	            							<div th:if="${stat.index == 0}" class="chat_list active_chat">
-	            								<input class="aktiverchat" type="hidden" th:value="${chat.id}">
-		             							<div class="chat_people">
-		                							<div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
-		                							</div>
-		               								<div class="chat_ib">
-		              									<h5 th:text="${chat.chatName}"><span class="chat_date">Dec 25</span></h5>
-		           										<p>Letzte Nachricht</p>
-													</div>
-		       					 				</div>
-	       					 				</div>
-	            							<div th:unless="${stat.index == 0}" class="chat_list">
-		             							<div class="chat_people">
-		                							<div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
-		                							</div>
-		               								<div class="chat_ib">
-		              									<h5 th:text="${chat.chatName}"><span class="chat_date">Dec 25</span></h5>
-		           										<p>Letzte Nachricht</p>
-													</div>
-		       					 				</div>
-	       					 				</div>
-	            						</div>
+			<div class="main">
+				<div class="pl-3 pt-3 pb-2 mb-3 border-bottom">
+					<h1 class="">Benachrichtigungen</h1>
+				</div>
+				<div class="col">
+					<div class="card mt-2" th:each="benachrichtigung : ${alleBenachrichtigungenDesAktuellenUsers}">
+						<div class="card-header bg-danger" th:id="'card-header-'+${benachrichtigung.id}" onclick="oeffneBenachrichtigung(this.id)" th:unless="${benachrichtigung.gelesen}">
+							<div class="row h-100">
+								<div class="col-4">
+									<div>
+										<strong><span>Von:</span></strong>
+										<span class="pr-4" th:text="${benachrichtigung.absender.name}+' (Liga: '+${benachrichtigung.absender.liga.ligaNameTyp.name}+')'"></span>
+									</div>
+									<div>
+										<strong><span>An:</span></strong>
+										<span th:text="${benachrichtigung.empfaenger.name}+' (Liga: '+${benachrichtigung.empfaenger.liga.ligaNameTyp.name}+')'"></span>
 									</div>
 								</div>
-	       						<div class="mesgs">
-	       							<div class="msg_history">
-	            						<div class="incoming_msg">
-	              							<div class="incoming_msg_img"> 
-	              								<img src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
-	              							</div>
-	           				 				<div class="received_msg">
-	               								<div class="received_withd_msg">
-													<p>Test which is a new approach to have all
-													  solutions</p>
-													<span class="time_date"> 11:01 AM    |    June 9</span>
-												</div>
-											</div>
-										</div>
-	           							<div class="outgoing_msg">
-	           								<div class="sent_msg">
-												<p>Test which is a new approach to have all
-												  solutions</p>
-												<span class="time_date"> 11:01 AM    |    June 9</span> 
-											</div>
-	           							</div>
-	       							</div>
-	       							<div class="type_msg">
-	           							<div class="input_msg_write">
-											<input type="text" class="write_msg" placeholder="Type a message" />
-											<button class="msg_send_btn" type="button">
-												<i class="far fa-paper-plane" aria-hidden="true"></i>
-											</button>
-	           							</div>
+								<div class="col-5 my-auto">
+									<strong><span th:text="'Betreff: '+${benachrichtigung.benachrichtungsTyp.bezeichnung}"></span></strong>
+								</div>
+								<div class="col-3 text-right">
+									<div>
+										<span th:text="${benachrichtigung.spieltag.spieltagNummer}+'. Spieltag'"></span>
 									</div>
-	       						</div>
-							</div>      
-    					</div>
-   					</div>
+									<div>
+										<span th:text="'Uhrzeit: '+${benachrichtigung.uhrzeit}"></span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="card-body" th:id="'card-body-'+${benachrichtigung.id}">
+							<p th:text="${benachrichtigung.benachrichtigungsText}"></p>
+						</div>
+						<div class="card-header bg-success" th:id="'card-header-'+${benachrichtigung.id}" onclick="oeffneBenachrichtigung(this.id)" th:if="${benachrichtigung.gelesen}">
+							<div class="row align-self-center">
+								<div class="col-4">
+									<div>
+										<strong><span>Von:</span></strong>
+										<span class="pr-4">asdasdasd</span>
+									</div>
+									<div>
+										<strong><span>An:</span></strong>
+										<span>Absender</span>
+									</div>
+								</div>
+								<div class="col-5">
+									<strong><span>Freundschaftsspielanfrage Alle-Alle</span></strong>
+								</div>
+								<div class="col-3 text-right">
+									<span>14. Spieltag</span>
+									<span>14:35</span>
+								</div>
+							</div>
+						</div>
+						<div class="card-body collapse" th:id="'card-body-'+${benachrichtigung.id}">
+							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 	<th:block th:replace="fragments/header :: scripts"></th:block>
 	<script>
-		var aktiverChat = document.getElementsByClassName("aktiverchat");
-		console.log(aktiverChat.length);
+		function oeffneBenachrichtigung(id) {
+			var bereinigteId = id.replace("card-header-", "");
+			var zielId = "card-body-"+bereinigteId
+			if(document.getElementById(zielId).className == "card-body") {
+				document.getElementById(zielId).className = "card-body collapse";
+			} else {
+				document.getElementById(zielId).className = "card-body";
+			}
+		}
 	</script>
 </body>
 </html>
