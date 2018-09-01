@@ -8,72 +8,155 @@
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" 
 	integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
-	<link rel="stylesheet" href="/css/header.css" />
+	<link rel="stylesheet" href="/css/sidebar.css" />
 </head>
 <body>
 	<div th:fragment="sidebar" id="header2">
-	    <div class="col-12 sidebar-fixed">
-	        <div class="card card-body p-2">
-	            <ul class="nav nav-pills flex-column">
-	                <li class="nav-item">
-	                    <a class="nav-link" href="/">Sekretariat</a>
-	                </li>
-	               	<li class="nav nav-pills flex-column">
-						<a class="nav-link ml-3 my-1" href="/benachrichtigungen">Benachrichtigungen</a>
-						<a class="nav-link ml-3 my-1" href="/statistik/1">Statistik</a>
-						<a class="nav-link ml-3 my-1" th:href="@{/team/}+${aktuellesTeam.id}+'/finanzen'">Finanzen</a>
-						<a class="nav-link ml-3 my-1" th:href="@{/team/}+${aktuellesTeam.id}+'/stadion'">Stadion</a>
-	                 </li>
-	                <li class="nav-item">
-	                    <a class="nav-link" th:href="@{/team/}+${aktuellesTeam.id}">Kader</a>
-	                </li>
-	                <li class="nav nav-pills flex-column">
-						<a class="nav-link ml-3 my-1" th:href="@{/team/}+${aktuellesTeam.id}+'/kaderdetails'">Details</a>
-				    	<a class="nav-link ml-3 my-1" th:href="@{/team/}+${aktuellesTeam.id}">Aufstellung</a>
-				    	<a class="nav-link ml-3 my-1" th:href="@{/team/}+${aktuellesTeam.id}+'/training'">Training</a>
-				    	<a class="nav-link ml-3 my-1" th:href="@{/team/}+${aktuellesTeam.id}+'/trainingslager'">Trainingslager</a>
-	                 </li>
-	                <li class="nav-item">
-	                    <a class="nav-link" th:href="@{/}+${aktuellesTeam.land.getLandNameTyp().getName()}+'/'+
-						${aktuellesTeam.liga.ligaNameTyp.getName()}+'/'+${aktuelleSaison.saisonNummer}+'/'+${aktuellerSpieltag.spieltagNummer}">Tabelle</a>
-	                </li>
+		<nav class="col-md-2 d-md-block sidebar">
+			<div class="sidebar-sticky">
+				<ul class="nav flex-column">
 					<li class="nav-item">
-						<a class="nav-link" th:href="@{/team/}+${aktuellesTeam.id}+'/saison'">Saison</a>
+						<a class="nav-link dropdown-toggle" href="#sekretariatUntermenu">
+							<i class="fas fa-home"></i>
+							Sekretariat
+						</a>
+						<ul class="nav ml-4 " id="sekretariatUntermenu">
+							<li class="nav-item">
+								<a class="nav-link active" href="/">
+									<i class="fas fa-home"></i>
+									Home
+								</a>
+								<a class="nav-link" href="/benachrichtigungen">
+									<i class="fas fa-envelope"></i>
+									Benachrichtigungen
+								</a>
+								<a class="nav-link" href="/statistik/1">
+									<i class="far fa-chart-bar"></i>
+									Statistik
+								</a>
+								<a class="nav-link" th:href="@{/team/}+${aktuellesTeam.id}+'/finanzen'">
+									<i class="fas fa-university"></i>
+									Finanzen
+								</a>
+								<a class="nav-link" th:href="@{/team/}+${aktuellesTeam.id}+'/stadion'">
+									<i class="far fa-futbol"></i>
+									Stadion
+								</a>
+							</li>
+						</ul>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link dropdown-toggle" href="#kaderUntermenu">
+							<i class="fas fa-male"></i>
+							Kader
+						</a>
+						<ul class="nav ml-4" id="kaderUntermenu">
+							<li class="nav-item">
+								<a class="nav-link" th:href="@{/team/}+${aktuellesTeam.id}">
+									<i class="fas fa-chess-board"></i>
+									Aufstellung
+								</a>
+								<a class="nav-link" th:href="@{/team/}+${aktuellesTeam.id}+'/kaderdetails'">
+									<i class="fas fa-info"></i>
+									Details
+								</a>
+								<a class="nav-link" th:href="@{/team/}+${aktuellesTeam.id}+'/training'">
+									<i class="fas fa-chart-line"></i>
+									Training
+								</a>
+								<a class="nav-link" th:href="@{/team/}+${aktuellesTeam.id}+'/trainingslager'">
+									<i class="fas fa-graduation-cap"></i>
+									Trainingslager
+								</a>
+							</li>
+						</ul>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/}+${aktuellesTeam.land.getLandNameTyp().getName()}+'/'+
+						${aktuellesTeam.liga.ligaNameTyp.getName()}+'/'+${aktuelleSaison.saisonNummer}+'/'+${aktuellerSpieltag.spieltagNummer}">
+							<i class="fas fa-table"></i>
+							Tabelle
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/team/}+${aktuellesTeam.id}+'/saison'">
+							<i class="fas fa-table"></i>
+							Saison
+						</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" onClick="window.open('/liveticker','liveticker','resizable,height=600,width=900'); return false;"
-						href="/liveticker" >Liveticker</a> 
+							href="/liveticker" >
+							<i class="fas fa-headphones-alt"></i>
+							Liveticker
+						</a> 
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="/transfermarkt/1">Transfermarkt</a>
+						<a class="nav-link" href="/transfermarkt/1">
+							<i class="fas fa-shopping-cart"></i>
+							Transfermarkt
+						</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="/pokal">Pokal</a>
-						<a class="nav-link ml-3 my-1" th:href="@{/team/}+${aktuellesTeam.id}">National</a>
-						<a class="nav-link ml-3 my-1" th:href="@{/team/}+${aktuellesTeam.id}">International</a>
+						<a class="nav-link dropdown-toggle" href="#pokalUntermenu">
+							<i class="fas fa-trophy"></i>
+							Pokal
+						</a>
+						<ul class="nav ml-4" id="pokalUntermenu">
+							<li class="nav-item">
+								<a class="nav-link" th:href="@{/team/}+${aktuellesTeam.id}">
+									<i class="fas fa-map-marked"></i>
+									National
+								</a>
+								<a class="nav-link" th:href="@{/team/}+${aktuellesTeam.id}+'/kaderdetails'">
+									<i class="fas fa-globe-americas"></i>
+									Welt-Pokal
+								</a>
+							</li>
+						</ul>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="/turniere/1">Turniere</a>
+						<a class="nav-link" href="/turniere/1">
+							<i class="fas fa-sitemap"></i>
+							Turniere
+						</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" th:href="@{/freundschaftsspiele/}+${aktuellesTeam.land.getLandNameTyp().getName()}+'/'+
-							${aktuellesTeam.liga.ligaNameTyp.getName()}">Freundschaftsspiele</a>
+							${aktuellesTeam.liga.ligaNameTyp.getName()}">
+							<i class="fas fa-user-friends"></i>
+							Freundschaftsspiele
+						</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="/auktionshaus">Auktionshaus</a>
+						<a class="nav-link" href="/auktionshaus">
+							<i class="fas fa-dollar-sign"></i>
+							Auktionshaus
+						</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="/community">Community</a>
+						<a class="nav-link" href="/community">
+							<i class="fas fa-users"></i>
+							Community
+						</a>
 					</li>
-	            </ul>
-	        </div>
-	        <div class="card card-body p-2">
-	        	 <ul class="nav nav-pills flex-column">
-	        	 	<li class="nav-item">
-	        	 		<strong><span th:text="'Protage: '+${aktuellerUser.protage}"></span></strong>
-	        	 	</li>
-	        	</ul>
-	        </div>
-	    </div>
+				</ul>
+				<h6 class="border-top sidebar-heading d-flex justify-content-between align-items-center px-3 pt-3 mt-1 mb-1 text-muted">
+					<span>Protage</span>
+				</h6>
+				<ul class="nav flex-column mb-2 ml-4">
+					<li class="nav-item protage">
+						<i class="fab fa-product-hunt"></i><span th:text="'&nbsp;&nbsp;'+${aktuellerUser.protage}"></span>
+					</li>
+				</ul>
+			</div>
+		</nav>
 	</div>
+	<script type="text/javascript">
+		console.log("sekretariatUntermenu")
+	 // Setting into the local storage
+	    localStorage.setItem("sekretariatUntermenu", "collapsed");
+	    // Getting from the local storage
+	    localStorage.getItem("sekretariatUntermenu");
+	</script>
 </body>

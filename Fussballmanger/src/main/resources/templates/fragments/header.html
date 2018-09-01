@@ -4,53 +4,52 @@
 	<meta charset="utf-8"/>
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+	<script src="/bootstrap/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
 	<link rel="stylesheet" href="/css/header.css" />
+	<link rel="stylesheet" href="/css/sidebar.css" />
 </head>
 <body>
 	<div th:fragment="header" id="header1">
-		<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
- 				<a class="navbar-brand" href="/">Fussballmanager-Game</a>
+		<nav class="navbar navbar-dark navbar-expand fixed-top bg-secondary flex-md-nowrap p-0 shadow">
+ 				<a class="navbar-brand col-sm-3" href="/">Fussballmanager-Game</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
 			<div class="collapse navbar-collapse" id="navbarNav">
 				<ul class="navbar-nav">
-					<li class="nav-item">
+					<li class="nav-item ml-5 mr-5">
 						<a class="nav-link" href="/chat">Chat</a>
 					</li>
-					<li class="nav-item">
+					<li class="nav-item ml-5 mr-5">
 						<a class="nav-link" th:href="@{/team/}+${aktuellesTeam.id}">Kader</a>
 					</li>
-					<li class="nav-item">
+					<li class="nav-item ml-5 mr-5">
 						<a class="nav-link" th:href="@{/}+${aktuellesTeam.land.getLandNameTyp().getName()}+'/'+
 								${aktuellesTeam.liga.ligaNameTyp.getName()}+'/'+${aktuelleSaison.saisonNummer}+'/'+${aktuellerSpieltag.spieltagNummer}">Tabelle</a>
 					</li>
-					<li class="nav-item">
+					<li class="nav-item ml-5 mr-5">
 						<a class="nav-link" href="/liveticker" onClick="window.open('/liveticker','liveticker','resizable,height=600,width=900'); return false;">
 						Liveticker</a>
 					</li>
-					<li class="nav-item">
+					<li class="nav-item ml-5 mr-5">
 						<a class="nav-link" href="/protage">Protage</a>
 					</li>
-					<li class="nav-item">
+					<li class="nav-item ml-5 mr-5">
 						<a class="nav-link" href="#">Forum</a>
 					</li>
-				</ul>
-				<ul class="nav navbar-nav ml-auto w-100 justify-content-end" id="dropdown-navbar">
-					<li class="nav-item dropdown">
-						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						  	<img id="navbar-image" class="img-thumbnail" height="40" width="40">
-						</a>
-						<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-					    	<a class="dropdown-item" href="/profil">Profil</a>
-					    	<div class="dropdown-divider"></div>
-					    	<a class="dropdown-item" href="/logout">Sign out</a>
-						</div>
+					<li class="navbar-item ml-5 mr-5">
+						<a href="/einstellungen" class="nav-link">Einstellungen</a>
 					</li>
 				</ul>
+				<ul class="nav navbar-nav ml-auto w-100 justify-content-end">
+					
+					<li class="navbar-text pr-3">
+						<a href="/logout"><button type="button" class="btn btn-sm btn-danger" >Logout</button></a>
+					</li>
+				</ul>
+
 			</div>
 		</nav>
 	</div>

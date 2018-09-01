@@ -1,42 +1,37 @@
-html, body {
-    height: 100%;
-    font-size: 13px;
-    padding-top: 28px;
+body {
+  font-size: .875rem;
 }
 
-/* Navbar */
-.dropdown:hover>.dropdown-menu {
-  display: block;
+/*
+ * Navbar
+ */
+
+.navbar-brand {
+	max-width: 250px;
+	min-width: 250px;
+  padding-top: .75rem;
+  padding-bottom: .75rem;
+  font-size: 1rem;
+  background-color: rgba(0, 0, 0, .25);
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
 }
 
-.dropdown-menu { 
-	font-size: 11px;
+.navbar .form-control {
+  padding: .75rem 1rem;
+  border-width: 0;
+  border-radius: 0;
 }
 
-.navbar-nav .nav-link {
-    margin-right: 40px;
-    margin-left: 40px;
-    font-size: 15px;
-}
-
-/* Sidebar */
-.sidebar-fixed {
-    width: 200px;
-    position: fixed;
-}
-    
-.container-fluid {
-	padding-top: 15px;
-	padding-bottom: 30px;
-}
-
-.nav {
-	padding-left: 10px;
+/* Protage */
+.protage {
+	font-size:1.5rem !important;
 }
 
 /* main */
 
-.main-content {
+.main {
+	padding-top: 50px;
 	margin-left: 250px;
+	width: 100%;
 }
 
