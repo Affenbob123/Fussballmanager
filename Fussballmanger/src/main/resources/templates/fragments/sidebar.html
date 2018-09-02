@@ -26,9 +26,13 @@
 									<i class="fas fa-home"></i>
 									Home
 								</a>
-								<a class="nav-link" href="/benachrichtigungen">
+								<a class="nav-link" href="/benachrichtigungen/1">
 									<i class="fas fa-envelope"></i>
-									Benachrichtigungen
+									Benachrichtigungen 
+									<span class="badge badge-danger" 
+										th:if="${alleUngelesenenBenachrichtigungenDesAktuellenUsers.size()} > 0"
+										th:text="${alleUngelesenenBenachrichtigungenDesAktuellenUsers.size()}"></span>
+									
 								</a>
 								<a class="nav-link" href="/statistik/1">
 									<i class="far fa-chart-bar"></i>

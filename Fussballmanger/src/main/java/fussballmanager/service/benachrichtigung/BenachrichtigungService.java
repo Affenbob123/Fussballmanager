@@ -2,6 +2,8 @@ package fussballmanager.service.benachrichtigung;
 
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -9,6 +11,7 @@ import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import fussballmanager.service.saison.SaisonService;
@@ -56,7 +59,28 @@ public class BenachrichtigungService {
 	
 	public List<Benachrichtigung> findeAlleBenachrichtigungenEinesUsers(User user) {
 		List<Team> teamsDesEmpfaengers = teamService.findeAlleTeamsEinesUsers(user);
-		return benachrichtigungRepository.findByGelesenAndEmpfaengerIn(false, teamsDesEmpfaengers);
+		return benachrichtigungRepository.findByEmpfaengerIn(teamsDesEmpfaengers);
+	}
+	
+	public List<Benachrichtigung> findeAlleUngelesenenBenachrichtigungenEinesUsers(User user) {
+		List<Team> teamsDesEmpfaengers = teamService.findeAlleTeamsEinesUsers(user);
+		return benachrichtigungRepository.findByEmpfaengerInAndGelesen(teamsDesEmpfaengers, false);
+	}
+	
+	public List<Benachrichtigung> findeBenachrichtigungenNachSeite(User user, int seite) {
+		int seitenLaenge = 10;
+		int ersteNachricht = (seite - 1) * seitenLaenge;
+		int letzteNachricht = (seite - 1) * seitenLaenge + seitenLaenge;
+		List<Benachrichtigung> alleBenachrichtigungenEinesUsers= findeAlleBenachrichtigungenEinesUsers(user);
+		List<Benachrichtigung> result = new ArrayList<>();
+		
+		Collections.reverse(alleBenachrichtigungenEinesUsers);
+		if(letzteNachricht > alleBenachrichtigungenEinesUsers.size()) {
+			result = alleBenachrichtigungenEinesUsers.subList(ersteNachricht, alleBenachrichtigungenEinesUsers.size());
+		} else {
+			result = alleBenachrichtigungenEinesUsers.subList(ersteNachricht, letzteNachricht);
+		}
+		return result;
 	}
 	
 	public void legeBenachrichtigungAn(Benachrichtigung benachrichtigung) {

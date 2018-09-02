@@ -16,7 +16,7 @@ import fussballmanager.service.spieler.Spieler;
 import fussballmanager.service.team.Team;
 
 @Entity
-public class Benachrichtigung {
+public class Benachrichtigung implements Comparable<Benachrichtigung>{
 
 	@Id
 	@GeneratedValue(strategy= GenerationType.AUTO, generator="native")
@@ -127,5 +127,16 @@ public class Benachrichtigung {
 
 	public void setAntwortTyp(AntwortTypen antwortTyp) {
 		this.antwortTyp = antwortTyp;
+	}
+
+	@Override
+	public int compareTo(Benachrichtigung compareTo) {
+		Spieltag compareToSpieltag = compareTo.getSpieltag();
+		LocalTime compareToUhrzeit = compareTo.getUhrzeit();
+		
+		if(compareToSpieltag.getSpieltagNummer() == this.spieltag.getSpieltagNummer()) {
+			return compareToUhrzeit.compareTo(this.uhrzeit);
+		}
+		return compareToSpieltag.getSpieltagNummer() - this.spieltag.getSpieltagNummer();
 	}
 }

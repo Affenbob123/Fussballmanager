@@ -63,7 +63,7 @@ public class ControllerHelper {
 			model.addAttribute("aktuellesTeam", aktuellesTeam);
 			model.addAttribute("aktuellerUser", aktuellerUser);
 			model.addAttribute("auth", auth);
-			model.addAttribute("alleUngelesenenBenachrichtigungenDesAktuellenUsers", benachrichtigungService.findeAlleBenachrichtigungenEinesUsers(aktuellerUser));
+			model.addAttribute("alleUngelesenenBenachrichtigungenDesAktuellenUsers", benachrichtigungService.findeAlleUngelesenenBenachrichtigungenEinesUsers(aktuellerUser));
 		}
 		DecimalFormat zahlenFormat = new DecimalFormat("0.0");
 		
