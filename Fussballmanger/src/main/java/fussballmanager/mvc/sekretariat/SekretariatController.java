@@ -53,7 +53,7 @@ public class SekretariatController {
 	BenachrichtigungService benachrichtigungService;
 	
 	@GetMapping("/")
-	public String getTeamListe(Model model, Authentication auth) {
+	public String getSekretariat(Model model, Authentication auth) {
 		User aktuellerUser = userService.findeUser(auth.getName());
 		List<Team> alleTeamsEinesUsers = teamService.findeAlleTeamsEinesUsers(aktuellerUser);
 		

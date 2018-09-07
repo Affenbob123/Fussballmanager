@@ -30,7 +30,7 @@ public class Team implements Comparable<Team> {
 	
 	private String name;
 		
-	@ManyToOne(fetch = FetchType.LAZY)
+	@OneToOne
 	private User user;
 	
 	@ManyToOne(fetch = FetchType.LAZY)

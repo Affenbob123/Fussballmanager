@@ -25,7 +25,8 @@
 							<div class="col">
 								<div class="row align-middle">
 									<div class="col-9 absender-nachricht-nachrichttyp">
-										<a class="align-middle" th:href="@{/team/}+${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].absender.id}" th:text="${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].absender.name}"></a>
+										<a class="align-middle" th:href="@{/team/}+${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].absender.id}" 
+											th:text="${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].absender.name}"></a>
 										<span class="align-middle" th:text="'Liga: '+${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].absender.liga.ligaNameTyp.name}"></span>
 										<span class="align-middle" th:text="'um: '+${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].uhrzeit}"></span>
 										<span class="align-middle" th:text="'am: '+${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].spieltag.spieltagNummer}+' Spieltag'"></span>

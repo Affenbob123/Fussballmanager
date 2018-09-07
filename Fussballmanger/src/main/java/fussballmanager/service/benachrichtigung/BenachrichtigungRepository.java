@@ -17,4 +17,7 @@ public interface BenachrichtigungRepository  extends JpaRepository<Benachrichtig
 	List<Benachrichtigung> findByEmpfaengerIn(List<Team> teamsDesEmpfaengers);
 
 	List<Benachrichtigung> findByEmpfaengerInAndGelesen(List<Team> teamsDesEmpfaengers, boolean b);
+
+	List<Benachrichtigung> findByBenachrichtungsTypAndEmpfaengerIn(BenachrichtigungsTypen benachrichtigungsTyp,
+			List<Team> teamsDesEmpfaengers);
 }

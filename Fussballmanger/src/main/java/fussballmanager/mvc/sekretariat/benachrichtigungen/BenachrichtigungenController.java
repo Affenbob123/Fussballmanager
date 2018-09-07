@@ -9,11 +9,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import fussballmanager.service.benachrichtigung.Benachrichtigung;
 import fussballmanager.service.benachrichtigung.BenachrichtigungService;
+import fussballmanager.service.benachrichtigung.BenachrichtigungsTypen;
 import fussballmanager.service.land.LandService;
 import fussballmanager.service.liga.LigaService;
 import fussballmanager.service.saison.SaisonService;
@@ -53,19 +56,29 @@ public class BenachrichtigungenController {
 	BenachrichtigungService benachrichtigungService;
 	
 	@GetMapping("/benachrichtigungen/{seite}")
-	public String getBenachrichtungen(Model model, Authentication auth, @PathVariable("seite") int seite) {
+	public String getBenachrichtungen(Model model, Authentication auth, @PathVariable("seite") int seite, 
+			@ModelAttribute("benachrichtigungsFilterHelper") BenachrichtigungsFilterHelper benachrichtigungsFilterHelper) {
 		User aktuellerUser = userService.findeUser(auth.getName());
-		List<Benachrichtigung> alleBenachrichtigungenDerSeite = benachrichtigungService.findeBenachrichtigungenNachSeite(aktuellerUser, seite);
+		List<Benachrichtigung> alleBenachrichtigungenDerSeite = 
+				benachrichtigungService.findeBenachrichtigungenNachSeite(aktuellerUser, seite, benachrichtigungsFilterHelper.getBenachrichtigungsTyp());
+		
 		model.addAttribute("alleBenachrichtigungenDesAktuellenUsers", benachrichtigungService.findeAlleBenachrichtigungenEinesUsers(aktuellerUser));
 		model.addAttribute("alleBenachrichtigungenDesAktuellenUsersDerAktuellenSeite", alleBenachrichtigungenDerSeite);
 		model.addAttribute("aktuelleSeite", seite);
+		model.addAttribute("alleBenachrichtigungsFilter", BenachrichtigungsTypen.values());
+		model.addAttribute("benachrichtigungsFilterHelper", benachrichtigungsFilterHelper);
 		
 		return "sekretariat/benachrichtigungen";
 	}
-	
-	@PostMapping("/benachrichtigung")
-	public String interagiereMitBenachrichtigung(Model model, Authentication auth) {
-		return "redirect:/benachrichtigungen/{seite}";
+
+	@PostMapping("/benachrichtigungen/{seite}/filter")
+	public String interagiereMitBenachrichtigung(Model model, Authentication auth, RedirectAttributes redirectAttribute, 
+			@ModelAttribute("benachrichtigungsFilterHelper") BenachrichtigungsFilterHelper benachrichtigungsFilterHelper) {
+		redirectAttribute.addFlashAttribute("benachrichtigungsFilterHelper", benachrichtigungsFilterHelper);
+		
+		LOG.info("benachrichtigungsFilter: {}", benachrichtigungsFilterHelper);
+		
+		return "redirect:/benachrichtigungen/1";
 	}
 	
 	@PostMapping("/benachrichtigungen/{seite}/{benachrichtigungId}/gelesen")

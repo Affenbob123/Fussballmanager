@@ -63,6 +63,7 @@ import fussballmanager.service.user.UserService;
 import fussballmanager.spielsimulation.SpielSimulation;
 
 @Component
+@Transactional
 public class FussballmanagerTestData {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(FussballmanagerTestData.class);
@@ -251,7 +252,7 @@ public class FussballmanagerTestData {
 	}
 	
 	private void erzeugeTestNachrichten() {
-		for(int i = 0; i < 30; i++) {
+		for(int i = 0; i < 40; i++) {
 			Benachrichtigung benachrichtigung = new Benachrichtigung();
 			benachrichtigung.setAbsender(teamService.findeTeam(2L));
 			benachrichtigung.setEmpfaenger(teamService.findeTeam(1L));

@@ -62,16 +62,28 @@ public class BenachrichtigungService {
 		return benachrichtigungRepository.findByEmpfaengerIn(teamsDesEmpfaengers);
 	}
 	
+	public List<Benachrichtigung> findeAlleBenachrichtigungenEinesUserUndBenachrichtigungsTyp(User user,
+			BenachrichtigungsTypen benachrichtigungsTyp) {
+		List<Team> teamsDesEmpfaengers = teamService.findeAlleTeamsEinesUsers(user);
+		return benachrichtigungRepository.findByBenachrichtungsTypAndEmpfaengerIn(benachrichtigungsTyp, teamsDesEmpfaengers);
+	}
+	
 	public List<Benachrichtigung> findeAlleUngelesenenBenachrichtigungenEinesUsers(User user) {
 		List<Team> teamsDesEmpfaengers = teamService.findeAlleTeamsEinesUsers(user);
 		return benachrichtigungRepository.findByEmpfaengerInAndGelesen(teamsDesEmpfaengers, false);
 	}
 	
-	public List<Benachrichtigung> findeBenachrichtigungenNachSeite(User user, int seite) {
+	public List<Benachrichtigung> findeBenachrichtigungenNachSeite(User user, int seite, BenachrichtigungsTypen benachrichtigungsTyp) {
 		int seitenLaenge = 10;
 		int ersteNachricht = (seite - 1) * seitenLaenge;
 		int letzteNachricht = (seite - 1) * seitenLaenge + seitenLaenge;
-		List<Benachrichtigung> alleBenachrichtigungenEinesUsers= findeAlleBenachrichtigungenEinesUsers(user);
+		List<Benachrichtigung> alleBenachrichtigungenEinesUsers = new ArrayList<Benachrichtigung>();
+		if(benachrichtigungsTyp == null) {
+			alleBenachrichtigungenEinesUsers = findeAlleBenachrichtigungenEinesUsers(user);
+		} else {
+			alleBenachrichtigungenEinesUsers = findeAlleBenachrichtigungenEinesUserUndBenachrichtigungsTyp(user, benachrichtigungsTyp);
+		}
+		
 		List<Benachrichtigung> result = new ArrayList<>();
 		
 		Collections.reverse(alleBenachrichtigungenEinesUsers);
@@ -82,8 +94,27 @@ public class BenachrichtigungService {
 		}
 		return result;
 	}
-	
+
 	public void legeBenachrichtigungAn(Benachrichtigung benachrichtigung) {
+		User empfaenger = benachrichtigung.getEmpfaenger().getUser();
+		List<Benachrichtigung> alleBenachrichtigungenDesEmpfaengers = findeAlleBenachrichtigungenEinesUsers(empfaenger);
+		Collections.sort(alleBenachrichtigungenDesEmpfaengers);
+		if(alleBenachrichtigungenDesEmpfaengers.size() >= 30) {
+			for(Benachrichtigung b : alleBenachrichtigungenDesEmpfaengers) {
+				if(b.isGelesen()) {
+					loescheBenachrichtigung(b);
+					alleBenachrichtigungenDesEmpfaengers.remove(b);
+					if(alleBenachrichtigungenDesEmpfaengers.size() < 30) {
+						break;
+					}
+				}
+			}
+		}
+		while(alleBenachrichtigungenDesEmpfaengers.size() >= 30) {
+			loescheBenachrichtigung(alleBenachrichtigungenDesEmpfaengers.get(0));
+			alleBenachrichtigungenDesEmpfaengers.remove(0);
+		}
+		
 		benachrichtigungRepository.save(benachrichtigung);
 	}
 	
