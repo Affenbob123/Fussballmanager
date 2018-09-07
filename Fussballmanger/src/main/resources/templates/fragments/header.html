@@ -18,32 +18,32 @@
 				<span class="navbar-toggler-icon"></span>
 			</button>
 			<div class="collapse navbar-collapse" id="navbarNav">
-				<ul class="navbar-nav">
-					<li class="nav-item ml-5 mr-5">
+				<ul class="nav navbar-nav w-100">
+					<li class="nav-item mx-auto">
 						<a class="nav-link" href="/chat">Chat</a>
 					</li>
-					<li class="nav-item ml-5 mr-5">
+					<li class="nav-item mx-auto">
 						<a class="nav-link" th:href="@{/team/}+${aktuellesTeam.id}">Kader</a>
 					</li>
-					<li class="nav-item ml-5 mr-5">
+					<li class="nav-item mx-auto">
 						<a class="nav-link" th:href="@{/}+${aktuellesTeam.land.getLandNameTyp().getName()}+'/'+
 								${aktuellesTeam.liga.ligaNameTyp.getName()}+'/'+${aktuelleSaison.saisonNummer}+'/'+${aktuellerSpieltag.spieltagNummer}">Tabelle</a>
 					</li>
-					<li class="nav-item ml-5 mr-5">
+					<li class="nav-item mx-auto">
 						<a class="nav-link" href="/liveticker" onClick="window.open('/liveticker','liveticker','resizable,height=600,width=900'); return false;">
 						Liveticker</a>
 					</li>
-					<li class="nav-item ml-5 mr-5">
+					<li class="nav-item mx-auto">
 						<a class="nav-link" href="/protage">Protage</a>
 					</li>
-					<li class="nav-item ml-5 mr-5">
+					<li class="nav-item mx-auto">
 						<a class="nav-link" href="#">Forum</a>
 					</li>
-					<li class="navbar-item ml-5 mr-5">
+					<li class="nav-item mx-auto">
 						<a href="/einstellungen" class="nav-link">Einstellungen</a>
 					</li>
 				</ul>
-				<ul class="nav navbar-nav ml-auto w-100 justify-content-end">
+				<ul class="nav navbar-nav ml-auto w-10 justify-content-end">
 					
 					<li class="navbar-text pr-3">
 						<a href="/logout"><button type="button" class="btn btn-sm btn-danger" >Logout</button></a>
