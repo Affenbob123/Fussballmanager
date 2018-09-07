@@ -1,7 +1,5 @@
 package fussballmanager.mvc.kader;
 
-import java.text.DecimalFormat;
-import java.util.Collection;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import fussballmanager.helper.SpielstatusHelper;
 import fussballmanager.mvc.spieler.SpielerListeWrapper;
 import fussballmanager.service.land.LandService;
 import fussballmanager.service.liga.LigaService;
@@ -64,7 +61,11 @@ public class AufstellungsController {
 		List<Spieler> alleSpielerAufSpielfeld = spielerService.findeAlleSpielerEinesTeamsInAufstellung(team);
 		List<Spieler> alleSpielerNichtAufSpielfeld = spielerService.findeAlleSpielerEinesTeamsAufErsatzbank(team);
 		EinUndAuswechselHelper einUndAuswechselHelper = new EinUndAuswechselHelper();
-
+		User aktuellerUser = userService.findeUser(auth.getName());
+		aktuellerUser.setAktuellesTeam(team);
+		userService.aktualisiereUser(aktuellerUser);
+		
+		
 		model.addAttribute("einUndAuswechselHelper", einUndAuswechselHelper);
 		model.addAttribute("alleSpielerAufSpielfeld", alleSpielerAufSpielfeld);
 		model.addAttribute("alleSpielerNichtAufSpielfeld", alleSpielerNichtAufSpielfeld);

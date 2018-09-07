@@ -6,128 +6,131 @@
 </head>
 <body>
 	<div th:insert="fragments/header :: header"></div>
-	<div class="container-fluid">
-		<div class="row">
-			<div th:insert="fragments/sidebar :: sidebar"></div>
-			<div class="main">
-				<div class="pl-3 pt-3 pb-2 mb-3 border-bottom">
-					<h1 class="h2">Sekretariat</h1>
+	<div class="container-fluid h-100">
+		<div class="row h-100">
+			<div class="" th:insert="fragments/sidebar :: sidebar"></div>
+			<div class="main h-100">
+				<div class="pl-3 pt-3 pb-2 w-100 border-bottom">
+					<h1 class="">Sekretariat</h1>
 				</div>
-				<div class="alert alert-success" th:if="${successMessage}">
-	  				<strong><p th:utext="${successMessage}"></p></strong>
-				</div>
-				<div class="alert alert-danger" th:if="${errorMessage}">
-		  			<strong><p th:utext="${errorMessage}"></p></strong>
-				</div>
-				<div th:if="${alleUngelesenenBenachrichtigungenDesAktuellenUsers.size() > 0}">
-					<div class="mx-auto col-6 border shadow-lg">
-						<div class="gesamte-nachricht" >
-							<div class="col">
-								<div class="row align-middle">
-									<div class="col-9 absender-nachricht-nachrichttyp">
-										<a class="align-middle" th:href="@{/team/}+${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].absender.id}" 
-											th:text="${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].absender.name}"></a>
-										<span class="align-middle" th:text="'Liga: '+${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].absender.liga.ligaNameTyp.name}"></span>
-										<span class="align-middle" th:text="'um: '+${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].uhrzeit}"></span>
-										<span class="align-middle" th:text="'am: '+${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].spieltag.spieltagNummer}+' Spieltag'"></span>
-									</div>
-									<div class="col-3 text-center">
-										<div class="row">
-											<div class="col">
-												<form method="POST" th:action="@{/benachrichtigung/}+${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].id}+'/naechste'">
-													<span class="align-top">
-														<button type="submit" name="submit" value="value"class="nachrichten-button btn btn-link">N&auml;chste &gt;&gt;</button>
-													</span>
-												</form>
+				<div class="col-10 h-100 px-5 border-right">
+					<div class="row py-3 justify-content-center" th:insert="fragments/aktuelleteamanzeige :: aktuelleteamanzeige"></div>
+					<div class="alert alert-success" th:if="${successMessage}">
+	  					<strong><p th:utext="${successMessage}"></p></strong>
+					</div>
+					<div class="alert alert-danger" th:if="${errorMessage}">
+			  			<strong><p th:utext="${errorMessage}"></p></strong>
+					</div>
+					<div th:if="${alleUngelesenenBenachrichtigungenDesAktuellenUsers.size() > 0}">
+						<div class="mx-auto col-6 border shadow-lg">
+							<div class="gesamte-nachricht" >
+								<div class="col">
+									<div class="row align-middle">
+										<div class="col-9 absender-nachricht-nachrichttyp">
+											<a class="align-middle" th:href="@{/team/}+${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].absender.id}" 
+												th:text="${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].absender.name}"></a>
+											<span class="align-middle" th:text="'Liga: '+${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].absender.liga.ligaNameTyp.name}"></span>
+											<span class="align-middle" th:text="'um: '+${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].uhrzeit}"></span>
+											<span class="align-middle" th:text="'am: '+${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].spieltag.spieltagNummer}+' Spieltag'"></span>
+										</div>
+										<div class="col-3 text-center">
+											<div class="row">
+												<div class="col">
+													<form method="POST" th:action="@{/benachrichtigung/}+${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].id}+'/naechste'">
+														<span class="align-top">
+															<button type="submit" name="submit" value="value"class="nachrichten-button btn btn-link">N&auml;chste &gt;&gt;</button>
+														</span>
+													</form>
+												</div>
 											</div>
 										</div>
 									</div>
 								</div>
-							</div>
-							<div class="col">
-								<div class="row">
-									<div class="col">
-										<strong><span th:text="${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].benachrichtungsTyp.bezeichnung}"></span></strong>
+								<div class="col">
+									<div class="row">
+										<div class="col">
+											<strong><span th:text="${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].benachrichtungsTyp.bezeichnung}"></span></strong>
+										</div>
 									</div>
 								</div>
-							</div>
-							<div class="col">
-								<div class="row">
-									<div class="col nachricht">
-										<p th:text="${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].benachrichtigungsText}"></p>
+								<div class="col">
+									<div class="row">
+										<div class="col nachricht">
+											<p th:text="${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].benachrichtigungsText}"></p>
+										</div>
 									</div>
 								</div>
-							</div>
-							<div class="row">
-								<div class="col-5 text-right" th:if="${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].antwortTyp == antwortTypAnnehmen}">
-									<form method="POST" th:action="@{/benachrichtigung/}+${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].id}+'/annehmen'">
-										<button type="submit" name="submit" value="value"class="nachrichten-button btn btn-link">Annehmen</button>
-									</form>
-								</div>
-								<div class="col-3 text-center" th:if="${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].antwortTyp == antwortTypAnnehmen}">
-									<form method="POST" th:action="@{/benachrichtigung/}+${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].id}+'/ablehnen'">
-										<div class="col">
-											<button type="submit" name="submit" value="value"class="nachrichten-button btn btn-link">Ablehnen</button>
-										</div>
-									</form>
-								</div>
-								<div class="col-3 text-center" th:if="${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].antwortTyp == antwortTypZuWenig}">
-									<form method="POST" th:action="@{/benachrichtigung/}+${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].id}+'/ablehnen'">
-										<div class="col">
-											<button type="submit" name="submit" value="value"class="nachrichten-button btn btn-link">Ablehnen</button>
-										</div>
-									</form>
+								<div class="row">
+									<div class="col-5 text-right" th:if="${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].antwortTyp == antwortTypAnnehmen}">
+										<form method="POST" th:action="@{/benachrichtigung/}+${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].id}+'/annehmen'">
+											<button type="submit" name="submit" value="value"class="nachrichten-button btn btn-link">Annehmen</button>
+										</form>
+									</div>
+									<div class="col-3 text-center" th:if="${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].antwortTyp == antwortTypAnnehmen}">
+										<form method="POST" th:action="@{/benachrichtigung/}+${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].id}+'/ablehnen'">
+											<div class="col">
+												<button type="submit" name="submit" value="value"class="nachrichten-button btn btn-link">Ablehnen</button>
+											</div>
+										</form>
+									</div>
+									<div class="col-3 text-center" th:if="${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].antwortTyp == antwortTypZuWenig}">
+										<form method="POST" th:action="@{/benachrichtigung/}+${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].id}+'/ablehnen'">
+											<div class="col">
+												<button type="submit" name="submit" value="value"class="nachrichten-button btn btn-link">Ablehnen</button>
+											</div>
+										</form>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-				<div class="col neues-team-button">
-					<form method="POST" th:action="@{/team/neu}">
-						<button type="submit" name="submit" value="value"
-							class="btn btn-sm btn-secondary">
-							<span aria-hidden="true">Neues Team erwerben</span>
-						</button>
-					</form>
-				</div>
-				<div class="col">
-					<table class="table table-sm table-hover table-bordered">
-						<thead>
-							<tr class="table-active">
-								<th scope="col">Id</th>
-								<th scope="col">Name</th>
-								<th scope="col">Liga</th>
-								<th scope="col">Geld</th>
-								<th scope="col"></th>
+					<div class="col neues-team-button">
+						<form method="POST" th:action="@{/team/neu}">
+							<button type="submit" name="submit" value="value"
+								class="btn btn-sm btn-secondary">
+								<span aria-hidden="true">Neues Team erwerben</span>
+							</button>
+						</form>
+					</div>
+					<div class="col">
+						<table class="table table-sm table-hover table-bordered table-striped">
+							<thead>
+								<tr class="table-active">
+									<th scope="col">Id</th>
+									<th scope="col">Name</th>
+									<th scope="col">Liga</th>
+									<th scope="col">Geld</th>
+									<th scope="col"></th>
+								</tr>
+							</thead>
+			
+							<tr class="" th:each="team : ${alleTeamsDesAktuellenUsers}">
+								<td th:text="${team.id}" />
+								<td> 
+									<a class="" th:text="${team.name}" th:href="@{/team/}+${team.id}"></a>
+								</td>
+								<td th:text="${team.liga.ligaNameTyp.getName()}" />
+								<td th:text="${team.bilanz.saldo}" />
+								<td>
+									<form method="POST" th:action="@{/team/}+${team.id}+'/loeschen'">
+										<button type="submit" name="submit" value="value"
+											class="btn btn-link btn-sm">
+											<span aria-hidden="true">L&#246;schen</span>
+										</button>
+									</form>
+								</td>
 							</tr>
-						</thead>
-		
-						<tr class="" th:each="team : ${alleTeamsDesAktuellenUsers}">
-							<td th:text="${team.id}" />
-							<td> 
-								<a class="" th:text="${team.name}" th:href="@{/team/}+${team.id}"></a>
-							</td>
-							<td th:text="${team.liga.ligaNameTyp.getName()}" />
-							<td th:text="${team.bilanz.saldo}" />
-							<td>
-								<form method="POST" th:action="@{/team/}+${team.id}+'/loeschen'">
-									<button type="submit" name="submit" value="value"
-										class="btn btn-link btn-sm">
-										<span aria-hidden="true">L&#246;schen</span>
-									</button>
-								</form>
-							</td>
-						</tr>
-					</table>
+						</table>
+					</div>
+					<div class="text-center">
+						<a class="" th:href="@{/teams/umbenennen}">Teams umbenennen</a>
+					</div>
 				</div>
-				<div class="text-center">
-					<a class="" th:href="@{/teams/umbenennen}">Teams umbenennen</a>
-				</div>
-			</div>	
+				
+				<div class="col-2"></div>
+			</div>
 		</div>
 	</div>
 	<th:block th:replace="fragments/header :: scripts"></th:block>
-	<script>
-	</script>
 </body>
 </html>

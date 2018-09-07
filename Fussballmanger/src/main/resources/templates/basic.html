@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head th:insert="fragments/header :: head"></head>
+<head>
+	<link rel="stylesheet" href="/css/benachrichtigungen.css" />
+</head>
+<body>
+	<div th:insert="fragments/header :: header"></div>
+	<div class="container-fluid h-100">
+		<div class="row h-100">
+			<div class="" th:insert="fragments/sidebar :: sidebar"></div>
+			<div class="main h-100">
+				<div class="pl-3 pt-3 pb-2 w-100 border-bottom">
+					<h1 class="">Sekretariat</h1>
+				</div>
+				<div class="col-10 h-100 px-5 border-right">
+					<div class="row py-3 justify-content-center" th:insert="fragments/aktuelleteamanzeige :: aktuelleteamanzeige"></div>
+				</div>
+				<div class="col-2"></div>
+			</div>
+		</div>
+	</div>
+	<th:block th:replace="fragments/header :: scripts"></th:block>
+</body>
+</html>

@@ -1,6 +1,5 @@
 package fussballmanager.mvc.kader;
 
-import java.text.DecimalFormat;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import fussballmanager.helper.SpielstatusHelper;
 import fussballmanager.service.land.LandService;
 import fussballmanager.service.liga.LigaService;
 import fussballmanager.service.saison.SaisonService;
@@ -23,7 +21,6 @@ import fussballmanager.service.team.EinsatzTypen;
 import fussballmanager.service.team.FormationsTypen;
 import fussballmanager.service.team.Team;
 import fussballmanager.service.team.TeamService;
-import fussballmanager.service.user.User;
 import fussballmanager.service.user.UserService;
 
 @Controller
