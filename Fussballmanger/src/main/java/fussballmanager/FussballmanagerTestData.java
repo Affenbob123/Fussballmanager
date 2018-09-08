@@ -245,12 +245,13 @@ public class FussballmanagerTestData {
 	}
 	
 	private void erzeugeTestBenachrichtigungen() {
-		for(int i = 0; i < 40; i++) {
+		for(int i = 0; i < 20; i++) {
 			Benachrichtigung benachrichtigung = new Benachrichtigung();
 			benachrichtigung.setAbsender(teamService.findeTeam(2L));
 			benachrichtigung.setEmpfaenger(teamService.findeTeam(1L));
 			benachrichtigung.setAntwortTyp(AntwortTypen.ZUWENIG);
-			benachrichtigung.setBenachrichtungsTyp(BenachrichtigungsTypen.FREUNDSCHAFTSSPIELALLEGEGENALLE);
+			benachrichtigung.setBenachrichtungsTyp(BenachrichtigungsTypen.SPIELERANGEBOT);
+			benachrichtigung.setSpieler(spielerService.findeSpieler(1L));
 			benachrichtigung.setBenachrichtigungsText("Freundschaftsspiele Eins-Team gegen Eins-Team Freundschaftsspiele Eins-Team gegen Eins-Team "
 					+ "Freundschaftsspiele Eins-Team gegen Eins-Team Freundschaftsspiele Eins-Team gegen Eins-Team Freundschaftsspiele Eins-Team gegen Eins-Team "
 					+ "Freundschaftsspiele Eins-Team gegen Eins-Team Freundschaftsspiele Eins-Team gegen Eins-Team Freundschaftsspiele Eins-Team gegen Eins-Team "

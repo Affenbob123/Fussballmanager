@@ -127,6 +127,11 @@ public class BenachrichtigungenController {
 	@PostMapping("/benachrichtigungen/{benachrichtigungId}/{seite}/zuwenig")
 	public String zuWenigBenachrichtigung(Model model, Authentication auth, @PathVariable("benachrichtigungId") Long benachrichtigungId,
 			@PathVariable("seite") int seite) {
+		Benachrichtigung benachrichtigung = benachrichtigungService.findeBenachrichtigung(benachrichtigungId);
+		benachrichtigung.setGelesen(true);
+		benachrichtigung.setGeantwortet(true);
+		benachrichtigungService.aktualisiereBenachrichtigung(benachrichtigung);
+		benachrichtigungService.benachrichtigungZuWenig(benachrichtigung);
 		return "redirect:/benachrichtigungen/{seite}";
 	}
 }

@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import fussballmanager.service.saison.SaisonService;
 import fussballmanager.service.saison.spieltag.SpieltagService;
 import fussballmanager.service.spiel.SpielService;
+import fussballmanager.service.spieler.AufstellungsPositionsTypen;
+import fussballmanager.service.spieler.Spieler;
 import fussballmanager.service.spieler.SpielerService;
 import fussballmanager.service.spieler.spielerzuwachs.SpielerZuwachs;
 import fussballmanager.service.spieler.spielerzuwachs.SpielerZuwachsRepository;
@@ -145,33 +147,85 @@ public class BenachrichtigungService {
 
 	public void benachrichtigungAngenommen(Benachrichtigung benachrichtigung) {
 		LocalTime aktuelleUhrzeit = LocalTime.now(ZoneId.of("Europe/Berlin"));
-		spielService.erstelleFreundschaftsspiele(benachrichtigung.getBenachrichtungsTyp(), benachrichtigung.getAbsender(), benachrichtigung.getEmpfaenger());
 		Benachrichtigung neueBenachrichtigung = new Benachrichtigung();
+		neueBenachrichtigung.setSpieler(benachrichtigung.getSpieler());
+		if(benachrichtigung.getBenachrichtungsTyp().equals(BenachrichtigungsTypen.FREUNDSCHAFTSSPIELALLEGEGENALLE) ||
+				benachrichtigung.getBenachrichtungsTyp().equals(BenachrichtigungsTypen.FREUNDSCHAFTSSPIELALLEGEGENEIN) ||
+				benachrichtigung.getBenachrichtungsTyp().equals(BenachrichtigungsTypen.FREUNDSCHAFTSSPIELEINGEGENALLE) ||
+				benachrichtigung.getBenachrichtungsTyp().equals(BenachrichtigungsTypen.FREUNDSCHAFTSSPIELEINGEGENEIN)) {
+			spielService.erstelleFreundschaftsspiele(benachrichtigung.getBenachrichtungsTyp(), benachrichtigung.getAbsender(), benachrichtigung.getEmpfaenger());
+			neueBenachrichtigung.setBenachrichtigungsText(freundschaftspielAnfrageAngenommenText(neueBenachrichtigung));
+		}
+		if(benachrichtigung.getBenachrichtungsTyp().equals(BenachrichtigungsTypen.SPIELERANGEBOT)) {
+			neueBenachrichtigung.setBenachrichtigungsText(spielerAngebotAngenommenText(neueBenachrichtigung));
+			Spieler spieler = spielerService.findeSpieler(benachrichtigung.getSpieler().getId());
+			spieler.setAufstellungsPositionsTyp(AufstellungsPositionsTypen.ERSATZ);
+			spieler.setTeam(benachrichtigung.getAbsender());
+			spielerService.aktualisiereSpieler(spieler);
+		}
+				
 		neueBenachrichtigung.setAbsender(benachrichtigung.getEmpfaenger());
 		neueBenachrichtigung.setEmpfaenger(benachrichtigung.getAbsender());
 		neueBenachrichtigung.setBenachrichtungsTyp(benachrichtigung.getBenachrichtungsTyp());
 		neueBenachrichtigung.setSpieltag(spieltagService.findeAktuellenSpieltag());
 		neueBenachrichtigung.setUhrzeit(aktuelleUhrzeit);
-		neueBenachrichtigung.setBenachrichtigungsText(freundschaftspielAnfrageAngenommenText(neueBenachrichtigung));
-		LOG.info("Absender: {}, Empfänger: {}", benachrichtigung.getAbsender().getName(), benachrichtigung.getEmpfaenger().getName());
-		LOG.info("Absender: {}, Empfänger: {}", neueBenachrichtigung.getAbsender().getName(), neueBenachrichtigung.getEmpfaenger().getName());
+		
 		legeBenachrichtigungAn(neueBenachrichtigung);
 	}
 
 	public void benachrichtigungAbgelehnt(Benachrichtigung benachrichtigung) {
 		LocalTime aktuelleUhrzeit = LocalTime.now(ZoneId.of("Europe/Berlin"));
 		Benachrichtigung neueBenachrichtigung = new Benachrichtigung();
+		neueBenachrichtigung.setSpieler(benachrichtigung.getSpieler());
+		if(benachrichtigung.getBenachrichtungsTyp().equals(BenachrichtigungsTypen.FREUNDSCHAFTSSPIELALLEGEGENALLE) ||
+				benachrichtigung.getBenachrichtungsTyp().equals(BenachrichtigungsTypen.FREUNDSCHAFTSSPIELALLEGEGENEIN) ||
+				benachrichtigung.getBenachrichtungsTyp().equals(BenachrichtigungsTypen.FREUNDSCHAFTSSPIELEINGEGENALLE) ||
+				benachrichtigung.getBenachrichtungsTyp().equals(BenachrichtigungsTypen.FREUNDSCHAFTSSPIELEINGEGENEIN)) {
+			neueBenachrichtigung.setBenachrichtigungsText(freundschaftspielAnfrageAbgelehntText(neueBenachrichtigung));	
+		}
+		if(benachrichtigung.getBenachrichtungsTyp().equals(BenachrichtigungsTypen.SPIELERANGEBOT)) {
+			neueBenachrichtigung.setBenachrichtigungsText(spielerAngebotAbgelehntText(neueBenachrichtigung));	
+		}
+		
 		neueBenachrichtigung.setAbsender(benachrichtigung.getEmpfaenger());
 		neueBenachrichtigung.setEmpfaenger(benachrichtigung.getAbsender());
 		neueBenachrichtigung.setBenachrichtungsTyp(benachrichtigung.getBenachrichtungsTyp());
 		neueBenachrichtigung.setSpieltag(spieltagService.findeAktuellenSpieltag());
 		neueBenachrichtigung.setUhrzeit(aktuelleUhrzeit);
-		neueBenachrichtigung.setBenachrichtigungsText(freundschaftspielAnfrageAbgelehntText(neueBenachrichtigung));		
-		LOG.info("Absender: {}, Empfänger: {}", benachrichtigung.getAbsender().getName(), benachrichtigung.getEmpfaenger().getName());
-		LOG.info("Absender: {}, Empfänger: {}", neueBenachrichtigung.getAbsender().getName(), neueBenachrichtigung.getEmpfaenger().getName());
+		legeBenachrichtigungAn(neueBenachrichtigung);
+	}
+
+	public void benachrichtigungZuWenig(Benachrichtigung benachrichtigung) {
+		LocalTime aktuelleUhrzeit = LocalTime.now(ZoneId.of("Europe/Berlin"));
+		Benachrichtigung neueBenachrichtigung = new Benachrichtigung();
+		neueBenachrichtigung.setSpieler(benachrichtigung.getSpieler());
+		neueBenachrichtigung.setAbsender(benachrichtigung.getEmpfaenger());
+		neueBenachrichtigung.setEmpfaenger(benachrichtigung.getAbsender());
+		neueBenachrichtigung.setBenachrichtungsTyp(benachrichtigung.getBenachrichtungsTyp());
+		neueBenachrichtigung.setSpieltag(spieltagService.findeAktuellenSpieltag());
+		neueBenachrichtigung.setUhrzeit(aktuelleUhrzeit);
+		neueBenachrichtigung.setBenachrichtigungsText(spielerAngebotZuWenigText(neueBenachrichtigung));
 		legeBenachrichtigungAn(neueBenachrichtigung);
 	}
 	
+	private String spielerAngebotAngenommenText(Benachrichtigung neueBenachrichtigung) {
+		return "Dein Angebot für " + neueBenachrichtigung.getSpieler().getName() + " (" + neueBenachrichtigung.getSpieler().getPosition().getPositionsName() + ") - "
+				+ neueBenachrichtigung.getSpieler().getSpielerStaerke().getReinStaerke() + " vom Team: " + neueBenachrichtigung.getSpieler().getTeam().getName() + 
+				" wurde angenommen.";
+	}
+	
+	private String spielerAngebotAbgelehntText(Benachrichtigung neueBenachrichtigung) {
+		return "Dein Angebot für " + neueBenachrichtigung.getSpieler().getName() + " (" + neueBenachrichtigung.getSpieler().getPosition().getPositionsName() + ") - "
+				+ neueBenachrichtigung.getSpieler().getSpielerStaerke().getReinStaerke() + " vom Team: " + neueBenachrichtigung.getSpieler().getTeam().getName() + 
+				" wurde abgelehnt.";
+	}
+	
+	private String spielerAngebotZuWenigText(Benachrichtigung neueBenachrichtigung) {
+		return "Dein Angebot für " + neueBenachrichtigung.getSpieler().getName() + " (" + neueBenachrichtigung.getSpieler().getPosition().getPositionsName() + ") - "
+				+ neueBenachrichtigung.getSpieler().getSpielerStaerke().getReinStaerke() + " vom Team: " + neueBenachrichtigung.getSpieler().getTeam().getName() + 
+				" war zu gering.";
+	}
+
 	private String freundschaftspielAnfrageText(Team absender, Team team, BenachrichtigungsTypen benachrichtigungsTyp) {
 		String s; 
 		s = "Das Team " + absender.getName() + " hat dir eine Freundschaftsspielanfrage gesendet. Es möchte " 

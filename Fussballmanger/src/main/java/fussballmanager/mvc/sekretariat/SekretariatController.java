@@ -147,6 +147,11 @@ public class SekretariatController {
 	
 	@PostMapping("/sekretariat/{benachrichtigungId}/zuwenig")
 	public String zuWenigBenachrichtigung(Model model, Authentication auth, @PathVariable("benachrichtigungId") Long benachrichtigungId) {
+		Benachrichtigung benachrichtigung = benachrichtigungService.findeBenachrichtigung(benachrichtigungId);
+		benachrichtigung.setGelesen(true);
+		benachrichtigung.setGeantwortet(true);
+		benachrichtigungService.aktualisiereBenachrichtigung(benachrichtigung);
+		benachrichtigungService.benachrichtigungZuWenig(benachrichtigung);
 		return "redirect:/";
 	}
 }
