@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
@@ -31,6 +32,7 @@ public class Benachrichtigung implements Comparable<Benachrichtigung>{
 	@OneToOne
 	Team empfaenger;
 	
+	@Lob
 	String benachrichtigungsText;
 	
 	@ManyToOne
@@ -42,6 +44,8 @@ public class Benachrichtigung implements Comparable<Benachrichtigung>{
 	LocalTime uhrzeit;
 	
 	boolean gelesen = false;
+	
+	boolean geantwortet = false;
 	
 	AntwortTypen antwortTyp = AntwortTypen.KEINE;
 	
@@ -127,6 +131,14 @@ public class Benachrichtigung implements Comparable<Benachrichtigung>{
 
 	public void setAntwortTyp(AntwortTypen antwortTyp) {
 		this.antwortTyp = antwortTyp;
+	}
+
+	public boolean isGeantwortet() {
+		return geantwortet;
+	}
+
+	public void setGeantwortet(boolean geantwortet) {
+		this.geantwortet = geantwortet;
 	}
 
 	@Override

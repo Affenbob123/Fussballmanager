@@ -1,23 +1,18 @@
 package fussballmanager;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import fussballmanager.service.benachrichtigung.AntwortTypen;
 import fussballmanager.service.benachrichtigung.Benachrichtigung;
@@ -46,8 +41,6 @@ import fussballmanager.service.spiel.spielereignisse.SpielEreignis;
 import fussballmanager.service.spiel.spielereignisse.SpielEreignisTypen;
 import fussballmanager.service.spiel.turnier.Turnier;
 import fussballmanager.service.spiel.turnier.TurnierService;
-import fussballmanager.service.spieler.AufstellungsPositionsTypen;
-import fussballmanager.service.spieler.Spieler;
 import fussballmanager.service.spieler.SpielerService;
 import fussballmanager.service.spieler.spielerzuwachs.SpielerZuwachsService;
 import fussballmanager.service.tabelle.TabellenEintrag;
@@ -247,18 +240,21 @@ public class FussballmanagerTestData {
 		erzeugeTestUser();
 		spieltagService.wechsleAktuellenSpieltag();
 		erzeugeTestTurnier();
-		erzeugeTestChatsUndNachrichten();
-		erzeugeTestNachrichten();
+		//erzeugeTestChatsUndNachrichten();
+		erzeugeTestBenachrichtigungen();
 	}
 	
-	private void erzeugeTestNachrichten() {
+	private void erzeugeTestBenachrichtigungen() {
 		for(int i = 0; i < 40; i++) {
 			Benachrichtigung benachrichtigung = new Benachrichtigung();
 			benachrichtigung.setAbsender(teamService.findeTeam(2L));
 			benachrichtigung.setEmpfaenger(teamService.findeTeam(1L));
-			benachrichtigung.setAntwortTyp(AntwortTypen.KEINE);
-			benachrichtigung.setBenachrichtungsTyp(BenachrichtigungsTypen.AUKTIONSHAUS);
-			benachrichtigung.setBenachrichtigungsText("Nachricht " + i);
+			benachrichtigung.setAntwortTyp(AntwortTypen.ZUWENIG);
+			benachrichtigung.setBenachrichtungsTyp(BenachrichtigungsTypen.FREUNDSCHAFTSSPIELALLEGEGENALLE);
+			benachrichtigung.setBenachrichtigungsText("Freundschaftsspiele Eins-Team gegen Eins-Team Freundschaftsspiele Eins-Team gegen Eins-Team "
+					+ "Freundschaftsspiele Eins-Team gegen Eins-Team Freundschaftsspiele Eins-Team gegen Eins-Team Freundschaftsspiele Eins-Team gegen Eins-Team "
+					+ "Freundschaftsspiele Eins-Team gegen Eins-Team Freundschaftsspiele Eins-Team gegen Eins-Team Freundschaftsspiele Eins-Team gegen Eins-Team "
+					+ "Freundschaftsspiele Eins-Team gegen Eins-Team Freundschaftsspiele Eins-Team gegen Eins-Team Freundschaftsspiele Eins-Team gegen Eins-Team ");
 			benachrichtigung.setSpieltag(spieltagService.findeAktuellenSpieltag());
 			benachrichtigung.setUhrzeit(LocalTime.now());
 			
@@ -267,40 +263,40 @@ public class FussballmanagerTestData {
 	}
 
 	public void erzeugeTestChatsUndNachrichten() {
-//		LocalTime aktuelleUhrzeit = LocalTime.now(ZoneId.of("Europe/Berlin"));
-//		List<User> userliste = new ArrayList<>();
-//		userliste.add(userService.findeUser(loginA));
-//		userliste.add(userService.findeUser(loginB));
-//		for(int i = 0; i < 10; i++) {
-//			Chat chat = new Chat();
-//			chat.setChatName("Chat " + i);
-//			chat.setUser(userliste);
-//			chat.setNachrichten(new ArrayList<Nachricht>());
-//			chatService.legeChatAn(chat);
-//		}
-//		
-//		for(Chat chat : chatService.findeAlleChats()) {
-//			for(int j = 0; j < 5; j++) {
-//				Nachricht nachricht = new Nachricht();
-//				nachricht.setAbsender(userService.findeUser(loginA));
-//				nachricht.setNachricht("Nachricht " + j);
-//				nachricht.setSpieltag(spieltagService.findeAktuellenSpieltag());
-//				nachricht.setUhrzeit(aktuelleUhrzeit);
-//				nachrichtService.legeNachrichtAn(nachricht);
-//				chat.getNachrichten().add(nachricht);
-//			}
-//			
-//			for(int j = 0; j < 5; j++) {
-//				Nachricht nachricht = new Nachricht();
-//				nachricht.setAbsender(userService.findeUser(loginB));
-//				nachricht.setNachricht("Nachricht " + j);
-//				nachricht.setSpieltag(spieltagService.findeAktuellenSpieltag());
-//				nachricht.setUhrzeit(aktuelleUhrzeit);
-//				nachrichtService.legeNachrichtAn(nachricht);
-//				chat.getNachrichten().add(nachricht);
-//			}
-//			chatService.aktualisiereChat(chat);
-//		}
+		LocalTime aktuelleUhrzeit = LocalTime.now(ZoneId.of("Europe/Berlin"));
+		List<User> userliste = new ArrayList<>();
+		userliste.add(userService.findeUser(loginA));
+		userliste.add(userService.findeUser(loginB));
+		for(int i = 0; i < 10; i++) {
+			Chat chat = new Chat();
+			chat.setChatName("Chat " + i);
+			chat.setUser(userliste);
+			chat.setNachrichten(new ArrayList<Nachricht>());
+			chatService.legeChatAn(chat);
+		}
+		
+		for(Chat chat : chatService.findeAlleChats()) {
+			for(int j = 0; j < 5; j++) {
+				Nachricht nachricht = new Nachricht();
+				nachricht.setAbsender(userService.findeUser(loginA));
+				nachricht.setNachricht("Nachricht " + j);
+				nachricht.setSpieltag(spieltagService.findeAktuellenSpieltag());
+				nachricht.setUhrzeit(aktuelleUhrzeit);
+				nachrichtService.legeNachrichtAn(nachricht);
+				chat.getNachrichten().add(nachricht);
+			}
+			
+			for(int j = 0; j < 5; j++) {
+				Nachricht nachricht = new Nachricht();
+				nachricht.setAbsender(userService.findeUser(loginB));
+				nachricht.setNachricht("Nachricht " + j);
+				nachricht.setSpieltag(spieltagService.findeAktuellenSpieltag());
+				nachricht.setUhrzeit(aktuelleUhrzeit);
+				nachrichtService.legeNachrichtAn(nachricht);
+				chat.getNachrichten().add(nachricht);
+			}
+			chatService.aktualisiereChat(chat);
+		}
 		
 	}
 	

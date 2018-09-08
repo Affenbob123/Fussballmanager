@@ -23,7 +23,7 @@
 					</div>
 					<div th:if="${alleUngelesenenBenachrichtigungenDesAktuellenUsers.size() > 0}">
 						<div class="mx-auto col-6 border shadow-lg">
-							<div class="gesamte-nachricht" >
+							<div class="gesamte-nachricht">
 								<div class="col">
 									<div class="row align-middle">
 										<div class="col-9 absender-nachricht-nachrichttyp">
@@ -36,7 +36,7 @@
 										<div class="col-3 text-center">
 											<div class="row">
 												<div class="col">
-													<form method="POST" th:action="@{/benachrichtigung/}+${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].id}+'/naechste'">
+													<form method="POST" th:action="@{/sekretariat/}+${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].id}+'/naechste'">
 														<span class="align-top">
 															<button type="submit" name="submit" value="value"class="nachrichten-button btn btn-link">N&auml;chste &gt;&gt;</button>
 														</span>
@@ -60,23 +60,25 @@
 										</div>
 									</div>
 								</div>
-								<div class="row">
-									<div class="col-5 text-right" th:if="${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].antwortTyp == antwortTypAnnehmen}">
-										<form method="POST" th:action="@{/benachrichtigung/}+${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].id}+'/annehmen'">
+								<div class="row pb-2" th:unless="${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].geantwortet}">
+									<div class="col-4 text-center" th:if="${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].antwortTyp == antwortTypAnnehmen or
+										alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].antwortTyp == antwortTypZuWenig}">
+										<form method="POST" th:action="@{/sekretariat/}+${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].id}+'/annehmen'">
 											<button type="submit" name="submit" value="value"class="nachrichten-button btn btn-link">Annehmen</button>
 										</form>
 									</div>
-									<div class="col-3 text-center" th:if="${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].antwortTyp == antwortTypAnnehmen}">
-										<form method="POST" th:action="@{/benachrichtigung/}+${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].id}+'/ablehnen'">
+									<div class="col-4 text-center" th:if="${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].antwortTyp == antwortTypAnnehmen or
+										alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].antwortTyp == antwortTypZuWenig}">
+										<form method="POST" th:action="@{/sekretariat/}+${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].id}+'/ablehnen'">
 											<div class="col">
 												<button type="submit" name="submit" value="value"class="nachrichten-button btn btn-link">Ablehnen</button>
 											</div>
 										</form>
 									</div>
-									<div class="col-3 text-center" th:if="${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].antwortTyp == antwortTypZuWenig}">
-										<form method="POST" th:action="@{/benachrichtigung/}+${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].id}+'/ablehnen'">
+									<div class="col-4 text-center" th:if="${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].antwortTyp == antwortTypZuWenig}">
+										<form method="POST" th:action="@{/sekretariat/}+${alleUngelesenenBenachrichtigungenDesAktuellenUsers[0].id}+'/zuwenig'">
 											<div class="col">
-												<button type="submit" name="submit" value="value"class="nachrichten-button btn btn-link">Ablehnen</button>
+												<button type="submit" name="submit" value="value"class="nachrichten-button btn btn-link">Zu Wenig</button>
 											</div>
 										</form>
 									</div>
@@ -84,11 +86,11 @@
 							</div>
 						</div>
 					</div>
-					<div class="col neues-team-button">
+					<div class="col p-3">
 						<form method="POST" th:action="@{/team/neu}">
 							<button type="submit" name="submit" value="value"
 								class="btn btn-sm btn-secondary">
-								<span aria-hidden="true">Neues Team erwerben</span>
+								<span>Neues Team erwerben</span>
 							</button>
 						</form>
 					</div>

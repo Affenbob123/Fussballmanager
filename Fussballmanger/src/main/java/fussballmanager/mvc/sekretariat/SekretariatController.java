@@ -117,7 +117,7 @@ public class SekretariatController {
 		return "redirect:/";
 	}
 	
-	@PostMapping("/benachrichtigung/{benachrichtigungId}/naechste")
+	@PostMapping("/sekretariat/{benachrichtigungId}/naechste")
 	public String interagiereMitBenachrichtigung(Model model, Authentication auth, @PathVariable("benachrichtigungId") Long benachrichtigungId) {
 		Benachrichtigung benachrichtigung = benachrichtigungService.findeBenachrichtigung(benachrichtigungId);
 		benachrichtigung.setGelesen(true);
@@ -125,21 +125,28 @@ public class SekretariatController {
 		return "redirect:/";
 	}
 	
-	@PostMapping("/benachrichtigung/{benachrichtigungId}/annehmen")
+	@PostMapping("/sekretariat/{benachrichtigungId}/annehmen")
 	public String nehmeBenachrichtigungAn(Model model, Authentication auth, @PathVariable("benachrichtigungId") Long benachrichtigungId) {
 		Benachrichtigung benachrichtigung = benachrichtigungService.findeBenachrichtigung(benachrichtigungId);
 		benachrichtigung.setGelesen(true);
+		benachrichtigung.setGeantwortet(true);
 		benachrichtigungService.aktualisiereBenachrichtigung(benachrichtigung);
 		benachrichtigungService.benachrichtigungAngenommen(benachrichtigung);
 		return "redirect:/";
 	}
 	
-	@PostMapping("/benachrichtigung/{benachrichtigungId}/ablehnen")
+	@PostMapping("/sekretariat/{benachrichtigungId}/ablehnen")
 	public String lehneBenachrichtigungAb(Model model, Authentication auth, @PathVariable("benachrichtigungId") Long benachrichtigungId) {
 		Benachrichtigung benachrichtigung = benachrichtigungService.findeBenachrichtigung(benachrichtigungId);
 		benachrichtigung.setGelesen(true);
+		benachrichtigung.setGeantwortet(true);
 		benachrichtigungService.aktualisiereBenachrichtigung(benachrichtigung);
 		benachrichtigungService.benachrichtigungAbgelehnt(benachrichtigung);
+		return "redirect:/";
+	}
+	
+	@PostMapping("/sekretariat/{benachrichtigungId}/zuwenig")
+	public String zuWenigBenachrichtigung(Model model, Authentication auth, @PathVariable("benachrichtigungId") Long benachrichtigungId) {
 		return "redirect:/";
 	}
 }

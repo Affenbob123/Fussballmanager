@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import fussballmanager.service.benachrichtigung.AntwortTypen;
 import fussballmanager.service.benachrichtigung.Benachrichtigung;
 import fussballmanager.service.benachrichtigung.BenachrichtigungService;
 import fussballmanager.service.benachrichtigung.BenachrichtigungsTypen;
@@ -67,6 +68,9 @@ public class BenachrichtigungenController {
 		model.addAttribute("aktuelleSeite", seite);
 		model.addAttribute("alleBenachrichtigungsFilter", BenachrichtigungsTypen.values());
 		model.addAttribute("benachrichtigungsFilterHelper", benachrichtigungsFilterHelper);
+		model.addAttribute("antwortTypAnnehmen", AntwortTypen.ANNEHMEN);
+		model.addAttribute("antwortTypZuWenig", AntwortTypen.ZUWENIG);
+		model.addAttribute("antwortTypKeine", AntwortTypen.KEINE);
 		
 		return "sekretariat/benachrichtigungen";
 	}
@@ -97,5 +101,32 @@ public class BenachrichtigungenController {
 		benachrichtigungService.loescheBenachrichtigung(benachrichtigungService.findeBenachrichtigung(benachrichtigungId));
 		
 		return "redirect:/benachrichtigungen/" + seite;
+	}
+	
+	@PostMapping("/benachrichtigungen/{benachrichtigungId}/{seite}/annehmen")
+	public String nehmeBenachrichtigungAn(Model model, Authentication auth, @PathVariable("benachrichtigungId") Long benachrichtigungId) {
+		Benachrichtigung benachrichtigung = benachrichtigungService.findeBenachrichtigung(benachrichtigungId);
+		benachrichtigung.setGelesen(true);
+		benachrichtigung.setGeantwortet(true);
+		benachrichtigungService.aktualisiereBenachrichtigung(benachrichtigung);
+		benachrichtigungService.benachrichtigungAngenommen(benachrichtigung);
+		return "redirect:/benachrichtigungen/{seite}";
+	}
+	
+	@PostMapping("/benachrichtigungen/{benachrichtigungId}/{seite}/ablehnen")
+	public String lehneBenachrichtigungAb(Model model, Authentication auth, @PathVariable("benachrichtigungId") Long benachrichtigungId, 
+			@PathVariable("seite") int seite) {
+		Benachrichtigung benachrichtigung = benachrichtigungService.findeBenachrichtigung(benachrichtigungId);
+		benachrichtigung.setGelesen(true);
+		benachrichtigung.setGeantwortet(true);
+		benachrichtigungService.aktualisiereBenachrichtigung(benachrichtigung);
+		benachrichtigungService.benachrichtigungAbgelehnt(benachrichtigung);
+		return "redirect:/benachrichtigungen/{seite}";
+	}
+	
+	@PostMapping("/benachrichtigungen/{benachrichtigungId}/{seite}/zuwenig")
+	public String zuWenigBenachrichtigung(Model model, Authentication auth, @PathVariable("benachrichtigungId") Long benachrichtigungId,
+			@PathVariable("seite") int seite) {
+		return "redirect:/benachrichtigungen/{seite}";
 	}
 }

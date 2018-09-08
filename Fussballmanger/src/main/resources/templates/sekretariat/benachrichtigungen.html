@@ -95,7 +95,34 @@
 										</div>
 									</div>
 									<div class="card-body collapse" th:id="'card-body-'+${benachrichtigung.id}">
-										<p th:text="${benachrichtigung.benachrichtigungsText}"></p>
+										<div class="row">
+											<div class="col">
+												<p th:text="${benachrichtigung.benachrichtigungsText}"></p>
+											</div>
+										</div>
+										<div class="row" th:unless="${benachrichtigung.geantwortet}">
+											<div class="col-4 text-center" th:if="${benachrichtigung.antwortTyp == antwortTypAnnehmen or 
+												benachrichtigung.antwortTyp == antwortTypZuWenig}">
+												<form method="POST" th:action="@{/benachrichtigungen/}+${benachrichtigung.id}+'/'+${aktuelleSeite}+'/annehmen'">
+													<button type="submit" name="submit" value="value"class="nachrichten-button btn btn-link">Annehmen</button>
+												</form>
+											</div>
+											<div class="col-4 text-center" th:if="${benachrichtigung.antwortTyp == antwortTypAnnehmen or
+												benachrichtigung.antwortTyp == antwortTypZuWenig}">
+												<form method="POST" th:action="@{/benachrichtigungen/}+${benachrichtigung.id}+'/'+${aktuelleSeite}+'/ablehnen'">
+													<div class="col">
+														<button type="submit" name="submit" value="value"class="nachrichten-button btn btn-link">Ablehnen</button>
+													</div>
+												</form>
+											</div>
+											<div class="col-4 text-center" th:if="${benachrichtigung.antwortTyp == antwortTypZuWenig}">
+												<form method="POST" th:action="@{/benachrichtigungen/}+${benachrichtigung.id}+'/'+${aktuelleSeite}+'/zuwenig'">
+													<div class="col">
+														<button type="submit" name="submit" value="value"class="nachrichten-button btn btn-link">Zu Wenig</button>
+													</div>
+												</form>
+											</div>
+										</div>
 									</div>
 								</div>
 								<div th:if="${benachrichtigung.gelesen}">
@@ -136,7 +163,34 @@
 										</div>
 									</div>
 									<div class="card-body collapse" th:id="'card-body-'+${benachrichtigung.id}">
-										<p th:text="${benachrichtigung.benachrichtigungsText}"></p>
+										<div class="row">
+											<div class="col">
+												<p th:text="${benachrichtigung.benachrichtigungsText}"></p>
+											</div>
+										</div>
+										<div class="row" th:unless="${benachrichtigung.geantwortet}">
+											<div class="col-4 text-center" th:if="${benachrichtigung.antwortTyp == antwortTypAnnehmen or 
+												benachrichtigung.antwortTyp == antwortTypZuWenig}">
+												<form method="POST" th:action="@{/benachrichtigungen/}+${benachrichtigung.id}+'/'+${aktuelleSeite}+'/annehmen'">
+													<button type="submit" name="submit" value="value"class="nachrichten-button btn btn-link">Annehmen</button>
+												</form>
+											</div>
+											<div class="col-4 text-center" th:if="${benachrichtigung.antwortTyp == antwortTypAnnehmen or
+												benachrichtigung.antwortTyp == antwortTypZuWenig}">
+												<form method="POST" th:action="@{/benachrichtigungen/}+${benachrichtigung.id}+'/'+${aktuelleSeite}+'/ablehnen'">
+													<div class="col">
+														<button type="submit" name="submit" value="value"class="nachrichten-button btn btn-link">Ablehnen</button>
+													</div>
+												</form>
+											</div>
+											<div class="col-4 text-center" th:if="${benachrichtigung.antwortTyp == antwortTypZuWenig}">
+												<form method="POST" th:action="@{/benachrichtigungen/}+${benachrichtigung.id}+'/'+${aktuelleSeite}+'/zuwenig'">
+													<div class="col">
+														<button type="submit" name="submit" value="value"class="nachrichten-button btn btn-link">Zu Wenig</button>
+													</div>
+												</form>
+											</div>
+										</div>
 									</div>
 								</div>
 							</div>

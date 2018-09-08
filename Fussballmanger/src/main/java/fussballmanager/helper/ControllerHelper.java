@@ -1,6 +1,7 @@
 package fussballmanager.helper;
 
 import java.text.DecimalFormat;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+import fussballmanager.service.benachrichtigung.Benachrichtigung;
 import fussballmanager.service.benachrichtigung.BenachrichtigungService;
 import fussballmanager.service.land.LandService;
 import fussballmanager.service.liga.LigaService;
@@ -60,10 +62,12 @@ public class ControllerHelper {
 		if(auth != null) {
 			User aktuellerUser = userService.findeUser(auth.getName());
 			Team aktuellesTeam = aktuellerUser.getAktuellesTeam();
+			List<Benachrichtigung> alleUngelesenenBenachrichtigungenEinesUsers = benachrichtigungService.findeAlleUngelesenenBenachrichtigungenEinesUsers(aktuellerUser);
+			Collections.reverse(alleUngelesenenBenachrichtigungenEinesUsers);
 			model.addAttribute("aktuellesTeam", aktuellesTeam);
 			model.addAttribute("aktuellerUser", aktuellerUser);
 			model.addAttribute("auth", auth);
-			model.addAttribute("alleUngelesenenBenachrichtigungenDesAktuellenUsers", benachrichtigungService.findeAlleUngelesenenBenachrichtigungenEinesUsers(aktuellerUser));
+			model.addAttribute("alleUngelesenenBenachrichtigungenDesAktuellenUsers", alleUngelesenenBenachrichtigungenEinesUsers);
 		}
 		DecimalFormat zahlenFormat = new DecimalFormat("0.0");
 		
