@@ -210,19 +210,19 @@ public class BenachrichtigungService {
 	
 	private String spielerAngebotAngenommenText(Benachrichtigung neueBenachrichtigung) {
 		return "Dein Angebot für " + neueBenachrichtigung.getSpieler().getName() + " (" + neueBenachrichtigung.getSpieler().getPosition().getPositionsName() + ") - "
-				+ neueBenachrichtigung.getSpieler().getSpielerStaerke().getReinStaerke() + " vom Team: " + neueBenachrichtigung.getSpieler().getTeam().getName() + 
+				+ neueBenachrichtigung.getSpieler().getSpielerReinStaerke().getReinStaerke() + " vom Team: " + neueBenachrichtigung.getSpieler().getTeam().getName() + 
 				" wurde angenommen.";
 	}
 	
 	private String spielerAngebotAbgelehntText(Benachrichtigung neueBenachrichtigung) {
 		return "Dein Angebot für " + neueBenachrichtigung.getSpieler().getName() + " (" + neueBenachrichtigung.getSpieler().getPosition().getPositionsName() + ") - "
-				+ neueBenachrichtigung.getSpieler().getSpielerStaerke().getReinStaerke() + " vom Team: " + neueBenachrichtigung.getSpieler().getTeam().getName() + 
+				+ neueBenachrichtigung.getSpieler().getSpielerReinStaerke().getReinStaerke() + " vom Team: " + neueBenachrichtigung.getSpieler().getTeam().getName() + 
 				" wurde abgelehnt.";
 	}
 	
 	private String spielerAngebotZuWenigText(Benachrichtigung neueBenachrichtigung) {
 		return "Dein Angebot für " + neueBenachrichtigung.getSpieler().getName() + " (" + neueBenachrichtigung.getSpieler().getPosition().getPositionsName() + ") - "
-				+ neueBenachrichtigung.getSpieler().getSpielerStaerke().getReinStaerke() + " vom Team: " + neueBenachrichtigung.getSpieler().getTeam().getName() + 
+				+ neueBenachrichtigung.getSpieler().getSpielerReinStaerke().getReinStaerke() + " vom Team: " + neueBenachrichtigung.getSpieler().getTeam().getName() + 
 				" war zu gering.";
 	}
 

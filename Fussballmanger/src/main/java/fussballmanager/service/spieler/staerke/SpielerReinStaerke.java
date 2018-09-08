@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-public class SpielerStaerke {
+public class SpielerReinStaerke {
 	
 	@Id
 	@GeneratedValue(strategy= GenerationType.AUTO, generator="native")
@@ -16,9 +16,7 @@ public class SpielerStaerke {
 	private Long id;
 	
 	private double reinStaerke;
-	
-	private double staerke;
-	
+		
 	private double geschwindigkeit;
 	
 	private double schiessen;
@@ -31,10 +29,9 @@ public class SpielerStaerke {
 	
 	private double physis;
 
-	public SpielerStaerke(double reinStaerke, double staerke, double geschwindigkeit, double schiessen, double passen, double dribbeln, double verteidigen,
+	public SpielerReinStaerke(double reinStaerke, double staerke, double geschwindigkeit, double schiessen, double passen, double dribbeln, double verteidigen,
 			double physis) {
 		this.reinStaerke = reinStaerke;
-		this.staerke = staerke;
 		this.geschwindigkeit = geschwindigkeit;
 		this.schiessen = schiessen;
 		this.passen = passen;
@@ -43,10 +40,10 @@ public class SpielerStaerke {
 		this.physis = physis;
 	}
 
-	public SpielerStaerke() {
+	public SpielerReinStaerke() {
 		
 	}
-
+	
 	public double getGeschwindigkeit() {
 		return geschwindigkeit;
 	}
@@ -94,10 +91,6 @@ public class SpielerStaerke {
 	public void setPhysis(double physis) {
 		this.physis = physis;
 	}
-	
-	public double getStaerke() {
-		return this.staerke;
-	}
 
 	public Long getId() {
 		return id;
@@ -107,10 +100,6 @@ public class SpielerStaerke {
 		this.id = id;
 	}
 
-	public void setStaerke(double staerke) {
-		this.staerke = staerke;
-	}
-	
 	public double getReinStaerke() {
 		return reinStaerke;
 	}

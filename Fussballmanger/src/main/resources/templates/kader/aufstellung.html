@@ -101,7 +101,7 @@
 															<div>
 																<img th:src="@{${ls.nationalitaet.landNameTyp.bild}}" />
 																<a th:text="'('+${ls.position}+')'+' | '+${ls.name}" th:id="${ls.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
-																<span th:text="${zahlenFormat.format(ls.spielerStaerke.staerke)}"></span>
+																<span th:text="${zahlenFormat.format(ls.spielerStaerke)}"></span>
 															</div>
 															<input type="hidden" id="lseinwechseln" th:value="${ls.id}" />
 														</div>
@@ -116,7 +116,7 @@
 															<div>
 																<img th:src="@{${rs.nationalitaet.landNameTyp.bild}}" />
 																<a th:text="'('+${rs.position}+')'+' | '+${rs.name}" th:id="${rs.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
-																<span th:text="${zahlenFormat.format(rs.spielerStaerke.staerke)}"></span>
+																<span th:text="${zahlenFormat.format(rs.spielerStaerke)}"></span>
 															</div>
 															<input type="hidden" id="rseinwechseln" th:value="${rs.id}" />
 														</div>
@@ -135,7 +135,7 @@
 															<div>
 																<img th:src="@{${ms.nationalitaet.landNameTyp.bild}}" />
 																<a th:text="'('+${ms.position}+')'+' | '+${ms.name}" th:id="${ms.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
-																<span th:text="${zahlenFormat.format(ms.spielerStaerke.staerke)}"></span>
+																<span th:text="${zahlenFormat.format(ms.spielerStaerke)}"></span>
 															</div>
 															<input type="hidden" id="mseinwechseln" th:value="${ms.id}" />
 														</div>
@@ -155,7 +155,7 @@
 															<div>
 																<img th:src="@{${om.nationalitaet.landNameTyp.bild}}" />
 																<a th:text="'('+${om.position}+')'+' | '+${om.name}" th:id="${om.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
-																<span th:text="${zahlenFormat.format(om.spielerStaerke.staerke)}"></span>
+																<span th:text="${zahlenFormat.format(om.spielerStaerke)}"></span>
 															</div>
 															<input type="hidden" id="omeinwechseln" th:value="${om.id}" />
 														</div>
@@ -174,7 +174,7 @@
 															<div>
 																<img th:src="@{${lm.nationalitaet.landNameTyp.bild}}" />
 																<a th:text="'('+${lm.position}+')'+' | '+${lm.name}" th:id="${lm.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
-																<span th:text="${zahlenFormat.format(lm.spielerStaerke.staerke)}"></span>
+																<span th:text="${zahlenFormat.format(lm.spielerStaerke)}"></span>
 															</div>
 															<input type="hidden" id="lmeinwechseln" th:value="${lm.id}" />
 														</div>
@@ -190,7 +190,7 @@
 															<div>
 																<img th:src="@{${zm.nationalitaet.landNameTyp.bild}}" />
 																<a th:text="'('+${zm.position}+')'+' | '+${zm.name}" th:id="${zm.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
-																<span th:text="${zahlenFormat.format(rm.spielerStaerke.staerke)}"></span>
+																<span th:text="${zahlenFormat.format(rm.spielerStaerke)}"></span>
 															</div>
 															<input type="hidden" id="zmeinwechseln" th:value="${zm.id}" />
 														</div>
@@ -206,7 +206,7 @@
 															<div>
 																<img th:src="@{${rm.nationalitaet.landNameTyp.bild}}" />
 																<a th:text="'('+${rm.position}+')'+' | '+${rm.name}" th:id="${rm.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
-																<span th:text="${zahlenFormat.format(rm.spielerStaerke.staerke)}"></span>
+																<span th:text="${zahlenFormat.format(rm.spielerStaerke)}"></span>
 															</div>
 															<input type="hidden" id="rmeinwechseln" th:value="${rm.id}" />
 														</div>
@@ -225,7 +225,7 @@
 															<div>
 																<img th:src="@{${dm.nationalitaet.landNameTyp.bild}}" />
 																<a th:text="'('+${dm.position}+')'+' | '+${dm.name}" th:id="${dm.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
-																<span th:text="${zahlenFormat.format(dm.spielerStaerke.staerke)}"></span>
+																<span th:text="${zahlenFormat.format(dm.spielerStaerke)}"></span>
 															</div>
 															<input type="hidden" id="dmeinwechseln" th:value="${dm.id}" />
 														</div>
@@ -244,7 +244,7 @@
 															<div>
 																<img th:src="@{${lv.nationalitaet.landNameTyp.bild}}" />
 																<a th:text="'('+${lv.position}+')'+' | '+${lv.name}" th:id="${lv.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
-																<span th:text="${zahlenFormat.format(lv.spielerStaerke.staerke)}"></span>
+																<span th:text="${zahlenFormat.format(lv.spielerStaerke)}"></span>
 															</div>
 															<input type="hidden" id="lveinwechseln" th:value="${lv.id}" />
 														</div>
@@ -260,7 +260,7 @@
 															<div>
 																<img th:src="@{${lib.nationalitaet.landNameTyp.bild}}" />
 																<a th:text="'('+${lib.position}+')'+' | '+${lib.name}" th:id="${lib.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
-																<span th:text="${zahlenFormat.format(lib.spielerStaerke.staerke)}"></span>
+																<span th:text="${zahlenFormat.format(lib.spielerStaerke)}"></span>
 															</div>
 															<input type="hidden" id="libeinwechseln" th:value="${lib.id}" />
 														</div>
@@ -276,7 +276,7 @@
 															<div>
 																<img th:src="@{${rv.nationalitaet.landNameTyp.bild}}" />
 																<a th:text="'('+${rv.position}+')'+' | '+${rv.name}" th:id="${rv.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
-																<span th:text="${zahlenFormat.format(rv.spielerStaerke.staerke)}"></span>
+																<span th:text="${zahlenFormat.format(rv.spielerStaerke)}"></span>
 															</div>
 															<input type="hidden" id="rveinwechseln" th:value="${rv.id}" />
 														</div>
@@ -295,7 +295,7 @@
 															<div>
 																<img th:src="@{${liv.nationalitaet.landNameTyp.bild}}" />
 																<a th:text="'('+${liv.position}+')'+' | '+${liv.name}" th:id="${liv.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
-																<span th:text="${zahlenFormat.format(liv.spielerStaerke.staerke)}"></span>
+																<span th:text="${zahlenFormat.format(liv.spielerStaerke)}"></span>
 															</div>
 															<input type="hidden" id="liveinwechseln" th:value="${liv.id}" />
 														</div>
@@ -311,7 +311,7 @@
 															<div>
 																<img th:src="@{${riv.nationalitaet.landNameTyp.bild}}" />
 																<a th:text="'('+${riv.position}+')'+' | '+${riv.name}" th:id="${riv.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
-																<span th:text="${zahlenFormat.format(riv.spielerStaerke.staerke)}"></span>
+																<span th:text="${zahlenFormat.format(riv.spielerStaerke)}"></span>
 															</div>
 															<input type="hidden" id="riveinwechseln" th:value="${riv.id}" />
 														</div>
@@ -331,7 +331,7 @@
 															<div>
 																<img th:src="@{${tw.nationalitaet.landNameTyp.bild}}" />
 																<a th:text="'('+${tw.position}+')'+' | '+${tw.name}" th:id="${tw.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
-																<span th:text="${zahlenFormat.format(tw.spielerStaerke.staerke)}"></span>
+																<span th:text="${zahlenFormat.format(tw.spielerStaerke)}"></span>
 															</div>
 															<input type="hidden" id="tweinwechseln" th:value="${tw.id}" />
 														</div>
@@ -351,7 +351,7 @@
 																<div>
 																	<img th:src="@{${spieler.nationalitaet.landNameTyp.bild}}" />
 																	<a th:text="'('+${spieler.position}+')'+' | '+${spieler.name}" th:id="${spieler.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
-																	<span th:text="${zahlenFormat.format(spieler.spielerStaerke.staerke)}"></span>
+																	<span th:text="${zahlenFormat.format(spieler.spielerStaerke)}"></span>
 																</div>
 																<input type="hidden" th:id="${spieler.id}+'einwechseln'" th:value="${spieler.id}" />
 															</div>

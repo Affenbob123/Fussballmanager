@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import fussballmanager.service.land.LaenderNamenTypen;
 import fussballmanager.service.land.Land;
 import fussballmanager.service.spieler.spielerzuwachs.Trainingslager;
-import fussballmanager.service.spieler.staerke.SpielerStaerke;
+import fussballmanager.service.spieler.staerke.SpielerReinStaerke;
 import fussballmanager.service.team.Team;
 
 @Repository
@@ -23,15 +23,15 @@ public interface SpielerRepository extends JpaRepository<Spieler, Long> {
 	List<Spieler> findByAufstellungsPositionsTyp(AufstellungsPositionsTypen aufstellungsPositionsTyp);
 	
 	//Transfermarkt
-	List<Spieler> findByTransfermarktAndAlterBetweenAndPreisBetweenOrderBySpielerStaerkeReinStaerkeDesc(boolean transfermarkt,
+	List<Spieler> findByTransfermarktAndAlterBetweenAndPreisBetweenOrderBySpielerReinStaerkeReinStaerkeDesc(boolean transfermarkt,
 			int minimalesAlter, int maximalesAlter, long minimalerPreis, long maximalerPreis, Pageable seite);
-	List<Spieler> findByTransfermarktAndNationalitaetAndAlterBetweenAndPreisBetweenOrderBySpielerStaerkeReinStaerkeDesc(
+	List<Spieler> findByTransfermarktAndNationalitaetAndAlterBetweenAndPreisBetweenOrderBySpielerReinStaerkeReinStaerkeDesc(
 			boolean b, Land nationalitaet, int minimalesAlter, int maximalesAlter, long minimalerPreis,
 			long maximalerPreis, Pageable seite);
-	List<Spieler> findByTransfermarktAndPositionAndAlterBetweenAndPreisBetweenOrderBySpielerStaerkeReinStaerkeDesc(
+	List<Spieler> findByTransfermarktAndPositionAndAlterBetweenAndPreisBetweenOrderBySpielerReinStaerkeReinStaerkeDesc(
 			boolean b, PositionenTypen position, int minimalesAlter, int maximalesAlter, long minimalerPreis,
 			long maximalerPreis, Pageable seite);
-	List<Spieler> findByTransfermarktAndPositionAndNationalitaetAndAlterBetweenAndSpielerStaerkeReinStaerkeBetweenAndPreisBetweenOrderBySpielerStaerkeReinStaerkeDesc(
+	List<Spieler> findByTransfermarktAndPositionAndNationalitaetAndAlterBetweenAndSpielerReinStaerkeReinStaerkeBetweenAndPreisBetweenOrderBySpielerReinStaerkeReinStaerkeDesc(
 			boolean b, PositionenTypen position, Land nationalitaet, int minimalesAlter, int maximalesAlter, double minimaleStaerke, double maximaleStaerke,
 			long minimalerPreis, long maximalerPreis, Pageable seite);
 	
@@ -40,14 +40,14 @@ public interface SpielerRepository extends JpaRepository<Spieler, Long> {
 	List<Spieler> findByGelbeKarteTrue();
 	
 	//Stärke
-	List<Spieler> findByOrderBySpielerStaerkeReinStaerkeDesc(Pageable seite);
-	List<Spieler> findByNationalitaetOrderBySpielerStaerkeReinStaerkeDesc(Land nationalitaet, Pageable seite);
-	List<Spieler> findByAlterOrderBySpielerStaerkeReinStaerkeDesc(int alter, Pageable seite);
-	List<Spieler> findByPositionOrderBySpielerStaerkeReinStaerkeDesc(PositionenTypen position, Pageable seite);
-	List<Spieler> findByAlterAndPositionOrderBySpielerStaerkeReinStaerkeDesc(int alter, PositionenTypen position, Pageable seite);
-	List<Spieler> findByNationalitaetAndAlterOrderBySpielerStaerkeReinStaerkeDesc(Land nationalitaet, int alter, Pageable seite);
-	List<Spieler> findByNationalitaetAndPositionOrderBySpielerStaerkeReinStaerkeDesc(Land nationalitaet, PositionenTypen position, Pageable seite);
-	List<Spieler> findByNationalitaetAndAlterAndPositionOrderBySpielerStaerkeReinStaerkeDesc(Land nationalitaet, int alter, 
+	List<Spieler> findByOrderBySpielerReinStaerkeReinStaerkeDesc(Pageable seite);
+	List<Spieler> findByNationalitaetOrderBySpielerReinStaerkeReinStaerkeDesc(Land nationalitaet, Pageable seite);
+	List<Spieler> findByAlterOrderBySpielerReinStaerkeReinStaerkeDesc(int alter, Pageable seite);
+	List<Spieler> findByPositionOrderBySpielerReinStaerkeReinStaerkeDesc(PositionenTypen position, Pageable seite);
+	List<Spieler> findByAlterAndPositionOrderBySpielerReinStaerkeReinStaerkeDesc(int alter, PositionenTypen position, Pageable seite);
+	List<Spieler> findByNationalitaetAndAlterOrderBySpielerReinStaerkeReinStaerkeDesc(Land nationalitaet, int alter, Pageable seite);
+	List<Spieler> findByNationalitaetAndPositionOrderBySpielerReinStaerkeReinStaerkeDesc(Land nationalitaet, PositionenTypen position, Pageable seite);
+	List<Spieler> findByNationalitaetAndAlterAndPositionOrderBySpielerReinStaerkeReinStaerkeDesc(Land nationalitaet, int alter, 
 			PositionenTypen position, Pageable seite);
 	//Erfahrung
 	List<Spieler> findByOrderByErfahrungDesc(Pageable seite);

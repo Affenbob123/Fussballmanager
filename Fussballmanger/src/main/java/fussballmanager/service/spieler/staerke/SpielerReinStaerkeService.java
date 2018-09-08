@@ -20,12 +20,12 @@ import fussballmanager.spielsimulation.torversuch.TorversuchService;
 
 @Service
 @Transactional
-public class SpielerStaerkeService {
+public class SpielerReinStaerkeService {
 
-	private static final Logger LOG = LoggerFactory.getLogger(SpielerStaerkeService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SpielerReinStaerkeService.class);
 
 	@Autowired
-	SpielerStaerkeRepository spielerStaerkeRepository;
+	SpielerReinStaerkeRepository spielerStaerkeRepository;
 	
 	@Autowired
 	SpielService spielService;
@@ -36,27 +36,27 @@ public class SpielerStaerkeService {
 	@Autowired
 	SaisonService saisonService;
 	
-	public SpielerStaerke findeSpielerStaerke(Long id) {
+	public SpielerReinStaerke findeSpielerStaerke(Long id) {
 		return spielerStaerkeRepository.getOne(id);
 	}
 	
-	public List<SpielerStaerke> findeAlleSpielerStaerken() {
+	public List<SpielerReinStaerke> findeAlleSpielerStaerken() {
 		return spielerStaerkeRepository.findAll();
 	}
 	
-	public List<SpielerStaerke> findeStaerksteSpielerNachSeite(PageRequest pageRequest) {
+	public List<SpielerReinStaerke> findeStaerksteSpielerNachSeite(PageRequest pageRequest) {
 		return spielerStaerkeRepository.findAllByOrderByReinStaerkeDesc(pageRequest);
 	}
 	
-	public void legeSpielerStaerkeAn(SpielerStaerke spielerStaerke) {
+	public void legeSpielerStaerkeAn(SpielerReinStaerke spielerStaerke) {
 		spielerStaerkeRepository.save(spielerStaerke);
 	}
 	
-	public void aktualisiereSpielerStaerke(SpielerStaerke spielerStaerke) {
+	public void aktualisiereSpielerStaerke(SpielerReinStaerke spielerStaerke) {
 		spielerStaerkeRepository.save(spielerStaerke);
 	}
 	
-	public void loescheSpielerStaerke(SpielerStaerke spielerStaerke) {
+	public void loescheSpielerStaerke(SpielerReinStaerke spielerStaerke) {
 		spielerStaerkeRepository.delete(spielerStaerke);
 	}
 }

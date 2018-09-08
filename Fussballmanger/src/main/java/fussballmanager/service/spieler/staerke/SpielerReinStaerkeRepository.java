@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import fussballmanager.service.spieler.Spieler;
 
 @Repository
-public interface SpielerStaerkeRepository extends JpaRepository<SpielerStaerke, Long> {
+public interface SpielerReinStaerkeRepository extends JpaRepository<SpielerReinStaerke, Long> {
 
-	List<SpielerStaerke> findAllByOrderByReinStaerkeDesc(Pageable pageable);
+	List<SpielerReinStaerke> findAllByOrderByReinStaerkeDesc(Pageable pageable);
 }

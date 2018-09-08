@@ -77,8 +77,8 @@ public class KaderDetailsController {
 			summeDerSpielerWerte.setErfahrung(summeDerSpielerWerte.getErfahrung() + spieler.getErfahrung());
 			summeDerSpielerWerte.setGehalt(summeDerSpielerWerte.getGehalt() + spieler.getGehalt());
 			summeDerSpielerWerte.setMotivation(summeDerSpielerWerte.getMotivation() + spieler.getMotivation());
-			summeDerSpielerWerte.setReinStaerke(summeDerSpielerWerte.getReinStaerke() + spieler.getSpielerStaerke().getReinStaerke());
-			summeDerSpielerWerte.setStaerke(summeDerSpielerWerte.getStaerke() + spieler.getSpielerStaerke().getStaerke());
+			summeDerSpielerWerte.setReinStaerke(summeDerSpielerWerte.getReinStaerke() + spieler.getSpielerReinStaerke().getReinStaerke());
+			summeDerSpielerWerte.setStaerke(summeDerSpielerWerte.getStaerke() + spieler.getSpielerStaerke());
 			summeDerSpielerWerte.setZuwachs(summeDerSpielerWerte.getZuwachs() + spieler.getSpielerZuwachs());
 		}
 		return summeDerSpielerWerte;

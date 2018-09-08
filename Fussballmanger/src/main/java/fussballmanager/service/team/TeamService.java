@@ -142,15 +142,18 @@ public class TeamService {
 		LOG.info("AktuellesTeam: {}", team.getId(), team.getUser().getLogin());
 	}
 	
-	public void aendereEinsatzEinesTeams(Team team) {
-		List<Spieler> alleSpielerDesTeams = spielerService.findeAlleSpielerEinesTeams(team);
-		
-		for(Spieler spieler : alleSpielerDesTeams) {
-			double spielerStaerkeAenderung = team.getEinsatzTyp().getStaerkenFaktor();
-			spielerService.kompletteStaerkeAendern(spieler, spielerStaerkeAenderung);
-		}
-		berechneTeamStaerke(team);
-	}
+	/*
+	 * TODO Wenn @Formula nicht funktioniert dnan einzeln setzen
+	 */
+//	public void aendereEinsatzEinesTeams(Team team) {
+//		List<Spieler> alleSpielerDesTeams = spielerService.findeAlleSpielerEinesTeams(team);
+//
+//		for(Spieler spieler : alleSpielerDesTeams) {
+//			double spielerStaerkeAenderung = team.getEinsatzTyp().getStaerkenFaktor();
+//			spielerService.kompletteStaerkeAendern(spieler, spielerStaerkeAenderung);
+//		}
+//		berechneTeamStaerke(team);
+//	}
 
 	//TODO Wenn kein SPieler mit der Position vorhanden ist dann spielen zu wenige
 	public void aenderFormationEinesTeams(Team team, List<Spieler> alleSpielerDesTeams) {
@@ -166,7 +169,7 @@ public class TeamService {
 					spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.VERLETZT) ||
 					spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.GESPERRT) ||
 					spieler.getAufstellungsPositionsTyp().equals(AufstellungsPositionsTypen.TRAININGSLAGER))) {
-				teamStaerke = teamStaerke + spieler.getSpielerStaerke().getStaerke();
+				teamStaerke = teamStaerke + spieler.getSpielerStaerke();
 			}
 		}
 		team.setStaerke(teamStaerke);

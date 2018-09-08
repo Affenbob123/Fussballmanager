@@ -11,14 +11,14 @@ import org.springframework.stereotype.Service;
 
 import fussballmanager.service.saison.SaisonService;
 import fussballmanager.service.spiel.SpielService;
-import fussballmanager.service.spieler.staerke.SpielerStaerkeService;
+import fussballmanager.service.spieler.staerke.SpielerReinStaerkeService;
 import fussballmanager.service.tabelle.TabellenEintragService;
 
 @Service
 @Transactional
 public class StadionService {
 
-	private static final Logger LOG = LoggerFactory.getLogger(SpielerStaerkeService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SpielerReinStaerkeService.class);
 
 	@Autowired
 	StadionRepository stadionRepository;

@@ -135,7 +135,7 @@
 												href="#"></a>
 										</td>
 										
-										<td th:text="${zahlenFormat.format(spieler.spielerStaerke.reinStaerke)}" />
+										<td th:text="${zahlenFormat.format(spieler.spielerReinStaerke.reinStaerke)}" />
 										<td th:text="${spieler.preis}" />
 										<td>
 											<form method="POST" th:action="@{/transfermarkt/}+${seite}+'/'+${spieler.id}">

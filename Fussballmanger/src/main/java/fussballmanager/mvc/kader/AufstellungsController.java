@@ -152,7 +152,7 @@ public class AufstellungsController {
 	public String aendereEinsatz(Model model, Authentication auth, @PathVariable("teamId") Long id, @ModelAttribute("aktuellesTeam") Team aktuellesTeam) {
 		Team team = teamService.findeTeam(id);
 		team.setEinsatzTyp(aktuellesTeam.getEinsatzTyp());
-		teamService.aendereEinsatzEinesTeams(team);
+		teamService.aktualisiereTeam(team);
 		
 		return "redirect:/team/{teamId}";
 	}

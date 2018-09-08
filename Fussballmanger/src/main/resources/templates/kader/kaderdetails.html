@@ -93,9 +93,9 @@
 												href="#"></a>
 										</td>
 										<td th:text="${spieler.alter}" />
-										<td th:text="${zahlenFormat.format(spieler.spielerStaerke.staerke)}" />
+										<td th:text="${zahlenFormat.format(spieler.spielerStaerke)}" />
 										<td th:text="${spieler.motivation}" />
-										<td th:text="${zahlenFormat.format(spieler.spielerStaerke.reinStaerke)}" />
+										<td th:text="${zahlenFormat.format(spieler.spielerReinStaerke.reinStaerke)}" />
 										<td th:text="${spieler.spielerZuwachs} >= 0 ?
 											'+'+${zahlenFormat.format(spieler.spielerZuwachs)} : 
 											${zahlenFormat.format(spieler.spielerZuwachs)}" />

@@ -10,11 +10,12 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
+import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.GenericGenerator;
 
 import fussballmanager.service.land.Land;
 import fussballmanager.service.spieler.spielerzuwachs.Trainingslager;
-import fussballmanager.service.spieler.staerke.SpielerStaerke;
+import fussballmanager.service.spieler.staerke.SpielerReinStaerke;
 import fussballmanager.service.team.Team;
 
 @Entity
@@ -41,16 +42,19 @@ public class Spieler implements Comparable<Spieler> {
 	
 	private int alter;
 	
+	@Formula("(Select s.rein_Staerke From Spieler_Rein_Staerke s Where s.Id = spieler_Rein_Staerke_Id) * (motivation + 100) / 100")
+	private double spielerStaerke;
+	
 	@OneToOne(fetch = FetchType.LAZY)
-	private SpielerStaerke spielerStaerke;
+	private SpielerReinStaerke spielerReinStaerke;
 	
 	private double spielerZuwachs = 0.0;
 	
-	private int erfahrung;
+	private int erfahrung = 0;
 	
 	private int talentwert;
 	
-	private boolean talentwertErmittelt;
+	private boolean talentwertErmittelt = false;
 	
 	private int motivation = 0;
 	
@@ -64,6 +68,7 @@ public class Spieler implements Comparable<Spieler> {
 	
 	private int gesperrteTage = 0;
 	
+	@Formula("(Select s.rein_Staerke From Spieler_Rein_Staerke s Where s.Id = spieler_Rein_Staerke_Id) * 100")
 	private long gehalt;
 	
 	private long preis;
@@ -81,21 +86,15 @@ public class Spieler implements Comparable<Spieler> {
 	private int roteKarten = 0;
 
 	public Spieler(Land nationalitaet, PositionenTypen position, AufstellungsPositionsTypen aufstellungsPositionsTyp,
-			int alter, SpielerStaerke spielerStaerke, int talentwert, Team team) {
+			int alter, SpielerReinStaerke spielerReinStaerke, int talentwert, Team team) {
 		this.nationalitaet = nationalitaet;
 		this.position = position;
 		this.aufstellungsPositionsTyp = aufstellungsPositionsTyp;
 		this.alter = alter;
-		this.spielerStaerke = spielerStaerke;
+		this.spielerReinStaerke = spielerReinStaerke;
 		this.talentwert = talentwert;
 		this.team = team;
-		this.talentwertErmittelt =  false;
-		this.erfahrung = 0;
-		this.motivation = 0;
-		this.verletzungsTage = 0;
-		this.gehalt = (long) (spielerStaerke.getReinStaerke() * 100);
-		this.preis = (long) (spielerStaerke.getReinStaerke() * 1000);
-		this.transfermarkt = false;
+		this.preis = (long) (spielerReinStaerke.getReinStaerke() * 1000);
 	}
 
 	public Spieler() {
@@ -214,12 +213,24 @@ public class Spieler implements Comparable<Spieler> {
 		this.gehalt = gehalt;
 	}
 
-	public SpielerStaerke getSpielerStaerke() {
+	public double getSpielerStaerke() {
 		return spielerStaerke;
 	}
 
-	public void setSpielerStaerke(SpielerStaerke spielerStaerke) {
+	public void setSpielerStaerke(double spielerStaerke) {
 		this.spielerStaerke = spielerStaerke;
+	}
+
+	public SpielerReinStaerke getSpielerReinStaerke() {
+		return spielerReinStaerke;
+	}
+
+	public void setSpielerReinStaerke(SpielerReinStaerke spielerReinStaerke) {
+		this.spielerReinStaerke = spielerReinStaerke;
+	}
+
+	public void setTrainingslager(Trainingslager trainingslager) {
+		this.trainingslager = trainingslager;
 	}
 
 	public double getSpielerZuwachs() {

@@ -27,8 +27,8 @@ import fussballmanager.service.saison.spieltag.SpieltagService;
 import fussballmanager.service.spieler.spielerzuwachs.SpielerZuwachsService;
 import fussballmanager.service.spieler.spielerzuwachs.Trainingslager;
 import fussballmanager.service.spieler.spielerzuwachs.ZuwachsFaktorAlter;
-import fussballmanager.service.spieler.staerke.SpielerStaerke;
-import fussballmanager.service.spieler.staerke.SpielerStaerkeService;
+import fussballmanager.service.spieler.staerke.SpielerReinStaerke;
+import fussballmanager.service.spieler.staerke.SpielerReinStaerkeService;
 import fussballmanager.service.team.FormationsTypen;
 import fussballmanager.service.team.Team;
 import fussballmanager.service.team.TeamService;
@@ -59,7 +59,7 @@ public class SpielerService {
 	SpieltagService spieltagService;
 	
 	@Autowired
-	SpielerStaerkeService spielerStaerkeService;
+	SpielerReinStaerkeService spielerStaerkeService;
 	
 	@Autowired
 	LandService landService;
@@ -136,24 +136,24 @@ public class SpielerService {
 		
 		if(statistikFormular.getSortierTyp().equals(SortierTypen.STAERKE)) {
 			if((statistikFormular.getLandNameTyp() == null) && (statistikFormular.getAlter() < 0) && (statistikFormular.getPosition() == null)) {
-				spielerListe = spielerRepository.findByOrderBySpielerStaerkeReinStaerkeDesc(statistikSeite);
+				spielerListe = spielerRepository.findByOrderBySpielerReinStaerkeReinStaerkeDesc(statistikSeite);
 			} else if((statistikFormular.getAlter() < 0) && (statistikFormular.getPosition() == null)) {
-				spielerListe = spielerRepository.findByNationalitaetOrderBySpielerStaerkeReinStaerkeDesc(land, statistikSeite);
+				spielerListe = spielerRepository.findByNationalitaetOrderBySpielerReinStaerkeReinStaerkeDesc(land, statistikSeite);
 			} else if((statistikFormular.getLandNameTyp() == null) && (statistikFormular.getPosition() == null)) {
-				spielerListe = spielerRepository.findByAlterOrderBySpielerStaerkeReinStaerkeDesc( statistikFormular.getAlter(), statistikSeite);
+				spielerListe = spielerRepository.findByAlterOrderBySpielerReinStaerkeReinStaerkeDesc( statistikFormular.getAlter(), statistikSeite);
 			} else if((statistikFormular.getLandNameTyp() == null) && (statistikFormular.getAlter() < 0)) {
-				spielerListe = spielerRepository.findByPositionOrderBySpielerStaerkeReinStaerkeDesc(statistikFormular.getPosition(), statistikSeite);
+				spielerListe = spielerRepository.findByPositionOrderBySpielerReinStaerkeReinStaerkeDesc(statistikFormular.getPosition(), statistikSeite);
 			} else if(statistikFormular.getLandNameTyp() == null) {
-				spielerListe = spielerRepository.findByAlterAndPositionOrderBySpielerStaerkeReinStaerkeDesc(statistikFormular.getAlter(), 
+				spielerListe = spielerRepository.findByAlterAndPositionOrderBySpielerReinStaerkeReinStaerkeDesc(statistikFormular.getAlter(), 
 						statistikFormular.getPosition(), statistikSeite);
 			} else if(statistikFormular.getPosition() == null) {
-				spielerListe = spielerRepository.findByNationalitaetAndAlterOrderBySpielerStaerkeReinStaerkeDesc(land, 
+				spielerListe = spielerRepository.findByNationalitaetAndAlterOrderBySpielerReinStaerkeReinStaerkeDesc(land, 
 						statistikFormular.getAlter(), statistikSeite);
 			} else if(statistikFormular.getAlter() < 0) {
-				spielerListe = spielerRepository.findByNationalitaetAndPositionOrderBySpielerStaerkeReinStaerkeDesc(land, 
+				spielerListe = spielerRepository.findByNationalitaetAndPositionOrderBySpielerReinStaerkeReinStaerkeDesc(land, 
 						statistikFormular.getPosition(), statistikSeite);
 			} else {
-				spielerListe = spielerRepository.findByNationalitaetAndAlterAndPositionOrderBySpielerStaerkeReinStaerkeDesc(land, 
+				spielerListe = spielerRepository.findByNationalitaetAndAlterAndPositionOrderBySpielerReinStaerkeReinStaerkeDesc(land, 
 						statistikFormular.getAlter(), statistikFormular.getPosition(), statistikSeite);
 			}
 		}
@@ -289,13 +289,12 @@ public class SpielerService {
 	
 	public void erstelleStandardSpielerFuerEinTeam(Team team) {
 		int alter = 16;
-		
 		Land nationalitaet = team.getLiga().getLand();
 		
 		for(PositionenTypen positionenTyp : PositionenTypen.values()) {
 			double anfangsStaerke = 200.0;
 			int talentwert = erzeugeZufaelligenTalentwert();
-			SpielerStaerke staerke = new SpielerStaerke(anfangsStaerke, anfangsStaerke, anfangsStaerke, 
+			SpielerReinStaerke staerke = new SpielerReinStaerke(anfangsStaerke, anfangsStaerke, anfangsStaerke, 
 					anfangsStaerke, anfangsStaerke, anfangsStaerke, anfangsStaerke, anfangsStaerke);
 			spielerStaerkeService.legeSpielerStaerkeAn(staerke);
 			AufstellungsPositionsTypen aufstellungsPositionsTyp = AufstellungsPositionsTypen.ERSATZ;
@@ -317,30 +316,13 @@ public class SpielerService {
 		return r.nextInt((maxTalentwert - minTalentwert) + 1) + minTalentwert;
 	}
 	
-	public void kompletteStaerkeAendern(Spieler spieler, double staerkeAenderungsFaktor) {
-		spieler.getSpielerStaerke().setDribbeln(spieler.getSpielerStaerke().getReinStaerke() * staerkeAenderungsFaktor);
-		spieler.getSpielerStaerke().setGeschwindigkeit(spieler.getSpielerStaerke().getReinStaerke() * staerkeAenderungsFaktor);
-		spieler.getSpielerStaerke().setPassen(spieler.getSpielerStaerke().getReinStaerke() * staerkeAenderungsFaktor);
-		spieler.getSpielerStaerke().setPhysis(spieler.getSpielerStaerke().getReinStaerke() * staerkeAenderungsFaktor);
-		spieler.getSpielerStaerke().setSchiessen(spieler.getSpielerStaerke().getReinStaerke() * staerkeAenderungsFaktor);
-		spieler.getSpielerStaerke().setVerteidigen(spieler.getSpielerStaerke().getReinStaerke() * staerkeAenderungsFaktor);
-		spieler.getSpielerStaerke().setStaerke(spieler.getSpielerStaerke().getReinStaerke() * staerkeAenderungsFaktor);
-		
-		aktualisiereSpieler(spieler);
-	}
-	
-	public void reinStaerkeAendern(Spieler spieler, double zuwachs) {
-		spieler.getSpielerStaerke().setReinStaerke(spieler.getSpielerStaerke().getReinStaerke() + zuwachs);
-		aktualisiereSpieler(spieler);
-	}
-	
 	public List<Spieler> sortiereSpielerNachStaerke(List<Spieler> spieler) {
 		List<Spieler> spielerListe = spieler;
 		
 		Collections.sort(spielerListe, new Comparator<Spieler>() {
 			@Override
 			public int compare(Spieler s1, Spieler s2) {
-				return Double.compare(s1.getSpielerStaerke().getStaerke(), s2.getSpielerStaerke().getStaerke());
+				return Double.compare(s1.getSpielerStaerke(), s2.getSpielerStaerke());
 			}
 		});
 		return spielerListe;
@@ -457,7 +439,7 @@ public class SpielerService {
 					int staerkeFaktor = alter - 13;
 					double anfangsStaerkeMitFaktor = anfangsStaerke * staerkeFaktor;
 					long preis = (long) (anfangsStaerkeMitFaktor * 1000);
-					SpielerStaerke staerke = new SpielerStaerke(anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor, 
+					SpielerReinStaerke staerke = new SpielerReinStaerke(anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor, 
 							anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor, 
 							anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor, anfangsStaerkeMitFaktor);
 					spielerStaerkeService.legeSpielerStaerkeAn(staerke);
@@ -512,18 +494,18 @@ public class SpielerService {
 		
 		if(position == null) {
 			if(land == null) {
-				return spielerRepository.findByTransfermarktAndAlterBetweenAndPreisBetweenOrderBySpielerStaerkeReinStaerkeDesc(true,
+				return spielerRepository.findByTransfermarktAndAlterBetweenAndPreisBetweenOrderBySpielerReinStaerkeReinStaerkeDesc(true,
 						minimalesAlter, maximalesAlter, minimalerPreis, maximalerPreis, tranfermarktSeite);
 			}
-			return spielerRepository.findByTransfermarktAndNationalitaetAndAlterBetweenAndPreisBetweenOrderBySpielerStaerkeReinStaerkeDesc(true, land,
+			return spielerRepository.findByTransfermarktAndNationalitaetAndAlterBetweenAndPreisBetweenOrderBySpielerReinStaerkeReinStaerkeDesc(true, land,
 					minimalesAlter, maximalesAlter, minimalerPreis, maximalerPreis, tranfermarktSeite);
 		}
 		if(land == null) {
-			return spielerRepository.findByTransfermarktAndPositionAndAlterBetweenAndPreisBetweenOrderBySpielerStaerkeReinStaerkeDesc(true, position,
+			return spielerRepository.findByTransfermarktAndPositionAndAlterBetweenAndPreisBetweenOrderBySpielerReinStaerkeReinStaerkeDesc(true, position,
 					minimalesAlter, maximalesAlter, minimalerPreis, maximalerPreis, tranfermarktSeite);
 		}
 		return spielerRepository.
-			findByTransfermarktAndPositionAndNationalitaetAndAlterBetweenAndSpielerStaerkeReinStaerkeBetweenAndPreisBetweenOrderBySpielerStaerkeReinStaerkeDesc(
+			findByTransfermarktAndPositionAndNationalitaetAndAlterBetweenAndSpielerReinStaerkeReinStaerkeBetweenAndPreisBetweenOrderBySpielerReinStaerkeReinStaerkeDesc(
 				true, position, land, minimalesAlter, maximalesAlter, minimaleStaerke, maximaleStaerke, minimalerPreis, maximalerPreis, tranfermarktSeite);
 	}
 
@@ -540,7 +522,7 @@ public class SpielerService {
 
 	public void spielerVonTransfermarktNehmen(Spieler spieler) {
 		spieler.setAufstellungsPositionsTyp(AufstellungsPositionsTypen.ERSATZ);
-		spieler.setPreis((long) (spieler.getSpielerStaerke().getReinStaerke() * 1000));
+		spieler.setPreis((long) (spieler.getSpielerReinStaerke().getReinStaerke() * 1000));
 		spieler.setTransfermarkt(false);
 		aktualisiereSpieler(spieler);
 	}
@@ -678,16 +660,97 @@ public class SpielerService {
 		
 		for(Spieler spieler: alleSpielerMitTeam) {
 			ueberpruefeUndBucheTrainingslager(spieler);
-			spieler.setSpielerZuwachs(berechneSpielerZuwachsFuerEinenSpieler(spieler));
-			reinStaerkeAendern(spieler, spieler.getSpielerZuwachs());
-			spieler.setGehalt(berechneGehalt(spieler));
+			setSpielerZuwachs(spieler);
 			reduziereVerletzungSperreTrainingslager(spieler);
 		}		
 	}
 	
+	private void setSpielerZuwachs(Spieler spieler) {
+		SpielerReinStaerke spielerReinStaerke = spieler.getSpielerReinStaerke();
+		Random random = new Random();
+		double festeZuwachsRateDesSpielers = berechneSpielerZuwachsFuerEinenSpieler(spieler);
+		double spielerZuwachsSumme = 0.0;
+		
+		//Geschwindigkeit
+		double zuwachsGeschwindigkeit;
+		int zufallsZahlGeschwindigkeit = random.nextInt(40);
+		
+		zufallsZahlGeschwindigkeit = 20 - zufallsZahlGeschwindigkeit;
+		zufallsZahlGeschwindigkeit = zufallsZahlGeschwindigkeit + 100;
+		zuwachsGeschwindigkeit = (festeZuwachsRateDesSpielers * zufallsZahlGeschwindigkeit) / 100;
+		spielerZuwachsSumme = spielerZuwachsSumme + zuwachsGeschwindigkeit;
+		
+		spielerReinStaerke.setGeschwindigkeit(spieler.getSpielerReinStaerke().getGeschwindigkeit() + zuwachsGeschwindigkeit);
+		
+		
+		//Schiessen
+		double zuwachsSchiessen;
+		int zufallsZahlSchiessen = random.nextInt(40);
+		
+		zufallsZahlSchiessen = 20 - zufallsZahlSchiessen;
+		zufallsZahlSchiessen = zufallsZahlSchiessen + 100;
+		zuwachsSchiessen = (festeZuwachsRateDesSpielers * zufallsZahlSchiessen) / 100;
+		spielerZuwachsSumme = spielerZuwachsSumme + zuwachsSchiessen;
+		
+		spielerReinStaerke.setSchiessen(spieler.getSpielerReinStaerke().getSchiessen() + zuwachsSchiessen);
+		
+		
+		//Passen
+		double zuwachsPassen;
+		int zufallsZahlPassen = random.nextInt(40);
+		
+		zufallsZahlPassen = 20 - zufallsZahlPassen;
+		zufallsZahlPassen = zufallsZahlPassen + 100;
+		zuwachsPassen = (festeZuwachsRateDesSpielers * zufallsZahlPassen) / 100;
+		spielerZuwachsSumme = spielerZuwachsSumme + zuwachsPassen;
+		
+		spielerReinStaerke.setPassen(spieler.getSpielerReinStaerke().getPassen() + zuwachsPassen);
+		
+		
+		//Dribbeln
+		double zuwachsDribbeln;
+		int zufallsZahlDribbeln = random.nextInt(40);
+		
+		zufallsZahlDribbeln = 20 - zufallsZahlDribbeln;
+		zufallsZahlDribbeln = zufallsZahlDribbeln + 100;
+		zuwachsDribbeln = (festeZuwachsRateDesSpielers * zufallsZahlDribbeln) / 100;
+		spielerZuwachsSumme = spielerZuwachsSumme + zuwachsDribbeln;
+		
+		spielerReinStaerke.setDribbeln(spieler.getSpielerReinStaerke().getDribbeln() + zuwachsDribbeln);
+		
+		
+		//Verteidigen
+		double zuwachsVerteidigen;
+		int zufallsZahlVerteidigen = random.nextInt(40);
+		
+		zufallsZahlVerteidigen = 20 - zufallsZahlVerteidigen;
+		zufallsZahlVerteidigen = zufallsZahlVerteidigen + 100;
+		zuwachsVerteidigen = (festeZuwachsRateDesSpielers * zufallsZahlVerteidigen) / 100;
+		spielerZuwachsSumme = spielerZuwachsSumme + zuwachsVerteidigen;
+		
+		spielerReinStaerke.setVerteidigen(spieler.getSpielerReinStaerke().getVerteidigen() + zuwachsVerteidigen);
+		
+		
+		//Verteidigen
+		double zuwachsPhysis;
+		int zufallsZahlPhysis = random.nextInt(40);
+		
+		zufallsZahlPhysis = 20 - zufallsZahlPhysis;
+		zufallsZahlPhysis = zufallsZahlPhysis + 100;
+		zuwachsPhysis = (festeZuwachsRateDesSpielers * zufallsZahlPhysis) / 100;
+		spielerZuwachsSumme = spielerZuwachsSumme + zuwachsPhysis;
+		
+		spielerReinStaerke.setPhysis(spieler.getSpielerReinStaerke().getPhysis() + zuwachsPhysis);
+		
+		double spielerZuwachs = spielerZuwachsSumme / 6;
+		spieler.setSpielerZuwachs(spielerZuwachs);
+		spielerReinStaerke.setReinStaerke(spieler.getSpielerReinStaerke().getReinStaerke() + spielerZuwachs);
+		spielerStaerkeService.aktualisiereSpielerStaerke(spielerReinStaerke);
+	}
+
 	public long berechneGehalt(Spieler spieler) {
 		long gehalt;
-		gehalt = (long) (spieler.getSpielerStaerke().getReinStaerke() * 100); 
+		gehalt = (long) (spieler.getSpielerReinStaerke().getReinStaerke() * 100); 
 				
 		return gehalt;
 	}
