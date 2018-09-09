@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import fussballmanager.service.land.Land;
+import fussballmanager.service.spieler.Spieler;
+import fussballmanager.service.spieler.spielerzuwachs.Trainingslager;
+import fussballmanager.service.spieler.spielerzuwachs.ZuwachsFaktorAlter;
 import fussballmanager.service.team.Team;
 
 
@@ -57,10 +60,8 @@ public class PersonalService {
 		double staerke = 200.0;
 		long preis = (long) (staerke * 1000);
 		Personal personal = new Personal(team, nationalitaet, alter, talentwert, erfahrung, personalTyp, staerke, preis);
-		Personal personal2 = new Personal(team, nationalitaet, alter, talentwert, erfahrung, personalTyp, 100, preis);
 		
 		legePersonalAn(personal);
-		legePersonalAn(personal2);
 	}
 	
 	private int erzeugeZufaelligenTalentwert() {
@@ -78,5 +79,37 @@ public class PersonalService {
 			gesamtStaerke = gesamtStaerke + trainerStaerke;
 		}
 		return gesamtStaerke;
+	}
+	
+	public void aufgabenBeiSpieltagWechsel() {
+		List<Personal> personaler = findeAllePersonaler();
+		for(Personal personal : personaler) {
+			personal.setStaerkeZuwachs(berechnePersonalZuwachsFuerEinPersonal(personal));
+			personal.setStaerke(personal.getStaerke() + personal.getStaerkeZuwachs());
+			aktualisierePersonal(personal);
+		}
+	}
+	
+	public double berechnePersonalZuwachsFuerEinPersonal(Personal personal) {
+		double defaultZuwachs = 1.0;
+		double maximaleErfahrung = 75;
+		
+		int alter = personal.getAlter();
+		int talentwert = personal.getTalentwert();
+		int erfahrung = personal.getErfahrung();
+		int anzahlDerSaisonsDesSpielers = alter - 13;
+		double zuwachsFaktorNachAlterDesSpielers = 1.0;
+		for(ZuwachsFaktorAlter zFA : ZuwachsFaktorAlter.values()) {
+			if(zFA.getPersonalAlter() == personal.getAlter()) {
+				zuwachsFaktorNachAlterDesSpielers = zFA.getZuwachsFaktor();
+			}
+		}
+		
+		double erfahrungsFaktorRechnungEins  = erfahrung * 1.0 / (maximaleErfahrung * anzahlDerSaisonsDesSpielers);
+		double erfahrungsFaktor = (erfahrungsFaktorRechnungEins + 1) / 2;
+		double zuwachsOhneErfahrung = defaultZuwachs * zuwachsFaktorNachAlterDesSpielers * (100 + (talentwert * 2)) / 100;
+		double zuwachsMitErfahrung = zuwachsOhneErfahrung * erfahrungsFaktor;
+		
+		return zuwachsMitErfahrung;
 	}
 }

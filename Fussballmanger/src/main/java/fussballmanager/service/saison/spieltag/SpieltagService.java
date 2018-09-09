@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import fussballmanager.service.personal.PersonalService;
 import fussballmanager.service.saison.Saison;
 import fussballmanager.service.saison.SaisonService;
 import fussballmanager.service.spiel.Spiel;
@@ -51,6 +52,9 @@ public class SpieltagService {
 	
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	PersonalService personalService;
 	
 	public Spieltag findeSpieltag(Long id) {
 		return spieltagRepository.getOne(id);
@@ -141,6 +145,7 @@ public class SpieltagService {
 		userService.aufgabenBeiSpieltagWechsel();
 		teamService.aufgabenBeiSpieltagWechsel();
 		spielerService.aufgabenBeiSpieltagWechsel();
+		personalService.aufgabenBeiSpieltagWechsel();
 		stadionService.aufgabenBeiSpieltagWechsel();
 	}
 

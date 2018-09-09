@@ -25,13 +25,13 @@ public enum ZuwachsFaktorAlter {
 
 	private final int alter;
 	
-	private final int trainerAlter;
+	private final int personalAlter;
 	
 	private final double zuwachsFaktor;
 	
-	ZuwachsFaktorAlter(int alter, int trainerAlter, double zuwachsFaktor) {
+	ZuwachsFaktorAlter(int alter, int personalAlter, double zuwachsFaktor) {
 		this.alter = alter;
-		this.trainerAlter = trainerAlter;
+		this.personalAlter = personalAlter;
 		this.zuwachsFaktor = zuwachsFaktor;
 	}
 
@@ -39,8 +39,8 @@ public enum ZuwachsFaktorAlter {
 		return alter;
 	}
 
-	public int getTrainerAlter() {
-		return trainerAlter;
+	public int getPersonalAlter() {
+		return personalAlter;
 	}
 
 	public double getZuwachsFaktor() {
