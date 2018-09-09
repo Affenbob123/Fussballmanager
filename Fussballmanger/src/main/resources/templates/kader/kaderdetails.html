@@ -146,13 +146,7 @@
 	</div>
 	<th:block th:include="fragments/header :: scripts" />
 	<th:block>
-		<script>
-			function openWindowInNewWindow(id) {
-				var spielerId = id
-				window.open('/spieler/' + spielerId,'spieler','resizable,height=700,width=700'); 
-				return false;
-			}
-		</script>
+		<script src="/js/spielerlink.js"></script>
 	</th:block>
 </body>
 </html>
