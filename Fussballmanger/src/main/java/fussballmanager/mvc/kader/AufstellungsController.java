@@ -1,5 +1,6 @@
 package fussballmanager.mvc.kader;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -16,6 +17,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import fussballmanager.mvc.spieler.SpielerListeWrapper;
 import fussballmanager.service.land.LandService;
 import fussballmanager.service.liga.LigaService;
+import fussballmanager.service.personal.Personal;
+import fussballmanager.service.personal.PersonalService;
+import fussballmanager.service.personal.PersonalTypen;
 import fussballmanager.service.saison.SaisonService;
 import fussballmanager.service.saison.spieltag.SpieltagService;
 import fussballmanager.service.spieler.AufstellungsPositionsTypen;
@@ -54,12 +58,18 @@ public class AufstellungsController {
 	
 	@Autowired
 	SpieltagService spieltagService;
+	
+	@Autowired
+	PersonalService personalService;
 
 	@GetMapping("/team/{teamId}")
 	public String getAufstellung(Model model, Authentication auth, @PathVariable("teamId") Long teamId) {
 		Team team = teamService.findeTeam(teamId);
 		List<Spieler> alleSpielerAufSpielfeld = spielerService.findeAlleSpielerEinesTeamsInAufstellung(team);
 		List<Spieler> alleSpielerNichtAufSpielfeld = spielerService.findeAlleSpielerEinesTeamsAufErsatzbank(team);
+		List<Spieler> alleNichtSpielberechtigtenSpieler = spielerService.findeAlleNichtSpielberechtigtenSpielerEinesTeams(team);
+		List<Personal> alleTrainerEinesTeams = personalService.findeAllePersonalerEinesTeamsNachPersonalTyp(team, PersonalTypen.TRAINER);
+		Collections.sort(alleTrainerEinesTeams);
 		EinUndAuswechselHelper einUndAuswechselHelper = new EinUndAuswechselHelper();
 		User aktuellerUser = userService.findeUser(auth.getName());
 		aktuellerUser.setAktuellesTeam(team);
@@ -67,8 +77,11 @@ public class AufstellungsController {
 		
 		
 		model.addAttribute("einUndAuswechselHelper", einUndAuswechselHelper);
+		model.addAttribute("trainerStaerke", personalService.ermittleStaerkeNachPersonalTyp(team, PersonalTypen.TRAINER));
+		model.addAttribute("alleTrainerEinesTeams", alleTrainerEinesTeams);
 		model.addAttribute("alleSpielerAufSpielfeld", alleSpielerAufSpielfeld);
 		model.addAttribute("alleSpielerNichtAufSpielfeld", alleSpielerNichtAufSpielfeld);
+		model.addAttribute("alleNichtSpielberechtigtenSpieler", alleNichtSpielberechtigtenSpieler);
 		model.addAttribute("alleFormationsTypen", FormationsTypen.values());
 		model.addAttribute("alleEinsatzTypen", EinsatzTypen.values());
 		model.addAttribute("alleAusrichtungsTypen", AusrichtungsTypen.values());
@@ -172,8 +185,8 @@ public class AufstellungsController {
 		AufstellungsPositionsTypen aufstellungsPositionsTyp = AufstellungsPositionsTypen.DM.getAufstellungsPositionsTypVonString(einUndAuswechselHelper.getAufstellungsPositionsTyp());
 
 		spielerService.wechsleSpielerEin(eingewechselterSpieler, aufstellungsPositionsTyp);
-		LOG.info("Eingewechselt: {}, {}, {}, {}", eingewechselterSpieler.getId(), eingewechselterSpieler.getName(), eingewechselterSpieler.getAlter(), 
-				eingewechselterSpieler.getPosition().getPositionsName());
+		LOG.info("Eingewechselt: {}", eingewechselterSpieler.getPosition().getPositionsName());
+				
 		LOG.info("Ausgewechselt: {}", einUndAuswechselHelper.getAufstellungsPositionsTyp());
 		
 		return "redirect:/team/{teamId}";

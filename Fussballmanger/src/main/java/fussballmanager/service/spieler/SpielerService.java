@@ -113,6 +113,15 @@ public class SpielerService {
 		return alleSpielerEinesTeams;
 	}
 	
+	public List<Spieler> findeAlleNichtSpielberechtigtenSpielerEinesTeams(Team team) {
+		List<Spieler> result = new ArrayList<Spieler>();
+		
+		result.addAll(spielerRepository.findByTeamAndAufstellungsPositionsTyp(team, AufstellungsPositionsTypen.TRAININGSLAGER));
+		result.addAll(spielerRepository.findByTeamAndAufstellungsPositionsTyp(team, AufstellungsPositionsTypen.GESPERRT));
+		result.addAll(spielerRepository.findByTeamAndAufstellungsPositionsTyp(team, AufstellungsPositionsTypen.VERLETZT));
+		return result;
+	}
+	
 	public List<Spieler> findeAlleSpielerEinesTeamsAufErsatzbank(Team team) {
 		List<Spieler> alleSpielerEinesTeamsAufErsatzbank =  new ArrayList<>();
 		

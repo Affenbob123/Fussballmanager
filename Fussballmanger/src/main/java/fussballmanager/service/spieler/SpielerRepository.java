@@ -117,7 +117,7 @@ public interface SpielerRepository extends JpaRepository<Spieler, Long> {
 	List<Spieler> findByTeamAndTrainingslagerLikeAndUebrigeTrainingslagerTageGreaterThan(Team team,
 			Trainingslager keinTrainingslager, int i);
 
-	List<Spieler> findByTeamAndAufstellungsPositionsTyp(Team team, AufstellungsPositionsTypen trainingslager);
+	List<Spieler> findByTeamAndAufstellungsPositionsTyp(Team team, AufstellungsPositionsTypen aufstellungsPositionsTyp);
 
 	List<Spieler> findByTeamAndAufstellungsPositionsTypNotLikeAndTrainingslagerTageGreaterThan(Team team,
 			AufstellungsPositionsTypen trainingslager, int i);

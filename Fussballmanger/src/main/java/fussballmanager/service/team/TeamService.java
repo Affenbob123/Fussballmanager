@@ -20,6 +20,7 @@ import fussballmanager.service.land.Land;
 import fussballmanager.service.liga.Liga;
 import fussballmanager.service.liga.LigaService;
 import fussballmanager.service.liga.LigenNamenTypen;
+import fussballmanager.service.personal.PersonalService;
 import fussballmanager.service.saison.Saison;
 import fussballmanager.service.saison.SaisonService;
 import fussballmanager.service.saison.spieltag.SpieltagService;
@@ -71,6 +72,9 @@ public class TeamService {
 	@Autowired
 	StadionService stadionService;
 	
+	@Autowired
+	PersonalService personalService;
+	
 	public Team findeTeam(Long id) {
 		return teamRepository.getOne(id);
 	}
@@ -107,6 +111,7 @@ public class TeamService {
 		teamRepository.save(team);
 		
 		spielerService.erstelleStandardSpielerFuerEinTeam(team);
+		personalService.erstelleStandardTrainer(team);
 	}
 	
 	public void aktualisiereTeam(Team team) {

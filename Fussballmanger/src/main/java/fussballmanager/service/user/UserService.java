@@ -83,8 +83,7 @@ public class UserService implements UserDetailsService {
 		chatService.fuegeUserAlleChatHinzu(user);
 	}
 	
-	public void aktualisiereUser(User user) {
-		user.setPassword("{noop}" + user.getPassword());
+	public void aktualisiereUser(User user) {		
 		userRepository.save(user);
 	}
 	

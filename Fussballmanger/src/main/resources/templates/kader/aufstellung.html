@@ -5,28 +5,25 @@
 	<link rel="stylesheet" href="/css/aufstellung.css" />
 </head>
 <body>
+<body>
 	<div th:insert="fragments/header :: header"></div>
-	<div class="container-fluid">
-		<div class="row">
-			<div class="col-2" th:insert="fragments/sidebar :: sidebar"></div>
-			<div class="col-10 main-content">
-				<div class="row">
-					<div class="col-11">
-						<div class="row" >
-							<div class="col-5"></div>
-							<div class="col-3" th:insert="fragments/aktuelleteamanzeige :: aktuelleteamanzeige"></div>
-						</div>
+	<div class="container-fluid h-100">
+		<div class="row h-100">
+			<div class="" th:insert="fragments/sidebar :: sidebar"></div>
+			<div class="main h-100">
+				<div class="pl-3 pt-3 pb-2 w-100 border-bottom">
+					<h1 class="">Sekretariat</h1>
+				</div>
+				<div class="col-10 h-100 px-5 border-right">
+					<div class="row py-3 justify-content-center" th:insert="fragments/aktuelleteamanzeige :: aktuelleteamanzeige"></div>
+					<div class="alert alert-success" th:if="${successMessage}">
+	  					<strong><p th:utext="${successMessage}"></p></strong>
 					</div>
-					<div class="col-11 main">
-						<hr>
-						<h4 th:text="${aktuellesTeam.name}"></h4>
-						<div class="alert alert-success" th:if="${successMessage}">
-			  				<strong><p th:utext="${successMessage}"></p></strong>
-						</div>
-						<div class="alert alert-danger" th:if="${errorMessage}">
-				  			<strong><p th:utext="${errorMessage}"></p></strong>
-						</div>
-						<div class="col-12">
+					<div class="alert alert-danger" th:if="${errorMessage}">
+			  			<strong><p th:utext="${errorMessage}"></p></strong>
+					</div>
+					<div class="row">
+						<div class="col-11">
 							<div class="row">
 								<div class="col-6 border rounded">
 									<div class="row auswahl-team">
@@ -79,7 +76,31 @@
 								</div>
 								<div class="col-1"></div>
 								<div class="col-5 border rounded">
-									Trainer
+									<strong><span th:text="'Trainerst&auml;rke: '+ ${trainerStaerke}"></span></strong>
+									<table class="table table-sm table-hover table-bordered table-stripped">
+										<thead>
+											<tr class="table-active">
+												<th scope="col">#</th>
+												<th scope="col">Land</th>
+												<th scope="col"></th>
+												<th scope="col">Alter</th>
+												<th scope="col">Name</th>
+												<th scope="col">St&auml;rke</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr th:each="trainer, stat : ${alleTrainerEinesTeams}">
+												<td th:text="${stat.index+1}"></td>
+												<td><img th:src="@{${trainer.nationalitaet.landNameTyp.bild}}" /></td>
+												<td th:text="${trainer.personalTyp.bezeichnung}"></td>
+												<td th:text="${trainer.alter}"></td>
+												<td >
+													<a th:text="${trainer.name}" th:id="${trainer.id}" onClick="openWindowInNewWindowPersonal(this.id)" href="#"></a>
+												</td>
+												<td th:text="${zahlenFormat.format(trainer.staerke)}"></td>
+											</tr>
+										</tbody>
+									</table>
 								</div>
 							</div>
 							<div class="row">
@@ -341,26 +362,72 @@
 												</div>
 											</div>
 											<div class="col-1"></div>
-											<div class="col-5">
-												<div class="row aufstellungs-reihe border rounded">
-													<div class="col-4 aufstellung-position text-center" 
-														th:each="spieler, stat : ${alleSpielerNichtAufSpielfeld}">
-														<div class="droptarget" th:id="${spieler.id}" ondrop="drop(event)" ondragover="allowDrop(event)">
-															<div th:id="${spieler.id}+'drag'" draggable="true" ondragstart="drag(event)">
-																<img src="/trikots/test.png" />
-																<div>
-																	<img th:src="@{${spieler.nationalitaet.landNameTyp.bild}}" />
-																	<a th:text="'('+${spieler.position}+')'+' | '+${spieler.name}" th:id="${spieler.id}" onClick="openWindowInNewWindow(this.id)" href="#"></a><br>
-																	<span th:text="${zahlenFormat.format(spieler.spielerStaerke)}"></span>
-																</div>
-																<input type="hidden" th:id="${spieler.id}+'einwechseln'" th:value="${spieler.id}" />
-															</div>
-														</div>
+											<div class="col-5 p-0">
+												<div class="row">
+													<div class="col">
+														<table class="table table-sm table-hover table-bordered">
+															<thead>
+																<tr class="table-active">
+																	<th scope="col">#</th>
+																	<th scope="col">Land</th>
+																	<th scope="col">Position</th>
+																	<th scope="col">Alter</th>
+																	<th scope="col">Name</th>
+																	<th scope="col">St&auml;rke</th>
+																	<th scope="col">Fitness</th>
+																	<th scope="col"></th>
+																</tr>
+															</thead>
+															<tbody th:each="spieler, stat : ${alleSpielerNichtAufSpielfeld}" 
+																	class="droptarget" th:id="${spieler.id}" ondrop="drop(event)" ondragover="allowDrop(event)">
+																<tr th:id="${spieler.id}+'drag'" draggable="true" ondragstart="drag(event)">
+																	<td>
+																		<span>1</span>
+																		<input type="hidden" th:id="${spieler.id}+'einwechseln'" th:value="${spieler.id}" />
+																	</td>
+																	<td><img th:src="@{${spieler.nationalitaet.landNameTyp.bild}}" /></td>
+																	<td th:text="${spieler.position}"></td>
+																	<td th:text="${spieler.alter}"></td>
+																	<td>
+																		<a th:text="${spieler.name}" th:id="${spieler.id}" onClick="openWindowInNewWindow(this.id)" href="#">
+																			
+																		</a>
+																	</td>
+																	<td th:text="${zahlenFormat.format(spieler.spielerStaerke)}"></td>
+																	<td>100%</td>
+																	<td>-</td>
+																</tr>
+															</tbody>
+														</table>
 													</div>
 												</div>
 												<div class="row">
-													<div class="col-6">
-														<a class="" th:href="@{/team/}+${aktuellesTeam.id}+'/spieler/umbenennen'">Spieler umbenennen</a>
+													<div class="col">
+														<table class="table table-sm table-hover table-bordered" th:if="${alleNichtSpielberechtigtenSpieler.size()} > 0">
+															<tbody>
+																<tr class="table-danger" th:each="spieler, stat : ${alleNichtSpielberechtigtenSpieler}">
+																	<td>
+																		<span>1</span>
+																		<input type="hidden" th:id="${spieler.id}+'einwechseln'" th:value="${spieler.id}" />
+																	</td>
+																	<td><img th:src="@{${spieler.nationalitaet.landNameTyp.bild}}" /></td>
+																	<td th:text="${spieler.position}"></td>
+																	<td th:text="${spieler.alter}"></td>
+																	<td>
+																		<a th:text="${spieler.name}" th:id="${spieler.id}" onClick="openWindowInNewWindow(this.id)" href="#">
+																			
+																		</a>
+																	</td>
+																	<td th:text="${zahlenFormat.format(spieler.spielerStaerke)}"></td>
+																	<td>100%</td>
+																	<td>
+																		<span th:text="${spieler.gesperrteTage}" th:if="${spieler.gesperrteTage} > 0"></span>
+																		<span th:text="${spieler.trainingslagerTage}" th:if="${spieler.trainingslagerTage} > 0"></span>
+																		<span th:text="${spieler.verletzungsTage}" th:if="${spieler.verletzungsTage} > 0"></span>
+																	</td>
+																</tr>
+															</tbody>
+														</table>
 													</div>
 												</div>
 											</div>
@@ -368,18 +435,31 @@
 									</form>
 								</div>
 							</div>
+							<div class="row justify-content-center">
+								<div class="col-7"></div>
+								<div class="col-5 text-center">
+									<a class="" th:href="@{/team/}+${aktuellesTeam.id}+'/spieler/umbenennen'">Spieler umbenennen</a>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
+				<div class="col-2"></div>
 			</div>
 		</div>
 	</div>
-	<th:block th:include="fragments/header :: scripts" />
+	<th:block th:replace="fragments/header :: scripts"></th:block>
 	<th:block>
 		<script>
 			function openWindowInNewWindow(id) {
 				var spielerId = id
 				window.open('/spieler/' + spielerId,'spieler','resizable,height=700,width=700'); 
+				return false;
+			}
+			
+			function openWindowInNewWindowPersonal(id) {
+				var personalId = id
+				window.open('/personal/' + personalId,'personal','resizable,height=700,width=700'); 
 				return false;
 			}
 		</script>

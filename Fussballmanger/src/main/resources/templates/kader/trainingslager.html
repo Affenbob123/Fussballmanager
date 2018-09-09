@@ -55,7 +55,7 @@
 															href="#"></a>
 													</td>
 													<td th:text="${s.alter}" />
-													<td th:text="${zahlenFormat.format(s.spielerStaerke.reinStaerke)}" />
+													<td th:text="${zahlenFormat.format(s.spielerReinStaerke.reinStaerke)}" />
 													<td th:text="${s.uebrigeTrainingslagerTage}" />
 													<td th:if="${s.uebrigeTrainingslagerTage} > 0">
 														<div class="col-7">
@@ -126,7 +126,7 @@
 												href="#"></a>
 										</td>
 										<td th:text="${s.alter}" />
-										<td th:text="${zahlenFormat.format(s.spielerStaerke.reinStaerke)}" />
+										<td th:text="${zahlenFormat.format(s.spielerReinStaerke.reinStaerke)}" />
 										<td th:text="${s.uebrigeTrainingslagerTage}" />
 										<td th:unless="${s.trainingslagerTage} > 0">-</td>
 										<td th:if="${s.trainingslagerTage} > 0" th:text="${s.trainingslagerTage}+' Tage im '+${s.trainingslager.bezeichnung}"></td>

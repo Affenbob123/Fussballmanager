@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import fussballmanager.service.land.LandService;
 import fussballmanager.service.liga.LigaService;
+import fussballmanager.service.personal.PersonalService;
+import fussballmanager.service.personal.PersonalTypen;
 import fussballmanager.service.saison.SaisonService;
 import fussballmanager.service.saison.spieltag.SpieltagService;
 import fussballmanager.service.spieler.AufstellungsPositionsTypen;
@@ -47,12 +49,17 @@ public class KaderDetailsController {
 	@Autowired
 	SpieltagService spieltagService;
 	
+	@Autowired
+	PersonalService personalService;
+	
 	@GetMapping("/team/{teamId}/kaderdetails")
 	public String getKaderDetails(Model model, Authentication auth, @PathVariable("teamId") Long teamId) {
 		Team team = teamService.findeTeam(teamId);
 		List<Spieler> alleSpielerEinesTeams = spielerService.findeAlleSpielerEinesTeams(team);
 		
 		model.addAttribute("alleSpielerDesAktuellenTeams", alleSpielerEinesTeams);
+		model.addAttribute("alleTrainerDesAktuellenTeams", 
+				personalService.findeAllePersonalerEinesTeamsNachPersonalTyp(team, PersonalTypen.TRAINER));
 		model.addAttribute("alleFormationsTypen", FormationsTypen.values());
 		model.addAttribute("alleEinsatzTypen", EinsatzTypen.values());
 		model.addAttribute("alleAusrichtungsTypen", AusrichtungsTypen.values());

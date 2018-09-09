@@ -12,7 +12,8 @@
 </head>
 <body>
 	<div th:fragment="aktuelleteamanzeige" id="header3">
-			<strong><span th:text="${aktuellesTeam.name}+'&nbsp;&nbsp;'+'Liga: '+${aktuellesTeam.liga.ligaNameTyp.name}+'&nbsp;&nbsp;'+'St&auml;rke: '+${aktuellesTeam.staerke}"
+			<strong><span th:text="${aktuellesTeam.name}+'&nbsp;&nbsp;'+'Liga: '
+			+${aktuellesTeam.liga.ligaNameTyp.name}+'&nbsp;&nbsp;'+'St&auml;rke: '+${zahlenFormat.format(aktuellesTeam.staerke)}"
 				id="aktuelleteamanzeige"></span></strong>
 	</div>
 </body>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head th:insert="fragments/header :: head"></head>
+<head>
+	<link rel="stylesheet" href="/css/spieler.css" />
+</head>
+<body>
+	<div class="container">
+		<h4 th:text="${personal.name}"></h4>
+		<div class="alert alert-success" th:if="${successMessage}">
+  			<strong><p th:utext="${successMessage}"></p></strong>
+		</div>
+		<div class="alert alert-danger" th:if="${errorMessage}">
+  			<strong><p th:utext="${errorMessage}"></p></strong>
+		</div>
+		<div class="col-12">
+			<table class="table table-hover table-bordered">
+					<tr th:if="${personal.nationalitaet}">
+						<td class="table-active">Nationalit&auml;t</td>
+						<td><img th:src="@{${personal.nationalitaet.landNameTyp.bild}}" /></td>
+					<tr>
+					<tr>
+						<td class="table-active">Position</td>
+						<td th:text="${personal.personalTyp.bezeichnung}" />
+					<tr>
+					<tr>
+						<td class="table-active">Alter</td>
+						<td th:text="${personal.alter}" />
+					<tr>
+					<tr>
+						<td class="table-active">Reinst&auml;rke</td>
+						<td th:text="${zahlenFormat.format(personal.staerke)}" />
+					<tr>
+					<tr>
+						<td class="table-active">Erfahrung</td>
+						<td th:text="${personal.erfahrung}" />
+					<tr>
+					<tr th:if="${personal.talentwertErmittelt}">
+						<td class="table-active">Talentwert</td>
+						<td th:text="${personal.talentwert}" />
+					<tr>
+					<tr>
+						<td class="table-active">Gehalt</td>
+						<td th:text="${personal.gehalt}" />
+					<tr>
+				</tr>
+			</table>
+			<div>
+				<div class="col"th:if="${personal.talentwertErmittelt} == false">
+					<form method="POST" th:action="@{/personal/} + ${personal.id} + '/talentwert'">
+						<button type="submit" name="submit" value="value"
+							class="btn btn-primary btn-sm button-toggle">
+							<span aria-hidden="true">Talentwert ermitteln</span>
+						</button>
+					</form>
+				</div>
+				<div class="col"th:if="${personal.transfermarkt} == false">
+					<form method="POST" th:action="@{/personal/} + ${personal.id} + '/transfermarkt'" th:object="${personal}">
+						<div class="from-group row">
+							<div class="col">
+								<input class="form-control" type="text" th:field="*{preis}"/>
+							</div>
+							<div class="col">
+								<button type="submit" name="submit" value="value"
+									class="btn btn-success btn-sm button-toggle">
+									<span aria-hidden="true">Auf Transfermarkt anbieten</span>
+								</button>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="col" th:if="${personal.transfermarkt}">
+					<form method="POST" th:action="@{/personal/} + ${personal.id} + '/transfermarkt/entfernen'">
+						<div class="from-group row">
+							<div class="col">
+								<span th:text="'F&uuml;r '+${personal.preis}+' auf dem Transfermarkt'"></span>
+							</div>
+							<div class="col">
+								<button type="submit" name="submit" value="value"
+									class="btn btn-danger btn-sm button-toggle">
+									<span aria-hidden="true">Vom Transfermarkt nehmen</span>
+								</button>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="col">
+					<form method="POST" th:action="@{/personal/} + ${personal.id} + '/entlassen'">
+						<button type="submit" name="submit" value="value"
+							class="btn btn-danger btn-sm button-toggle">
+							<span th:text="${personal.personalTyp.bezeichnung}+' entlassen'"></span>
+						</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
