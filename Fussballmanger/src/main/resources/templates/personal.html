@@ -85,9 +85,9 @@
 					</form>
 				</div>
 				<div class="col">
-					<form method="POST" th:action="@{/personal/} + ${personal.id} + '/entlassen'">
-						<button type="submit" name="submit" value="value"
-							class="btn btn-danger btn-sm button-toggle">
+					<form method="POST" th:action="@{/personal/} + ${personal.id} + '/entlassen'" id="personal-loeschen-form" 
+						onSubmit="confirmEntlassen(event)">
+						<button type="submit" class="btn btn-danger btn-sm" >
 							<span th:text="${personal.personalTyp.bezeichnung}+' entlassen'"></span>
 						</button>
 					</form>
@@ -95,5 +95,17 @@
 			</div>
 		</div>
 	</div>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script> 
+	<script src="http://malsup.github.com/jquery.form.js"></script> 
+	<script>
+		function confirmEntlassen(event) {
+		   var antwort = confirm("Sicher?");
+		   if(antwort) {
+		       setTimeout(window.close(), 3000);
+		   } else {
+		       event.preventDefault();
+		   }
+		}
+	</script>
 </body>
 </html>

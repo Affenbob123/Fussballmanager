@@ -38,11 +38,8 @@ public class PersonalController {
 	}
 	
 	@PostMapping("/personal/{personalId}/entlassen")
-	public String entlassePersonal(Model model, Authentication auth, @PathVariable("personalId") Long personalId,
+	public void entlassePersonal(Model model, Authentication auth, @PathVariable("personalId") Long personalId,
 			HttpServletRequest request) {
 		personalService.loeschePersonal(personalService.findePersonal(personalId));
-		String referer = request.getHeader("Referer");
-		
-		return "redirect:/" + referer;
 	}
 }
