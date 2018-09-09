@@ -12,7 +12,7 @@
 			<div class="" th:insert="fragments/sidebar :: sidebar"></div>
 			<div class="main h-100">
 				<div class="pl-3 pt-3 pb-2 w-100 border-bottom">
-					<h1 class="">Sekretariat</h1>
+					<h1 class="">Aufstellung</h1>
 				</div>
 				<div class="col-10 h-100 px-5 border-right">
 					<div class="row py-3 justify-content-center" th:insert="fragments/aktuelleteamanzeige :: aktuelleteamanzeige"></div>
@@ -378,8 +378,7 @@
 																	<th scope="col"></th>
 																</tr>
 															</thead>
-															<tbody th:each="spieler, stat : ${alleSpielerNichtAufSpielfeld}" 
-																	class="droptarget" th:id="${spieler.id}" ondrop="drop(event)" ondragover="allowDrop(event)">
+															<tbody th:each="spieler, stat : ${alleSpielerNichtAufSpielfeld}">
 																<tr th:id="${spieler.id}+'drag'" draggable="true" ondragstart="drag(event)">
 																	<td>
 																		<span>1</span>
